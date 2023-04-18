@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray"
+        android:orientation="vertical">
+
+    <include layout="@layout/layout_topbar" />
+
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+
+            <TextView
+                    android:id="@+id/tv_current_battery_change_combination"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:text="当前设备："
+                    android:textColor="#00A0E9"
+                    android:textSize="16sp" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="当前组合方式" />
+
+            <com.flyco.roundview.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    app:rv_backgroundColor="@color/white"
+                    app:rv_cornerRadius="5dp">
+
+
+                <TextView
+                        android:id="@+id/tv_current_combination_change_combination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="15dp"
+                        android:text="当前组合方式"
+                        android:textColor="#232524"
+                        android:textSize="15sp" />
+
+
+            </com.flyco.roundview.RoundLinearLayout>
+
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="更换为" />
+
+
+            <com.flyco.roundview.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    app:rv_backgroundColor="#00A0E9"
+                    app:rv_cornerRadius="5dp">
+
+
+                <LinearLayout
+                        android:id="@+id/ll_changed_to_combination_change_combination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="15dp">
+
+                    <TextView
+                            android:id="@+id/tv_changed_to_combination_change_combination"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="点击更换组合方式"
+                            android:textColor="#fff"
+                            android:textSize="15sp" />
+
+
+                    <ImageView
+                            android:id="@+id/iv_enter_combination_change_combination"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/enter"
+                            android:tint="@color/white" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_combination_change_combination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:visibility="gone" />
+
+
+            </com.flyco.roundview.RoundLinearLayout>
+
+
+            <TextView
+                    android:id="@+id/tv_tips_status_change_combination"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:textColor="#00A0E9"
+                    tools:text="您需要补充的费用金额为" />
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/bg_dot_radius"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="15dp">
+
+
+                <TextView
+                        android:id="@+id/tv_deposit_change_combination"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="押金："
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+
+                <TextView
+                        android:id="@+id/tv_total_change_combination"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|right"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        tools:text="合计：￥800.00" />
+
+
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="30dp"
+                    android:text="温馨提示："
+                    android:textColor="#FF0000"
+                    android:textSize="16sp" />
+
+
+            <com.flyco.roundview.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    app:rv_backgroundColor="@color/white"
+                    app:rv_cornerRadius="5dp">
+
+
+                <TextView
+                        android:id="@+id/tv_tips_change_combination"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="15dp"
+                        android:text="提示信息"
+                        android:textColor="#FF0000"
+                        android:textSize="15sp" />
+
+
+            </com.flyco.roundview.RoundLinearLayout>
+
+
+            <com.flyco.roundview.RoundTextView
+                    android:id="@+id/rtv_submit_change_combination"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="30dp"
+                    android:gravity="center"
+                    android:text="立即确认"
+                    android:textColor="@color/white"
+                    app:rv_backgroundColor="@color/app_color"
+                    app:rv_cornerRadius="20dp"
+                    app:rv_isRippleEnable="true" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

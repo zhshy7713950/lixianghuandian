@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:orientation="vertical"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_borderColor="@color/app_color"
+			app:qmui_radius="10dp">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_margin="10dp"
+				android:orientation="vertical">
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_device_num_sign_contract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center_vertical"
+						android:textColor="@color/white"
+						android:textSize="12sp"
+						tools:text="编号：1226" />
+
+
+				<TextView
+						android:id="@+id/tv_device_model_sign_contract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:textColor="@color/white"
+						android:textSize="12sp"
+						tools:text="型号：60V  40ah" />
+
+				<TextView
+						android:id="@+id/tv_rent_long_sign_contract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center_vertical|right"
+						android:textColor="@color/white"
+						android:textSize="12sp"
+						tools:text="租期：9个月" />
+			</LinearLayout>
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_deposit_sign_contract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center_vertical"
+						android:textColor="@color/white"
+						android:textSize="12sp"
+						tools:text="押金：￥800.00" />
+
+				<TextView
+						android:id="@+id/tv_rent_money_sign_contract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:textColor="@color/white"
+						android:textSize="12sp"
+						tools:text="租金：￥120.00" />
+
+				<View
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:gravity="center_vertical|right" />
+			</LinearLayout>
+
+
+		</LinearLayout>
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+	<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:gravity="center"
+			android:text="合同预览" />
+
+	<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:src="@drawable/bg_credit_contract" />
+
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginTop="10dp"
+			android:orientation="vertical">
+
+		<androidx.viewpager.widget.ViewPager
+				android:id="@+id/vp_sign_contract"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:clipToPadding="false"
+				android:paddingLeft="80dp"
+				android:paddingRight="80dp"
+				android:paddingBottom="24dp" />
+
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+				android:id="@+id/btn_sign_contract"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:layout_gravity="center"
+				android:layout_marginLeft="25dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginRight="25dp"
+				android:layout_marginBottom="10dp"
+				android:text="我已阅读并同意合同内容"
+				android:textColor="@color/white"
+				android:textSize="12sp"
+				app:qmui_backgroundColor="@color/app_color"
+				app:qmui_borderColor="@color/app_color" />
+
+	</LinearLayout>
+
+
+</LinearLayout>

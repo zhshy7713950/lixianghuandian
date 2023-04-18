@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                            android:orientation="vertical"
+                                                            app:qmui_borderColor="@color/app_color"
+                                                            app:qmui_borderWidth="1dp"
+                                                            app:qmui_radius="5dp"
+                                                            android:layout_gravity="center"
+                                                            app:qmui_backgroundColor="@color/white"
+                                                            android:layout_width="250dp"
+                                                            android:layout_height="wrap_content">
+
+    <TextView
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/app_color"
+            android:text="单期还款"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/tv"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="本期应还："
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    <TextView
+            android:textSize="14sp"
+            android:paddingLeft="10dp"
+            android:text="请选择支付方式"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="match_parent"
+            android:elevation="2dp"
+            app:qmui_radius="10dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            app:qmui_borderColor="@color/white"
+            app:qmui_backgroundColor="@color/white"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:id="@+id/ll_wechat"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+            <ImageView
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"
+                    android:src="@drawable/wechat"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+
+            <TextView
+                    android:paddingLeft="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/app_color"
+                    android:text="微信支付"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"/>
+
+
+            <ImageView
+                    android:id="@+id/iv_check_wechat"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/check"
+                    android:layout_gravity="center"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/ll_alipay"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+            <ImageView
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"
+                    android:src="@drawable/alipay"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+
+            <TextView
+                    android:paddingLeft="10dp"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/app_color"
+                    android:text="支付宝支付"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"/>
+
+
+            <ImageView
+                    android:id="@+id/iv_check_alipay"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/check"
+                    android:layout_gravity="center"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+        </LinearLayout>
+
+
+    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btn"
+            android:layout_width="200dp"
+            app:qmui_backgroundColor="@color/app_color"
+            app:qmui_borderColor="@color/app_color"
+            android:textColor="@color/white"
+            android:text="确定"
+            android:layout_gravity="center"
+            android:layout_height="40dp"/>
+
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>

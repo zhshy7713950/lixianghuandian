@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/bg_gray"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+	<TextView
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:gravity="center"
+			android:text="当前电池" />
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			app:qmui_backgroundColor="@color/white"
+			app:qmui_borderWidth="0dp"
+			app:qmui_radius="5dp">
+
+		<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="20dp"
+				android:paddingTop="10dp"
+				android:paddingRight="20dp"
+				android:paddingBottom="10dp">
+
+			<TextView
+					android:id="@+id/tv_num"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:gravity="center_vertical"
+					android:textColor="#ff232524"
+					tools:text="编号：1126" />
+
+
+			<TextView
+					android:id="@+id/tv_rent_duration"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_alignLeft="@+id/tv_deposit"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#ff232524"
+					tools:text="租期：9个月 " />
+
+
+			<TextView
+					android:id="@+id/tv_model"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_below="@+id/tv_num"
+					android:gravity="center_vertical"
+					android:textColor="#ff232524"
+					tools:text="型号：72V   20AH" />
+
+
+			<TextView
+					android:id="@+id/tv_deposit"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_below="@+id/tv_num"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#ff232524"
+					tools:text="押金：￥800.00" />
+
+		</RelativeLayout>
+
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+
+	<TextView
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:gravity="center"
+			android:text="更换为" />
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			app:qmui_backgroundColor="#00A0E9"
+			app:qmui_borderWidth="0dp"
+			app:qmui_radius="5dp">
+
+		<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="20dp"
+				android:paddingTop="10dp"
+				android:paddingRight="20dp"
+				android:paddingBottom="10dp">
+
+			<TextView
+					android:id="@+id/tv_num_change"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:gravity="center_vertical"
+					android:textColor="#fff"
+					tools:text="编号：1126" />
+
+
+			<TextView
+					android:id="@+id/tv_rent_duration_change"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_alignLeft="@+id/tv_deposit_change"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#fff"
+					tools:text="租期：9个月 " />
+
+
+			<TextView
+					android:id="@+id/tv_model_change"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_below="@+id/tv_num_change"
+					android:gravity="center_vertical"
+					android:textColor="#fff"
+					tools:text="型号：72V   20AH" />
+
+
+			<TextView
+					android:id="@+id/tv_deposit_change"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_below="@+id/tv_num_change"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#fff"
+					tools:text="押金：￥800.00" />
+
+		</RelativeLayout>
+
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+	<TextView
+			android:id="@+id/tv_money_pipe"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:gravity="center"
+			android:text="您需要补充的费用金额为"
+			android:textColor="#00A0E9" />
+
+
+	<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:background="@drawable/bg_round_dash">
+
+		<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="20dp"
+				android:paddingTop="10dp"
+				android:paddingRight="20dp"
+				android:paddingBottom="10dp">
+
+			<TextView
+					android:id="@+id/tv_rent_money"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:gravity="center_vertical"
+					android:textColor="#000"
+					tools:text="租金：￥320.00" />
+
+
+			<TextView
+					android:id="@+id/tv_deposit_final"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_alignLeft="@+id/tv_money_total"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#000"
+					tools:text="押金：￥200.00" />
+
+
+			<TextView
+					android:id="@+id/tv_money_total"
+					android:layout_width="wrap_content"
+					android:layout_height="40dp"
+					android:layout_below="@+id/tv_rent_money"
+					android:layout_alignParentRight="true"
+					android:gravity="center_vertical"
+					android:textColor="#00A0E9"
+					tools:text="合计：￥520.00" />
+
+		</RelativeLayout>
+
+
+	</FrameLayout>
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+			android:id="@+id/btn_pay_now_change_battery"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:layout_gravity="center"
+			android:layout_margin="30dp"
+			android:elevation="2dp"
+			android:text="立即支付"
+			android:textColor="@color/white"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_borderColor="@color/app_color"
+			app:qmui_radius="2dp" />
+
+</LinearLayout>

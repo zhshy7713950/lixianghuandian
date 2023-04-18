@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.flyco.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="500dp"
+		android:layout_gravity="center"
+		android:layout_margin="30dp"
+
+		android:orientation="vertical"
+		app:rv_backgroundColor="@color/white"
+		app:rv_cornerRadius="10dp">
+
+	<com.flyco.roundview.RoundTextView
+			android:layout_width="match_parent"
+			android:layout_height="60dp"
+			android:gravity="center"
+			android:text="重要提示"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			app:rv_backgroundColor="@color/app_color"
+			app:rv_cornerRadius_TL="10dp"
+			app:rv_cornerRadius_TR="10dp" />
+
+
+	<WebView
+			android:id="@+id/web"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_marginTop="5dp"
+			android:layout_weight="1" />
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+			android:id="@+id/btn"
+			android:layout_width="match_parent"
+			android:layout_height="45dp"
+			android:layout_margin="15dp"
+			android:textColor="@color/white"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_borderWidth="0dp"
+			tools:text="同意" />
+
+</com.flyco.roundview.RoundLinearLayout>

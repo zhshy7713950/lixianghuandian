@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/bg_gray"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<FrameLayout
+			android:background="@color/white"
+			android:layout_width="match_parent"
+			android:layout_height="180dp">
+
+		<TextView
+				android:layout_marginLeft="10dp"
+				android:padding="10dp"
+				android:textSize="18sp"
+				android:text="首付支付金额"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_money_credit_first_pay"
+				android:padding="10dp"
+				android:textSize="22sp"
+				android:layout_gravity="center"
+				android:text="¥  *.*"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+	</FrameLayout>
+
+	<LinearLayout
+			android:orientation="vertical"
+			android:background="@color/white"
+			android:layout_marginTop="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<TextView
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="10dp"
+				android:padding="10dp"
+				android:textSize="18sp"
+				android:text="支付方式:"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+				xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:elevation="2dp"
+				android:id="@+id/btn_alipay_credit_first_pay"
+				android:layout_width="match_parent"
+				app:qmui_borderColor="@color/app_color"
+				app:qmui_backgroundColor="@color/app_color"
+				android:layout_margin="40dp"
+				android:textColor="@color/white"
+				android:text="支付宝"
+				android:layout_height="45dp"/>
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+				xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:elevation="2dp"
+				android:id="@+id/btn_wechat_pay_credit_first_pay"
+				android:layout_width="match_parent"
+				app:qmui_borderColor="@color/app_color"
+				app:qmui_backgroundColor="@color/app_color"
+				android:layout_marginLeft="40dp"
+				android:layout_marginRight="40dp"
+				android:layout_marginTop="10dp"
+				android:textColor="@color/white"
+				android:text="微信支付"
+				android:layout_height="45dp"/>
+	</LinearLayout>
+</LinearLayout>

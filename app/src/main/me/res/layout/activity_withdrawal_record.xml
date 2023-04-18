@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/gray_F5"
+		android:orientation="vertical">
+
+	<com.qmuiteam.qmui.widget.QMUITopBar
+			android:id="@+id/topbar"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:orientation="vertical" />
+
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:id="@+id/refreshLayout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.scwang.smartrefresh.header.MaterialHeader
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+
+
+		<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/recyclerView"
+				android:layout_width="match_parent"
+				android:background="@drawable/rectangle_white_bg"
+				android:layout_margin="10dp"
+				android:padding="10dp"
+				android:layout_height="wrap_content" />
+
+
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

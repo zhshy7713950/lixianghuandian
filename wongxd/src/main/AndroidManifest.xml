@@ -1,0 +1,53 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		package="wongxd">
+
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<application>
+		<activity
+				android:name=".AtyWeb"
+				android:configChanges="orientation|screenSize" />
+
+		<activity
+				android:name=".alipay.AlipayH5Activity"
+				android:configChanges="orientation|keyboardHidden|navigation"
+				android:exported="false"
+				android:screenOrientation="behind" />
+
+		<service
+				android:name=".common.autoInstall.AutoInstallService"
+				android:label="@string/aby_label"
+				android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+				android:process=":install">
+			<intent-filter>
+				<action android:name="android.accessibilityservice.AccessibilityService" />
+			</intent-filter>
+			<meta-data
+					android:name="android.accessibilityservice"
+					android:resource="@xml/accessibility_config" />
+		</service>
+
+		<provider
+				android:name="androidx.core.content.FileProvider"
+				android:authorities="${applicationId}.fileprovider"
+				android:exported="false"
+				android:grantUriPermissions="true">
+			<!--元数据-->
+			<meta-data
+					android:name="android.support.FILE_PROVIDER_PATHS"
+					android:resource="@xml/file_paths" />
+			<!--配置中的authorities按照江湖规矩一般加上包名,${applicationId}是获取当前项目的包名，-->
+			<!--前提是defaultConfig｛｝闭包中要有applicationId属性。-->
+			<!--defaultConfig {-->
+			<!--applicationId "com.xx.xx"-->
+			<!--}-->
+		</provider>
+
+		<activity android:name=".base.crash.DefaultErrorActivity" />
+
+		<activity
+				android:name=".base.custom.idcardCamera.camera.CameraActivity"
+				android:screenOrientation="landscape"
+				android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
+
+	</application>
+</manifest>

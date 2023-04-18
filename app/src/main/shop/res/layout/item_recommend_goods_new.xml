@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/goods_list_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="fitXY" />
+
+
+    <TextView
+        android:id="@+id/goods_list_goods_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="可抵扣"
+            android:textColor="@color/gray_96"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/goods_list_old_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="#FF1C2C"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/white"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+	<TextView
+			android:id="@+id/tv_follow_wechat"
+			android:layout_width="match_parent"
+			android:layout_height="30dp"
+			android:background="@color/white"
+			android:gravity="center"
+			android:text="点击关注微信公众号第一时间掌握设备数据信息"
+			android:textColor="#FFA800"
+			android:textSize="12sp" />
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="30dp"
+			android:layout_marginLeft="10dp"
+			android:gravity="center_vertical"
+			android:orientation="horizontal"
+			android:paddingRight="15dp">
+
+		<ImageView
+				android:id="@+id/imageView"
+				android:layout_width="20dp"
+				android:src="@mipmap/led_left_image"
+				android:layout_height="20dp" />
+
+		<com.view.MyTextView
+				android:id="@+id/ledTextView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:layout_marginLeft="5dp"
+				android:singleLine="true"
+				android:text="走马灯效果的演示"
+				android:textColor="@color/black_3" />
+
+
+	</LinearLayout>
+
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:id="@+id/srl_home"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.scwang.smartrefresh.header.MaterialHeader
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<FrameLayout
+				android:id="@+id/fl_fgt_home"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+			<include layout="@layout/home_status_no_item" />
+
+			<include layout="@layout/home_status_item" />
+
+		</FrameLayout>
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

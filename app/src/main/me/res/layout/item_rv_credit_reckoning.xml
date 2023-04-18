@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                            xmlns:tools="http://schemas.android.com/tools"
+                                                            android:orientation="vertical"
+                                                            android:layout_margin="10dp"
+                                                            app:qmui_borderColor="@color/bg_gray"
+                                                            app:qmui_backgroundColor="@color/bg_gray"
+                                                            app:qmui_radius="10dp"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="wrap_content">
+
+
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+
+		<LinearLayout
+				android:layout_margin="10dp"
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="match_parent">
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_rent_cycle"
+						android:layout_width="wrap_content"
+						tools:text="周期：1/8期"
+						android:textSize="12sp"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+				<TextView
+						android:singleLine="true"
+						android:paddingLeft="10dp"
+						android:id="@+id/tv_pay_money"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="本期还款：310"
+						android:textSize="10sp"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+			</LinearLayout>
+
+
+			<TextView
+					android:id="@+id/tv_next_pay_time"
+					android:layout_width="match_parent"
+					tools:text="下一还款日：暂无"
+					android:textSize="12sp"
+					android:gravity="center_vertical"
+					android:layout_height="25dp"/>
+
+
+		</LinearLayout>
+
+		<FrameLayout
+				android:layout_width="80dp"
+				android:layout_height="match_parent">
+
+			<TextView
+					android:id="@+id/tv_status"
+					android:layout_gravity="center"
+					android:text="已还款"
+					android:gravity="center"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+					android:textSize="12sp"
+					android:id="@+id/btn"
+					android:layout_width="80dp"
+					app:qmui_backgroundColor="@color/app_color"
+					app:qmui_borderColor="@color/app_color"
+					android:textColor="@color/white"
+					android:text="点击还款"
+					android:layout_gravity="center"
+					android:layout_height="30dp"/>
+
+		</FrameLayout>
+	</LinearLayout>
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>

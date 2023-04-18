@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                            xmlns:tools="http://schemas.android.com/tools"
+                                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                            android:orientation="vertical"
+                                                            android:layout_margin="20dp"
+                                                            app:qmui_radius="5dp"
+                                                            app:qmui_borderColor="@color/bg_gray"
+                                                            app:qmui_backgroundColor="@color/bg_gray"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent">
+
+	<TextView
+			android:padding="10dp"
+			android:gravity="center"
+			android:text="《租赁协议》"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+	<WebView
+			android:id="@+id/web_rent_protocol"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>

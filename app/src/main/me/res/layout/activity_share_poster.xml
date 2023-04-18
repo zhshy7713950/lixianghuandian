@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/gray_F5"
+		android:orientation="vertical">
+
+	<com.qmuiteam.qmui.widget.QMUITopBar
+			android:id="@+id/topbar"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:orientation="vertical" />
+
+
+	<androidx.viewpager.widget.ViewPager
+			android:id="@+id/viewPager"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_gravity="center_horizontal"
+			android:layout_weight="1"
+			android:clipToPadding="false"
+			android:paddingLeft="30dp"
+			android:paddingRight="30dp"
+			android:paddingBottom="20dp"
+			android:paddingTop="20dp" />
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_marginBottom="20dp"
+			android:gravity="center"
+			android:orientation="horizontal">
+
+		<LinearLayout
+				android:id="@+id/copyUrlLayout"
+				android:layout_width="150dp"
+				android:layout_height="match_parent"
+				android:layout_marginRight="10dp"
+				android:background="@drawable/rectangle_bg_34d437"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+			<ImageView
+					android:layout_width="18dp"
+					android:layout_height="18dp"
+					android:src="@mipmap/share_poster_copy_url_image" />
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="10dp"
+					android:gravity="center"
+					android:text="复制链接"
+					android:textColor="@color/white"
+					android:textSize="15sp"
+					android:textStyle="bold" />
+
+		</LinearLayout>
+
+		<LinearLayout
+				android:id="@+id/shareLayout"
+				android:layout_width="150dp"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="10dp"
+				android:background="@drawable/rectangle_bg_main_color"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+			<ImageView
+					android:layout_width="18dp"
+					android:layout_height="18dp"
+					android:src="@mipmap/share_poster_share_image" />
+
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="10dp"
+					android:gravity="center"
+					android:text="分享海报"
+					android:textColor="@color/white"
+					android:textSize="15sp"
+					android:textStyle="bold" />
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

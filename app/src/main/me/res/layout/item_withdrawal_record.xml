@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/white"
+		android:orientation="vertical">
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal">
+
+		<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+			<TextView
+					android:id="@+id/titleTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:ellipsize="end"
+					android:maxLines="1"
+					android:textColor="@color/black_3"
+					android:textSize="13sp"
+					tools:text="提现到支付宝" />
+
+			<TextView
+					android:id="@+id/timeTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="5dp"
+					android:ellipsize="end"
+					android:maxLines="1"
+					android:textColor="@color/gray_9"
+					android:textSize="12sp"
+					tools:text="xxxx-xx-xx xx:xx" />
+
+		</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical">
+
+			<TextView
+					android:id="@+id/priceTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:ellipsize="end"
+					android:gravity="right"
+					android:maxLines="1"
+					android:textColor="@color/black_3"
+					android:textSize="13sp"
+					tools:text="-￥0.00" />
+
+			<TextView
+					android:id="@+id/statusTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="5dp"
+					android:ellipsize="end"
+					android:gravity="right"
+					android:maxLines="1"
+					android:textColor="@color/gray_9"
+					android:textSize="12sp"
+					tools:text="提现成功" />
+		</LinearLayout>
+
+
+	</LinearLayout>
+
+
+	<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:background="@color/gray_F5" />
+</LinearLayout>

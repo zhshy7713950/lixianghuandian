@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+			android:orientation="vertical"
+			android:layout_margin="10dp"
+			app:qmui_borderColor="@color/app_color"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_radius="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<LinearLayout
+				android:layout_margin="10dp"
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_money_credit_contract"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="合同金额：3000"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+				<TextView
+						android:id="@+id/tv_cycle_credit_contract"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="分期期数：8期"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical|right"
+						android:layout_height="match_parent"/>
+			</LinearLayout>
+
+
+
+		</LinearLayout>
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+	<TextView
+			android:layout_margin="10dp"
+			android:gravity="center"
+			android:text="合同预览"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+	<ImageView
+			android:src="@drawable/bg_credit_contract"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+
+	<LinearLayout
+			android:layout_marginTop="10dp"
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<androidx.viewpager.widget.ViewPager
+				android:clipToPadding="false"
+				android:paddingBottom="24dp"
+				android:paddingLeft="80dp"
+				android:paddingRight="80dp"
+				android:layout_weight="1"
+				android:id="@+id/vp_credit_contract"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"/>
+
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+				android:layout_marginBottom="10dp"
+				android:layout_marginTop="10dp"
+				android:textSize="12sp"
+				android:id="@+id/btn_credit_contract"
+				android:layout_marginLeft="25dp"
+				android:layout_marginRight="25dp"
+				android:layout_width="match_parent"
+				app:qmui_backgroundColor="@color/app_color"
+				app:qmui_borderColor="@color/app_color"
+				android:textColor="@color/white"
+				android:text="我已阅读并同意合同内容"
+				android:layout_gravity="center"
+				android:layout_height="50dp"/>
+
+	</LinearLayout>
+
+
+</LinearLayout>

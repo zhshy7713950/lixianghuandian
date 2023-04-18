@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/bg_gray"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp">
+
+
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:gravity="center"
+					android:text="当前电池" />
+
+
+			<com.flyco.roundview.RoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginRight="20dp"
+					android:layout_marginBottom="20dp"
+					android:orientation="vertical"
+					android:padding="10dp"
+					app:rv_backgroundColor="@color/white"
+					app:rv_cornerRadius="5dp">
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:id="@+id/tv_device_num_current"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="编号：1226" />
+
+
+					<TextView
+							android:id="@+id/tv_rent_long_current"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="租期：9个月" />
+				</LinearLayout>
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:id="@+id/tv_device_model_current"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="型号：60V  40ah" />
+
+					<TextView
+							android:id="@+id/tv_deposit_current"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="押金：￥800.00" />
+
+				</LinearLayout>
+
+
+			</com.flyco.roundview.RoundLinearLayout>
+
+
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:gravity="center"
+					android:text="更换为" />
+
+
+			<com.flyco.roundview.RoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginRight="20dp"
+					android:layout_marginBottom="20dp"
+					android:orientation="vertical"
+					android:padding="10dp"
+					app:rv_backgroundColor="@color/white"
+					app:rv_cornerRadius="5dp">
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:id="@+id/tv_device_num_new"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="编号：1226" />
+
+
+					<TextView
+							android:id="@+id/tv_rent_long_new"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="租期：9个月" />
+				</LinearLayout>
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:id="@+id/tv_device_model_new"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="型号：60V  40ah" />
+
+					<TextView
+							android:id="@+id/tv_deposit_new"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="押金：￥800.00" />
+
+				</LinearLayout>
+
+
+			</com.flyco.roundview.RoundLinearLayout>
+
+
+			<TextView
+					android:id="@+id/tv_tips_status"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:gravity="center"
+					tools:text="您需要补充的费用金额为" />
+
+
+			<com.flyco.roundview.RoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginRight="20dp"
+					android:layout_marginBottom="20dp"
+					android:orientation="vertical"
+					android:padding="10dp"
+					app:rv_backgroundColor="@color/white"
+					app:rv_cornerRadius="5dp">
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:id="@+id/tv_rent"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="租金：1226" />
+
+
+					<TextView
+							android:id="@+id/tv_deposit"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="押金：999" />
+				</LinearLayout>
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="25dp">
+
+					<TextView
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical"
+							android:textColor="@color/black"
+							android:textSize="12sp" />
+
+					<TextView
+							android:id="@+id/tv_total"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center_vertical|right"
+							android:textColor="@color/black"
+							android:textSize="12sp"
+							tools:text="合计：￥800.00" />
+
+				</LinearLayout>
+
+
+			</com.flyco.roundview.RoundLinearLayout>
+
+
+<!--			<com.flyco.roundview.RoundLinearLayout-->
+<!--					android:id="@+id/inputCodeLayout"-->
+<!--					android:visibility="visible"-->
+<!--					android:layout_width="match_parent"-->
+<!--					android:layout_height="45dp"-->
+<!--					android:layout_marginLeft="20dp"-->
+<!--					android:layout_marginTop="10dp"-->
+<!--					android:layout_marginRight="20dp"-->
+<!--					android:layout_marginBottom="10dp"-->
+<!--					android:orientation="horizontal"-->
+<!--					app:rv_backgroundColor="@color/white"-->
+<!--					app:rv_cornerRadius="5dp">-->
+
+				<LinearLayout
+						android:id="@+id/inputCodeLayout"
+						android:layout_width="match_parent"
+						android:layout_height="45dp"
+						android:layout_marginLeft="20dp"
+						android:layout_marginTop="10dp"
+						android:layout_marginRight="20dp"
+						android:layout_marginBottom="10dp"
+						android:background="@drawable/rectangle_white_bg"
+						android:orientation="horizontal">
+
+					<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="match_parent"
+							android:layout_marginLeft="10dp"
+							android:gravity="center"
+							android:textSize="13sp"
+							android:textColor="@color/black"
+							android:text="代理验证码：" />
+
+
+					<EditText
+							android:id="@+id/inputCode"
+							android:layout_width="0dp"
+							android:layout_weight="3"
+							android:layout_height="match_parent"
+							android:textSize="13sp"
+							android:textColor="@color/black"
+							android:textColorHint="@color/gray_7d"
+							android:gravity="center_vertical"
+							android:paddingLeft="10dp"
+							android:inputType="number"
+							android:background="@null"
+							android:hint="请输入代理验证码"/>
+				</LinearLayout>
+
+
+<!--			</com.flyco.roundview.RoundLinearLayout>-->
+
+
+			<com.flyco.roundview.RoundTextView
+					android:id="@+id/rtv_submit"
+					android:layout_width="match_parent"
+					android:layout_height="45dp"
+					android:layout_margin="30dp"
+					android:gravity="center"
+					android:textColor="@color/white"
+					app:rv_backgroundColor="@color/app_color"
+					app:rv_cornerRadius="20dp"
+					app:rv_isRippleEnable="true" />
+
+
+		</LinearLayout>
+
+	</ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/bg_gray"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:orientation="horizontal">
+
+				<View
+						android:layout_width="0dp"
+						android:layout_height="0dp"
+						android:layout_weight="1" />
+
+				<ImageView
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_gravity="center"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_light_follow_wechat" />
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="match_parent"
+						android:gravity="center"
+						android:paddingLeft="10dp"
+						android:paddingRight="10dp"
+						android:text="方式一" />
+
+				<ImageView
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_gravity="center"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_light_follow_wechat" />
+
+				<View
+						android:layout_width="0dp"
+						android:layout_height="0dp"
+						android:layout_weight="1" />
+			</LinearLayout>
+
+
+			<com.flyco.roundview.RoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="10dp"
+					android:orientation="vertical"
+					android:padding="10dp"
+					app:rv_backgroundColor="@color/white"
+					app:rv_cornerRadius="10dp">
+
+				<TextView
+						android:layout_width="match_parent"
+						android:layout_height="30dp"
+						android:gravity="center_vertical"
+						android:text="一、保存下方二维码" />
+
+
+				<ImageView
+						android:id="@+id/iv_qr"
+						android:layout_width="80dp"
+						android:layout_height="80dp"
+						android:layout_gravity="center"
+						android:layout_margin="10dp"
+						android:src="@drawable/wechat_account_qr" />
+
+
+				<com.flyco.roundview.RoundTextView
+						android:id="@+id/tv_save_qr"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:layout_margin="10dp"
+						android:paddingLeft="15dp"
+						android:paddingTop="5dp"
+						android:paddingRight="15dp"
+						android:paddingBottom="5dp"
+						android:text="保存到手机"
+						android:textColor="@color/white"
+						app:rv_backgroundColor="@color/app_color"
+						app:rv_cornerRadius="15dp" />
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="10dp"
+						android:orientation="horizontal">
+
+					<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="30dp"
+							android:layout_gravity="center"
+							android:gravity="center_vertical"
+							android:text="二、打开微信扫扫识别并关注" />
+
+					<com.flyco.roundview.RoundTextView
+							android:id="@+id/tv_open_wechat"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_gravity="center"
+							android:layout_margin="10dp"
+							android:paddingLeft="20dp"
+							android:paddingTop="5dp"
+							android:paddingRight="20dp"
+							android:paddingBottom="5dp"
+							android:text="打开微信"
+							android:textColor="@color/white"
+							android:textSize="12sp"
+							app:rv_backgroundColor="@color/app_color"
+							app:rv_cornerRadius="15dp" />
+
+				</LinearLayout>
+
+
+				<ImageView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginBottom="20dp"
+						android:adjustViewBounds="true"
+						android:src="@drawable/icon_way_one_follow_wechat" />
+
+
+			</com.flyco.roundview.RoundLinearLayout>
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_marginTop="10dp"
+					android:orientation="horizontal">
+
+				<View
+						android:layout_width="0dp"
+						android:layout_height="0dp"
+						android:layout_weight="1" />
+
+				<ImageView
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_gravity="center"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_light_follow_wechat" />
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="match_parent"
+						android:gravity="center"
+						android:paddingLeft="10dp"
+						android:paddingRight="10dp"
+						android:text="方式二" />
+
+				<ImageView
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_gravity="center"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_light_follow_wechat" />
+
+				<View
+						android:layout_width="0dp"
+						android:layout_height="0dp"
+						android:layout_weight="1" />
+			</LinearLayout>
+
+
+			<com.flyco.roundview.RoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="10dp"
+					android:orientation="vertical"
+					android:padding="10dp"
+					app:rv_backgroundColor="@color/white"
+					app:rv_cornerRadius="10dp">
+
+
+				<TextView
+						android:layout_width="match_parent"
+						android:layout_height="30dp"
+						android:gravity="center_vertical"
+						android:text="一、点击右侧复制按钮复制公众号" />
+
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="10dp"
+						android:orientation="horizontal">
+
+					<View
+							android:layout_width="0dp"
+							android:layout_height="0dp"
+							android:layout_weight="1" />
+
+					<TextView
+							android:id="@+id/tv_wecaht_account"
+							android:layout_width="wrap_content"
+							android:layout_height="30dp"
+							android:layout_gravity="center"
+							android:gravity="center_vertical"
+							android:text="享锂来"
+							android:textColor="@color/app_red" />
+
+					<com.flyco.roundview.RoundTextView
+							android:id="@+id/tv_copy_wechat_account_name"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_gravity="center"
+							android:layout_marginLeft="10dp"
+							android:paddingLeft="20dp"
+							android:paddingTop="5dp"
+							android:paddingRight="20dp"
+							android:paddingBottom="5dp"
+							android:text="一键复制"
+							android:textColor="@color/white"
+							android:textSize="12sp"
+							app:rv_backgroundColor="@color/app_color"
+							app:rv_cornerRadius="15dp" />
+
+					<View
+							android:layout_width="0dp"
+							android:layout_height="0dp"
+							android:layout_weight="1" />
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="10dp"
+						android:orientation="horizontal">
+
+					<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="30dp"
+							android:layout_gravity="center"
+							android:gravity="center_vertical"
+							android:text="二、点击按钮打开微信搜索公众号" />
+
+					<com.flyco.roundview.RoundTextView
+							android:id="@+id/tv_open_wechat_way_two"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_gravity="center"
+							android:layout_marginLeft="10dp"
+							android:paddingLeft="10dp"
+							android:paddingTop="5dp"
+							android:paddingRight="10dp"
+							android:paddingBottom="5dp"
+							android:text="打开微信"
+							android:textColor="@color/white"
+							android:textSize="12sp"
+							app:rv_backgroundColor="@color/app_color"
+							app:rv_cornerRadius="15dp" />
+
+				</LinearLayout>
+
+
+				<ImageView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginBottom="20dp"
+						android:adjustViewBounds="true"
+						android:src="@drawable/icon_way_two_follow_wechat" />
+
+
+			</com.flyco.roundview.RoundLinearLayout>
+
+
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

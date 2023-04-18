@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/bg_gray"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+	<com.flyco.roundview.RoundLinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/ll_alipay_rent_installment_payment"
+			android:layout_width="match_parent"
+			android:layout_height="120dp"
+			android:layout_margin="30dp"
+			android:orientation="vertical"
+			app:rv_backgroundColor="@color/white"
+			app:rv_cornerRadius="10dp">
+
+		<ImageView
+				android:layout_width="100dp"
+				android:layout_height="80dp"
+				android:layout_gravity="center"
+				android:scaleType="centerInside"
+				android:src="@drawable/icon_alipay_rent_installment_payment" />
+
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:background="@color/bg_gray" />
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:gravity="center"
+				android:text="支付宝在线支付" />
+
+	</com.flyco.roundview.RoundLinearLayout>
+
+
+	<com.flyco.roundview.RoundLinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+			android:id="@+id/ll_bank_rent_installment_payment"
+			android:layout_width="match_parent"
+			android:layout_height="120dp"
+			android:layout_margin="30dp"
+			android:orientation="vertical"
+			app:rv_backgroundColor="@color/white"
+			app:rv_cornerRadius="10dp">
+
+		<ImageView
+				android:layout_width="100dp"
+				android:layout_height="80dp"
+				android:layout_gravity="center"
+				android:scaleType="centerInside"
+				android:src="@drawable/icon_bank_rent_installment_payment" />
+
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:background="@color/bg_gray" />
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:gravity="center"
+				android:text="银行卡支付" />
+
+	</com.flyco.roundview.RoundLinearLayout>
+
+</LinearLayout>

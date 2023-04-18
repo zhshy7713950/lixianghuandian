@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/white"
+		android:orientation="vertical">
+
+	<include layout="@layout/layout_topbar" />
+
+	<LinearLayout
+			android:id="@+id/ll_try_to_submit_truename"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/white"
+			android:orientation="vertical">
+
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginLeft="20dp"
+				android:layout_marginTop="20dp"
+				android:gravity="center_vertical"
+				android:text="请输入准确的身份信息，以确保您的合法权益得到 保障: "
+				android:textSize="16sp" />
+
+		<com.flyco.roundview.RoundFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="20dp"
+				android:layout_marginTop="20dp"
+				android:layout_marginRight="20dp"
+				app:rv_backgroundColor="@color/bg_gray"
+				app:rv_cornerRadius="10dp">
+
+
+			<EditText
+					android:id="@+id/et_name_truename"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_alignParentBottom="true"
+					android:layout_marginLeft="10dp"
+					android:background="@color/transparent"
+					android:gravity="center_vertical"
+					android:hint="请输入您的真实姓名"
+					android:textSize="12sp" />
+
+
+		</com.flyco.roundview.RoundFrameLayout>
+
+
+		<com.flyco.roundview.RoundFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="20dp"
+				android:layout_marginTop="20dp"
+				android:layout_marginRight="20dp"
+				app:rv_backgroundColor="@color/bg_gray"
+				app:rv_cornerRadius="10dp">
+
+
+			<EditText
+					android:id="@+id/et_idcard_truename"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_alignParentBottom="true"
+					android:layout_marginLeft="10dp"
+					android:background="@color/transparent"
+					android:gravity="center_vertical"
+					android:hint="请输入您的18位身份证号码"
+					android:maxLength="18"
+					android:textSize="12sp" />
+
+
+		</com.flyco.roundview.RoundFrameLayout>
+
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:id="@+id/btn_submit_truename"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginLeft="40dp"
+				android:layout_marginTop="80dp"
+				android:layout_marginRight="40dp"
+				android:text="提交认证"
+				android:textColor="@color/white"
+				app:qmui_backgroundColor="@color/app_color"
+				app:qmui_borderColor="@color/app_color" />
+	</LinearLayout>
+
+
+</LinearLayout>

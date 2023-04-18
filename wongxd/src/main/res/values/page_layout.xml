@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="page_error">网络开小差了</string>
+
+    <string name="page_error_retry">点击重试</string>
+
+    <string name="page_empty">暂无新数据</string>
+
+
+    <color name="blink_color">#b1b1b1</color>
+
+    <color name="shimmer_color">#a2878787</color>
+
+
+
+    <declare-styleable name="BlinkLayout">
+
+        <attr name="blink_color" format="color|reference"/>
+
+        <attr name="blink_animation_duration" format="integer|reference"/>
+
+    </declare-styleable>
+</resources>

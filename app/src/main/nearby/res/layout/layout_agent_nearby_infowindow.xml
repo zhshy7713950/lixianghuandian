@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:background="@drawable/custom_info_bubble"
+              android:layout_width="150dp"
+              android:layout_margin="10dp"
+              android:padding="10dp"
+              android:layout_height="wrap_content">
+
+	<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textSize="12sp"
+				android:text="代理商："
+				android:textColor="@color/black"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_agent_name"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:textSize="12sp"
+				tools:text="代理商：代理商代理商"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+
+	<LinearLayout
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textSize="12sp"
+				android:text="电话："
+				android:textColor="@color/black"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_agent_phone"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:textSize="12sp"
+				tools:text="028-111111111"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+
+	<LinearLayout
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textSize="12sp"
+				android:text="地址："
+				android:textColor="@color/black"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_agent_location"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:textSize="12sp"
+				tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+
+	<LinearLayout
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textSize="12sp"
+				android:text="公告："
+				android:textColor="@color/black"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_agent_msg"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:textSize="12sp"
+				tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+
+	<Button
+			android:id="@+id/btn_navi_here"
+			android:layout_margin="10dp"
+			android:textSize="12sp"
+			android:textColor="@color/white"
+			android:text="去这里"
+			android:background="@color/app_color"
+			android:layout_width="match_parent"
+			android:layout_height="30dp"/>
+
+</LinearLayout>

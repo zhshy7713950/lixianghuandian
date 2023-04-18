@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="160dp">
+
+		<RelativeLayout
+
+				android:id="@+id/rl_pass_info_credit_sys"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+			<ImageView
+					android:id="@+id/iv_credit_header_me"
+					android:layout_marginTop="20dp"
+					android:layout_marginLeft="20dp"
+					android:src="@drawable/credit_header_me"
+					android:layout_width="80dp"
+					android:layout_height="80dp"/>
+
+			<ImageView
+					android:id="@+id/iv_credit_sign_me"
+					android:layout_marginLeft="60dp"
+					android:layout_marginTop="60dp"
+					android:src="@drawable/credit_sign_me"
+					android:layout_width="50dp"
+					android:layout_height="50dp"/>
+
+
+			<TextView
+					android:layout_alignTop="@+id/iv_credit_header_me"
+					android:layout_marginLeft="15dp"
+					android:layout_toRightOf="@+id/iv_credit_sign_me"
+					tools:text="姓名：张全蛋"
+					android:textSize="14sp"
+					android:id="@+id/tv_name"
+					android:gravity="center_vertical"
+					android:layout_width="wrap_content"
+					android:layout_height="26dp"/>
+
+
+			<TextView
+					android:layout_below="@+id/tv_name"
+					android:layout_marginLeft="15dp"
+					android:layout_toRightOf="@+id/iv_credit_sign_me"
+					tools:text="性别：男"
+					android:textSize="14sp"
+					android:id="@+id/tv_gender"
+					android:gravity="center_vertical"
+					android:layout_width="wrap_content"
+					android:layout_height="26dp"/>
+
+			<TextView
+					android:layout_below="@+id/tv_gender"
+					android:layout_marginLeft="15dp"
+					android:layout_toRightOf="@+id/iv_credit_sign_me"
+					tools:text="证件号码：5100192154212032"
+					android:textSize="14sp"
+					android:id="@+id/tv_card_no"
+					android:gravity="center_vertical"
+					android:layout_width="wrap_content"
+					android:layout_height="26dp"/>
+
+
+		</RelativeLayout>
+
+
+		<LinearLayout
+				android:visibility="gone"
+				android:id="@+id/ll_not_pass_credit_sys"
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+			<ImageView
+					android:layout_marginTop="10dp"
+					android:layout_gravity="center"
+					android:src="@drawable/credit_black"
+					android:layout_width="60dp"
+					android:layout_height="60dp"/>
+
+			<TextView
+					android:padding="5dp"
+					android:gravity="center"
+					android:text="您还没有认证信用体系"
+					android:textSize="14sp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+					android:id="@+id/btn_req_credit_sys"
+					android:layout_width="200dp"
+					app:qmui_backgroundColor="@color/app_color"
+					app:qmui_borderColor="@color/app_color"
+					android:textColor="@color/white"
+					android:text="立即认证"
+					android:layout_gravity="center"
+					android:layout_height="40dp"/>
+		</LinearLayout>
+
+
+	</FrameLayout>
+
+	<View
+			android:background="@color/bg_gray"
+			android:layout_width="match_parent"
+			android:layout_height="5dp"/>
+
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:id="@+id/srl_credit_sys"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.scwang.smartrefresh.header.MaterialHeader
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<androidx.recyclerview.widget.RecyclerView
+				android:layout_marginTop="5dp"
+				android:id="@+id/rv_credit_sys"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>

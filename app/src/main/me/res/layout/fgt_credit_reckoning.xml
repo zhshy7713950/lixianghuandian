@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+			android:orientation="vertical"
+			android:layout_margin="10dp"
+			app:qmui_borderColor="@color/app_color"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_radius="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="95dp">
+
+		<LinearLayout
+				android:layout_margin="10dp"
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_battery_num_credit_reckoning"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="设备编号：1025"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+				<TextView
+						android:id="@+id/tv_battery_model_credit_reckoning"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="设备型号：60V-40AH"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical|right"
+						android:layout_height="match_parent"/>
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_rent_long_credit_reckoning"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="租赁周期：8个月"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+				<TextView
+						android:id="@+id/tv_sign_status_credit_reckoning"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="签约状态:"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical|right"
+						android:layout_height="match_parent"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="25dp">
+
+				<TextView
+						android:id="@+id/tv_next_pay_time_credit_reckoning"
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						tools:text="下一还款日：暂无"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical"
+						android:layout_height="match_parent"/>
+
+
+				<TextView
+						android:layout_width="0dp"
+						android:layout_weight="1"
+						android:textSize="12sp"
+						android:textColor="@color/white"
+						android:gravity="center_vertical|right"
+						android:layout_height="match_parent"/>
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+	<View
+			android:layout_width="match_parent"
+			android:layout_height="5dp"
+			android:layout_marginTop="10dp"
+			android:background="@color/bg_gray"/>
+
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:layout_marginTop="10dp"
+			app:srlEnableLoadMore="false"
+			app:srlEnableRefresh="false"
+			android:id="@+id/srl_credit_reckoning"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+		<com.scwang.smartrefresh.header.MaterialHeader
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rv_credit_reckoning"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

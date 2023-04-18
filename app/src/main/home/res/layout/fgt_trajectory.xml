@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.amap.api.maps.MapView
+				android:id="@+id/mapView_trajectory"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+				android:layout_margin="10dp"
+				android:layout_width="wrap_content"
+				xmlns:app="http://schemas.android.com/apk/res-auto"
+				app:qmui_radius="10dp"
+				app:qmui_borderColor="#85000000"
+				app:qmui_backgroundColor="#85000000"
+				android:padding="3dp"
+				android:layout_height="wrap_content">
+
+			<TextView
+					android:id="@+id/tv_selected_date_trajectory"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="8dp"
+					android:textColor="@color/white"
+					android:textSize="10sp"
+					android:text="当前选择日期"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+	</FrameLayout>
+</LinearLayout>

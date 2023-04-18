@@ -1,0 +1,11 @@
+<resources>
+    <declare-styleable name="ElasticView">
+        <attr name="flexibility" format="float" />
+    </declare-styleable>
+
+
+
+    <color name="startColor">#59FFFFFF</color>
+    <color name="endColor">#23FFFFFF</color>
+
+</resources>

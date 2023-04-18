@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<LinearLayout
+				xmlns:app="http://schemas.android.com/apk/res-auto"
+				android:background="@color/bg_gray"
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+					android:padding="10dp"
+					android:orientation="vertical"
+					app:qmui_borderColor="@color/white"
+					app:qmui_radius="10dp"
+					app:qmui_backgroundColor="@color/white"
+					android:layout_margin="20dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<LinearLayout
+						android:id="@+id/ll_check_province_apply_agent"
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:id="@+id/tv_check_province_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="请选择省"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<ImageView
+							android:scaleType="centerInside"
+							android:tint="@color/grey"
+							android:src="@drawable/enter"
+							android:layout_marginRight="10dp"
+							android:layout_gravity="center_vertical"
+							android:layout_width="20dp"
+							android:layout_height="20dp"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:id="@+id/ll_check_city_apply_agent"
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:id="@+id/tv_check_city_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="请选择市"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<ImageView
+							android:scaleType="centerInside"
+							android:tint="@color/grey"
+							android:src="@drawable/enter"
+							android:layout_marginRight="10dp"
+							android:layout_gravity="center_vertical"
+							android:layout_width="20dp"
+							android:layout_height="20dp"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:id="@+id/ll_check_area_apply_agent"
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:id="@+id/tv_check_area_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="请选区/县"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<ImageView
+							android:scaleType="centerInside"
+							android:tint="@color/grey"
+							android:src="@drawable/enter"
+							android:layout_marginRight="10dp"
+							android:layout_gravity="center_vertical"
+							android:layout_width="20dp"
+							android:layout_height="20dp"/>
+
+				</LinearLayout>
+
+			</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+					android:padding="10dp"
+					android:orientation="vertical"
+					app:qmui_borderColor="@color/white"
+					app:qmui_radius="10dp"
+					app:qmui_backgroundColor="@color/white"
+					android:layout_margin="20dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="企业名称"
+							android:background="@color/transparent"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<EditText
+							android:id="@+id/et_agent_name_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_weight="2"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="姓名"
+							android:background="@color/transparent"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<EditText
+							android:id="@+id/et_name_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_weight="2"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="手机号"
+							android:background="@color/transparent"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<EditText
+							android:inputType="phone"
+							android:id="@+id/et_phone_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_weight="2"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="40dp">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="身份证号码"
+							android:background="@color/transparent"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<EditText
+							android:id="@+id/et_idcard_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_weight="2"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:minHeight="40dp"
+						android:layout_height="wrap_content">
+
+					<TextView
+							android:textColor="@color/text_color"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:text="详细地址"
+							android:background="@color/transparent"
+							android:layout_marginLeft="10dp"
+							android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"/>
+
+					<EditText
+							android:id="@+id/et_detail_adress_apply_agent"
+							android:gravity="center_vertical"
+							android:textSize="12sp"
+							android:background="@color/transparent"
+							android:layout_marginRight="10dp"
+							android:layout_weight="2"
+							android:layout_width="0dp"
+							android:minHeight="40dp"
+							android:layout_height="wrap_content"/>
+
+				</LinearLayout>
+
+
+			</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+			<FrameLayout
+					android:background="@drawable/shape_round_dotted_line"
+					android:id="@+id/fl_upload_business_license_apply_agent"
+					android:layout_margin="20dp"
+					android:layout_width="match_parent"
+					android:layout_height="200dp">
+
+
+				<TextView
+						android:text="点击上传营业执照"
+						android:gravity="center"
+						android:textColor="@color/text_color"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"/>
+
+				<ImageView
+						android:layout_margin="10dp"
+						android:id="@+id/iv_business_license_apply_agent"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"/>
+
+			</FrameLayout>
+
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+					xmlns:app="http://schemas.android.com/apk/res-auto"
+					android:elevation="2dp"
+					android:id="@+id/btn_submit_apply_agent"
+					android:layout_width="match_parent"
+					app:qmui_borderColor="@color/app_color"
+					app:qmui_backgroundColor="@color/app_color"
+					android:layout_margin="30dp"
+					android:textColor="@color/white"
+					android:text="提交申请"
+					android:layout_height="45dp"/>
+
+		</LinearLayout>
+	</ScrollView>
+
+</LinearLayout>

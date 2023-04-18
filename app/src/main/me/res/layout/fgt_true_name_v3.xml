@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/white"
+		android:orientation="vertical">
+
+
+	<include layout="@layout/layout_topbar" />
+
+	<ScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<LinearLayout
+				android:id="@+id/ll_try_to_submit_truename"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/white"
+				android:orientation="vertical">
+
+
+			<TextView
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_marginLeft="20dp"
+					android:gravity="center_vertical"
+					android:text="请上传您的身份证件："
+					android:textSize="14sp" />
+
+			<com.flyco.roundview.RoundFrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="180dp"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="10dp"
+					android:layout_marginRight="20dp"
+					app:rv_backgroundColor="@color/bg_gray"
+					app:rv_cornerRadius="10dp">
+
+				<ImageView
+						android:id="@+id/iv_front_true_name"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_front_true_name_v3" />
+
+			</com.flyco.roundview.RoundFrameLayout>
+
+
+			<com.flyco.roundview.RoundFrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="180dp"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="40dp"
+					android:layout_marginRight="20dp"
+					app:rv_backgroundColor="@color/bg_gray"
+					app:rv_cornerRadius="10dp">
+
+				<ImageView
+						android:id="@+id/iv_back_true_name"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_back_true_name_v3" />
+			</com.flyco.roundview.RoundFrameLayout>
+
+
+			<com.flyco.roundview.RoundFrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="180dp"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="40dp"
+					android:layout_marginRight="20dp"
+					app:rv_backgroundColor="@color/bg_gray"
+					app:rv_cornerRadius="10dp">
+
+				<ImageView
+						android:id="@+id/iv_hand_card_true_name"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:scaleType="centerInside"
+						android:src="@drawable/icon_hand_card_true_name_v3" />
+
+			</com.flyco.roundview.RoundFrameLayout>
+
+
+			<com.flyco.roundview.RoundTextView
+					android:id="@+id/rtv_submit_true_name"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:layout_marginLeft="40dp"
+					android:layout_marginTop="40dp"
+					android:layout_marginRight="40dp"
+					android:layout_marginBottom="40dp"
+					android:gravity="center"
+					android:text="提交认证"
+					android:textColor="@color/white"
+					app:rv_backgroundColor="@color/app_color"
+					app:rv_backgroundPressColor="@color/bg_gray"
+					app:rv_isRadiusHalfHeight="true"
+					app:rv_isRippleEnable="true" />
+		</LinearLayout>
+
+	</ScrollView>
+
+
+</LinearLayout>

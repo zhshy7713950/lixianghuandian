@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@color/bg_gray"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<ImageView
+			android:background="@color/white"
+			android:src="@drawable/bg_fgt_control"
+			android:layout_width="match_parent"
+			android:layout_height="200dp"/>
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+			app:qmui_radius="10dp"
+			app:qmui_backgroundColor="@color/white"
+			app:qmui_borderColor="@color/white"
+			android:elevation="2dp"
+			android:layout_margin="10dp"
+			android:layout_width="match_parent"
+			android:layout_height="60dp">
+
+		<TextView
+				android:textColor="@color/app_color"
+				android:paddingLeft="20dp"
+				android:gravity="center_vertical"
+				android:text="电源总开关"
+				android:layout_weight="1"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"/>
+
+		<Switch
+				android:id="@+id/switcher_fgt_control"
+				android:layout_marginRight="20dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+</LinearLayout>

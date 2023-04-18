@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.flyco.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:orientation="vertical"
+        app:rv_backgroundColor="@color/white"
+        app:rv_cornerRadius="10dp">
+
+    <com.flyco.roundview.RoundTextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="请选择您要支付的方式"
+            android:textColor="@color/white"
+            app:rv_backgroundColor="@color/app_color"
+            app:rv_cornerRadius_TL="10dp"
+            app:rv_cornerRadius_TR="10dp" />
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal">
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        <LinearLayout
+                android:id="@+id/ll_wechat_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/wechat" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="微信支付" />
+
+        </LinearLayout>
+
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1.5" />
+
+
+        <LinearLayout
+                android:id="@+id/ll_alipay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/alipay" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="支付宝支付" />
+
+        </LinearLayout>
+
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+    <com.flyco.roundview.RoundTextView
+            android:id="@+id/rtv_submit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:text="确认"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:rv_backgroundColor="@color/app_color"
+            app:rv_backgroundPressColor="@color/bg_gray"
+            app:rv_isRadiusHalfHeight="true"
+            app:rv_isRippleEnable="true" />
+
+
+</com.flyco.roundview.RoundLinearLayout>

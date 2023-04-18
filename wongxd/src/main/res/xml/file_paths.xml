@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+		tools:ignore="MissingDefaultResource">
+	<paths>
+		<!--files-path：          该方式提供在应用的内部存储区的文件/子目录的文件。-->
+		<!--它对应Context.getFilesDir返回的路径：eg:”/data/data/com.***.***/files”。-->
+
+		<!--cache-path：          该方式提供在应用的内部存储区的缓存子目录的文件。-->
+		<!--它对应Context.getCacheDir返回的路:eg:“/data/data/com.***.***/cache”；-->
+
+		<!--external-path：       该方式提供在外部存储区域根目录下的文件。-->
+		<!--它对应Environment.getExternalStorageDirectory返回的路径-->
+
+		<!--external-files-path:  Context.getExternalFilesDir(null)-->
+
+		<!--external-cache-path： Context.getExternalCacheDir(String)-->
+		<!--上述代码中path=”“，是有特殊意义的，它代码根目录，也就是说你可以向其它的应用共享根目录及其子目录下任何一个文件了，
+		如果你将path设为path=”pictures”， 那么它代表着根目录下的pictures目录(eg:/storage/emulated/0/pictures)，
+		如果你向其它应用分享pictures目录范围之外的文件是不行的。-->
+
+
+		<root-path
+				name="root_path"
+				path="." />
+		<files-path
+				name="files_path"
+				path="." />
+		<cache-path
+				name="cache_path"
+				path="." />
+		<external-path
+				name="external_path"
+				path="." />
+		<external-files-path
+				name="external_file_path"
+				path="." />
+		<external-cache-path
+				name="external_cache_path"
+				path="." />
+	</paths>
+</resources>

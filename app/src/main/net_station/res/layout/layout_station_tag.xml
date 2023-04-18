@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                           xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                           xmlns:tools="http://schemas.android.com/tools"
+                                                           android:orientation="vertical"
+                                                           app:qmui_borderWidth="1dp"
+                                                           app:qmui_borderColor="@color/text_color"
+                                                           app:qmui_backgroundColor="@color/white"
+                                                           app:qmui_radius="5dp"
+                                                           android:paddingLeft="8dp"
+                                                           android:paddingRight="8dp"
+                                                           android:paddingTop="3dp"
+                                                           android:paddingBottom="3dp"
+                                                           android:layout_gravity="center"
+                                                           android:layout_width="wrap_content"
+                                                           android:layout_height="wrap_content">
+	<TextView
+			android:id="@+id/tv"
+			android:textSize="10sp"
+			tools:text = "测试TAG"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>

@@ -1,0 +1,147 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+
+apply from: '../wongxd/config.gradle'
+//读取Git commit number
+static def getGitCommitNumber() {
+//    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
+    return 594
+}
+
+
+//读取Git Tag
+static def getGitTag() {
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
+    catch (ignored) {
+        return "1.0.0"
+    }
+}
+
+
+//读取Git日志
+static def getGitVersionInfo() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
+}
+
+
+android {
+
+    defaultConfig {
+        applicationId "com.ruimeng.things"
+        versionCode getGitCommitNumber()
+        versionName "1.0.${getGitCommitNumber()}"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            //abiFilters "armeabi-v7a", 'x86', "arm64-v8a"//"armeabi",
+        }
+    }
+
+
+    signingConfigs {
+        release {
+            storeFile file("app.keystore")
+            storePassword "123456"
+            keyAlias "jh"
+            keyPassword "123456"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            //def date = new Date().format("yyyyMMdd" , TimeZone.getTimeZone("Asia/Shanghai"))
+//            def date = new Date().format("yyyy-MM-dd hh.mm", TimeZone.getTimeZone("GMT+08"))
+            if (variant.buildType.name == 'debug') {
+                outputFileName = "享锂来租赁_${versionName}-debug.apk"
+            }
+            if (variant.buildType.name == 'release') {
+//                outputFileName = "享锂来租赁_${date}_${versionName}-release.apk"
+                outputFileName = "享锂来租赁_${versionName}.apk"
+            }
+        }
+    }
+
+
+    sourceSets {
+        main {
+
+            java.srcDir("src/main/agent/java")
+            res.srcDir("src/main/agent/res")
+
+
+            java.srcDir("src/main/java")
+            res.srcDir("src/main/res")
+
+            def dirs = [
+                    'custom', 'home', 'nearby', 'net_station', 'msg', 'shop', 'me'
+            ]
+            dirs.each { dir ->
+                res.srcDir("src/main/$dir/res")
+            }
+
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+
+    api project(':wongxd')
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.flyco.roundview:FlycoRoundView_Lib:1.1.4@aar'
+    //高德地图
+    //定位
+    //noinspection GradleDependency
+    api 'com.amap.api:location:5.4.0'
+    //搜索
+    //noinspection GradleDependency
+    api 'com.amap.api:search:7.9.0'
+    //3D地图
+    //noinspection GradleDependency
+    api 'com.amap.api:3dmap:8.0.0'
+    implementation files('libs/Amap_2DMap_V5.2.0_20170627.jar')
+//    //3D地图so及jar
+//    implementation 'com.amap.api:3dmap:latest.integration'
+//    //定位功能
+//    compileOnly 'com.amap.api:location:latest.integration'
+//    //搜索功能
+//    implementation 'com.amap.api:search:latest.integration'
+
+    implementation("com.aliyun.ams:alicloud-android-push:3.1.6") {
+        exclude group: 'com.ta.utdid2' //by group
+        exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
+    }
+
+}

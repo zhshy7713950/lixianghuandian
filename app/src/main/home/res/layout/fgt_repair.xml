@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<com.qmuiteam.qmui.widget.QMUITabSegment
+			android:id="@+id/tab_repair"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"/>
+
+
+	<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<ScrollView
+				android:id="@+id/scrollView_repair"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+			<LinearLayout
+					android:orientation="vertical"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+				<FrameLayout
+						android:layout_marginTop="10dp"
+						android:padding="10dp"
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
+
+					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+							android:id="@+id/fl_energy_repair"
+							app:qmui_backgroundColor="@color/bg_gray"
+							app:qmui_borderColor="@color/bg_gray"
+							app:qmui_radius="10dp"
+							android:layout_marginLeft="30dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:layout_width="wrap_content"
+							android:layout_height="35dp">
+
+						<LinearLayout
+								android:layout_gravity="center"
+								android:orientation="horizontal"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content">
+
+							<TextView
+									android:id="@+id/tv_energy_repair"
+									android:text="电量问题"
+									android:textColor="@color/app_color"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"/>
+
+							<ImageView
+									android:id="@+id/iv_energy_repair"
+									android:layout_marginLeft="5dp"
+									android:src="@drawable/face_bad"
+									android:layout_width="20dp"
+									android:layout_height="20dp"/>
+						</LinearLayout>
+					</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+							android:id="@+id/fl_u_repair"
+							android:layout_marginRight="30dp"
+							android:layout_gravity="right"
+							app:qmui_backgroundColor="@color/bg_gray"
+							app:qmui_borderColor="@color/bg_gray"
+							app:qmui_radius="10dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:layout_width="wrap_content"
+							android:layout_height="35dp">
+
+						<LinearLayout
+								android:layout_gravity="center"
+								android:orientation="horizontal"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content">
+
+							<TextView
+									android:id="@+id/tv_u_repair"
+									android:text="电压问题"
+									android:textColor="@color/app_color"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"/>
+
+							<ImageView
+									android:id="@+id/iv_u_repair"
+									android:layout_marginLeft="5dp"
+									android:src="@drawable/face_bad"
+									android:layout_width="20dp"
+									android:layout_height="20dp"/>
+						</LinearLayout>
+					</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+
+				</FrameLayout>
+
+				<FrameLayout
+						android:layout_marginBottom="10dp"
+						android:padding="10dp"
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
+
+					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+							android:id="@+id/fl_skin_repair"
+							app:qmui_backgroundColor="@color/bg_gray"
+							app:qmui_borderColor="@color/bg_gray"
+							app:qmui_radius="10dp"
+							android:layout_marginLeft="30dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:layout_width="wrap_content"
+							android:layout_height="35dp">
+
+						<LinearLayout
+								android:layout_gravity="center"
+								android:orientation="horizontal"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content">
+
+							<TextView
+									android:id="@+id/tv_skin_repair"
+									android:text="外壳损坏"
+									android:textColor="@color/app_color"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"/>
+
+							<ImageView
+									android:id="@+id/iv_skin_repair"
+									android:layout_marginLeft="5dp"
+									android:src="@drawable/face_bad"
+									android:layout_width="20dp"
+									android:layout_height="20dp"/>
+						</LinearLayout>
+					</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+							android:id="@+id/fl_other_repair"
+							android:layout_marginRight="30dp"
+							android:layout_gravity="right"
+							app:qmui_backgroundColor="@color/bg_gray"
+							app:qmui_borderColor="@color/bg_gray"
+							app:qmui_radius="10dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:layout_width="wrap_content"
+							android:layout_height="35dp">
+
+						<LinearLayout
+								android:layout_gravity="center"
+								android:orientation="horizontal"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content">
+
+							<TextView
+									android:id="@+id/tv_other_repair"
+									android:text="其他问题"
+									android:textColor="@color/app_color"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"/>
+
+							<ImageView
+									android:id="@+id/iv_other_repair"
+									android:layout_marginLeft="5dp"
+									android:src="@drawable/face_bad"
+									android:layout_width="20dp"
+									android:layout_height="20dp"/>
+						</LinearLayout>
+					</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+
+				</FrameLayout>
+
+
+				<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+						app:qmui_radius="5dp"
+						android:layout_margin="10dp"
+						app:qmui_borderColor="@color/bg_gray"
+						app:qmui_backgroundColor="@color/bg_gray"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
+
+					<EditText
+							android:layout_margin="10dp"
+							android:textSize="14sp"
+							android:hint="请您详细描述问题内容"
+							android:background="@color/transparent"
+							android:id="@+id/et_repair"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"/>
+				</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+
+				<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+						android:layout_width="match_parent"
+						android:layout_marginLeft="20dp"
+						android:layout_marginRight="20dp"
+						android:layout_marginTop="35dp"
+						android:textColor="@color/white"
+						android:text="提交反馈"
+						android:id="@+id/btn_submit_repair"
+						app:qmui_borderColor="@color/app_color"
+						app:qmui_backgroundColor="@color/app_color"
+						android:layout_height="40dp"/>
+
+			</LinearLayout>
+
+		</ScrollView>
+
+		<com.scwang.smartrefresh.layout.SmartRefreshLayout
+				android:background="@color/white"
+				android:layout_width="match_parent"
+				android:visibility="gone"
+				android:id="@+id/srl_reapair_log"
+				android:layout_height="match_parent">
+
+			<com.scwang.smartrefresh.header.MaterialHeader
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" />
+
+			<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/rv_repair_log"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"/>
+		</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+	</FrameLayout>
+</LinearLayout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                            xmlns:tools="http://schemas.android.com/tools"
+                                                            android:orientation="vertical"
+                                                            android:layout_margin="10dp"
+                                                            app:qmui_borderColor="@color/app_color"
+                                                            app:qmui_backgroundColor="@color/app_color"
+                                                            app:qmui_radius="10dp"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="95dp">
+
+	<LinearLayout
+			android:layout_margin="10dp"
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="25dp">
+
+			<TextView
+					android:id="@+id/tv_battery_num_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					tools:text="设备编号：1025"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical"
+					android:layout_height="match_parent"/>
+
+
+			<TextView
+					android:id="@+id/tv_battery_model_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					tools:text="设备型号：60V-40AH"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical|right"
+					android:layout_height="match_parent"/>
+		</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="25dp">
+
+			<TextView
+					android:id="@+id/tv_rent_long_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					tools:text="租赁周期：8个月"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical"
+					android:layout_height="match_parent"/>
+
+
+			<TextView
+					android:id="@+id/tv_sign_status_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					tools:text="签约状态"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical|right"
+					android:layout_height="match_parent"/>
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+					android:id="@+id/fl_req_sign_credit_sys"
+					android:layout_width="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="5dp"
+					android:padding="4dp"
+					app:qmui_radius="5dp"
+					app:qmui_backgroundColor="@color/white"
+					app:qmui_borderColor="@color/white"
+					android:layout_height="wrap_content">
+
+				<TextView
+						android:textSize="10sp"
+						android:layout_gravity="center"
+						android:text="点击签约"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+			</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+		</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="25dp">
+
+			<TextView
+					android:id="@+id/tv_next_pay_time_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					tools:text="下一还款日：暂无"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical"
+					android:layout_height="match_parent"/>
+
+
+			<TextView
+					tools:text="首付：125"
+					android:id="@+id/tv_first_pay_credit_sys"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:textSize="12sp"
+					android:textColor="@color/white"
+					android:gravity="center_vertical|right"
+					android:layout_height="match_parent"/>
+
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+					android:id="@+id/fl_go_pay_first_credit_sys"
+					android:layout_width="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="5dp"
+					android:padding="4dp"
+					app:qmui_radius="5dp"
+					app:qmui_backgroundColor="@color/white"
+					app:qmui_borderColor="@color/white"
+					android:layout_height="wrap_content">
+
+				<TextView
+						android:textSize="10sp"
+						android:layout_gravity="center"
+						android:text="去支付"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+			</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+		</LinearLayout>
+
+	</LinearLayout>
+
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>

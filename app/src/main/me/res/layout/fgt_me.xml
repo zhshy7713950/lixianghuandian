@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/bg_gray"
+		android:orientation="vertical">
+
+	<com.qmuiteam.qmui.widget.QMUITopBar
+			android:id="@+id/topbar"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/topbar_height"
+			android:elevation="2dp" />
+
+	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:id="@+id/srl_me"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<com.scwang.smartrefresh.header.MaterialHeader
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="vertical">
+
+			<FrameLayout
+					android:layout_width="match_parent"
+					android:layout_height="210dp">
+
+
+				<RelativeLayout
+						android:layout_width="match_parent"
+						android:layout_height="170dp"
+						android:background="@drawable/bg_me">
+
+					<ImageView
+							android:id="@+id/iv_header_me"
+							android:layout_width="60dp"
+							android:layout_height="60dp"
+							android:layout_centerHorizontal="true"
+							android:layout_marginTop="15dp"
+							android:src="@drawable/header_me" />
+
+					<TextView
+							android:id="@+id/tv_username_me"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_below="@+id/iv_header_me"
+							android:layout_centerHorizontal="true"
+							android:paddingTop="5dp"
+							android:textColor="@color/white"
+							tools:text="13608065215" />
+
+
+					<com.flyco.roundview.RoundTextView
+							android:id="@+id/rtv_truename_status"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_below="@+id/tv_username_me"
+							android:layout_marginTop="5dp"
+							android:layout_toLeftOf="@+id/v_bind_status"
+							android:drawableLeft="@drawable/icon_not_truename_me"
+							android:drawablePadding="2dp"
+							android:padding="3dp"
+							android:textColor="@color/white"
+							android:textSize="12sp"
+							app:rv_cornerRadius="2dp"
+							app:rv_strokeColor="@color/white"
+							app:rv_strokeWidth="1dp"
+							tools:text="未实名认证" />
+
+
+					<View
+							android:id="@+id/v_bind_status"
+							android:layout_width="0dp"
+							android:layout_height="0dp"
+							android:layout_below="@+id/tv_username_me"
+							android:layout_centerHorizontal="true"
+							android:layout_marginLeft="5dp"
+							android:layout_marginTop="5dp"
+							android:layout_marginRight="5dp" />
+
+					<com.flyco.roundview.RoundTextView
+							android:id="@+id/rtv_bind_wechat_status"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_below="@+id/tv_username_me"
+							android:layout_marginTop="5dp"
+							android:layout_toRightOf="@+id/v_bind_status"
+							android:drawableLeft="@drawable/icon_not_bind_wecaht_me"
+							android:drawablePadding="2dp"
+							android:padding="3dp"
+							android:textColor="@color/white"
+							android:textSize="12sp"
+							app:rv_cornerRadius="2dp"
+							app:rv_strokeColor="@color/white"
+							app:rv_strokeWidth="1dp"
+							tools:text="未绑定微信" />
+
+				</RelativeLayout>
+
+				<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="60dp"
+						android:layout_gravity="bottom"
+						android:layout_marginLeft="10dp"
+						android:layout_marginRight="10dp"
+						android:layout_marginBottom="5dp"
+						android:elevation="3dp"
+						android:orientation="horizontal"
+						app:qmui_backgroundColor="@color/white"
+						app:qmui_borderColor="@color/white"
+						app:qmui_radius="10dp">
+
+					<TextView
+							android:id="@+id/tv_money_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center"
+							android:textSize="12sp"
+							tools:text="设备数量：450" />
+
+					<TextView
+							android:id="@+id/tv_ya_money_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:gravity="center"
+							android:textSize="12sp"
+							tools:text="账户押金：1000.00" />
+
+				</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+			</FrameLayout>
+
+
+			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="bottom"
+					android:layout_marginLeft="10dp"
+					android:layout_marginTop="20dp"
+					android:layout_marginRight="10dp"
+					android:elevation="3dp"
+					android:orientation="vertical"
+					app:qmui_backgroundColor="@color/white"
+					app:qmui_borderColor="@color/white"
+					app:qmui_radius="10dp">
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="60dp"
+						android:layout_marginTop="5dp"
+						android:layout_marginBottom="5dp"
+						android:orientation="horizontal">
+
+					<LinearLayout
+							android:id="@+id/distributionCenterLayout"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/distribution_center_layout_image" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="分销中心"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+					<LinearLayout
+							android:id="@+id/ll_ticket_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/ticket_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="优惠券"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+
+
+
+					<LinearLayout
+							android:id="@+id/withdrawalAccountLayout"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/withdrawal_account_layout_image" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="提现账户"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+					<LinearLayout
+							android:id="@+id/ll_agnet_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/agent_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="代理商"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+				</LinearLayout>
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="60dp"
+						android:layout_marginTop="5dp"
+						android:layout_marginBottom="5dp"
+						android:orientation="horizontal">
+
+					<LinearLayout
+							android:id="@+id/ll_setting_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/setting_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="设置"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+					<LinearLayout
+							android:id="@+id/ll_credit_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/credit_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="信用白条"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+					<LinearLayout
+							android:id="@+id/ll_contract_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<FrameLayout
+								android:layout_width="match_parent"
+								android:layout_height="30dp">
+
+							<ImageView
+									android:layout_width="30dp"
+									android:layout_height="30dp"
+									android:layout_gravity="center"
+									android:scaleType="centerInside"
+									android:src="@drawable/my_contract_me" />
+
+
+							<com.flyco.roundview.RoundTextView
+									android:id="@+id/tv_my_contract_unread"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_gravity="center_horizontal"
+									android:layout_marginLeft="12dp"
+									android:paddingLeft="5dp"
+									android:paddingRight="5dp"
+									android:textColor="@color/white"
+									android:textSize="10sp"
+									android:visibility="gone"
+									app:rv_backgroundColor="@color/app_red"
+									app:rv_cornerRadius="5dp"
+									tools:text="0" />
+						</FrameLayout>
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="我的合约"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+					<LinearLayout
+							android:id="@+id/ll_support_me"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/service_support_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="售后支持"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+				</LinearLayout>
+
+				<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="60dp"
+						android:layout_marginTop="5dp"
+						android:layout_marginBottom="5dp"
+						android:orientation="horizontal">
+
+					<LinearLayout
+							android:id="@+id/ll_safe_center"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/protect_center" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="安全中心"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+					<LinearLayout
+							android:visibility="invisible"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/credit_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="信用白条"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+					<LinearLayout
+							android:visibility="invisible"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<FrameLayout
+								android:layout_width="match_parent"
+								android:layout_height="30dp">
+
+							<ImageView
+									android:layout_width="30dp"
+									android:layout_height="30dp"
+									android:layout_gravity="center"
+									android:scaleType="centerInside"
+									android:src="@drawable/my_contract_me" />
+
+
+							<com.flyco.roundview.RoundTextView
+									android:id="@+id/tv_my_contract_unread"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_gravity="center_horizontal"
+									android:layout_marginLeft="12dp"
+									android:paddingLeft="5dp"
+									android:paddingRight="5dp"
+									android:textColor="@color/white"
+									android:textSize="10sp"
+									android:visibility="gone"
+									app:rv_backgroundColor="@color/app_red"
+									app:rv_cornerRadius="5dp"
+									tools:text="0" />
+						</FrameLayout>
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="我的合约"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+
+					<LinearLayout
+							android:visibility="invisible"
+							android:layout_width="0dp"
+							android:layout_height="match_parent"
+							android:layout_weight="1"
+							android:orientation="vertical"
+							android:padding="5dp">
+
+						<ImageView
+								android:layout_width="30dp"
+								android:layout_height="30dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/service_support_me" />
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="match_parent"
+								android:gravity="center"
+								android:text="售后支持"
+								android:textColor="@color/text_color"
+								android:textSize="12sp" />
+					</LinearLayout>
+
+				</LinearLayout>
+
+			</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+		</LinearLayout>
+	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

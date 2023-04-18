@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+
+              android:background="@color/white"
+              android:layout_height="match_parent">
+
+	<include layout="@layout/layout_topbar"/>
+
+	<TextView
+			android:textSize="16sp"
+			android:layout_margin="20dp"
+			android:text="本期需还款"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="40dp">
+
+		<TextView
+				android:layout_toLeftOf="@+id/tv_money_credit_pay_cycle"
+				android:textSize="16sp"
+				android:text="¥"
+				android:layout_marginRight="5dp"
+				android:layout_alignBaseline="@+id/tv_money_credit_pay_cycle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+
+		<TextView
+				android:id="@+id/tv_money_credit_pay_cycle"
+				android:textSize="33sp"
+				tools:text="310.00"
+				android:layout_centerInParent="true"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+	</RelativeLayout>
+
+
+	<TextView
+			android:textSize="16sp"
+			android:layout_margin="20dp"
+			android:text="请选择还款方式:"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+			android:textSize="12sp"
+			android:id="@+id/btn_alipay_credit_pay_cycle"
+			android:layout_margin="25dp"
+			android:layout_width="match_parent"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_borderColor="@color/app_color"
+			android:textColor="@color/white"
+			android:text="支付宝"
+			android:layout_gravity="center"
+			android:layout_height="50dp"/>
+
+
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+			android:textSize="12sp"
+			android:id="@+id/btn_wechat_credit_pay_cycle"
+			android:layout_margin="25dp"
+			android:layout_width="match_parent"
+			app:qmui_backgroundColor="@color/app_color"
+			app:qmui_borderColor="@color/app_color"
+			android:textColor="@color/white"
+			android:text="微信"
+			android:layout_gravity="center"
+			android:layout_height="50dp"/>
+
+</LinearLayout>

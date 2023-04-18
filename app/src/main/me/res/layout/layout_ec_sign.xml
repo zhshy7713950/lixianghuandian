@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#85000000">
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@color/white"
+			android:orientation="vertical">
+
+		<com.ruimeng.things.me.widget.signature_view.SignatureView
+				android:id="@+id/signatureView"
+				android:layout_width="match_parent"
+				android:layout_height="300dp"
+				android:background="#3000" />
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="20dp"
+				android:gravity="center"
+				android:orientation="horizontal">
+
+			<Button
+					android:id="@+id/clear"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="2"
+					android:text="清空" />
+
+			<View
+					android:layout_width="0dp"
+					android:layout_height="1dp"
+					android:layout_weight="1" />
+
+			<Button
+					android:id="@+id/confirm"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="2"
+					android:text="确定" />
+
+
+			<View
+					android:layout_width="0dp"
+					android:layout_height="1dp"
+					android:layout_weight="1" />
+
+
+			<Button
+					android:id="@+id/cancel"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="2"
+					android:text="取消" />
+
+
+		</LinearLayout>
+	</LinearLayout>
+
+</FrameLayout>

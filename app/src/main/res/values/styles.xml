@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="WTheme" parent="SwipeBack">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/app_red</item>
+    </style>
+
+</resources>

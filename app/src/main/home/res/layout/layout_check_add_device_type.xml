@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="300dp"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_margin="10dp"
+		app:qmui_backgroundColor="@color/white"
+		app:qmui_radius="10dp">
+
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+
+		<com.flyco.roundview.RoundTextView
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:gravity="center"
+				android:text="请选择"
+				android:textColor="@color/white"
+				app:rv_backgroundColor="@color/app_color"
+				app:rv_cornerRadius_TL="10dp"
+				app:rv_cornerRadius_TR="10dp" />
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_marginTop="20dp"
+				android:layout_marginBottom="10dp"
+				android:layout_weight="1"
+				android:orientation="horizontal">
+
+			<FrameLayout
+					android:id="@+id/fl_whole_bike"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1">
+
+				<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:orientation="vertical">
+
+					<FrameLayout
+							android:layout_width="100dp"
+							android:layout_height="80dp">
+
+						<ImageView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/icon_rent_whole_bike" />
+					</FrameLayout>
+
+					<TextView
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:gravity="center"
+							android:text="电池+车架租赁"
+							android:textSize="12sp" />
+
+					<ImageView
+							android:id="@+id/iv_check_whole_bike"
+							android:layout_width="15dp"
+							android:layout_height="15dp"
+							android:layout_gravity="center"
+							android:layout_marginTop="20dp"
+							android:src="@drawable/icon_rent_type_uncheck" />
+				</LinearLayout>
+
+			</FrameLayout>
+
+
+			<FrameLayout
+					android:id="@+id/fl_battery"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1">
+
+				<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center"
+						android:orientation="vertical">
+
+
+					<FrameLayout
+							android:layout_width="100dp"
+							android:layout_height="80dp">
+
+						<ImageView
+								android:layout_width="wrap_content"
+								android:layout_height="33dp"
+								android:layout_gravity="center"
+								android:scaleType="centerInside"
+								android:src="@drawable/icon_rent_battery" />
+					</FrameLayout>
+
+
+					<TextView
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:gravity="center"
+							android:text="单电池租赁"
+							android:textSize="12sp" />
+
+					<ImageView
+							android:id="@+id/iv_check_battery"
+							android:layout_width="15dp"
+							android:layout_height="15dp"
+							android:layout_gravity="center"
+							android:layout_marginTop="20dp"
+							android:src="@drawable/icon_rent_type_uncheck" />
+
+				</LinearLayout>
+
+			</FrameLayout>
+		</LinearLayout>
+
+
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+				android:id="@+id/btn_submit"
+				android:layout_width="match_parent"
+				android:layout_height="35dp"
+				android:layout_marginLeft="20dp"
+				android:layout_marginTop="30dp"
+				android:layout_marginRight="20dp"
+				android:layout_marginBottom="30dp"
+				android:text="确认"
+				android:textColor="@color/white"
+				app:qmui_backgroundColor="#00A0E9"
+				app:qmui_borderWidth="0dp" />
+
+	</LinearLayout>
+</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>

@@ -1,6 +1,10 @@
 package com.ruimeng.things.me
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.AtyLogin
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
@@ -45,22 +49,27 @@ class FgtSetting : BaseBackFragment() {
         }
 
 
-        ll_about_us_setting.setOnClickListener {
-            http {
-                method = "get"
-                url = Path.ABOUT_ME
 
-                onResponse {
-                    AtyWeb.start("关于我们", it)
-                }
-            }
-        }
 
 
         btn_logout_setting.setOnClickListener {
-            Config.getDefault().token = ""
-            Config.getDefault().stringCacheUtils.remove(UserInfoLiveData.STORE_KEY)
-            SystemUtils.cleanTask2Activity(activity, AtyLogin::class.java)
+            NormalDialog(activity).apply {
+                style(NormalDialog.STYLE_TWO)
+                title("退出登录？")
+                titleTextColor(Color.parseColor("#131414"))
+                btnText("取消", "确认")
+                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+                setOnBtnClickL(OnBtnClickL {
+                    dismiss()
+                }, OnBtnClickL {
+                    Config.getDefault().token = ""
+                    Config.getDefault().stringCacheUtils.remove(UserInfoLiveData.STORE_KEY)
+                    SystemUtils.cleanTask2Activity(activity, AtyLogin::class.java)
+                    dismiss()
+                })
+                show()
+            }
+
         }
 
         //1,获取包 管理器

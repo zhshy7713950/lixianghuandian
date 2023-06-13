@@ -2,6 +2,7 @@ package com.ruimeng.things
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -69,6 +70,8 @@ class AtyMain : BaseBackActivity() {
 
         val pushService = PushServiceFactory.getCloudPushService()
         bindPush(pushService.deviceId, pushService.deviceId)
+
+
     }
 
     private fun bindPush(sdk_userid: String, sdk_channelid: String) {

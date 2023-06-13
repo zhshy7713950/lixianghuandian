@@ -17,6 +17,8 @@ import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.NotificationHelper.mContext
 import wongxd.common.loadImg
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.http
 import java.io.File
 
@@ -129,21 +131,30 @@ class FgtTrueName : BaseBackFragment() {
     }
 
     private fun getPic() {
-        Matisse.from(this)
-            .choose(MimeType.allOf())
-            .capture(true)
-            .captureStrategy(
-                CaptureStrategy(
-                    true,
-                    activity?.packageName + ".fileprovider"
-                )
+        getPermissions(
+            listOf(
+                PermissionType.CAMERA,
+                PermissionType.WRITE_EXTERNAL_STORAGE,
+                PermissionType.READ_EXTERNAL_STORAGE
             )
-            .countable(true)
-            .maxSelectable(1)
-            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-            .thumbnailScale(0.85f)
-            .imageEngine(PostGlideEngine())
-            .forResult(REQUEST_IMAGE)
+        ){
+            Matisse.from(this)
+                .choose(MimeType.allOf())
+                .capture(true)
+                .captureStrategy(
+                    CaptureStrategy(
+                        true,
+                        activity?.packageName + ".fileprovider"
+                    )
+                )
+                .countable(true)
+                .maxSelectable(1)
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .imageEngine(PostGlideEngine())
+                .forResult(REQUEST_IMAGE)
+        }
+
     }
 
     private var isFrontFlag = 1

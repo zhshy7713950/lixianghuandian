@@ -32,7 +32,7 @@ object SmsTimeUtils {
                 tvSendCode?.get()?.text = "获取验证码"
                 tvSendCode?.get()?.isEnabled = true
             } else {
-                tvSendCode?.get()?.setText(msg.what.toString() + "s")
+                tvSendCode?.get()?.setText(msg.what.toString() + "秒后重新发送")
                 tvSendCode?.get()?.isEnabled = false
             }
             super.handleMessage(msg)

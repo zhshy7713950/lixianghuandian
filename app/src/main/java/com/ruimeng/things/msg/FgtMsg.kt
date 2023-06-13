@@ -11,6 +11,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.msg.bean.MsgListBean
 import kotlinx.android.synthetic.main.fgt_msg.*
 import wongxd.AtyWeb
+import wongxd.base.BaseBackFragment
 import wongxd.base.MainTabFragment
 import wongxd.common.bothNotNull
 import wongxd.common.getTime
@@ -19,7 +20,7 @@ import wongxd.common.toPOJO
 import wongxd.http
 
 
-class FgtMsg : MainTabFragment() {
+class FgtMsg : BaseBackFragment() {
 
     private var mAdapter: RvMsgAdapter? = null
     private var dataList = ArrayList<MsgListBean.Data>()
@@ -28,12 +29,11 @@ class FgtMsg : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_msg
 
-    override fun initView(mView: View?, savedInstanceState: Bundle?) {
-        initTopbar(mView?.findViewById(R.id.topbar), "消息", false)
+    override fun onLazyInitView( savedInstanceState: Bundle?) {
+        initTopbar(topbar, "消息")
         firstVisit = true
 
         recyclerview?.layoutManager = LinearLayoutManager(activity)
-
         initAdapter()
         initRefresh()
     }

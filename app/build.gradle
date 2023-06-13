@@ -131,6 +131,7 @@ dependencies {
     //3D地图
     //noinspection GradleDependency
     api 'com.amap.api:3dmap:8.0.0'
+    implementation 'io.github.lwjfork:CodeEditText:1.0.5'
     implementation files('libs/Amap_2DMap_V5.2.0_20170627.jar')
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'

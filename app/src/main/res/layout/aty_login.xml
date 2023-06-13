@@ -1,172 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:background="@color/white"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:background="@drawable/bg_background"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
 
 	<TextView
-			android:layout_marginBottom="20dp"
-			android:layout_width="match_parent"
-			android:layout_height="@dimen/topbar_height"
-			android:background="@color/app_color"
-			android:gravity="center"
-			android:text="@string/app_name"
-			android:textColor="@color/white"
-			android:textSize="16sp"/>
+		android:id="@+id/tv_title1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="手机验证码登录"
+		android:textColor="#ffffffff"
+		android:textSize="20sp"
+		android:layout_marginTop="60dp"
+		android:layout_marginLeft="12dp"
+		/>
 
-
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-			app:qmui_radius="5dp"
-			android:layout_margin="10dp"
-			app:qmui_borderColor="@color/bg_gray"
-			app:qmui_backgroundColor="@color/bg_gray"
-			android:layout_width="match_parent"
-			android:layout_height="50dp">
-
+	<TextView
+		android:id="@+id/tv_title2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="未注册的手机号验证后将创建新账号"
+		android:textColor="#ffb8c7d7"
+		android:layout_marginLeft="12dp"
+		android:layout_marginTop="8dp"
+		android:textSize="14sp"
+		/>
+	<LinearLayout
+		android:id="@+id/ll_phone"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:visibility="gone">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="手机号码"
+			android:layout_marginLeft="12dp"
+			android:layout_marginTop="30dp"
+			android:textColor="#ffffffff"
+			android:textSize="12sp"
+			/>
 		<EditText
-				android:inputType="phone"
-				android:layout_margin="10dp"
-				android:textSize="14sp"
-				android:hint="请输入手机号码"
-				android:background="@color/transparent"
-				android:id="@+id/et_phone"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
-
-
-	<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
-
-		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-				app:qmui_radius="5dp"
-				android:layout_margin="10dp"
-				app:qmui_borderColor="@color/bg_gray"
-				app:qmui_backgroundColor="@color/bg_gray"
-				android:layout_width="0dp"
-				android:layout_weight="1"
-				android:layout_height="50dp">
-
-			<EditText
-					android:inputType="number"
-					android:layout_margin="10dp"
-					android:textSize="14sp"
-					android:hint="请输入验证码"
-					android:background="@color/transparent"
-					android:id="@+id/et_code"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"/>
-
-		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
-
-
-		<com.flyco.roundview.RoundTextView
-				android:id="@+id/tv_get_code"
-				android:layout_margin="10dp"
-				app:rv_cornerRadius="5dp"
-				android:text="获取验证码"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:gravity="center"
-				android:textColor="@color/white"
-				app:rv_backgroundColor="@color/app_color"
-				android:layout_width="wrap_content"
-				android:layout_height="50dp"/>
-
-	</LinearLayout>
-
-
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-			android:layout_marginBottom="30dp"
-			android:layout_width="match_parent"
-			android:layout_marginLeft="20dp"
-			android:layout_marginRight="20dp"
-			android:layout_marginTop="35dp"
+			android:inputType="phone"
+			android:layout_margin="12dp"
+			android:textSize="18sp"
 			android:textColor="@color/white"
-			android:text="登录"
-			android:id="@+id/btn_login"
-			app:qmui_borderColor="@color/app_color"
-			app:qmui_backgroundColor="@color/app_color"
-			android:layout_height="40dp"/>
-
-	<LinearLayout
+			android:hint="请输入手机号码"
+			android:background="@color/transparent"
+			android:id="@+id/et_phone"
 			android:layout_width="match_parent"
-			android:layout_height="40dp">
+			android:layout_height="wrap_content"/>
 
 		<View
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:layout_weight="1"/>
+			android:layout_width="match_parent"
+			android:layout_height="0.5dp"
+			android:background="@drawable/shape_line"
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"/>
 
+		<TextView
+			android:id="@+id/tv_get_code"
+			android:layout_width="match_parent"
+			android:layout_height="42dp"
+			android:text="发送验证码"
+			android:textColor="#ff272934"
+			android:textSize="15sp"
+			android:gravity="center"
+			android:background="@drawable/bg_btn_common1"
+			android:layout_margin="42dp"
+			android:textStyle="bold"
+			/>
+	</LinearLayout>
+	<LinearLayout
+		android:id="@+id/ll_code"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<com.lwjfork.code.CodeEditText
+			android:id="@+id/et_code"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:layout_margin="10dp"
+			android:layout_marginTop="20dp"
+			android:focusable="true"
+			android:inputType="number"
+			android:focusableInTouchMode="true"
+			android:maxLength="6"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			app:blockErrorColor="@android:color/black"
+			app:blockFocusColor="#BDCBD6"
+			app:blockLineWidth="1dp"
+			app:blockNormalColor="#BDCBD6"
+			app:blockShape="underline"
+			app:blockSpace="15dp"
+			app:codeInputType="text"
+			app:codeTextColor="@android:color/white"
+			app:codeTextSize="30sp"
+			app:cursorWidth="1dp"
+			app:maxCodeLength="6"
+			app:showCursor="false"
+			/>
+		<TextView
+			android:id="@+id/tv_reget_code"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="重新获取验证码"
+			android:textColor="#ff29ebb6"
+			android:textSize="14sp"
+			android:layout_marginTop="30dp"
+			android:layout_marginLeft="12dp"
+			/>
+	</LinearLayout>
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/ll_other"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 		<CheckBox
-				android:padding="2dp"
-				android:button="@drawable/checkedbox_bg"
-				android:id="@+id/cb_login"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-
+			android:id="@+id/cb_login"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			android:layout_marginLeft="38dp"
+			android:layout_marginBottom="40dp"
+			android:button="@drawable/check_box"/>
 		<TextView
-				android:id="@+id/tv_login_protocol"
-				android:gravity="center_vertical"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"/>
-
-		<View
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:layout_weight="1"/>
-	</LinearLayout>
-
-	<View
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			android:layout_weight="1"/>
-
-	<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="40dp">
-
-		<View
-				android:layout_gravity="center"
-				android:layout_marginLeft="40dp"
-				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_weight="1"
-				android:background="@color/bg_gray"/>
-
-		<TextView
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:text="其他登录方式"
-				android:gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"/>
-
-		<View
-				android:layout_gravity="center"
-				android:layout_marginRight="40dp"
-				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_weight="1"
-				android:background="@color/bg_gray"/>
-
-	</LinearLayout>
-
-
-	<ImageView
+			android:id="@+id/tv_login_protocol"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=""
+			android:textColor="#ffb8c7d7"
+			android:textSize="12sp"
+			android:maxLines="2"
+			app:layout_constraintLeft_toRightOf="@id/cb_login"
+			app:layout_constraintTop_toTopOf="@id/cb_login"
+			app:layout_constraintBottom_toBottomOf="@id/cb_login"
+			app:layout_constraintRight_toRightOf="parent"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="30dp"
+			/>
+		<ImageView
 			android:id="@+id/iv_wechat_login"
-			android:layout_marginTop="10dp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@mipmap/ic_login_wx"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/tv_login_protocol"
+			android:layout_marginBottom="40dp"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="使用其他方式登录"
+			android:textColor="#ffbcc5cc"
+			android:textSize="14sp"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toTopOf="@id/iv_wechat_login"
 			android:layout_marginBottom="20dp"
-			android:layout_gravity="center"
-			android:src="@drawable/wechat_login"
-			android:layout_width="50dp"
-			android:layout_height="50dp"/>
+			/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package wongxd.base;
 
+import android.graphics.Color;
 import android.os.Bundle;
+
 import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.core.ISwipeBackActivity;
 import me.yokeyword.fragmentation_swipeback.core.SwipeBackActivityDelegate;
@@ -16,6 +18,7 @@ public class BaseBackActivity extends AtyBase implements ISwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDelegate.onCreate(savedInstanceState);
+        getWindow().setNavigationBarColor(Color.parseColor("#404E59"));
     }
 
     @Override

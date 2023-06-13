@@ -1,11 +1,12 @@
 package wongxd.base;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.qmuiteam.qmui.widget.QMUITopBar;
 
@@ -69,7 +70,6 @@ public abstract class FgtBase extends SupportFragment {
                 }
             });
         }
-
         topBar.setTitle(title);
         topBar.setBackgroundColor(getResources().getColor(R.color.app_top_color));
     }

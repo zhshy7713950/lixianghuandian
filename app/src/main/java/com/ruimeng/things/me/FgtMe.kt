@@ -3,6 +3,7 @@ package com.ruimeng.things.me
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import com.flyco.dialog.listener.OnBtnClickL
@@ -16,8 +17,10 @@ import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.me.credit.FgtCreditSystem
+import com.ruimeng.things.msg.FgtMsg
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
+import wongxd.AtyWeb
 import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
 import wongxd.common.loadImg
@@ -30,11 +33,13 @@ import wongxd.utils.SystemUtils
  */
 class FgtMe : MainTabFragment() {
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
+//        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
 
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
-            iv_header_me.loadImg(userinfo.logo)
+            if (!TextUtils.isEmpty(userinfo.logo)){
+                iv_header_me.loadImg(userinfo.logo)
+            }
 
             tv_username_me.text =
                 if (userinfo.mobile.isBlank()) userinfo.nickname else userinfo.mobile
@@ -44,7 +49,7 @@ class FgtMe : MainTabFragment() {
 
 
                 val dra =
-                    resources.getDrawable(if (userinfo.realname_auth == 1) R.drawable.icon_truename_me else R.drawable.icon_not_truename_me)
+                    resources.getDrawable(if (userinfo.realname_auth == 1) R.mipmap.icon_truename_me else R.mipmap.icon_not_truename_me)
                         .apply {
                             setBounds(0, 0, minimumWidth, minimumHeight)
                         }
@@ -53,11 +58,11 @@ class FgtMe : MainTabFragment() {
 
                 setTextColor(if (userinfo.realname_auth == 1) Color.GREEN else Color.WHITE)
 
-                text = if (userinfo.realname_auth == 1) "已实名认证" else "未实名认证"
+                text = if (userinfo.realname_auth == 1) "已认证" else "未认证"
 
 
-                val del = delegate as RoundViewDelegate
-                del.strokeColor = if (userinfo.realname_auth == 1) Color.GREEN else Color.WHITE
+//                val del = delegate as RoundViewDelegate
+//                del.strokeColor = if (userinfo.realname_auth == 1) Color.GREEN else Color.WHITE
 
 
 
@@ -78,7 +83,7 @@ class FgtMe : MainTabFragment() {
                 val isMpFollow = userinfo.mp_follow == 1
 
                 val dra =
-                    resources.getDrawable(if (isMpFollow) R.drawable.icon_bind_wecaht_me else R.drawable.icon_not_bind_wecaht_me)
+                    resources.getDrawable(if (isMpFollow) R.mipmap.icon_bind_wecaht_me else R.mipmap.icon_not_bind_wecaht_me)
                         .apply {
                             setBounds(0, 0, minimumWidth, minimumHeight)
                         }
@@ -87,11 +92,11 @@ class FgtMe : MainTabFragment() {
 
                 setTextColor(if (isMpFollow) Color.GREEN else Color.WHITE)
 
-                text = if (isMpFollow) "已关注公众号" else "未关注公众号"
+                text = if (isMpFollow) "已绑定" else "未绑定"
 
-                val del = delegate as RoundViewDelegate
-                del.strokeColor =
-                    if (isMpFollow) Color.GREEN else Color.WHITE
+//                val del = delegate as RoundViewDelegate
+//                del.strokeColor =
+//                    if (isMpFollow) Color.GREEN else Color.WHITE
 
 
                 setOnClickListener {
@@ -105,30 +110,32 @@ class FgtMe : MainTabFragment() {
 
 
 
-            tv_money_me.text = "设备数量：" + userinfo.devicenumber
+            tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = "账户押金：" + userinfo.devicedeposit
+            tv_ya_money_me.text = "" + userinfo.devicedeposit
 
         }
 
 
         ll_ticket_me.setOnClickListener {
-            //            EasyToast.DEFAULT.show("功能开发中，敬请期待。")
             startFgt(FgtTicket())
         }
 
         ll_safe_center.setOnClickListener { startFgt(FgtSafeCenter()) }
 
 
-        ll_agnet_me.setOnClickListener { startFgt(FgtAgnet()) }
+        ll_about_us.setOnClickListener {   http {
+            method = "get"
+            url = Path.ABOUT_ME
+
+            onResponse {
+                AtyWeb.start("关于我们", it)
+            }
+        } }
 
         ll_setting_me.setOnClickListener { startFgt(FgtSetting()) }
 
-        ll_credit_me.setOnClickListener { startFgt(FgtCreditSystem()) }
-
-        ll_contract_me.setOnClickListener {
-            startFgt(FgtMyContract())
-        }
+        ll_msg.setOnClickListener { startFgt(FgtMsg()) }
 
         ll_support_me.setOnClickListener {
             val tel = "4000283969"

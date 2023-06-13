@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.qmuiteam.qmui.widget.QMUITopBar xmlns:android="http://schemas.android.com/apk/res/android"
-                                     android:orientation="vertical"
-                                     android:id="@+id/topbar"
-                                     android:elevation="2dp"
-                                     android:layout_marginBottom="2dp"
-                                     android:layout_width="match_parent"
-                                     android:layout_height="@dimen/topbar_height">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/topbar_height"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+    app:qmui_topbar_title_color="@color/white">
 
 </com.qmuiteam.qmui.widget.QMUITopBar>

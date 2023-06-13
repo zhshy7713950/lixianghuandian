@@ -334,7 +334,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
             http {
 //                url = Path.GET_RENT_PAY
-                url = "apiv4/getrentpay"
+                url = "apiv5/getrentpay"
                 params["device_id"] = deviceId
                 params["pack_id"] = selectedRentLongId
                 //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fgt_my_contract.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import wongxd.base.BaseBackFragment
+import wongxd.base.MainTabFragment
 import wongxd.base.custom.caneffect.CanRippleLayout
 import wongxd.base.custom.caneffect.CanShadowDrawable
 import wongxd.common.dp2px
@@ -23,7 +25,7 @@ import wongxd.common.dp2px
 /**
  * Created by wongxd on 2019/12/24.
  */
-class FgtMyContract : BaseBackFragment() {
+class FgtMyContract : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_my_contract
 
@@ -33,9 +35,8 @@ class FgtMyContract : BaseBackFragment() {
 
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
 
-    override fun onLazyInitView(savedInstanceState: Bundle?) {
-        super.onLazyInitView(savedInstanceState)
-        initTopbar(topbar, "我的合约")
+    override fun initView(mView: View?, savedInstanceState: Bundle?) {
+//        initTopbar(topbar, "我的合约")
 
 
         vp_my_contract.apply {

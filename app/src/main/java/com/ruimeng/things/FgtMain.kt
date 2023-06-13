@@ -4,18 +4,22 @@ package com.ruimeng.things
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
+import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.msg.FgtMsg
 import com.ruimeng.things.net_station.FgtNetStation
 import com.ruimeng.things.shop.FgtShoppingMall
+import kotlinx.android.synthetic.main.fgt_main.*
 import me.majiajie.pagerbottomtabstrip.NavigationController
 import me.majiajie.pagerbottomtabstrip.PageNavigationView
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import wongxd.base.FgtBase
+import wongxd.base.MainTabFragment
 import wongxd.base.custom.SpecialTab
 import wongxd.common.EasyToast
 
@@ -35,51 +39,71 @@ class FgtMain : FgtBase() {
     override fun getLayoutRes(): Int = R.layout.fgt_main
 
 
-    var navigationController: NavigationController? = null
+//    var navigationController: NavigationController? = null
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
         EventBus.getDefault().register(this)
         instance = this
-
         val fgts = arrayOf(
             FgtHome(),
             FgtNetStation(),
-            FgtMsg(),
-            FgtShoppingMall(),
+            FgtMyContract(),
             FgtMe()
         )
 
-        val tab = rootView.findViewById<View>(R.id.tab) as PageNavigationView
 
 
-        val msgTab = newItem(R.drawable.tab_msg, R.drawable.tab_msg_se, "消息")
-        val meTab = newItem(R.drawable.tab_me, R.drawable.tab_me_se, "我的")
-        navigationController = tab.custom()
-            .addItem(newItem(R.drawable.tab_home, R.drawable.tab_home_se, "首页"))
-            .addItem(newItem(R.drawable.tab_nearby, R.drawable.tab_nearby_se, "网点"))
-            .addItem(msgTab)
-            .addItem(newItem(R.drawable.tab_shop, R.drawable.tab_shop_se, "商城"))
-            .addItem(meTab)
-            .build()
-
-        navigationController?.addSimpleTabItemSelectedListener { index, old ->
-            showHideFragment(fgts[index])
-            NoReadLiveData.refresh { }
+        val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        for (i in 0..3){
+            var tabView = rootView.findViewById(tabs[i]) as ImageView
+            tabView.setOnClickListener { initTab(i,fgts) }
         }
+
+//
+//        val msgTab = newItem(R.drawable.tab_msg, R.drawable.tab_msg_se, "消息")
+//        val meTab = newItem(R.drawable.tab_me, R.drawable.tab_me_se, "我的")
+//        navigationController = tab.custom()
+//            .addItem(newItem(R.drawable.tab_home, R.drawable.tab_home_se, "首页"))
+//            .addItem(newItem(R.drawable.tab_nearby, R.drawable.tab_nearby_se, "网点"))
+//            .addItem(msgTab)
+//            .addItem(newItem(R.drawable.tab_shop, R.drawable.tab_shop_se, "商城"))
+//            .addItem(meTab)
+//            .build()
+
+//        navigationController?.addSimpleTabItemSelectedListener { index, old ->
+//            showHideFragment(fgts[index])
+//            NoReadLiveData.refresh { }
+//        }
 
         loadMultipleRootFragment(R.id.fl_fgt_main, 0, *fgts)
 
 
-        NoReadLiveData.getInstance().simpleObserver(this) { data: NoReadBean.Data ->
-            msgTab.setMessageNumber(data.msg.msg_noread)
-            meTab.setMessageNumber(data.my.contract_total)
-        }
+//        NoReadLiveData.getInstance().simpleObserver(this) { data: NoReadBean.Data ->
+//            msgTab.setMessageNumber(data.msg.msg_noread)
+//            meTab.setMessageNumber(data.my.contract_total)
+//        }
 
         NoReadLiveData.refresh { }
     }
 
+    private fun initTab(index:Int,fgts:Array< MainTabFragment>){
+
+        val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_contract,R.mipmap.tab_me)
+        val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_contract_se,R.mipmap.tab_me_se)
+        val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        for (i in 0..3){
+            var tabView = rootView.findViewById(tabs[i]) as ImageView
+            if (i == index){
+                tabView.setImageResource(tabImgSe[i])
+            }else{
+                tabView.setImageResource(tabImg[i])
+            }
+            showHideFragment(fgts[index])
+        }
+
+    }
 
     /**
      * 正常tab
@@ -111,7 +135,7 @@ class FgtMain : FgtBase() {
 
     @Subscribe
     fun switchToTab(event: SwitchTabEvent) {
-        navigationController?.setSelect(event.pos)
+//        navigationController?.setSelect(event.pos)
     }
 
     override fun onDestroyView() {

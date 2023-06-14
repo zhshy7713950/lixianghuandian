@@ -1,91 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:gravity="bottom"
-		android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical">
 
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			android:layout_margin="10dp"
-			android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#404E59"
+        android:orientation="vertical">
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:paddingTop="15dp"
-				android:paddingBottom="10dp"
-				android:background="@drawable/rectangle_white_bg"
-				android:orientation="horizontal">
-			<LinearLayout
-					android:id="@+id/shareWeChatLayout"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="wrap_content"
-					android:orientation="vertical" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分享至"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:textColor="#ffffffff"
+            android:textSize="14sp" />
 
-				<ImageView
-						android:layout_width="50dp"
-						android:layout_height="50dp"
-						android:layout_gravity="center_horizontal"
-						android:src="@drawable/share_weixin" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="35dp"
+            android:paddingBottom="10dp">
 
-				<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:textSize="13sp"
-						android:gravity="center"
-						android:layout_marginTop="5dp"
-						android:layout_marginBottom="5dp"
-						android:text="微信好友"
+            <LinearLayout
+                android:id="@+id/shareWeChatLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-						android:textColor="@color/black" />
-			</LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/share_weixin" />
 
-			<LinearLayout
-					android:id="@+id/shareFriendsLayout"
-					android:layout_height="wrap_content"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:orientation="vertical"
-					android:paddingLeft="15dip" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="微信好友"
+                    android:textColor="@color/white"
 
-				<ImageView
-						android:layout_width="50dp"
-						android:layout_height="50dp"
-						android:layout_gravity="center_horizontal"
-						android:background="@drawable/share_pengyouquan" />
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-				<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:textSize="13sp"
-						android:gravity="center"
-						android:layout_marginTop="5dp"
-						android:layout_marginBottom="5dp"
-						android:text="朋友圈"
-						android:textColor="@color/black" />
-			</LinearLayout>
+            <LinearLayout
+                android:id="@+id/shareFriendsLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="15dip">
 
-		</LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@mipmap/share_pengyouquan" />
 
-		<TextView
-				android:id="@+id/shareCancelLayout"
-				android:layout_width="match_parent"
-				android:layout_height="50dp"
-				android:textSize="13sp"
-				android:gravity="center"
-				android:background="@drawable/rectangle_white_bg"
-				android:layout_marginTop="10dp"
-				android:textColor="@color/black"
-				android:text="取消"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="朋友圈"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/shareCancelLayout"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_btn_common1"
+            android:gravity="center"
+            android:text="取消"
+            android:layout_marginLeft="42dp"
+            android:layout_marginRight="42dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_marginBottom="10dp"/>
 
 
-
-	</LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

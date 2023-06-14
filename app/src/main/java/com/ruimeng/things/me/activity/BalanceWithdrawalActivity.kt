@@ -48,6 +48,7 @@ class BalanceWithdrawalActivity : AtyBase() {
         inputMoneyText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
             @SuppressLint("SetTextI18n")
             override fun afterTextChanged(editable: Editable) {
                 if (editable.isNotEmpty()) {
@@ -87,48 +88,46 @@ class BalanceWithdrawalActivity : AtyBase() {
                 inputMoneyText?.setSelection(inputMoneyText?.text!!.length)
             }
         }
-        withdrawalTypeLayout?.setOnClickListener {
-            CommonWithdrawalTypeChoiceDialogHelper.commonWithdrawalTypeChoiceDialog(mActivity,
-                getWithdrawalType,
-                object : CommonDialogCallBackHelper {
-                    override fun back(viewId: Int, msg: String?) {
-                        getWithdrawalType = msg.toString()
-                        if ("alipay" == getWithdrawalType) {
-                            if ("1" == getIsAliPay) {
-                                setWithdrawalTypeLayoutStatus()
-                            } else {
-                                ToastHelper.longToast(mActivity, "您还未绑定支付宝，请先绑定")
-                                startActivity(
-                                    Intent(
-                                        mActivity,
-                                        WithdrawalAccountActivity::class.java
-                                    )
-                                )
-                            }
-                        } else {
-
-                            if ("1" == getIsWeChat) {
-                                setWithdrawalTypeLayoutStatus()
-                            } else {
-                                ToastHelper.longToast(mActivity, "您还未绑定微信，请先绑定")
-                                startActivity(
-                                    Intent(
-                                        mActivity,
-                                        WithdrawalAccountActivity::class.java
-                                    )
-                                )
-                            }
-                        }
+        rgWithdrawal.setOnCheckedChangeListener { group, id ->
+            when (id) {
+                R.id.rbWx -> {
+                    getWithdrawalType = "wxpay"
+                    if ("1" == getIsWeChat) {
+                        setWithdrawalTypeLayoutStatus()
+                    } else {
+                        ToastHelper.longToast(mActivity, "您还未绑定微信，请先绑定")
+                        startActivity(
+                            Intent(
+                                mActivity,
+                                WithdrawalAccountActivity::class.java
+                            )
+                        )
                     }
-                })
+                }
+                R.id.rbAlipay -> {
+                    getWithdrawalType = "alipay"
+                    if ("1" == getIsAliPay) {
+                        setWithdrawalTypeLayoutStatus()
+                    } else {
+                        ToastHelper.longToast(mActivity, "您还未绑定支付宝，请先绑定")
+                        startActivity(
+                            Intent(
+                                mActivity,
+                                WithdrawalAccountActivity::class.java
+                            )
+                        )
+                    }
+                }
+            }
         }
+
         confirmBtn?.setOnClickListener {
             if (TextUtils.isEmpty(inputMoneyText?.text)) {
                 ToastHelper.shortToast(mActivity, inputMoneyText?.hint)
                 return@setOnClickListener
             }
-            LogHelper.i("data===","===getIsWeChat===${getIsWeChat}")
-            LogHelper.i("data===","===getWithdrawalType===${getWithdrawalType}")
+            LogHelper.i("data===", "===getIsWeChat===${getIsWeChat}")
+            LogHelper.i("data===", "===getWithdrawalType===${getWithdrawalType}")
             if ("alipay" == getWithdrawalType) {
                 if ("1" != getIsAliPay) {
                     ToastHelper.longToast(mActivity, "您还未绑定支付宝，请先绑定")
@@ -185,8 +184,8 @@ class BalanceWithdrawalActivity : AtyBase() {
         }
         tabLayout?.setHasIndicator(true)
         tabLayout?.setIndicatorWidthAdjustContent(true)
-        tabLayout?.setDefaultNormalColor(ColorHelper.getColor(mActivity, R.color.gray_6))
-        tabLayout?.setDefaultSelectedColor(ColorHelper.getColor(mActivity, R.color.black_3))
+        tabLayout?.setDefaultNormalColor(ColorHelper.getColor(mActivity, R.color.gray_7))
+        tabLayout?.setDefaultSelectedColor(ColorHelper.getColor(mActivity, R.color.gray_71))
         tabLayout?.addOnTabSelectedListener(object : QMUITabSegment.OnTabSelectedListener {
             override fun onTabSelected(index: Int) {
                 setLayoutShowStatus(index)
@@ -239,23 +238,16 @@ class BalanceWithdrawalActivity : AtyBase() {
     private fun setWithdrawalTypeLayoutStatus() {
         when (getWithdrawalType) {
             "alipay" -> {
-                GlideHelper.loadImage(mActivity, withdrawalTypeImage, R.mipmap.ali_pay_image)
-                withdrawalTypeText?.text = "支付宝"
                 withdrawalAccountText?.text = getAliPayAccountName
             }
             "wxpay" -> {
-                GlideHelper.loadImage(mActivity, withdrawalTypeImage, R.mipmap.we_chat_image)
-                withdrawalTypeText?.text = "微信"
                 withdrawalAccountText?.text = getWeChatName
             }
             else -> {
-                GlideHelper.loadImage(mActivity, withdrawalTypeImage, "")
-                withdrawalTypeText?.text = "请选择提现方式"
                 withdrawalAccountText?.text = ""
             }
         }
     }
-
 
 
     private var firstVisit = true
@@ -273,6 +265,7 @@ class BalanceWithdrawalActivity : AtyBase() {
     private var getIsWeChat = ""
     private var getAliPayAccountName = ""
     private var getWeChatName = ""
+
     @SuppressLint("SetTextI18n")
     private fun requestDistrCashInfo() {
         http {

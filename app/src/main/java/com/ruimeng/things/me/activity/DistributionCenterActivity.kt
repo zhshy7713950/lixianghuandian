@@ -39,7 +39,9 @@ class DistributionCenterActivity : AtyBase() {
             startActivity(Intent(mActivity, BalanceWithdrawalActivity::class.java))
         }
         myTeamLayout?.setOnClickListener {
-            startActivity(Intent(mActivity, MyTeamActivity::class.java))
+            val intent=Intent(mActivity, MyTeamActivity::class.java)
+            intent.putExtra("member",textViewThree?.text.toString().replace("人",""))
+            startActivity(intent)
         }
         shareFriendLayout?.setOnClickListener {
             startActivity(Intent(mActivity, SharePosterActivity::class.java))
@@ -47,7 +49,7 @@ class DistributionCenterActivity : AtyBase() {
     }
 
     private fun initData(){
-        initTopbar(topbar, "分销中心")
+        initTopbar(topbar, "分享赚收益")
         textViewFour?.text = "赚收益"
         requestDistHome()
     }

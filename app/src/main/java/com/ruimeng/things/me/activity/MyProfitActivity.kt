@@ -92,7 +92,7 @@ class MyProfitActivity : AtyBase(){
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<MyInComeBean>().data
                 allBalanceText?.text="￥${data.distr_all_income}"
-                balanceTextView?.text="可提现余额：￥${data.distr_balance}"
+                balanceTextView?.text="￥${data.distr_balance}"
 
                 if (page == 1) {
                     mAdapter?.setNewData(data.list)

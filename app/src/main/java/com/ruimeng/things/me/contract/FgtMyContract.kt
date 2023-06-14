@@ -36,16 +36,15 @@ class FgtMyContract : MainTabFragment() {
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-//        initTopbar(topbar, "我的合约")
 
 
         vp_my_contract.apply {
             //0正常1过期2未完成3历史
             val vpList = listOf(
-                VpBean(FgtMyContractItem.newInstance(0), "正常"),
-                VpBean(FgtMyContractItem.newInstance(1), "过期"),
-                VpBean(FgtMyContractItem.newInstance(2), "未完成"),
-                VpBean(FgtMyContractItem.newInstance(3), "历史")
+                VpBean(FgtMyContractItem.newInstance(0), "正常合约"),
+                VpBean(FgtMyContractItem.newInstance(1), "过期合约"),
+                VpBean(FgtMyContractItem.newInstance(2), "未完合约"),
+                VpBean(FgtMyContractItem.newInstance(3), "历史合约")
             )
 
             offscreenPageLimit = vpList.size

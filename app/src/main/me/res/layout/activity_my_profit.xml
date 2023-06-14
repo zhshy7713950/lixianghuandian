@@ -1,125 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/gray_F5"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2E3440"
+    android:orientation="vertical">
 
-	<com.qmuiteam.qmui.widget.QMUITopBar
-			android:id="@+id/topbar"
-			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:orientation="vertical" />
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+        app:qmui_topbar_title_color="@color/white" />
 
-	<com.scwang.smartrefresh.layout.SmartRefreshLayout
-			android:id="@+id/refreshLayout"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-	<com.scwang.smartrefresh.header.MaterialHeader
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
+        <com.scwang.smartrefresh.header.MaterialHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-	<androidx.core.widget.NestedScrollView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:scrollbars="none">
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dp"
-					android:layout_marginTop="10dp"
-					android:layout_marginRight="10dp"
-					android:background="@drawable/rectangle_white_bg"
-					android:orientation="vertical"
-					android:padding="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@mipmap/bg_profit_top"
+                    android:orientation="vertical">
 
-				<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="20dp"
-						android:ellipsize="end"
-						android:gravity="center"
-						android:maxLines="1"
-						android:text="累计收益"
-						android:textColor="@color/gray_9"
-						android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/allBalanceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="#F9BB6C"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="￥0.00" />
 
-				<TextView
-						android:id="@+id/allBalanceText"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="10dp"
-						android:layout_marginBottom="20dp"
-						android:ellipsize="end"
-						android:gravity="center"
-						android:maxLines="1"
-						android:textColor="@color/black_3"
-						android:textSize="18sp"
-						android:textStyle="bold"
-						tools:text="￥0.00" />
-
-				<View
-						android:layout_width="match_parent"
-						android:layout_height="1dp"
-						android:background="@color/gray_F5" />
-
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="10dp"
-						android:gravity="center"
-						android:orientation="horizontal">
-
-					<TextView
-							android:id="@+id/balanceTextView"
-							android:layout_width="0dp"
-							android:layout_height="wrap_content"
-							android:layout_weight="1"
-							android:ellipsize="end"
-							android:gravity="center_vertical"
-							android:maxLines="1"
-							android:textColor="@color/black_3"
-							android:textSize="13sp"
-							tools:text="可提现余额：￥0.00" />
-
-					<TextView
-							android:id="@+id/withdrawalBtn"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:background="@drawable/fillet_bg_main_color"
-							android:ellipsize="end"
-							android:gravity="center"
-							android:maxLines="1"
-							android:paddingLeft="20dp"
-							android:paddingTop="6dp"
-							android:paddingRight="20dp"
-							android:paddingBottom="6dp"
-							android:text="提现"
-							android:textColor="@color/white"
-							android:textSize="13sp" />
-				</LinearLayout>
-			</LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:layout_gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:text="累计收益"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
 
-			<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/recyclerView"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					android:background="@drawable/rectangle_white_bg"
-					android:padding="10dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="30dp"
+                        android:background="@drawable/shape_line" />
 
-		</LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="19dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="可提现余额："
+                            android:textColor="#ff929fab"
+                            android:textSize="14sp"
+                            android:layout_marginLeft="14dp"
+                            />
+                        <TextView
+                            android:id="@+id/balanceTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            tools:text="￥0.00" />
 
-	</androidx.core.widget.NestedScrollView>
+                        <TextView
+                            android:id="@+id/withdrawalBtn"
+                            android:layout_width="88dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_btn_common1"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:text="立即提现"
+                            android:layout_marginRight="14dp"
+                            android:textColor="#272934"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
-	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="21dp"
+                    android:text="收益记录"
+                    android:textColor="#ffffffff"
+                    android:textSize="15sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="12dp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rectangle_gray_bg"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                     />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.ruimeng.things.me
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -27,8 +28,8 @@ class FgtTicket : BaseBackFragment() {
 
         tab_ticket.addTab(QMUITabSegment.Tab("未使用"))
             .addTab(QMUITabSegment.Tab("已使用"))
-            .setDefaultNormalColor(activity?.resources?.getColor(R.color.text_color)!!)
-        tab_ticket.setDefaultSelectedColor(activity?.resources?.getColor(R.color.app_color)!!)
+            .setDefaultNormalColor(Color.parseColor("#929FAB"))
+        tab_ticket.setDefaultSelectedColor(Color.parseColor("#29EBB6"))
 
         tab_ticket.addOnTabSelectedListener(object : QMUITabSegment.OnTabSelectedListener {
             override fun onTabReselected(index: Int) {
@@ -95,7 +96,9 @@ class FgtTicket : BaseBackFragment() {
     class RvTicketAdapter : BaseQuickAdapter<MyCouponBean.Data, BaseViewHolder>(R.layout.item_rv_ticket) {
         override fun convert(helper: BaseViewHolder, item: MyCouponBean.Data?) {
             bothNotNull(helper, item) { a, b ->
-                a.setText(R.id.tv_money, b.coupon_price)
+                a.setText(R.id.tv_money,"¥"+ b.coupon_price)
+                    .setText(R.id.tv_limit,b.limit_day)
+                    .setText(R.id.tv_use,b.is_use)
             }
         }
     }

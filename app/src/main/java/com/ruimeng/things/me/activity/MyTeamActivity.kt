@@ -30,6 +30,7 @@ class MyTeamActivity : AtyBase() {
 
     private fun initView() {
         mActivity = this
+        tv_team_member.text = ""+intent.getStringExtra("member")
         recyclerView?.layoutManager = GridLayoutManager(mActivity, 1)
     }
 

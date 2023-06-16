@@ -1,5 +1,6 @@
 package com.ruimeng.things.net_station
 
+import android.media.Image
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
@@ -55,22 +56,29 @@ class FgtNetStationItem : MainTabFragment() {
         srl_station?.setEnableLoadMore(false)
         srl_station.setOnRefreshListener { getList() }
 
-        rv_city.layoutManager = LinearLayoutManager(activity)
-        rv_city.adapter = cityAdapter
+//        rv_city.layoutManager = LinearLayoutManager(activity)
+//        rv_city.adapter = cityAdapter
 
         rv_station.layoutManager = LinearLayoutManager(activity)
         rv_station.adapter = stationAdapter
 
         CityDataWorker.initJsonData()
 
-        tv_province.setOnClickListener {
-            CityDataWorker.showOptionPicker(activity, "") { p, c ->
+
+//        tv_province.setOnClickListener {
+//            CityDataWorker.showOptionPicker(activity, "") { p, c ->
+//                provice = p
+//                city = c
+//                refreshCityPickerState()
+//            }
+//        }
+        tv_city.setOnClickListener {
+                        CityDataWorker.showOptionPicker(activity, "") { p, c ->
                 provice = p
                 city = c
                 refreshCityPickerState()
             }
         }
-        tv_city.setOnClickListener { tv_province.performClick() }
 
 
 
@@ -121,9 +129,9 @@ class FgtNetStationItem : MainTabFragment() {
     private var oldCity: NetCityJsonBean.Data.Child? = null
 
     private fun refreshCityPickerState() {
-        tv_city_picker_pre.text = if (null == city) "请选择" else "已选择"
-        tv_province.text = provice?.name?.replace("省", "") ?: ""
-        tv_city.text = city?.name?.replace("市", "") ?: ""
+//        tv_city_picker_pre.text = if (null == city) "请选择" else "已选择"
+//        tv_province.text = provice?.name?.replace("省", "") ?: ""
+        tv_city.text = city?.name
         if (oldCity != city) {
             oldCity = city
             getList()
@@ -159,11 +167,16 @@ class FgtNetStationItem : MainTabFragment() {
             onSuccess { res ->
                 srl_station?.let {
                     data = res.toPOJO<NetStationBean>().data
-                    val citys = data.map { item -> item.city }
-                    currentIndex = -1
-                    cityAdapter.setNewData(citys)
-                    tv_empty_net_station.visibility =
-                        if (data.isEmpty()) View.VISIBLE else View.GONE
+                    if (data.isEmpty()){
+                        tv_empty_net_station.visibility =View.VISIBLE
+                        stationAdapter.setNewData(null)
+                    }else{
+                        tv_empty_net_station.visibility =View.GONE
+                        val citys = data.map { item -> item.city }
+                        currentIndex = 0
+                        stationAdapter.setNewData(data[currentIndex].list)
+                    }
+
                 }
             }
         }
@@ -279,13 +292,13 @@ class FgtNetStationItem : MainTabFragment() {
 
 
     inner class StationRvAdapter :
-        BaseQuickAdapter<NetStationBean.Data.X, BaseViewHolder>(com.ruimeng.things.R.layout.item_rv_station) {
+        BaseQuickAdapter<NetStationBean.Data.X, BaseViewHolder>(R.layout.item_rv_station) {
         override fun convert(helper: BaseViewHolder, item: NetStationBean.Data.X?) {
             bothNotNull(helper, item) { a, b ->
-                val ivCall = a.getView<ImageView>(com.ruimeng.things.R.id.iv_call)
-                val tvTitle = a.getView<TextView>(com.ruimeng.things.R.id.tv_title)
-                val qmf = a.getView<QMUIFloatLayout>(com.ruimeng.things.R.id.qmf)
-                val tvLocation = a.getView<TextView>(com.ruimeng.things.R.id.tv_location)
+                val tvCall = a.getView<TextView>(R.id.tv_call)
+                val tvTitle = a.getView<TextView>(R.id.tv_title)
+                val tvLocation = a.getView<TextView>(R.id.tv_location)
+                val tvDistance = a.getView<TextView>(R.id.tv_distance)
 
 
                 a.itemView.setOnClickListener {
@@ -307,7 +320,7 @@ class FgtNetStationItem : MainTabFragment() {
 
                 }
 
-                ivCall.setOnClickListener {
+                tvCall.setOnClickListener {
                     getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
                         SystemUtils.call(context, b.tel)
                     })
@@ -322,46 +335,28 @@ class FgtNetStationItem : MainTabFragment() {
                         "${String.format("%.2f", (distance / 1000))}km"
                     else
                         "${String.format("%.2f", distance)}m"
+                tvDistance.text = "距离我${distanceStr}"
 
-                tvLocation.text = "$distanceStr   |   ${b.address}"
+                tvLocation.text = "地址：${b.address}"
 
-                tvLocation.setOnClickListener {
+                a.getView<TextView>(R.id.tv_nav).setOnClickListener {
                     naviToLocation(b.lat, b.lng, b.site_name)
                 }
                 val isReturnStation = "1" != getType
-                a.setVisible(com.ruimeng.things.R.id.qmf, !isReturnStation)
 
+                val tvCode = a.getView<TextView>(R.id.tv_code)
+                val tvNumber = a.getView<TextView>(R.id.tv_number)
+                val imageView = a.getView<ImageView>(R.id.iv01)
                 if (!isReturnStation) {
-                    qmf.apply {
-                        removeAllViews()
-                        setChildHorizontalSpacing(DensityHelper.dp2px(5f))
-                        setChildVerticalSpacing(DensityHelper.dp2px(2f))
-                    }
-
-                    val tagList = b.tag.split(",")
-                    if (b.tag.isNotBlank() && tagList.isNotEmpty()) {
-                        tagList.forEach { tag ->
-                            val tagV = View.inflate(
-                                context,
-                                com.ruimeng.things.R.layout.layout_station_tag,
-                                null
-                            )
-                            val tv = tagV.findViewById<TextView>(com.ruimeng.things.R.id.tv)
-                            tv.text = tag
-                            qmf.addView(tagV)
-                        }
-                    }
-
-
-                    val tagV = View.inflate(
-                        context,
-                        com.ruimeng.things.R.layout.layout_station_battery_count,
-                        null
-                    )
-                    val tv = tagV.findViewById<TextView>(com.ruimeng.things.R.id.tv)
-                    tv.text = "可租用电池：${b.count}"
-                    qmf.addView(tagV)
-
+                    tvCode.text =  "代理编码：${b.tag}"
+                    tvNumber.text = "可租用电池：${b.count}"
+                    tvCode.visibility = View.VISIBLE
+                    tvNumber.visibility = View.VISIBLE
+                    imageView.setImageResource(R.mipmap.ic_shouhou)
+                }else{
+                    tvCode.visibility = View.GONE
+                    tvNumber.visibility = View.GONE
+                    imageView.setImageResource(R.mipmap.ic_statation)
                 }
             }
         }

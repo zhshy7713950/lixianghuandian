@@ -1,5 +1,6 @@
 package com.ruimeng.things.net_station
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,6 +14,7 @@ import com.ruimeng.things.net_station.bean.NetWorkShowBean
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.utils.LogHelper
 import com.utils.ToastHelper
+import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_net_station.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.jetbrains.anko.sp
@@ -34,7 +36,7 @@ class FgtNetStation : MainTabFragment() {
 
         mView?.findViewById<QMUITopBar>(R.id.topbar)?.apply {
             initTopbar(this, "服务网点", false)
-            addRightImageButton(R.drawable.by_map_net_station, R.id.right)
+            addRightImageButton(R.mipmap.map, R.id.right)
                 .setOnClickListener {
                     LogHelper.i(
                         "data===",
@@ -149,20 +151,18 @@ class FgtNetStation : MainTabFragment() {
         }
     }
 
-    private fun setView(list: Array<SupportFragment>
-    ) {
+    private fun setView(list: Array<SupportFragment>) {
         tab_net_station.apply {
             reset()
             for (i in titleList.indices) {
                 addTab(QMUITabSegment.Tab(titleList[i]))
             }
-            setTabTextSize(sp(12))
+            setTabTextSize(sp(14))
             setHasIndicator(true)
             setIndicatorWidthAdjustContent(true)
-            @Suppress("DEPRECATION")
-            setDefaultNormalColor(resources.getColor(R.color.text_color))
-            @Suppress("DEPRECATION")
-            setDefaultSelectedColor(resources.getColor(R.color.black))
+            setIndicatorDrawable(resources.getDrawable(R.drawable.line_green))
+            setDefaultNormalColor(Color.parseColor("#8694A0"))
+            setDefaultSelectedColor(resources.getColor(R.color.white))
             setOnTabClickListener { index ->
                 currentIndex = index
                 showHideFragment(
@@ -170,6 +170,7 @@ class FgtNetStation : MainTabFragment() {
                             list[index]
                 )
             }
+            selectTab(0)
             notifyDataChanged()
         }
 

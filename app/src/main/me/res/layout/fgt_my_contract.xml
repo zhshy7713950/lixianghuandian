@@ -63,21 +63,69 @@
 
 
 
-
-    <com.qmuiteam.qmui.widget.QMUITabSegment
-        android:id="@+id/tab_my_contract"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="23.5dp">
+            <View
+                android:id="@+id/v1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/rectangle_btn_bg"/>
+            <View
+                android:id="@+id/v2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/transparent"/>
+            <View
+                android:id="@+id/v3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/transparent"/>
+            <View
+                android:id="@+id/v4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:background="@color/transparent"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.qmuiteam.qmui.widget.QMUITabSegment
+                android:id="@+id/tab_my_contract"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:qmui_tab_indicator_height="33dp"
+                android:layout_marginTop="20dp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/bg_gray" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/bg_gray" />
 
-    <com.qmuiteam.qmui.widget.QMUIViewPager
-        android:id="@+id/vp_my_contract"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <com.qmuiteam.qmui.widget.QMUIViewPager
+                android:id="@+id/vp_my_contract"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 
 </LinearLayout>

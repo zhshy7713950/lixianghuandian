@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+	android:background="#404E58">
 
 	<include layout="@layout/layout_topbar"/>
 
@@ -10,10 +11,10 @@
 			android:elevation="2dp"
 			android:id="@+id/tab_net_station"
 			android:layout_width="match_parent"
-			android:layout_height="40dp"/>
+			android:layout_height="40dp"
+		android:background="#404E58"/>
 
 	<FrameLayout
-			android:layout_marginTop="2dp"
 			android:id="@+id/fl_net_station"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>

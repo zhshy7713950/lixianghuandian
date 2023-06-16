@@ -7,9 +7,11 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.R
@@ -36,7 +38,7 @@ class FgtMyContract : MainTabFragment() {
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-
+        val tabv = arrayOf(R.id.v1,R.id.v2,R.id.v3,R.id.v4)
 
         vp_my_contract.apply {
             //0正常1过期2未完成3历史
@@ -64,6 +66,15 @@ class FgtMyContract : MainTabFragment() {
                 override fun onPageSelected(position: Int) {
                     currentTabIndex = position
                     qfl_search_my_contract.performClick()
+                    for (i in 0..3){
+                        var tabBg = rootView.findViewById(tabv[i]) as View
+                        if (i == position){
+                            tabBg.setBackgroundResource( R.drawable.rectangle_btn_bg)
+                        }else{
+                            tabBg.setBackgroundColor(resources.getColor(R.color.transparent))
+                        }
+
+                    }
                 }
             })
         }
@@ -120,12 +131,25 @@ class FgtMyContract : MainTabFragment() {
         tab_my_contract.apply {
             reset()
             mode = QMUITabSegment.MODE_FIXED
-            setDefaultNormalColor(Color.parseColor("#A4A4A4"))
-            setDefaultSelectedColor(Color.parseColor("#232524"))
-            setHasIndicator(true)
+            setDefaultNormalColor(Color.parseColor("#929FAB"))
+            setDefaultSelectedColor(Color.parseColor("#29EBB6"))
+            setHasIndicator(false)
             setupWithViewPager(vp_my_contract)
+            if (suffixExp > 0){
+                var tab = tab_my_contract.getTab(1)
+                tab.setSignCountMargin(-QMUIDisplayHelper.dp2px(context, 8), -QMUIDisplayHelper.dp2px(context, 8))
+                tab.showSignCountView(context,suffixExp)
+            }
+            if (suffixNotComplete > 0){
+                var tab = tab_my_contract.getTab(2)
+                tab.setSignCountMargin(-QMUIDisplayHelper.dp2px(context, 8), -QMUIDisplayHelper.dp2px(context, 8))
+                tab.showSignCountView(context,2)
+            }
+
             notifyDataChanged()
         }
+
+
     }
 
     private var suffixExp = 0
@@ -144,18 +168,18 @@ class FgtMyContract : MainTabFragment() {
 
             var title: CharSequence = oriTitle
 
-            if (position == 1) {
-                if (suffixExp != 0) {
-                    title = Html.fromHtml("$oriTitle<font color='#FF5757'>(${suffixExp})</font>")
-                }
-
-            } else if (position == 2) {
-                if (suffixNotComplete != 0) {
-                    title =
-                        Html.fromHtml("$oriTitle<font color='#FF5757'>(${suffixNotComplete})</font>")
-                }
-
-            }
+//            if (position == 1) {
+//                if (suffixExp != 0) {
+//                    title = Html.fromHtml("$oriTitle<font color='#FF5757'>(${suffixExp})</font>")
+//                }
+//
+//            } else if (position == 2) {
+//                if (suffixNotComplete != 0) {
+//                    title =
+//                        Html.fromHtml("$oriTitle<font color='#FF5757'>(${suffixNotComplete})</font>")
+//                }
+//
+//            }
 
             return title
         }

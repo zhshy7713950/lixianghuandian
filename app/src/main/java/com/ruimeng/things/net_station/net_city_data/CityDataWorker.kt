@@ -120,21 +120,19 @@ object CityDataWorker {
 
             .setContentTextSize(20)//设置滚轮文字大小
 
-            .setDividerColor(Color.LTGRAY)//设置分割线的颜色
+            .setDividerColor(Color.parseColor("#586671"))//设置分割线的颜色
 
             .setSelectOptions(0, 1)//默认选中项
 
-            .setBgColor(Color.BLACK)
+            .setBgColor(Color.parseColor("#404E59"))
 
-            .setTitleBgColor(Color.DKGRAY)
+            .setTitleBgColor(Color.parseColor("#404E59"))
+            .setCancelColor(Color.WHITE)
+            .setTitleSize(15)
+            .setTextColorCenter(Color.WHITE)
 
-            .setTitleColor(Color.LTGRAY)
+            .setSubmitColor(Color.parseColor("#29EBB6"))
 
-            .setCancelColor(Color.YELLOW)
-
-            .setSubmitColor(Color.YELLOW)
-
-            .setTextColorCenter(Color.LTGRAY)
 
             .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
 
@@ -142,7 +140,7 @@ object CityDataWorker {
 
 //            .setLabels("省", "市", "区")
 
-            .setBackgroundId(0x00000000) //设置外部遮罩颜色
+            .setBackgroundId(0x50000000) //设置外部遮罩颜色
 
             .setOptionsSelectChangeListener { options1, options2, options3 ->
                 //                val str = "options1: $options1\noptions2: $options2\noptions3: $options3"

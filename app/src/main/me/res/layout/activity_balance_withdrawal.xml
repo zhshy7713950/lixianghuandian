@@ -171,22 +171,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <RadioButton
-                            android:id="@+id/rbWx"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutDirection="rtl"
-                            android:text="微信"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:layout_marginLeft="14dp"
-                            android:layout_marginRight="14dp"
-                            android:drawablePadding="12dp"
-                            android:layout_marginTop="14dp"
-                            android:drawableLeft="@mipmap/ic_withdrawal_wx"
-                            android:drawableRight="@drawable/radio_select"
-                            android:button="@null">
-                        </RadioButton>
-                        <RadioButton
                             android:id="@+id/rbAlipay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -198,11 +182,28 @@
                             android:layout_marginRight="14dp"
                             android:drawablePadding="12dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginBottom="16dp"
                             android:drawableLeft="@mipmap/ic_withdrawal_alipay"
                             android:drawableRight="@drawable/radio_select"
                             android:button="@null">
                         </RadioButton>
+                        <RadioButton
+                            android:id="@+id/rbWx"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layoutDirection="rtl"
+                            android:text="微信"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginRight="14dp"
+                            android:drawablePadding="12dp"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="16dp"
+                            android:drawableLeft="@mipmap/ic_withdrawal_wx"
+                            android:drawableRight="@drawable/radio_select"
+                            android:button="@null">
+                        </RadioButton>
+
                     </RadioGroup>
                 </LinearLayout>
 

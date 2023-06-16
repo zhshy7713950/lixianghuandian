@@ -1,56 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/white"
-		android:orientation="vertical"
-		android:padding="10dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/rectangle_gray_bg"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp">
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/iv01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_statation"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-		<TextView
-				android:id="@+id/tv_title"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="1"
-				android:gravity="center_vertical"
-				android:textSize="16sp"
-				tools:text="网点标题" />
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-		<View
-				android:layout_width="1dp"
-				android:layout_height="20dp"
-				android:layout_gravity="center"
-				android:background="@color/black" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新街里137#柜"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            />
 
-		<ImageView
-				android:id="@+id/iv_call"
-				android:layout_width="20dp"
-				android:layout_height="20dp"
-				android:layout_gravity="center"
-				android:layout_marginLeft="20dp"
-				android:layout_marginRight="20dp"
-				android:src="@drawable/call_net_station" />
-	</LinearLayout>
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="距离我100m"
+            android:textColor="#ff29ebb6"
+            android:textSize="12sp"
+            />
 
-	<com.qmuiteam.qmui.widget.QMUIFloatLayout
-			android:id="@+id/qmf"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="5dp"
-			android:paddingBottom="5dp" />
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="地址：新街里荟锦路南城都汇8期（海博牙科旁）"
+            android:textColor="#ffb2c1ce"
+            android:textSize="12sp"
+             />
+        <TextView
+            android:id="@+id/tv_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="代理编码：789306"
+            android:textColor="#ffb2c1ce"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="可租用电池：0"
+            android:textColor="#ffb2c1ce"
+            android:textSize="12sp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_line"
+            app:layout_constraintTop_toBottomOf="@id/tv_location" />
+    </LinearLayout>
 
-	<TextView
-			android:id="@+id/tv_location"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingRight="20dp"
-			android:textColor="@color/text_color"
-			android:textSize="12sp"
-			tools:text="我是地址信息" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@mipmap/call_net_station"
+        android:drawablePadding="6dp"
+        android:text="联系经销商"
+        android:textColor="#ffffffff"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/lin_ver"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll" />
+
+    <TextView
+        android:id="@+id/tv_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="53dp"
+        android:drawableLeft="@mipmap/nav_net_station"
+        android:drawablePadding="6dp"
+        android:text="到这里去"
+        android:textColor="#ffffffff"
+        android:textSize="13sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

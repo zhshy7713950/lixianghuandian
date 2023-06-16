@@ -4,6 +4,7 @@ import MyContractListBean
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -210,9 +211,9 @@ class FgtMyContractItem : MainTabFragment() {
         override fun convert(helper: BaseViewHolder, item: MyContractListBean.Data?) {
             bothNotNull(helper, item) { a, b ->
 
-                a.getView<TextView>(R.id.tv_num).text = "编号：${b.device_id}"
+                a.getView<TextView>(R.id.tv_num).text = "${b.device_id}"
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
-                a.getView<TextView>(R.id.tv_rent_long).text = "租期：${b.renttime_str}"
+                a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
                 a.getView<TextView>(R.id.tv_rent_start_time).text = "租用日期:${b.begin_time}"
                 a.getView<TextView>(R.id.tv_rent_end_time).text = "结束日期:${b.end_time}"
 
@@ -229,7 +230,7 @@ class FgtMyContractItem : MainTabFragment() {
                     }
                 }
 
-                a.getView<QMUIRoundFrameLayout>(R.id.qrf_return).apply {
+                a.getView<FrameLayout>(R.id.qrf_return).apply {
                     visibility = if (b.btn_return == 1) View.VISIBLE else View.GONE
                     setOnClickListener { tryReturnDeposit(b.contract_id) }
                 }

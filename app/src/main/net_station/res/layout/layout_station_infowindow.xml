@@ -1,177 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="180dp"
-		android:layout_height="wrap_content"
-		android:layout_margin="10dp"
-		android:background="@drawable/custom_info_bubble"
-		android:orientation="vertical"
-		android:padding="10dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+   >
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="30dp"
-			android:orientation="horizontal">
-
-		<View
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="1" />
-
-		<ImageView
-				android:id="@+id/iv_close"
-				android:layout_width="20dp"
-				android:layout_height="20dp"
-				android:src="@drawable/camera_close"
-				android:tint="@color/black" />
-	</LinearLayout>
-
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal">
-
-		<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="换电站："
-				android:textColor="@color/black"
-				android:textSize="12sp" />
-
-		<TextView
-				android:id="@+id/tv_station_name"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center_vertical"
-				android:textSize="12sp"
-				tools:text="芙蓉小区换电站" />
-	</LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/rectangle_gray_bg"
+        android:padding="10dp"
+        >
 
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:visibility="gone"
-			android:orientation="horizontal">
+        <ImageView
 
-		<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="电话："
-				android:textColor="@color/black"
-				android:textSize="12sp" />
-
-		<TextView
-				android:id="@+id/tv_station_phone"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center_vertical"
-				android:textSize="12sp"
-				tools:text="028-111111111" />
-	</LinearLayout>
-
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:orientation="horizontal">
-
-		<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="距离："
-				android:textColor="@color/black"
-				android:textSize="12sp" />
-
-		<TextView
-				android:id="@+id/tv_station_distance"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center_vertical"
-				android:textSize="12sp"
-				tools:text="1.25km" />
-	</LinearLayout>
-
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:orientation="horizontal">
-
-		<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="地址："
-				android:textColor="@color/black"
-				android:textSize="12sp" />
-
-		<TextView
-				android:id="@+id/tv_station_location"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:gravity="center_vertical"
-				android:textSize="12sp"
-				tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号" />
-	</LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="30dp"
+            android:src="@mipmap/ic_charge"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-	<TextView
-			android:id="@+id/tv_station_tag"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:gravity="center_vertical"
-			android:textSize="12sp"
-			tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号" />
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/camera_close"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_station_name"
+                android:layout_width="93dp"
+                android:layout_height="21dp"
+                android:text="新街里137#柜"
+                android:textColor="#ffffffff"
+                android:textSize="15sp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/tv_station_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距离我4.61km"
+                    android:textColor="#ff29ebb6"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_in_shop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:drawableRight="@mipmap/arrow_right"
+                    android:drawablePadding="10dp"
+                    android:text="进店看看"
+                    android:textColor="#ff29ebb6"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="地址："
+                    android:textColor="#ff929fab"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_station_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_station_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="028-地址：成都市一环路南二段46号附5号 号附5号号附5号" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话："
+                    android:textColor="#ff929fab"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_station_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    tools:text="10800950560" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="可换电池数："
+                    android:textColor="#ff929fab"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_station_battery_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    tools:text="206台" />
+            </LinearLayout>
+        </LinearLayout>
 
 
-	<TextView
-			android:id="@+id/tv_station_battery_count"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5dp"
-			android:gravity="center_vertical"
-			android:textSize="12sp"
-			tools:text="可换电池数：210台" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/ll">
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_phone_call"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_common3"
+                android:drawableLeft="@mipmap/call_net_station2"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="立即联系"
+                android:textColor="#29EBB6"
+                android:textSize="15sp" />
 
-		<com.flyco.roundview.RoundTextView xmlns:app="http://schemas.android.com/apk/res-auto"
-				android:id="@+id/tv_into_shop"
-				android:layout_width="0dp"
-				android:layout_height="30dp"
-				android:layout_margin="10dp"
-				android:layout_weight="1"
-				android:gravity="center"
-				android:text="进店"
-				android:textColor="@color/white"
-				android:textSize="12sp"
-				app:rv_backgroundColor="@color/app_color"
-				app:rv_cornerRadius="5dp"
-				app:rv_strokeWidth="0dp" />
+            <TextView
+                android:id="@+id/tv_navi_here"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_btn_common1"
+                android:drawableLeft="@mipmap/nav_marker2"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="30dp"
+                android:text="到这里去"
+                android:textColor="#272934"
+                android:textSize="15sp" />
 
-		<com.flyco.roundview.RoundTextView xmlns:app="http://schemas.android.com/apk/res-auto"
-				android:id="@+id/tv_navi_here"
-				android:layout_width="0dp"
-				android:layout_height="30dp"
-				android:layout_margin="10dp"
-				android:layout_weight="1"
-				android:gravity="center"
-				android:text="去这里"
-				android:textColor="@color/white"
-				android:textSize="12sp"
-				app:rv_backgroundColor="@color/app_color"
-				app:rv_cornerRadius="5dp"
-				app:rv_strokeWidth="0dp" />
-
-	</LinearLayout>
-
-</LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

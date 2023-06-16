@@ -98,77 +98,101 @@ class FgtNetStationByMap : BaseBackFragment() {
             }
 
             @SuppressLint("SetTextI18n")
-            override fun getInfoWindow(marker: Marker?): View {
+            override fun getInfoWindow(marker: Marker?): View? {
 
-                val v = View.inflate(activity, R.layout.layout_station_infowindow, null)
-                val ivClose = v.findViewById<ImageView>(R.id.iv_close)
-                val tvStationName = v.findViewById<TextView>(R.id.tv_station_name)
-                val tvStationPhone = v.findViewById<TextView>(R.id.tv_station_phone)
-                val tvStationDistance = v.findViewById<TextView>(R.id.tv_station_distance)
-                val tvStationLocation = v.findViewById<TextView>(R.id.tv_station_location)
-                val tvStationTag = v.findViewById<TextView>(R.id.tv_station_tag)
-                val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
-
-                val tvIntoShop = v.findViewById<TextView>(R.id.tv_into_shop)
-                val tvNavi = v.findViewById<TextView>(R.id.tv_navi_here)
-
-
-                marker?.let { markerView ->
-
-                    ivClose.setOnClickListener {
-                        markerView.hideInfoWindow()
-                    }
-
-
-                    val agent = markInfoMap[marker.position.latitude + marker.position.longitude]
-
-                    agent?.let {
-
-                        val distance =
-                            AMapUtils.calculateLineDistance(
-                                LatLng(agent.lat, agent.lng),
-                                LatLng(App.lat, App.lng)
-                            )
-                        val distanceStr =
-                            if (distance >= 1000)
-                                "${String.format("%.2f", (distance / 1000))}km"
-                            else
-                                "${String.format("%.2f", distance)}m"
-
-
-                        tvStationName.text = agent.site_name
-                        tvStationPhone.text = agent.tel
-                        tvStationDistance.text = distanceStr
-                        tvStationLocation.text = agent.address
-                        tvStationTag.text = agent.tag
-
-                        tvStationPhone.setOnClickListener {
-                            getPermissions(activity,
-                                PermissionType.CALL_PHONE,
-                                allGranted = { SystemUtils.call(activity, agent.tel) })
-                        }
-
-                        tvStationBatteryCount.text = "可换电池数：${agent.count}台"
-
-                        tvIntoShop.setOnClickListener {
-                            if ("3"==getType){
-                                start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
-                            }else{
-                                start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
+                var popupWindow = activity?.let {
+                    if (marker != null) {
+                        MarkPopupWindow(it,marker,markInfoMap,object :MarkPopupWindow.OnMarKCallback{
+                            override fun click(view: View,agent:NetStationBean.Data.X) {
+                                if (view.id == R.id.tv_phone_call){
+                                    getPermissions(activity,
+                                        PermissionType.CALL_PHONE,
+                                        allGranted = { SystemUtils.call(activity, agent.tel) })
+                                }else if (view.id == R.id.tv_in_shop){
+                                    if ("3"==getType){
+                                        start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
+                                    }else{
+                                        start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
+                                    }
+                                }else if (view.id == R.id.tv_navi_here){
+                                    naviToLocation(marker, agent.site_name)
+                                }
                             }
-
-                        }
-
-                        tvNavi.setOnClickListener {
-                            naviToLocation(marker, agent.site_name)
-                        }
+                        })
                     }
-
-
                 }
 
 
-                return v
+
+//                val v = View.inflate(activity, R.layout.layout_station_infowindow, null)
+//                val ivClose = v.findViewById<ImageView>(R.id.iv_close)
+//                val tvStationName = v.findViewById<TextView>(R.id.tv_station_name)
+//                val tvStationPhone = v.findViewById<TextView>(R.id.tv_station_phone)
+//                val tvStationDistance = v.findViewById<TextView>(R.id.tv_station_distance)
+//                val tvStationLocation = v.findViewById<TextView>(R.id.tv_station_location)
+//                val tvStationTag = v.findViewById<TextView>(R.id.tv_station_tag)
+//                val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
+//
+//                val tvIntoShop = v.findViewById<TextView>(R.id.tv_into_shop)
+//                val tvNavi = v.findViewById<TextView>(R.id.tv_navi_here)
+//
+//
+//                marker?.let { markerView ->
+//
+//                    ivClose.setOnClickListener {
+//                        markerView.hideInfoWindow()
+//                    }
+//
+//
+//                    val agent = markInfoMap[marker.position.latitude + marker.position.longitude]
+//
+//                    agent?.let {
+//
+//                        val distance =
+//                            AMapUtils.calculateLineDistance(
+//                                LatLng(agent.lat, agent.lng),
+//                                LatLng(App.lat, App.lng)
+//                            )
+//                        val distanceStr =
+//                            if (distance >= 1000)
+//                                "${String.format("%.2f", (distance / 1000))}km"
+//                            else
+//                                "${String.format("%.2f", distance)}m"
+//
+//
+//                        tvStationName.text = agent.site_name
+//                        tvStationPhone.text = agent.tel
+//                        tvStationDistance.text = distanceStr
+//                        tvStationLocation.text = agent.address
+//                        tvStationTag.text = agent.tag
+//
+//                        tvStationPhone.setOnClickListener {
+//                            getPermissions(activity,
+//                                PermissionType.CALL_PHONE,
+//                                allGranted = { SystemUtils.call(activity, agent.tel) })
+//                        }
+//
+//                        tvStationBatteryCount.text = "可换电池数：${agent.count}台"
+//
+//                        tvIntoShop.setOnClickListener {
+//                            if ("3"==getType){
+//                                start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
+//                            }else{
+//                                start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
+//                            }
+//
+//                        }
+//
+//                        tvNavi.setOnClickListener {
+//                            naviToLocation(marker, agent.site_name)
+//                        }
+//                    }
+//
+//
+//                }
+//
+
+                return null
             }
         })
 

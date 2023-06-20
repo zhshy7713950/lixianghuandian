@@ -1,121 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/gray_F5"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_F5"
+    android:orientation="vertical">
 
-	<com.qmuiteam.qmui.widget.QMUITopBar
-			android:id="@+id/topbar"
-			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:elevation="2dp"
-			android:orientation="vertical" />
-
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10dp"
-			android:layout_marginTop="10dp"
-			android:layout_marginRight="10dp"
-			android:background="?attr/selectableItemBackground"
-			android:orientation="vertical"
-			app:qmui_backgroundColor="@color/white"
-			app:qmui_borderColor="@color/white"
-			app:qmui_radius="5dp">
-
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="108dp"
-				android:background="@color/white"
-				android:orientation="horizontal"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp">
-
-			<ImageView
-					android:layout_width="70dp"
-					android:layout_height="88dp"
-					android:layout_gravity="center"
-					android:src="@drawable/icon_net_station_shop_1" />
-
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:orientation="vertical"
-					android:paddingLeft="10dp">
-
-				<TextView
-						android:id="@+id/addressDetailText"
-						android:layout_width="match_parent"
-						android:layout_height="0dp"
-						android:layout_weight="1"
-						android:gravity="bottom"
-						android:textColor="@color/black"
-						android:textSize="12sp"
-						tools:text="地址：成都市天府新区天府大道北段" />
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+        app:qmui_topbar_title_color="@color/white"
+       />
 
 
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_height="0dp"
-						android:layout_weight="1"
-						android:gravity="center_vertical">
 
-					<TextView
-							android:id="@+id/numberText"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:textColor="@color/black"
-							android:textSize="12sp"
-							tools:text="电池数量：20    可换电数量：14" />
-
-
-				</LinearLayout>
-
-
-				<TextView
-						android:id="@+id/recommendText"
-						android:layout_width="match_parent"
-						android:layout_height="0dp"
-						android:layout_weight="1"
-						android:gravity="top"
-						android:textColor="@color/black"
-						android:textSize="12sp"
-						tools:text="推荐：1号架6号柜 10235号电池" />
-
-			</LinearLayout>
-
-		</LinearLayout>
-
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
-
-
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_marginLeft="10dp"
-			android:layout_marginTop="10dp"
-			android:layout_marginRight="10dp"
-			android:layout_marginBottom="10dp"
-			android:background="?attr/selectableItemBackground"
-			android:orientation="vertical"
-			app:qmui_backgroundColor="@color/white"
-			app:qmui_borderColor="@color/white"
-			app:qmui_radius="5dp">
-
-		<com.qmuiteam.qmui.widget.QMUITabSegment
-				android:id="@+id/mQMUITabSegment"
-				android:layout_width="match_parent"
-				android:layout_height="40dp" />
-
-		<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/recyclerview"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:paddingBottom="10dp"
+            />
 
 
 </LinearLayout>

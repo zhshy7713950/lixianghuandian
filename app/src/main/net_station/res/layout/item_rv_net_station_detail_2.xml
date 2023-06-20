@@ -1,79 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/rectangle_black_bg"
+	android:orientation="vertical"
+	android:padding="10dp"
+	android:layout_marginLeft="5dp"
+	android:layout_marginRight="5dp"
+	android:layout_marginTop="10dp">
+
+	<com.flyco.roundview.RoundTextView
+		android:id="@+id/positionText"
+		android:layout_width="wrap_content"
+		android:layout_height="27dp"
+		android:gravity="center"
+		tools:text="1"
+		android:paddingLeft="14dp"
+		android:paddingRight="14dp"
+		android:textColor="@color/white"
+		app:rv_backgroundColor="#363E4C"
+		app:rv_cornerRadius="3dp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		/>
+	<TextView
+		android:id="@+id/tvPercent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:background="@color/white"
-		android:orientation="vertical"
-		android:padding="0.5dp">
+		tools:text="59%"
+		android:textColor="#ff29ebb6"
+		android:textSize="20sp"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		/>
+	<ImageView
+		android:id="@+id/imageView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginTop="50dp"
+		android:src="@mipmap/battery_image_1"/>
+
 
 	<LinearLayout
-			android:id="@+id/rootLayout"
-			android:layout_width="match_parent"
-			android:layout_height="120dp"
-			android:orientation="vertical"
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp">
-
-		<TextView
-				android:id="@+id/positionText"
-				android:layout_width="20dp"
-				android:layout_height="20dp"
-				android:layout_marginLeft="10dp"
-				android:background="@drawable/dot_whitle"
-				android:gravity="center"
-				android:textColor="@color/white"
-				android:textSize="11sp"
-				tools:text="1" />
-
-		<ImageView
-				android:id="@+id/imageView"
-				android:layout_width="45dp"
-				android:layout_height="21dp"
-				android:layout_gravity="center" />
-
-
-		<TextView
-				android:id="@+id/textView"
-				android:layout_width="match_parent"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/rectangle_gray_bg_5"
+		app:layout_constraintTop_toBottomOf="@id/imageView"
+		android:layout_marginTop="16dp"
+		android:orientation="vertical">
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="14dp"
+			android:layout_marginTop="10dp">
+			<TextView
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				android:textColor="@color/white"
-				android:gravity="center"
+				android:text="编号："
+				android:textColor="#ff929fab"
+				android:textSize="10sp"
+				/>
+			<TextView
+				android:id="@+id/tvCode"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="2000112"
+				android:textColor="#ffffffff"
 				android:textSize="11sp"
-				tools:text="" />
+
+				/>
+		</LinearLayout>
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="14dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="状态："
+			android:textColor="#ff929fab"
+			android:textSize="10sp"
+			/>
+		<TextView
+			android:id="@+id/tvStatus"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="正常可换"
+			android:textColor="#ffffffff"
+			android:textSize="10sp"
+			/>
+	</LinearLayout>
 
 	</LinearLayout>
 
-	<FrameLayout
-			android:id="@+id/checkedLayout"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="120dp">
-
-		<View
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:background="@color/blue" />
-
-		<View
-				android:layout_width="5dp"
-				android:layout_height="match_parent"
-				android:background="@color/blue" />
-
-		<View
-				android:layout_width="5dp"
-				android:layout_height="match_parent"
-				android:layout_gravity="right"
-				android:background="@color/blue" />
 
 
-		<View
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_gravity="bottom"
-				android:background="@color/blue" />
-
-	</FrameLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
+import com.utils.CommonUtil
 import com.utils.DensityHelper
 import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.jetbrains.anko.doAsync
@@ -141,10 +142,15 @@ class FgtNetStationItem : MainTabFragment() {
 
     private val getType by lazy { arguments?.getString("type", "") ?: "" }
     private var currentIndex = -1
-    private val cityAdapter by lazy { CityRvAdapter { stationAdapter.setNewData(data[currentIndex].list) } }
     private val stationAdapter by lazy { StationRvAdapter() }
 
     private var data: List<NetStationBean.Data> = emptyList()
+
+    public fun getStationList(): ArrayList<NetStationBean.Data.X> {
+        var list = ArrayList<NetStationBean.Data.X>(stationAdapter.data.size)
+        stationAdapter.data.toCollection(list)
+        return list
+    }
 
     private fun getList() {
 
@@ -183,112 +189,9 @@ class FgtNetStationItem : MainTabFragment() {
     }
 
     private fun naviToLocation(targetLat: Double, targetLng: Double, targetName: String) {
-
-        val appName = getString(R.string.app_name)
-        val latA = App.lat
-        val lngA = App.lng
-        val sName = "我的位置"
-
-        val latB = targetLat
-        val lngB = targetLng
-        val dName = targetName
-
-
-        val bs = QMUIBottomSheet.BottomListSheetBuilder(activity)
-            .setTitle("选择应用进行导航")
-
-
-
-        if (checkPackage(activity!!, "com.autonavi.minimap")) {
-
-            bs.addItem("高德地图", "gd")
-
-        }
-        if (checkPackage(activity!!, "com.baidu.BaiduMap")) {
-
-            bs.addItem("百度地图", "bd")
-
-        }
-
-        if (!checkPackage(activity!!, "com.autonavi.minimap")
-            &&
-            !checkPackage(activity!!, "com.baidu.BaiduMap")
-        ) {
-            bs.addItem("请先下载“高德地图” 或 “百度地图”", "no")
-        }
-
-
-        bs.setOnSheetItemClickListener { dialog, itemView, position, tag ->
-            if (tag == "gd") {
-                NaviUtil.setUpGaodeAppByLoca(
-                    appName,
-                    latA.toString(), lngA.toString(), sName,
-                    latB.toString(), lngB.toString(), dName
-                )
-            } else if (tag == "bd") {
-
-                val posA = LngLat()
-                posA.latitude = latA
-                posA.longitude = lngA
-
-                val posB = LngLat()
-                posB.latitude = latB
-                posB.longitude = lngB
-
-
-                val bdA = CoodinateCovertor.bd_encrypt(posA)
-                val bdB = CoodinateCovertor.bd_encrypt(posB)
-
-                NaviUtil.setUpBaiduAPPByLoca(
-                    bdA.latitude.toString(), bdA.longitude.toString(), sName,
-                    bdB.latitude.toString(), bdB.longitude.toString(), dName,
-                    appName, appName
-                )
-
-
-            }
-            dialog.dismiss()
-
-        }
-
-        bs.build().show()
+        CommonUtil.naviToLocation(activity!!,targetLat,targetLng,targetName)
     }
 
-    inner class CityRvAdapter(val click: () -> Unit) :
-        BaseQuickAdapter<String, BaseViewHolder>(com.ruimeng.things.R.layout.item_rv_city_station) {
-        override fun convert(helper: BaseViewHolder, item: String?) {
-            bothNotNull(helper, item) { a, b ->
-                if (currentIndex == -1) {
-                    currentIndex = 0
-                    click.invoke()
-                }
-                val isChecked = a.layoutPosition == currentIndex
-                val ll = a.getView<LinearLayout>(com.ruimeng.things.R.id.ll)
-                val v = a.getView<View>(com.ruimeng.things.R.id.v)
-                val tv = a.getView<TextView>(com.ruimeng.things.R.id.tv)
-
-
-                if (isChecked) {
-                    tv.setTextColor(resources.getColor(com.ruimeng.things.R.color.app_color))
-                    ll.setBackgroundColor(resources.getColor(com.ruimeng.things.R.color.bg_gray))
-                    v.setBackgroundColor(resources.getColor(com.ruimeng.things.R.color.app_color))
-                } else {
-                    tv.setTextColor(resources.getColor(com.ruimeng.things.R.color.text_color))
-                    ll.setBackgroundColor(resources.getColor(com.ruimeng.things.R.color.white))
-                    v.setBackgroundColor(resources.getColor(com.ruimeng.things.R.color.white))
-                }
-
-                tv.text = b
-
-                a.itemView.setOnClickListener {
-                    currentIndex = a.layoutPosition
-                    click.invoke()
-                    notifyDataSetChanged()
-                }
-
-            }
-        }
-    }
 
 
     inner class StationRvAdapter :

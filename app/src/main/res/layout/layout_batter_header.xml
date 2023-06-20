@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_gray_bg"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="9dp"
+            android:layout_marginRight="13dp"
+            android:src="@mipmap/icon_net_station_shop_1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingLeft="6dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电柜编号"
+                android:textColor="#ffb2c1ce"
+                android:textSize="12sp"
+                android:layout_marginTop="12dp"
+                />
+            <TextView
+                android:id="@+id/tvCode"
+                android:layout_width="105dp"
+                android:layout_height="28dp"
+                tools:text="400001122"
+                android:textColor="#ffffffff"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:id="@+id/tvBatteryNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="电池数量：10"
+                android:textColor="#ffffffff"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"
+                />
+            <TextView
+                android:id="@+id/tvNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="可换电池数量：8"
+                android:textColor="#ffffffff"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                />
+            <TextView
+                android:id="@+id/addressDetailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="成都市武侯区石羊场路99号"
+                android:textColor="#ffb2c1ce"
+                android:textSize="12sp"
+                android:drawablePadding="7dp"
+                android:layout_marginTop="8dp"
+                android:drawableLeft="@mipmap/ic_left_address"
+                />
+
+        </LinearLayout>
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_line"
+            app:layout_constraintTop_toBottomOf="@id/ll"
+            />
+
+        <View
+            android:id="@+id/ver_line"
+            android:layout_width="1dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/lin_ver"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tv_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/call_net_station"
+            android:drawablePadding="6dp"
+            android:text="联系经销商"
+            android:textColor="#ffffffff"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintRight_toRightOf="@id/ver_line"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/nav_net_station"
+            android:drawablePadding="6dp"
+            android:text="到这里去"
+            android:textColor="#ffffffff"
+            android:textSize="13sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintLeft_toLeftOf="@id/ver_line"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

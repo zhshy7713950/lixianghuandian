@@ -43,21 +43,13 @@ class FgtNetStation : MainTabFragment() {
                         "===currentIndex===${currentIndex}===titleList[currentIndex]===${titleList[currentIndex]}"
                     )
                     val type = when {
-                        "售后服务网点" == titleList[currentIndex] -> {
-                            "1"
-                        }
-                        "租电服务站点" == titleList[currentIndex] -> {
-                            "2"
-                        }
-                        else -> {//换电站点
-                            "3"
-                        }
+                        "售后服务网点" == titleList[currentIndex] -> {"1"}
+                        "租电服务站点" == titleList[currentIndex] -> {"2"}
+                        else -> {"3"}
                     }
-                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type))
+                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,fragmentList.get(currentIndex).getStationList()))
                 }
         }
-
-
 
         requestNetWorkShow()
 
@@ -67,78 +59,90 @@ class FgtNetStation : MainTabFragment() {
     //    private var fragmentList = arrayOf<SupportFragment>()
     //    private var fragmentList = arrayOf(FgtNetStationItem.newInstance("2"))
     private var titleList = ArrayList<String>()
+    private var fragmentList = ArrayList<FgtNetStationItem>()
 
     private fun requestNetWorkShow() {
         http {
             url = "apiv4/networkshow"
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<NetWorkShowBean>().data
-
                 titleList.clear()
-
-
-                if ((data.cg_service_show != 0) && (data.cg_rent_show != 0) && (data.cg_show != 0)) {//111
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("3"),
-                        FgtNetStationItem.newInstance("2"),
-                        FgtNetStationItem.newInstance("1")
-                    )
+                if (data.cg_show != 0){
+                    fragmentList.add( FgtNetStationItem.newInstance("3"))
                     titleList.add("换电站点")
-                    titleList.add("租电服务站点")
-                    titleList.add("售后服务网点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show != 0) && (data.cg_rent_show == 0) && (data.cg_show == 0)) { //100
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("1")
-                    )
-                    titleList.add("售后服务网点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show != 0) && (data.cg_rent_show == 0) && (data.cg_show != 0)
-                ) { //101
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("3"),
-                        FgtNetStationItem.newInstance("1")
-                    )
-
-                    titleList.add("换电站点")
-                    titleList.add("售后服务网点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show != 0) && (data.cg_rent_show != 0) && (data.cg_show == 0)
-                ) { // 110
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("2"),
-                        FgtNetStationItem.newInstance("1")
-                    )
-
-                    titleList.add("租电服务站点")
-                    titleList.add("售后服务网点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show != 0)
-                ) { //  011
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("3"),
-                        FgtNetStationItem.newInstance("2")
-                    )
-
-                    titleList.add("换电站点")
-                    titleList.add("租电服务站点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show == 0)
-                ) {
-                    // 010
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("2")
-                    )
-                    titleList.add("租电服务站点")
-                    setView(fragmentList)
-                } else if ((data.cg_service_show == 0) && (data.cg_rent_show == 0) && (data.cg_show != 0)
-                ) { //001
-                    val fragmentList = arrayOf<SupportFragment>(
-                        FgtNetStationItem.newInstance("3")
-                    )
-                    titleList.add("换电站点")
-                    setView(fragmentList)
                 }
+                if (data.cg_rent_show != 0){
+                    fragmentList.add( FgtNetStationItem.newInstance("2"))
+                    titleList.add("换电站点")
+                }
+                if (data.cg_service_show != null){
+                    fragmentList.add( FgtNetStationItem.newInstance("1"))
+                    titleList.add("售后服务网点")
+                }
+                setView(fragmentList.toTypedArray())
+//
+//                if ((data.cg_service_show != 0) && (data.cg_rent_show != 0) && (data.cg_show != 0)) {//111
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("3"),
+//                        FgtNetStationItem.newInstance("2"),
+//                        FgtNetStationItem.newInstance("1")
+//                    )
+//                    titleList.add("换电站点")
+//                    titleList.add("租电服务站点")
+//                    titleList.add("售后服务网点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show != 0) && (data.cg_rent_show == 0) && (data.cg_show == 0)) { //100
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("1")
+//                    )
+//                    titleList.add("售后服务网点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show != 0) && (data.cg_rent_show == 0) && (data.cg_show != 0)
+//                ) { //101
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("3"),
+//                        FgtNetStationItem.newInstance("1")
+//                    )
+//
+//                    titleList.add("换电站点")
+//                    titleList.add("售后服务网点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show != 0) && (data.cg_rent_show != 0) && (data.cg_show == 0)
+//                ) { // 110
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("2"),
+//                        FgtNetStationItem.newInstance("1")
+//                    )
+//
+//                    titleList.add("租电服务站点")
+//                    titleList.add("售后服务网点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show != 0)
+//                ) { //  011
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("3"),
+//                        FgtNetStationItem.newInstance("2")
+//                    )
+//
+//                    titleList.add("换电站点")
+//                    titleList.add("租电服务站点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show == 0)
+//                ) {
+//                    // 010
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("2")
+//                    )
+//                    titleList.add("租电服务站点")
+//                    setView(fragmentList)
+//                } else if ((data.cg_service_show == 0) && (data.cg_rent_show == 0) && (data.cg_show != 0)
+//                ) { //001
+//                    val fragmentList = arrayOf<SupportFragment>(
+//                        FgtNetStationItem.newInstance("3")
+//                    )
+//                    titleList.add("换电站点")
+//                    setView(fragmentList)
+//                }
 //                else { //000
 //
 //                }
@@ -166,8 +170,7 @@ class FgtNetStation : MainTabFragment() {
             setOnTabClickListener { index ->
                 currentIndex = index
                 showHideFragment(
-//                    allFragmentList[index]
-                            list[index]
+                    fragmentList[index]
                 )
             }
             selectTab(0)

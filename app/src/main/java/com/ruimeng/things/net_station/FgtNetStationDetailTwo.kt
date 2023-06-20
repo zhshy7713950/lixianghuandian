@@ -14,15 +14,20 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
+import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_detail_two.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.sp
+import org.w3c.dom.Text
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
+import wongxd.utils.SystemUtils
 
 
 class FgtNetStationDetailTwo : BaseBackFragment() {
@@ -50,7 +55,7 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, title)
         recyclerview.apply {
-            layoutManager = GridLayoutManager(activity, 4)
+            layoutManager = GridLayoutManager(activity, 2)
             adapter = rvAdapter
         }
         getInfo()
@@ -76,55 +81,33 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
             }
 
             onSuccess { res ->
-
-
                 val bean = res.toPOJO<NetStationDetailBeanTwo>().data
 
-                addressDetailText?.text = "地址：${bean.address}"
-                numberText?.text = "电池数量：${bean.device_num}    可换电数量：${bean.device_available_num}"
-                recommendText?.text = bean.recommend_str
-                getRecommendId =bean.recommend_id.toInt()
-                getRecommendPos = bean.recommend_pos.toInt()
-                currentIndex=getRecommendId
-                val fragmentList = ArrayList<BaseBackFragment>()
-                val titleList = ArrayList<String>()
+                var header = View.inflate(activity, R.layout.layout_batter_header, null)
+                header.findViewById<TextView>(R.id.addressDetailText).setText("${bean.address}")
+                header.findViewById<TextView>(R.id.tvCode).setText("${bean.code}")
+                header.findViewById<TextView>(R.id.tvBatteryNum).setText("电池数量：${bean.device_num}")
+                header.findViewById<TextView>(R.id.tvNumber).setText("可换电数量：${bean.device_available_num}")
+                rvAdapter.addHeaderView(header)
+                rvAdapter.notifyDataSetChanged()
+                header.findViewById<TextView>(R.id.tv_call).setOnClickListener {
+                    getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
+                        SystemUtils.call(context, bean.tel)
+                    })
+                }
+                header.findViewById<TextView>(R.id.tv_nav).setOnClickListener{
+                    CommonUtil.naviToLocation(activity!!,bean.lat,bean.lng, bean.site_name)
+                }
+
                 val dataList = ArrayList<NetStationDetailBeanTwo.Data.ExchangeBean>()
                 dataList.clear()
                 dataList.addAll(bean.exchange)
-
-                if (dataList.isNotEmpty()) {
-                    fragmentList.clear()
-                    titleList.clear()
-
-                    for (i in dataList.indices) {
-                        titleList.add(dataList[i].name)
-                    }
-
-
-                    mQMUITabSegment?.apply {
-                        reset()
-                        for (i in 0 until titleList.size) {
-                            addTab(QMUITabSegment.Tab(titleList[i]))
-                        }
-                        setTabTextSize(sp(12))
-                        setHasIndicator(true)
-                        setIndicatorWidthAdjustContent(true)
-                        setDefaultNormalColor(resources.getColor(R.color.text_color))
-                        setDefaultSelectedColor(resources.getColor(R.color.black))
-                        setOnTabClickListener { index ->
-                            currentIndex = index
-                            val list =
-                                ArrayList<NetStationDetailBeanTwo.Data.ExchangeBean.DeviceBean>()
-                            list.clear()
-                            rvAdapter.setNewData(list)
-                            rvAdapter.setNewData(dataList[currentIndex].device)
-                        }
-                        selectTab(currentIndex)
-                        notifyDataChanged()
-                    }
-
-                    rvAdapter.setNewData(dataList[currentIndex].device)
+                if (!bean.exchange.isEmpty() && !bean.exchange[0].device.isEmpty()){
+                    rvAdapter.setNewData(bean.exchange[0].device)
                 }
+
+
+
             }
 
 
@@ -147,79 +130,20 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
             bean: NetStationDetailBeanTwo.Data.ExchangeBean.DeviceBean
         ) {
             bothNotNull(helper, bean) { a, b ->
+                var status = listOf("0","1","2","3","4")
+                var statusTxt = listOf("正常更换","充电中","无电池","故障","未知")
+                var colors = listOf("#15EF9B","#29EBB6","#A8B9B3","#F78E6B","#67A7EC")
+                var resources = listOf(R.mipmap.battery_image_1,R.mipmap.battery_image_2,R.mipmap.battery_image_3,R.mipmap.battery_image_4,R.mipmap.battery_image_5)
 
-                if ((currentIndex==getRecommendId)&&(getRecommendPos==a.adapterPosition)){
-                    a.getView<FrameLayout>(R.id.checkedLayout)?.apply {
-                        visibility= View.VISIBLE
-                    }
+                var index = status.indexOf(b.status)
+                index = if (index == -1) 4 else index
 
-                }else{
-                    a.getView<FrameLayout>(R.id.checkedLayout)?.apply {
-                        visibility= View.GONE
-                    }
-                }
-                val getStatus =
-                    when (b.status) {
-                        "0" -> {
-                            "状态：可换"
-                        }
-                        "1" -> {
-                            "状态：充电"
-                        }
-                        "2" -> {
-                            "状态：无电池"
-                        }
-                        "9" -> {
-                            "状态：故障"
-                        }
-                        else -> {
-                            "状态："
-                        }
-                    }
-                a.getView<LinearLayout>(R.id.rootLayout)?.apply {
-                    //插槽状态 0正常可换1充电中2无电池9故障
-                    when (b.status) {
-                        "0" -> {
-                            backgroundColor = Color.parseColor("#83C68E")
-                        }
-                        "1" -> {
-                            backgroundColor = Color.parseColor("#F8BE4F")
-                        }
-                        "2" -> {
-                            backgroundColor = Color.parseColor("#B1B1B1")
-                        }
-                        "9" -> {
-                            backgroundColor = Color.parseColor("#B1B1B1")
-                        }
-                    }
-                }
-                a.getView<ImageView>(R.id.imageView)?.apply {
-                    //插槽状态 0正常可换1充电中2无电池9故障
-                    when (b.status) {
-                        "0" -> {
-                            backgroundResource = R.mipmap.battery_image_1
-                        }
-                        "1" -> {
-                            backgroundResource = R.mipmap.battery_image_2
-                        }
-                        "2" -> {
-                            backgroundResource = R.mipmap.battery_image_3
-                        }
-                        "9" -> {
-                            backgroundResource = R.mipmap.battery_image_3
-                        }
-                    }
-                }
-
-
-                a.getView<TextView>(R.id.positionText)
-                    ?.apply {
-                        text = (b.pos.toInt() + 1).toString()
-                    }
-
-                a.getView<TextView>(R.id.textView)?.apply {
-                    text = "编号：${b.device_id}\n电量：${b.electricity}%\n${getStatus}"
-                }
+                a.setText(R.id.positionText,(b.pos.toInt() + 1).toString())
+                    .setText(R.id.tvPercent,"${b.electricity}%")
+                    .setTextColor(R.id.tvPercent,Color.parseColor(colors[index]))
+                    .setImageResource(R.id.imageView,resources[index])
+                    .setText(R.id.tvCode,"${b.device_id}")
+                    .setText(R.id.tvStatus,statusTxt[index])
 
             }
         }

@@ -1,5 +1,10 @@
 package com.ruimeng.things.net_station.bean
 
+import android.os.Parcelable
+import com.amap.api.maps.model.Marker
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+
 data class NetStationBean(
     var `data`: List<Data> = listOf(),
     var errcode: Int = 0, // 200
@@ -10,6 +15,7 @@ data class NetStationBean(
         var city_id: Int = 0, // 2
         var list: List<X> = listOf()
     ) {
+        @Parcelize
         data class X(
             var address: String = "", // 成都市高新区天府五街6号
             var lat: Double = 0.0, // 30.542695
@@ -18,7 +24,8 @@ data class NetStationBean(
             var site_name: String = "", // 服务中心4
             var tag: String = "",
             var count: String = "",
+            var markerId: String = "" ,
             var tel: String = "" // 028-85214458
-        )
+        ): Parcelable
     }
 }

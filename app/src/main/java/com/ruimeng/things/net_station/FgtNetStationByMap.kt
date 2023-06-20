@@ -4,18 +4,24 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
+import com.amap.api.maps.model.animation.ScaleAnimation
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.utils.CommonUtil
+import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
+import wongxd.common.bothNotNull
 import wongxd.common.checkPackage
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
@@ -31,18 +37,28 @@ import wongxd.utils.SystemUtils
  */
 class FgtNetStationByMap : BaseBackFragment() {
     companion object {
-        fun newInstance(type: String = ""): FgtNetStationByMap {
+        fun newInstance(type: String = "", locations: ArrayList<NetStationBean.Data.X>): FgtNetStationByMap {
             val fgt = FgtNetStationByMap()
             val b = Bundle()
             b.putString("type", type)
+            b.putParcelableArrayList("list",locations)
             fgt.arguments = b
             return fgt
         }
     }
 
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_by_map
-
     private val getType by lazy { arguments?.getString("type", "") ?: "" }
+    private var mCurrentMemMarker: Marker? = null
+    private val markInfoMap: MutableMap<String, NetStationBean.Data.X> = mutableMapOf()
+    private val markerMap: MutableMap<String, Marker> = mutableMapOf()
+
+    private var markerOption: MarkerOptions? = null
+
+    private val bitmap by lazy {  var iv = ImageView(activity)
+        iv.setImageResource(if(getType == "3") R.mipmap.marker_net_station_small else R.mipmap.service_station_small)
+        BitmapDescriptorFactory.fromView(iv)
+    }
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, "地图查找")
@@ -57,220 +73,88 @@ class FgtNetStationByMap : BaseBackFragment() {
             }
         )
     }
+    private val stationAdapter by lazy { StationRvAdapter() }
+
 
     private fun afterGetPermission(savedInstanceState: Bundle?) {
 
+        rvStation.layoutManager = LinearLayoutManager(activity)
+        rvStation.adapter = stationAdapter
 
         mMapView = rootView?.findViewById(R.id.mapView_nearby) as MapView?
         mMapView?.onCreate(savedInstanceState) // 此方法必须重写
 
+
         if (aMap == null) {
             aMap = mMapView?.map
-            aMap?.setOnMarkerClickListener { marker ->
-
-                marker.showInfoWindow()
-                true
-            }
         }
 
         //设置希望展示的地图缩放级别
-        aMap?.moveCamera(CameraUpdateFactory.zoomTo(19f))
+        aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
 
-
-        //        aMap?.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
-        //            override fun onCameraChange(p0: CameraPosition?) {
-        //
-        //            }
-        //
-        //            override fun onCameraChangeFinish(p0: CameraPosition?) {
-        //                p0?.let {
-        //                    mCurrentLat = it.target.latitude
-        //                    mCurrentLon = it.target.longitude
-        //                    getRedPackets()
-        //                }
-        //            }
-        //        })
-
-
-        aMap?.setInfoWindowAdapter(object : AMap.InfoWindowAdapter {
-            override fun getInfoContents(marker: Marker?): View? {
-                return null
-            }
-
-            @SuppressLint("SetTextI18n")
-            override fun getInfoWindow(marker: Marker?): View? {
-
-                var popupWindow = activity?.let {
-                    if (marker != null) {
-                        MarkPopupWindow(it,marker,markInfoMap,object :MarkPopupWindow.OnMarKCallback{
-                            override fun click(view: View,agent:NetStationBean.Data.X) {
-                                if (view.id == R.id.tv_phone_call){
-                                    getPermissions(activity,
-                                        PermissionType.CALL_PHONE,
-                                        allGranted = { SystemUtils.call(activity, agent.tel) })
-                                }else if (view.id == R.id.tv_in_shop){
-                                    if ("3"==getType){
-                                        start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
-                                    }else{
-                                        start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
-                                    }
-                                }else if (view.id == R.id.tv_navi_here){
-                                    naviToLocation(marker, agent.site_name)
-                                }
-                            }
-                        })
-                    }
-                }
-
-
-
-//                val v = View.inflate(activity, R.layout.layout_station_infowindow, null)
-//                val ivClose = v.findViewById<ImageView>(R.id.iv_close)
-//                val tvStationName = v.findViewById<TextView>(R.id.tv_station_name)
-//                val tvStationPhone = v.findViewById<TextView>(R.id.tv_station_phone)
-//                val tvStationDistance = v.findViewById<TextView>(R.id.tv_station_distance)
-//                val tvStationLocation = v.findViewById<TextView>(R.id.tv_station_location)
-//                val tvStationTag = v.findViewById<TextView>(R.id.tv_station_tag)
-//                val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
-//
-//                val tvIntoShop = v.findViewById<TextView>(R.id.tv_into_shop)
-//                val tvNavi = v.findViewById<TextView>(R.id.tv_navi_here)
-//
-//
-//                marker?.let { markerView ->
-//
-//                    ivClose.setOnClickListener {
-//                        markerView.hideInfoWindow()
-//                    }
-//
-//
-//                    val agent = markInfoMap[marker.position.latitude + marker.position.longitude]
-//
-//                    agent?.let {
-//
-//                        val distance =
-//                            AMapUtils.calculateLineDistance(
-//                                LatLng(agent.lat, agent.lng),
-//                                LatLng(App.lat, App.lng)
-//                            )
-//                        val distanceStr =
-//                            if (distance >= 1000)
-//                                "${String.format("%.2f", (distance / 1000))}km"
-//                            else
-//                                "${String.format("%.2f", distance)}m"
-//
-//
-//                        tvStationName.text = agent.site_name
-//                        tvStationPhone.text = agent.tel
-//                        tvStationDistance.text = distanceStr
-//                        tvStationLocation.text = agent.address
-//                        tvStationTag.text = agent.tag
-//
-//                        tvStationPhone.setOnClickListener {
-//                            getPermissions(activity,
-//                                PermissionType.CALL_PHONE,
-//                                allGranted = { SystemUtils.call(activity, agent.tel) })
-//                        }
-//
-//                        tvStationBatteryCount.text = "可换电池数：${agent.count}台"
-//
-//                        tvIntoShop.setOnClickListener {
-//                            if ("3"==getType){
-//                                start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
-//                            }else{
-//                                start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
-//                            }
-//
-//                        }
-//
-//                        tvNavi.setOnClickListener {
-//                            naviToLocation(marker, agent.site_name)
-//                        }
-//                    }
-//
-//
-//                }
-//
-
-                return null
-            }
-        })
-
-
+        aMap?.setOnMarkerClickListener {
+            selectMarker(it)
+            false
+        }
         showPosInMap()
+
     }
-
-    private fun naviToLocation(marker: Marker, title: String) {
-
-        val appName = getString(R.string.app_name)
-        val latA = mCurrentLat
-        val lngA = mCurrentLon
-        val sName = "我的位置"
-
-        val latB = marker.position.latitude
-        val lngB = marker.position.longitude
-        val dName = title
-
-
-        val bs = QMUIBottomSheet.BottomListSheetBuilder(activity)
-            .setTitle("选择应用进行导航")
-
-
-
-        if (checkPackage(activity!!, "com.autonavi.minimap")) {
-
-            bs.addItem("高德地图", "gd")
-
-        }
-        if (checkPackage(activity!!, "com.baidu.BaiduMap")) {
-
-            bs.addItem("百度地图", "bd")
-
-        }
-
-        if (!checkPackage(activity!!, "com.autonavi.minimap")
-            &&
-            !checkPackage(activity!!, "com.baidu.BaiduMap")
-        ) {
-            bs.addItem("请先下载“高德地图” 或 “百度地图”", "no")
-        }
-
-
-        bs.setOnSheetItemClickListener { dialog, itemView, position, tag ->
-            if (tag == "gd") {
-                NaviUtil.setUpGaodeAppByLoca(
-                    appName,
-                    latA.toString(), lngA.toString(), sName,
-                    latB.toString(), lngB.toString(), dName
-                )
-            } else if (tag == "bd") {
-
-                val posA = LngLat()
-                posA.latitude = latA
-                posA.longitude = lngA
-
-                val posB = LngLat()
-                posB.latitude = latB
-                posB.longitude = lngB
-
-
-                val bdA = CoodinateCovertor.bd_encrypt(posA)
-                val bdB = CoodinateCovertor.bd_encrypt(posB)
-
-                NaviUtil.setUpBaiduAPPByLoca(
-                    bdA.latitude.toString(), bdA.longitude.toString(), sName,
-                    bdB.latitude.toString(), bdB.longitude.toString(), dName,
-                    appName, appName
-                )
-
-
+    private fun selectMarker(marker: Marker){
+        if (marker != null) {
+            mCurrentMemMarker?.startAnimation()
+            setNotClickedMarkerAnim()
+            mCurrentMemMarker = marker
+            marker?.startAnimation()
+            setClickedMarkerAnim()
+            var agent = markInfoMap[marker.id]
+            if (agent != null){
+                showInfoPop(agent)
             }
-            dialog.dismiss()
-
         }
-
-        bs.build().show()
     }
+
+    private fun setClickedMarkerAnim(){
+        if (mCurrentMemMarker != null){
+            var animation = ScaleAnimation(1.6f,1.0f,1.6f,1.0f)
+            animation.setDuration(0)
+            animation.fillMode = 1
+            mCurrentMemMarker?.setAnimation(animation)
+        }
+    }
+    private fun setNotClickedMarkerAnim(){
+        if (mCurrentMemMarker != null){
+            var animation = ScaleAnimation(1.0f,1.6f,1.0f,1.6f)
+            animation.setDuration(0)
+            animation.fillMode = 1
+            mCurrentMemMarker?.setAnimation(animation)
+        }
+    }
+
+
+    private fun showInfoPop(agent:NetStationBean.Data.X){
+         activity?.let {
+             if (agent != null){
+                 MarkPopupWindow(it,agent,getType,object :MarkPopupWindow.OnMarKCallback{
+                     override fun click(view: View,agent:NetStationBean.Data.X) {
+                         if (view.id == R.id.tv_phone_call){
+                             getPermissions(activity,
+                                 PermissionType.CALL_PHONE,
+                                 allGranted = { SystemUtils.call(activity, agent.tel) })
+                         }else if (view.id == R.id.tv_in_shop){
+                             if ("3"==getType){
+                                 start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
+                             }else{
+                                 start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
+                             }
+                         }else if (view.id == R.id.tv_navi_here){
+                             CommonUtil.naviToLocation(activity!!,agent.lat,agent.lng, agent.site_name)
+                         }
+                     }
+                 })
+             }
+        }
+    }
+
 
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -294,8 +178,8 @@ class FgtNetStationByMap : BaseBackFragment() {
 
         val myLocationStyle: MyLocationStyle = MyLocationStyle()
         //初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
-        myLocationStyle.interval(2000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW)
+//        myLocationStyle.interval(2000) //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
 
         aMap?.myLocationStyle = myLocationStyle//设置定位蓝点的Style
         aMap?.uiSettings?.isMyLocationButtonEnabled = true//设置默认定位按钮是否显示，非必需设置。
@@ -304,8 +188,8 @@ class FgtNetStationByMap : BaseBackFragment() {
         aMap?.setOnMyLocationChangeListener { location ->
             mCurrentLat = location.latitude
             mCurrentLon = location.longitude
-
             getList()
+
         }
     }
 
@@ -339,45 +223,49 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
     }
 
-
+    private var locations: MutableList<NetStationBean.Data.X> = mutableListOf()
     private fun getList() {
-
-        http {
-            url = when (getType) {
-                "1" -> {
-                    "apiv3/servicenetwork"
-                }
-                "2" -> {
-                    "apiv3/returnnetwork"
-                }
-                else -> {
-                    "apiv3/cgstationnetwork"
-                }
-            }
-            params["city_id"] = ""
-
-            onSuccess { res ->
-                rootView?.let {
-                    val data = res.toPOJO<NetStationBean>().data
-
-                    val locations: MutableList<NetStationBean.Data.X> = mutableListOf()
-
-                    data.forEach { item ->
-                        locations.addAll(item.list)
+        locations = arguments?.getParcelableArrayList<NetStationBean.Data.X>("list")!!
+        if (!locations.isNullOrEmpty()){
+            showMarkList()
+        }else{
+            http {
+                url = when (getType) {
+                    "1" -> {
+                        "apiv3/servicenetwork"
                     }
-
-                    locations.forEach { loc ->
-                        addMarker(loc)
+                    "2" -> {
+                        "apiv3/returnnetwork"
                     }
-
-                    setSuitZoom(locations)
+                    else -> {
+                        "apiv3/cgstationnetwork"
+                    }
                 }
-            }
+                params["city_id"] = ""
 
-            onFail { i, s ->
-                EasyToast.DEFAULT.show(s)
+                onSuccess { res ->
+                    rootView?.let {
+                        val data = res.toPOJO<NetStationBean>().data
+                        data.forEach { item ->
+                            locations.addAll(item.list)
+                        }
+                        showMarkList()
+
+                    }
+                }
+                onFail { i, s ->
+                    EasyToast.DEFAULT.show(s)
+                }
             }
         }
+
+    }
+    fun showMarkList(){
+        locations.forEach { loc ->
+            addMarker(loc)
+        }
+        setSuitZoom(locations)
+        stationAdapter.setNewData(locations)
     }
 
 
@@ -406,71 +294,100 @@ class FgtNetStationByMap : BaseBackFragment() {
      */
     private fun setSuitZoom(list: List<NetStationBean.Data.X>) {
 
-        var nearestDistance = 0f
-        list.forEach {
-            val distance = AMapUtils.calculateLineDistance(
-                LatLng(mCurrentLat, mCurrentLon),
-                LatLng(it.lat, it.lng)
-            )
-
-            if (nearestDistance > distance || nearestDistance == 0f) {
-                nearestDistance = distance
-            }
-
+//        var nearestDistance = 0f
+//        list.forEach {
+//            val distance = AMapUtils.calculateLineDistance(
+//                LatLng(mCurrentLat, mCurrentLon),
+//                LatLng(it.lat, it.lng)
+//            )
+//
+//            if (nearestDistance > distance || nearestDistance == 0f) {
+//                nearestDistance = distance
+//            }
+//
+//        }
+//
+//        val zoomSize =
+//            when (nearestDistance) {
+//                in 10..100 -> 18f
+//                in 100..500 -> 15f
+//                in 500..1000 -> 14f
+//                in 1000..2000 -> 13f
+//                in 2000..5000 -> 12f
+//                in 1000..10000 -> 11f
+//                in 1000..20000 -> 10f
+//                in 1000..30000 -> 9f
+//                in 1000..50000 -> 8f
+//                in 1000..100000 -> 7f
+//                in 100000..1000000 -> 5f
+//                else -> 17f
+//            }
+        var latLng = LatLng(mCurrentLat, mCurrentLon)
+        if (!list.isEmpty()){
+            latLng = LatLng(list[0].lat, list[0].lng)
         }
-
-        val zoomSize =
-            when (nearestDistance) {
-                in 10..100 -> 18f
-                in 100..500 -> 15f
-                in 500..1000 -> 14f
-                in 1000..2000 -> 13f
-                in 2000..5000 -> 12f
-                in 1000..10000 -> 11f
-                in 1000..20000 -> 10f
-                in 1000..30000 -> 9f
-                in 1000..50000 -> 8f
-                in 1000..100000 -> 7f
-                in 100000..1000000 -> 5f
-                else -> 17f
-            }
-
-        mMapView?.map?.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    mCurrentLat,
-                    mCurrentLon
-                ), zoomSize
-            )
-        )
+        aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
     }
 
 
-    private val markInfoMap: MutableMap<Double, NetStationBean.Data.X> = mutableMapOf()
-
-    private var markerOption: MarkerOptions? = null
 
     /**
      * 在地图上添加marker
      */
     private fun addMarker(agent: NetStationBean.Data.X) {
-
         markerOption = MarkerOptions()
             .zIndex(10f)
             .position(LatLng(agent.lat, agent.lng))
             .draggable(false)
 
+        markerOption?.icon(bitmap)
 
-        val v = View.inflate(activity, R.layout.layout_net_station_marker, null)
-        val iv = v.findViewById<ImageView>(R.id.iv)
+        var marker = aMap?.addMarker(markerOption)
+        if (marker != null){
+            var animation = ScaleAnimation(1.0f,1.6f,1.0f,1.6f)
+            animation.setDuration(0)
+            animation.fillMode = 1
+            marker.setAnimation(animation)
+            marker.isClickable = true
+            agent.markerId = marker.id
+            markInfoMap.put(marker.id, agent)
+            markerMap.put(marker.id,marker)
+        }
 
-
-        markerOption?.icon(BitmapDescriptorFactory.fromView(iv))
-
-        aMap?.addMarker(markerOption)
-
-        markInfoMap.put((agent.lat + agent.lng), agent)
     }
 
+    inner class StationRvAdapter :
+        BaseQuickAdapter<NetStationBean.Data.X, BaseViewHolder>(R.layout.item_rv_map_station) {
+        override fun convert(helper: BaseViewHolder, item: NetStationBean.Data.X?) {
+            bothNotNull(helper, item) { a, b ->
+                val distance = AMapUtils.calculateLineDistance(LatLng(b.lat, b.lng), LatLng(App.lat, App.lng))
+                val distanceStr = if (distance >= 1000)
+                        "${String.format("%.2f", (distance / 1000))}km"
+                    else
+                        "${String.format("%.2f", distance)}m"
+                a.setText(R.id.tv_title,b.site_name)
+                    .setText(R.id.tv_distance,"距离我${distanceStr}")
+                    .setText(R.id.tv_location,"${b.address}")
+                    .setImageResource(R.id.iv01,if(getType == "3")  R.mipmap.marker_net_station_big else R.mipmap.service_station_big)
+                if (getType == "3"){
+                    a.setText(R.id.tv_number,"${b.count}台")
+                        .setText(R.id.text2,"可换电池数：")
+                }else{
+                    a.setText(R.id.tv_number,"${b.tel}")
+                        .setText(R.id.text2,"电话：")
+                }
+                a.itemView.setOnClickListener{
+                    var marker = markerMap[b.markerId]
+                    if (marker != null){
+                        marker.zIndex = 15f
+                        selectMarker(marker)
+                        var latLng = LatLng(b.lat,b.lng)
+                        aMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                    }
+                }
 
+            }
+        }
+
+    }
 }

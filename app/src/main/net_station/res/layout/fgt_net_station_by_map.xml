@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:background="@color/white"
               android:layout_width="match_parent"
@@ -11,7 +11,13 @@
 	<com.amap.api.maps.MapView
 			android:id="@+id/mapView_nearby"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+			android:layout_height="match_parent"
+		android:layout_marginTop="@dimen/topbar_height"/>
 
-
-</LinearLayout>
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/rvStation"
+		android:layout_width="match_parent"
+		android:layout_height="250dp"
+		android:layout_gravity="bottom"
+		android:background="@drawable/rectangle_gray_bg_top"/>
+</FrameLayout>

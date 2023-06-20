@@ -3,7 +3,7 @@
            android:orientation="vertical"
            android:layout_width="30dp"
            android:id="@+id/iv"
-           android:src="@mipmap/marker_net_station"
+           android:src="@mipmap/marker_net_station_small"
            android:layout_height="30dp">
 
 </ImageView>

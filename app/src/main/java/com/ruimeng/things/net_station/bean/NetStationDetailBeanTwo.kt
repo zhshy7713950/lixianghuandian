@@ -12,7 +12,12 @@ data class NetStationDetailBeanTwo(
         var exchange: List<ExchangeBean> = listOf(),
         var recommend_str: String = "",
         var recommend_id: String = "",
-        var recommend_pos: String = ""
+        var recommend_pos: String = "",
+        var code: String = "",
+        var tel: String = "",
+        var site_name: String = "",
+        var lng: Double = 0.0,
+        var lat: Double = 0.0
     ) {
         data class ExchangeBean(
             var name: String = "",

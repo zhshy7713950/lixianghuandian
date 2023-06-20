@@ -10,20 +10,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/rectangle_gray_bg"
+        android:background="@drawable/rectangle_gray_bg_top"
         android:padding="10dp"
         >
 
 
         <ImageView
-
+            android:id="@+id/iv01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="30dp"
-            android:src="@mipmap/ic_charge"
+            android:src="@mipmap/marker_net_station_big"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

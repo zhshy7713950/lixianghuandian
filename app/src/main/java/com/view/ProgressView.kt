@@ -31,17 +31,11 @@ class ProgressView @JvmOverloads constructor(
     private var mCyclePaint: Paint? = null
     private var mWidth = 0
     private var mHeight = 0
-    var textColor:Int = Color.parseColor("#29EBB6")
-    var showAlter :Boolean = false
     var colors :IntArray? = null
-    private fun init(context: Context) {
-        mPaint = Paint()
-        mCyclePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    }
+
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        if (colors != null){
+        if (colors != null ){
             initPaint()
             //画最外的圆环
             canvas.drawCircle(mWidth/2f,mHeight/2f,(mWidth+mHeight)*0.25f-1,mCyclePaint!!)
@@ -70,6 +64,8 @@ class ProgressView @JvmOverloads constructor(
     }
 
     private fun initPaint() {
+        mPaint = Paint()
+        mCyclePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mPaint!!.isAntiAlias = true
         mPaint!!.strokeWidth = dipToPx(20).toFloat()
         mPaint!!.style = Paint.Style.STROKE
@@ -132,6 +128,6 @@ class ProgressView @JvmOverloads constructor(
 
 
     init {
-        init(context)
+
     }
 }

@@ -3,6 +3,7 @@ package com.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -57,6 +58,7 @@ public class MyTextView extends TextView implements OnClickListener {
      */
     public void init(WindowManager windowManager) {
         paint = getPaint();
+        paint.setColor(Color.WHITE);
         text = getText().toString();
         textLength = paint.measureText(text);
         viewWidth = getWidth();

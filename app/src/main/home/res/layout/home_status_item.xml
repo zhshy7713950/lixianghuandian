@@ -7,12 +7,131 @@
 		android:layout_height="match_parent"
 		android:background="@color/bg_gray">
 
+
 	<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			android:paddingTop="10dp">
+			>
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@mipmap/bg_home_top">
 
+			<com.view.ProgressView
+				android:id="@+id/pvBattery"
+				android:layout_width="215dp"
+				android:layout_height="215dp"
+				android:layout_marginTop="72dp"
+				android:layout_gravity="center_horizontal"/>
+			<LinearLayout
+				android:layout_width="215dp"
+				android:layout_height="215dp"
+				android:layout_marginTop="72dp"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center_horizontal"
+				android:orientation="vertical">
+				<TextView
+					android:id="@+id/tvProgress"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					tools:text="75%"
+					android:textColor="#ff29ebb6"
+					android:textSize="44sp"
+					android:layout_marginTop="79dp"
+					/>
+				<TextView
+					android:drawableLeft="@mipmap/ic_left_bt"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="剩余电量"
+					android:drawablePadding="4dp"
+					android:textColor="#ffd8e7f3"
+					android:textSize="13sp"
+					/>
+			</LinearLayout>
+			<ImageView
+				android:id="@+id/ivWrongBt"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@mipmap/ic_wrong_bt"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="120dp"
+				android:visibility="gone"/>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_gravity="left"
+				android:layout_marginLeft="12dp"
+				android:layout_marginTop="78dp">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="电池编码"
+					android:textColor="#96A2AA"
+					android:textSize="10sp"
+
+					/>
+				<TextView
+					android:id="@+id/tvBatteryName"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="10sp"
+					android:textColor="@color/white"
+					tools:text="1212323" />
+				<TextView
+					android:id="@+id/fl_change_remark_home"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="备注信息"
+					android:textColor="#96A2AA"
+					android:textSize="10sp"
+					android:layout_marginTop="4dp"
+					android:drawableRight="@mipmap/ic_right_remark"
+					android:drawablePadding="2dp"
+					/>
+				<TextView
+					android:id="@+id/tv_remark_num"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="10sp"
+					android:textColor="@color/white"
+					tools:text="1212323" />
+			</LinearLayout>
+			<com.flyco.roundview.RoundTextView
+				android:id="@+id/tv_switch_battery"
+				android:layout_width="55dp"
+				android:layout_height="20dp"
+				android:text="切换"
+				android:textColor="#ff434e58"
+				android:textSize="10sp"
+				app:rv_backgroundColor="#2FE29F"
+				app:rv_cornerRadius="10dp"
+				android:gravity="center_vertical"
+				android:drawableLeft="@mipmap/ic_change_bt"
+				android:paddingLeft="13dp"
+				android:drawablePadding="2dp"
+				android:layout_gravity="right"
+				android:layout_marginRight="12dp"
+				android:layout_marginTop="78dp"/>
+			<com.flyco.roundview.RoundTextView
+				android:id="@+id/tvUnbind"
+				android:layout_width="55dp"
+				android:layout_height="20dp"
+				android:text="解绑"
+				android:textColor="#ff434e58"
+				android:textSize="10sp"
+				app:rv_backgroundColor="#FFA267"
+				app:rv_cornerRadius="10dp"
+				android:gravity="center_vertical"
+				android:drawableLeft="@mipmap/ic_unbind_bt"
+				android:paddingLeft="13dp"
+				android:drawablePadding="2dp"
+				android:layout_gravity="right"
+				android:layout_marginRight="12dp"
+				android:layout_marginTop="112dp"/>
+		</FrameLayout>
 		<FrameLayout
 				android:layout_width="match_parent"
 				android:layout_height="220dp"
@@ -114,7 +233,6 @@
 						android:src="@drawable/change_remark_home" />
 
 				<TextView
-						android:id="@+id/tv_remark_num"
 						android:layout_width="wrap_content"
 						android:layout_height="20dp"
 						android:layout_below="@+id/tv_battery_num"
@@ -127,12 +245,9 @@
 
 
 				<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-						android:id="@+id/fl_change_remark_home"
 						android:layout_width="wrap_content"
 						android:layout_height="18dp"
-						android:layout_alignTop="@id/tv_remark_num"
 						android:layout_marginLeft="30dp"
-						android:layout_toRightOf="@+id/tv_remark_num"
 						android:visibility="gone"
 						app:qmui_backgroundColor="@color/white"
 						app:qmui_borderColor="@color/white"
@@ -163,7 +278,6 @@
 							android:src="@drawable/switch_devices" />
 
 					<TextView
-							android:id="@+id/tv_switch_battery"
 							android:layout_width="wrap_content"
 							android:layout_height="match_parent"
 							android:gravity="center"

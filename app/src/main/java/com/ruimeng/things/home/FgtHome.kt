@@ -175,8 +175,7 @@ class FgtHome : MainTabFragment() {
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
 
-        topbar = rootView.findViewById(R.id.topbar)
-        initTopbar(topbar, "设备状态", false)
+
 
 
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
@@ -312,7 +311,7 @@ class FgtHome : MainTabFragment() {
                 params["remark"] = remark
 
                 onSuccessWithMsg { s, msg ->
-                    tv_remark_num.text = "备注：${remark}"
+                    tv_remark_num.text = "${remark}"
                     EasyToast.DEFAULT.show(msg)
                 }
             }
@@ -438,6 +437,9 @@ class FgtHome : MainTabFragment() {
                     dealTwoStatus(true)
 
                     deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
+                    deviceDetailBean?.let { item ->
+                        showNewDeviceData(item)
+                    }
 
 
 
@@ -700,7 +702,6 @@ class FgtHome : MainTabFragment() {
 
 
                         tv_battery_num.text = "电池编号：" + item.device_id
-                        tv_remark_num.text = "备注：" + item.device_contract.remark
 
 
 
@@ -834,5 +835,26 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
+
+    private fun showNewDeviceData(device:DeviceDetailBean.Data){
+       showDeviceInfo(device.device_base)
+        tv_remark_num.text = device.device_contract.remark
+
+    }
+    private fun showDeviceInfo(info:DeviceDetailBean.Data.DeviceBase){
+        val  colors = when(info.device_status){
+            "3"->intArrayOf(Color.parseColor("#FF7A5A"),Color.parseColor("#FFE177"))
+            "1","2"->intArrayOf(Color.parseColor("#2FE19C"),Color.parseColor("#1CFFE6"))
+            else -> intArrayOf(Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"))
+        }
+        pvBattery.maxCount = 100f
+        pvBattery.colors = colors
+        pvBattery.setCurrentCount(info.rsoc.toFloat())
+        tvProgress.text = "${info.rsoc}%"
+        ivWrongBt.visibility = if (info.device_status == "3") View.VISIBLE else View.GONE
+        tvBatteryName.text = info.device_id
+
+    }
+
 
 }

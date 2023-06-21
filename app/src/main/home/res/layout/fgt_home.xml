@@ -2,66 +2,105 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/white"
+		android:background="#272831"
 		android:orientation="vertical">
 
-	<include layout="@layout/layout_topbar" />
-
-	<TextView
-			android:id="@+id/tv_follow_wechat"
-			android:layout_width="match_parent"
-			android:layout_height="30dp"
-			android:background="@color/white"
-			android:gravity="center"
-			android:text="点击关注微信公众号第一时间掌握设备数据信息"
-			android:textColor="#FFA800"
-			android:textSize="12sp" />
-
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="30dp"
-			android:layout_marginLeft="10dp"
-			android:gravity="center_vertical"
-			android:orientation="horizontal"
-			android:paddingRight="15dp">
-
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="45dp"
+		android:background="#505F6A">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="四川享换电"
+			android:layout_gravity="center"
+			android:textColor="#ffffffff"
+			android:textSize="17sp"
+			/>
 		<ImageView
-				android:id="@+id/imageView"
-				android:layout_width="20dp"
-				android:src="@mipmap/led_left_image"
-				android:layout_height="20dp" />
-
-		<com.view.MyTextView
-				android:id="@+id/ledTextView"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:layout_marginLeft="5dp"
-				android:singleLine="true"
-				android:text="走马灯效果的演示"
-				android:textColor="@color/black_3" />
-
-
-	</LinearLayout>
-
-	<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:src="@mipmap/ic_scan"
+			android:scaleType="centerInside"
+			android:layout_gravity="right|center_vertical"
+			/>
+	</FrameLayout>
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		<com.scwang.smartrefresh.layout.SmartRefreshLayout
 			android:id="@+id/srl_home"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-		<com.scwang.smartrefresh.header.MaterialHeader
+			<com.scwang.smartrefresh.header.MaterialHeader
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content" />
 
-		<FrameLayout
+			<FrameLayout
 				android:id="@+id/fl_fgt_home"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
-			<include layout="@layout/home_status_no_item" />
+				<include layout="@layout/home_status_no_item" />
 
-			<include layout="@layout/home_status_item" />
+				<include layout="@layout/home_status_item" />
 
-		</FrameLayout>
-	</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+			</FrameLayout>
+		</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"
+			android:background="@drawable/rectangle_gray_bg_line">
+			<TextView
+				android:id="@+id/tv_follow_wechat"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_marginTop="6dp"
+				android:text="点击关注微信公众号，第一时间掌握设备数据信息"
+				android:textColor="#29EBB6"
+				android:textSize="11sp" />
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="6dp"
+				android:layout_marginBottom="6dp"
+				android:gravity="center_vertical"
+				android:orientation="horizontal"
+				android:paddingRight="15dp">
+
+				<ImageView
+					android:id="@+id/imageView"
+					android:layout_width="20dp"
+					android:src="@mipmap/led_left_image"
+					android:layout_height="20dp" />
+
+				<com.view.MyTextView
+					android:id="@+id/ledTextView"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="5dp"
+					android:singleLine="true"
+					android:textSize="11sp"
+					android:text="走马灯效果的演示"
+					android:textColor="@color/white" />
+
+
+			</LinearLayout>
+		</LinearLayout>
+
+	</FrameLayout>
+
+
+
+
+
 </LinearLayout>

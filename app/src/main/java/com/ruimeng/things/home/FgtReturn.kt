@@ -130,8 +130,8 @@ class FgtReturn : BaseBackFragment() {
                 params["damage"] = currentTagIndex.toString()
                 params["retrun_host"] = hostIndex.toString()
                 params["msg"] = msg
-                params["device_id"] = FgtHome.CURRENT_DEVICEID
-                params["contract_id"] = FgtHome.CURRENT_CONTRACT_ID
+                params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+                params["contract_id"] = FgtHomeBack.CURRENT_CONTRACT_ID
 
                 onSuccessWithMsg { res, msg ->
                     EasyToast.DEFAULT.show(msg)
@@ -189,7 +189,7 @@ class FgtReturn : BaseBackFragment() {
         http {
             IS_SHOW_MSG = false
             url = "/apiv4/getonedevice"
-            params["device_id"] = FgtHome.CURRENT_DEVICEID
+            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
             IS_SHOW_MSG = false
 
             onSuccess {

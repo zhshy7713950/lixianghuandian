@@ -3,18 +3,11 @@ package com.ruimeng.things
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
-import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
 import com.ruimeng.things.me.contract.FgtMyContract
-import com.ruimeng.things.msg.FgtMsg
 import com.ruimeng.things.net_station.FgtNetStation
-import com.ruimeng.things.shop.FgtShoppingMall
-import kotlinx.android.synthetic.main.fgt_main.*
-import me.majiajie.pagerbottomtabstrip.NavigationController
-import me.majiajie.pagerbottomtabstrip.PageNavigationView
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

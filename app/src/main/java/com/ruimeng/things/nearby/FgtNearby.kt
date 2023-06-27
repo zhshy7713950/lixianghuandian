@@ -13,7 +13,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
-import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.home.FgtHomeBack
 import com.ruimeng.things.nearby.bean.LBSNearbyBean
 import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
@@ -51,7 +51,7 @@ class FgtNearby : MainTabFragment() {
 
 
         val flScan = rootView?.findViewById<QMUIRoundFrameLayout>(R.id.fl_scan_nearby)
-        flScan?.setOnClickListener { FgtHome.selectDeviceType() }
+        flScan?.setOnClickListener { FgtHomeBack.selectDeviceType() }
 
         mMapView = rootView?.findViewById(R.id.mapView_nearby) as MapView?
         mMapView?.onCreate(savedInstanceState) // 此方法必须重写

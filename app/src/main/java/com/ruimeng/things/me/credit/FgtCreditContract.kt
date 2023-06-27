@@ -17,7 +17,7 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.ruimeng.things.FgtViewBigImg
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
-import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.home.FgtHomeBack
 import com.ruimeng.things.me.FgtUploadAuthInfo
 import com.ruimeng.things.me.credit.bean.CreditContractInfoBean
 import com.utils.DensityHelper
@@ -172,7 +172,7 @@ class FgtCreditContract : BaseBackFragment() {
                 dlg.contentText = "即将进入首付支付"
                 dlg.confirmText = "确认"
                 dlg.setConfirmClickListener {
-                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
+                    EventBus.getDefault().post(FgtHomeBack.RefreshMyDeviceList())
                     anyLayer.dismiss()
                     dlg.dismissWithAnimation()
                     startWithPop(FgtCreditFirstPay.newInstance(contract_id, credit_first_money))

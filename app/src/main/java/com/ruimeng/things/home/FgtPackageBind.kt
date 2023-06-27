@@ -54,8 +54,8 @@ class FgtPackageBind : BaseBackFragment() {
         topbar.addRightTextButton("添加", R.id.right)?.apply {
             setTextColor(Color.WHITE)
             setOnClickListener {
-                FgtHome.IsWholeBikeRent = false
-                FgtHome.tryToScan(PACKAGE_BIND_SCAN_PREFIX)
+                FgtHomeBack.IsWholeBikeRent = false
+                FgtHomeBack.tryToScan(PACKAGE_BIND_SCAN_PREFIX)
             }
         }
 

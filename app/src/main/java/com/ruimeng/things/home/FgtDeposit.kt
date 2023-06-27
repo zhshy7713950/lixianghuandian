@@ -105,7 +105,7 @@ class FgtDeposit : BaseBackFragment() {
 //            dealBtnYesAndNo(false)
 //        }
 
-        dealBtnYesAndNo(FgtHome.IsWholeBikeRent)
+        dealBtnYesAndNo(FgtHomeBack.IsWholeBikeRent)
 
         ll_wechat_account_deposit.setOnClickListener {
             dealPayWay(PayWay.WX)
@@ -231,7 +231,7 @@ class FgtDeposit : BaseBackFragment() {
 
 
                     tv_money_account_deposit.text =
-                        if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+                        if (FgtHomeBack.IsWholeBikeRent) it.deposit_host else it.deposit
 
                     currentDepositOption.apply {
                         clear()
@@ -311,7 +311,7 @@ class FgtDeposit : BaseBackFragment() {
         batteryCombinationBean?.let {
             tv_combination_deposit?.text = it.name
             tv_money_account_deposit?.text =
-                if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+                if (FgtHomeBack.IsWholeBikeRent) it.deposit_host else it.deposit
 
         }
     }
@@ -346,7 +346,7 @@ class FgtDeposit : BaseBackFragment() {
 
 
     private fun dealBtnYesAndNo(isYes: Boolean) {
-        FgtHome.IsWholeBikeRent = isYes
+        FgtHomeBack.IsWholeBikeRent = isYes
 
         fun setBtnStatus(isCheck: Boolean, btn: QMUIRoundButton) {
 
@@ -478,7 +478,7 @@ class FgtDeposit : BaseBackFragment() {
             params["device_id"] = deviceId
             params["code"] = agentCode
             params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")
-            params["host"] = if (FgtHome.IsWholeBikeRent) "1" else "2"
+            params["host"] = if (FgtHomeBack.IsWholeBikeRent) "1" else "2"
             //1微信支付2支付宝支付99线下支付 芝麻信用 101
             params["pay_type"] = when (PAY_WAY_TAG) {
                 PayWay.WX -> "1"

@@ -230,7 +230,7 @@ class FgtFindBattery : BaseBackFragment() {
 
             url = Path.DEVICE_GEO
 
-            params["device_id"] = FgtHome.CURRENT_DEVICEID
+            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
 
             onFinish {
                 right?.clearAnimation()

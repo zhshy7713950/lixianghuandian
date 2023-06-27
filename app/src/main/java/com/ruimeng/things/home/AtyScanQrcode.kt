@@ -9,7 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.ruimeng.things.R
-import com.ruimeng.things.home.FgtHome.Companion.REQUEST_ZXING_CODE
+import com.ruimeng.things.home.FgtHomeBack.Companion.REQUEST_ZXING_CODE
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.aty_scan_qrcode.*
@@ -58,7 +58,7 @@ class AtyScanQrcode : AtyBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.ruimeng.things.R.layout.aty_scan_qrcode)
+        setContentView(R.layout.aty_scan_qrcode)
 
         initTopbar(topbar, if (resultPrefix == TYPE_CHANGE) "更换设备" else "添加设备")
         Log.i("data===","===contract_id4===${intent?.getStringExtra(RESULT_OLD_CONTRACT_ID)}")
@@ -106,24 +106,17 @@ class AtyScanQrcode : AtyBase() {
         /**
          * 替换我们的扫描控件
          */
-        supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment)
-            .commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
 
-
-
-
-        fl_input_code.setOnClickListener {
+        tv_input_code.setOnClickListener {
             AnyLayer.with(this)
                 .contentView(R.layout.fgt_input_device_code)
                 .bindData { anyLayer ->
-
                     val et = anyLayer.contentView.findViewById<EditText>(R.id.et_input_device_code)
                     val btn = anyLayer.contentView.findViewById<Button>(R.id.btn_submit_device_code)
-
                     if (resultPrefix == TYPE_CHANGE) {
                         et.hint = "请输入要更换设备的编号"
                     }
-
                     btn.setOnClickListener {
                         val result = et.text.toString()
                         anyLayer.dismiss()
@@ -144,10 +137,7 @@ class AtyScanQrcode : AtyBase() {
                                 finish()
                             }
                         }
-
                     }
-
-
                 }
                 .backgroundBlurScale(10f)
                 .backgroundBlurRadius(10f)

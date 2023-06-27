@@ -1,61 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/root_no_item"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/bg_gray"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_no_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
 
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="70dp"
+        android:src="@mipmap/home_bg" />
 
-	<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="150dp"
-			android:layout_marginTop="20dp"
-			android:src="@drawable/home_bg" />
-
-	<TextView
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:layout_marginTop="30dp"
-			android:gravity="center"
-			android:text="您还没有添加电池设备"
-			android:textColor="@color/app_color" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="您还没有添加电池设备"
+        android:textColor="@color/app_color"
+        android:visibility="gone" />
 
 
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-			android:id="@+id/addDeviceBtn"
-			android:layout_width="match_parent"
-			android:layout_height="45dp"
-			android:layout_marginLeft="50dp"
-			android:layout_marginTop="20dp"
-			android:layout_marginRight="50dp"
-			android:background="?attr/selectableItemBackground"
-			android:elevation="2dp"
-			android:foreground="?attr/selectableItemBackground"
-			app:qmui_backgroundColor="@color/app_color"
-			app:qmui_borderColor="@color/app_color"
-			app:qmui_radius="20dp">
+    <FrameLayout
 
-		<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center"
-				android:orientation="horizontal">
+        android:id="@+id/addDeviceBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/bg_btn_common1"
 
-			<ImageView
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:src="@drawable/scan"
-					android:tint="@color/white" />
+        >
 
-			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingLeft="5dp"
-					android:text="点击添加"
-					android:textColor="@color/white" />
-		</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/ic_scan_blank" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="点击添加"
+                android:textSize="15sp"
+                android:textColor="#272934" />
+        </LinearLayout>
+
+    </FrameLayout>
 </LinearLayout>

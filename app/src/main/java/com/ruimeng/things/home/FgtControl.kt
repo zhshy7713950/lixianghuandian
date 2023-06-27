@@ -25,7 +25,7 @@ class FgtControl : BaseBackFragment() {
 
         initTopbar(topbar, "控制")
 
-        switcher_fgt_control.isChecked = FgtHome.IS_OPEN
+        switcher_fgt_control.isChecked = FgtHomeBack.IS_OPEN
 
         switcher_fgt_control.setOnCheckedChangeListener { buttonView, isChecked ->
             changeBatteryStatus(isChecked)
@@ -38,7 +38,7 @@ class FgtControl : BaseBackFragment() {
         showProgressDialog("操作电池中")
         http {
             url = Path.OPT_DEVICE
-            params["device_id"] = FgtHome.CURRENT_DEVICEID
+            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
             params["device_status"] = if (isOpen) "1" else "2"
 
             onSuccess {

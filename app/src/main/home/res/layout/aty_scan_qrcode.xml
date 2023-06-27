@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/activity_second"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_second"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#272831">
 
-	<com.qmuiteam.qmui.widget.QMUITopBar xmlns:android="http://schemas.android.com/apk/res/android"
-	                                     android:orientation="vertical"
-	                                     android:id="@+id/topbar"
-	                                     android:elevation="2dp"
-	                                     android:layout_marginBottom="2dp"
-	                                     android:layout_width="match_parent"
-	                                     android:layout_height="@dimen/topbar_height"/>
-
-
-	<FrameLayout
-			android:layout_marginTop="@dimen/topbar_height"
-			android:id="@+id/fl_my_container"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height"
+        android:orientation="vertical"
+        app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+        app:qmui_topbar_title_color="@color/white" />
 
 
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-			xmlns:app="http://schemas.android.com/apk/res-auto"
-			app:qmui_radius="20dp"
-			android:elevation="2dp"
-			android:layout_marginBottom="90dp"
-			android:layout_gravity="center_horizontal|bottom"
-			android:foreground="?attr/selectableItemBackground"
-			android:background="?attr/selectableItemBackground"
-			android:id="@+id/fl_input_code"
-			app:qmui_backgroundColor="@color/app_color"
-			app:qmui_borderColor="@color/app_color"
-			android:layout_marginTop="20dp"
-			android:layout_marginLeft="50dp"
-			android:layout_marginRight="50dp"
-			android:layout_width="180dp"
-			android:layout_height="45dp">
+    <FrameLayout
+        android:id="@+id/fl_my_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/topbar_height" />
 
 
-		<TextView
-				android:layout_gravity="center"
-				android:paddingLeft="5dp"
-				android:textColor="@color/white"
-				android:text="手动输入"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tv_input_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="输入编号"
+        android:textColor="#ffffffff"
+        android:textSize="14sp"
+        android:drawableTop="@mipmap/ic_input_code"
+        android:layout_gravity="left|bottom"
+        android:drawablePadding="14dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="60dp"
+        />
 
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+    <TextView
+        android:id="@+id/tv_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开手电筒"
+        android:textColor="#ffffffff"
+        android:textSize="14sp"
+        android:drawableTop="@mipmap/ic_light"
+        android:layout_gravity="right|bottom"
+        android:drawablePadding="14dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="60dp"
+        />
+
+
 
 
 </FrameLayout>

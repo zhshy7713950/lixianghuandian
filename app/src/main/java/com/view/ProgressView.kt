@@ -97,6 +97,9 @@ class ProgressView @JvmOverloads constructor(
         this.score = currentCount.toInt()
         invalidate()
     }
+    fun refreshView(){
+        invalidate()
+    }
 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

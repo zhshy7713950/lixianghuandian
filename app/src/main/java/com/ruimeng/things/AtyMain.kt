@@ -2,7 +2,6 @@ package com.ruimeng.things
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -19,7 +18,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.bean.ConfigBean
 import com.ruimeng.things.home.AtyScanQrcode
 import com.ruimeng.things.home.FgtChangeRentBattery
-import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.home.FgtHomeBack
 import com.ruimeng.things.home.FgtPackageBind
 import com.ruimeng.things.shop.tkLogin
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -298,7 +297,7 @@ class AtyMain : BaseBackActivity() {
         /**
          * 处理二维码扫描结果
          */
-        if (requestCode == FgtHome.REQUEST_ZXING_CODE) {
+        if (requestCode == FgtHomeBack.REQUEST_ZXING_CODE) {
             //处理扫描结果（在界面上显示）
             if (null != data) {
                 val bundle = data.extras ?: return
@@ -319,7 +318,7 @@ class AtyMain : BaseBackActivity() {
                         }
 
                     } else {
-                        FgtHome.dealScanResult(result)
+                        FgtHomeBack.dealScanResult(result)
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     EasyToast.DEFAULT.show("未能正确识别设备码")

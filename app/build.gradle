@@ -52,6 +52,12 @@ android {
 
 
     signingConfigs {
+        debug {
+            storeFile file("app.keystore")
+            storePassword "123456"
+            keyAlias "jh"
+            keyPassword "123456"
+        }
         release {
             storeFile file("app.keystore")
             storePassword "123456"
@@ -107,6 +113,10 @@ android {
             }
 
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }

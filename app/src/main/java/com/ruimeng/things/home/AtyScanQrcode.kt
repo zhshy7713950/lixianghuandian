@@ -1,15 +1,21 @@
 package com.ruimeng.things.home
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.hardware.camera2.CameraManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import com.ruimeng.things.R
+import com.ruimeng.things.ScanQrCodeActivity
 import com.ruimeng.things.home.FgtHomeBack.Companion.REQUEST_ZXING_CODE
+import com.utils.FlashUtil
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.aty_scan_qrcode.*
@@ -56,6 +62,7 @@ class AtyScanQrcode : AtyBase() {
 
     private val resultPrefix by lazy { intent?.getStringExtra(RESULT_PREFIX) ?: "" }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_scan_qrcode)
@@ -109,42 +116,70 @@ class AtyScanQrcode : AtyBase() {
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment).commit()
 
         tv_input_code.setOnClickListener {
-            AnyLayer.with(this)
-                .contentView(R.layout.fgt_input_device_code)
-                .bindData { anyLayer ->
-                    val et = anyLayer.contentView.findViewById<EditText>(R.id.et_input_device_code)
-                    val btn = anyLayer.contentView.findViewById<Button>(R.id.btn_submit_device_code)
-                    if (resultPrefix == TYPE_CHANGE) {
-                        et.hint = "请输入要更换设备的编号"
-                    }
-                    btn.setOnClickListener {
-                        val result = et.text.toString()
-                        anyLayer.dismiss()
-                        if (result.isNotBlank()) {
-                            this@AtyScanQrcode.apply {
-                                setResult(Activity.RESULT_OK, Intent().apply {
-                                    putExtras(Bundle().apply {
-                                        putInt(
-                                            CodeUtils.RESULT_TYPE,
-                                            if (result.isBlank()) CodeUtils.RESULT_FAILED else CodeUtils.RESULT_SUCCESS
-                                        )
-                                        putString(RESULT_PREFIX, resultPrefix)
-                                        putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
-                                        putString(IS_HOST, getIsHost)
-                                        putString(CodeUtils.RESULT_STRING, result)
-                                    })
-                                })
-                                finish()
-                            }
-                        }
-                    }
-                }
-                .backgroundBlurScale(10f)
-                .backgroundBlurRadius(10f)
-                .backgroundColorInt(Color.parseColor("#55000000"))
-                .show()
+            val intent = Intent(this, AtyInputCode::class.java)
+            startActivityForResult(intent, 1)
+
+//            AnyLayer.with(this)
+//                .contentView(R.layout.fgt_input_device_code)
+//                .bindData { anyLayer ->
+//                    val et = anyLayer.contentView.findViewById<EditText>(R.id.et_input_device_code)
+//                    val btn = anyLayer.contentView.findViewById<Button>(R.id.btn_submit_device_code)
+//                    if (resultPrefix == TYPE_CHANGE) {
+//                        et.hint = "请输入要更换设备的编号"
+//                    }
+//                    btn.setOnClickListener {
+//                        val result = et.text.toString()
+//                        anyLayer.dismiss()
+//                        if (result.isNotBlank()) {
+//                            this@AtyScanQrcode.apply {
+//                                setResult(Activity.RESULT_OK, Intent().apply {
+//                                    putExtras(Bundle().apply {
+//                                        putInt(
+//                                            CodeUtils.RESULT_TYPE,
+//                                            if (result.isBlank()) CodeUtils.RESULT_FAILED else CodeUtils.RESULT_SUCCESS
+//                                        )
+//                                        putString(RESULT_PREFIX, resultPrefix)
+//                                        putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
+//                                        putString(IS_HOST, getIsHost)
+//                                        putString(CodeUtils.RESULT_STRING, result)
+//                                    })
+//                                })
+//                                finish()
+//                            }
+//                        }
+//                    }
+//                }
+//                .backgroundBlurScale(10f)
+//                .backgroundBlurRadius(10f)
+//                .backgroundColorInt(Color.parseColor("#55000000"))
+//                .show()
+        }
+
+        tv_light.setOnClickListener {
+           CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
+            tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == 1001 && data != null){
+            this@AtyScanQrcode.apply {
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtras(Bundle().apply {
+                        putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
+                        putString(RESULT_PREFIX, resultPrefix)
+                        putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
+                        putString(IS_HOST, getIsHost)
+                        putString(CodeUtils.RESULT_STRING, data.getStringExtra("code"))
+                    })
+                })
+                finish()
+            }
+        }
+    }
+
+
 
 
 }

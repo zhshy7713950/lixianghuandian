@@ -1,384 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2E3440"
+    android:orientation="vertical">
 
-	<include layout="@layout/layout_topbar"/>
+    <include layout="@layout/layout_topbar" />
 
-	<com.qmuiteam.qmui.widget.QMUITabSegment
-			android:id="@+id/tab_return"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"/>
+    <com.qmuiteam.qmui.widget.QMUITabSegment
+        android:id="@+id/tab_return"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 
 
-	<FrameLayout
-			android:background="@color/white"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		<ScrollView
-				android:id="@+id/scrollView_return"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
+        <ScrollView
+            android:id="@+id/scrollView_return"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-			<RelativeLayout
-					android:paddingTop="10dp"
-					android:orientation="vertical"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
 
-				<RelativeLayout
-						android:id="@+id/rl_device_info_return"
-						android:background="@drawable/bg_return_battery"
-						android:layout_margin="10dp"
-						android:layout_width="match_parent"
-						android:layout_height="140dp">
-
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rl_device_info_return"
+                    android:layout_width="match_parent"
+                    android:layout_height="194dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rectangle_gray_bg">
 					<TextView
-							android:layout_marginTop="10dp"
-							android:layout_marginLeft="10dp"
-							android:id="@+id/tv_model_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="电池型号:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-
-					<TextView
-							android:layout_marginTop="10dp"
-							android:layout_below="@+id/tv_model_return"
-							android:layout_marginLeft="10dp"
-							android:id="@+id/tv_deposit_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="押金:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-					<TextView
-							android:layout_marginTop="10dp"
-							android:layout_below="@+id/tv_deposit_return"
-							android:layout_marginLeft="10dp"
-							android:id="@+id/tv_rent_long_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="租用时长:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-
-					<TextView
-							android:layout_marginTop="10dp"
-							android:layout_below="@+id/tv_rent_long_return"
-							android:layout_marginLeft="10dp"
-							android:id="@+id/tv_rent_start_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="起租时间:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-
-					<TextView
-							android:layout_marginTop="10dp"
-							android:layout_below="@+id/tv_rent_start_return"
-							android:layout_marginLeft="10dp"
-							android:id="@+id/tv_u_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="电压:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-
-					<TextView
-							android:layout_alignParentRight="true"
-							android:layout_marginTop="10dp"
-							android:layout_marginRight="30dp"
-							android:id="@+id/tv_pay_money_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="电池:**元"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-					<TextView
-							android:layout_below="@+id/tv_pay_money_return"
-							android:layout_alignParentRight="true"
-							android:layout_marginTop="10dp"
-							android:layout_marginRight="30dp"
-							android:id="@+id/tv_km_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="共行驶:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-
-					<TextView
-							android:layout_below="@+id/tv_km_return"
-							android:layout_alignParentRight="true"
-							android:layout_marginTop="10dp"
-							android:layout_marginRight="30dp"
-							android:id="@+id/tv_charge_num_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="充电次数:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-					<TextView
-							android:layout_below="@+id/tv_charge_num_return"
-							android:layout_alignParentRight="true"
-							android:layout_marginTop="10dp"
-							android:layout_marginRight="30dp"
-							android:id="@+id/tv_energy_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="电量:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-					<TextView
-							android:layout_below="@+id/tv_energy_return"
-							android:layout_alignParentRight="true"
-							android:layout_marginTop="10dp"
-							android:layout_marginRight="30dp"
-							android:id="@+id/tv_wh_return"
-							android:textSize="12sp"
-							android:textColor="@color/white"
-							android:text="功率:"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"/>
-
-				</RelativeLayout>
-
-
-				<TextView
-						android:id="@+id/tv_tips1_reutrn"
-						android:layout_marginTop="160dp"
+						android:id="@+id/tv_battery_code"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="电池编号：36291"
+						android:textColor="#ffffffff"
 						android:textSize="14sp"
-						android:paddingLeft="10dp"
-						android:text="上传电池和车架图片："
-						android:gravity="center_vertical"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toTopOf="parent"
+						android:layout_marginLeft="14dp"
+						android:layout_marginTop="14dp"
+						/>
+					<View
+						android:id="@+id/line1"
 						android:layout_width="match_parent"
-						android:layout_height="40dp"/>
+						android:layout_height="0.5dp"
+						android:background="@drawable/shape_line"
+						app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="14dp"
+						android:layout_marginTop="44dp"/>
+                    <TextView
+                        android:id="@+id/tv_model_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="10dp"
+                        android:text="电  池:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/line1"/>
 
 
-				<androidx.recyclerview.widget.RecyclerView
-						android:layout_below="@id/tv_tips1_reutrn"
-						android:layout_margin="10dp"
-						android:id="@+id/rv_pic_return"
-						android:minHeight="150dp"
-						android:layout_width="match_parent"
-						android:layout_height="match_parent"/>
+                    <TextView
+                        android:id="@+id/tv_deposit_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_model_return"
+                        android:layout_marginLeft="190dp"
+                        android:layout_marginTop="10dp"
+                        android:text="押  金:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintTop_toBottomOf="@id/line1"
+						app:layout_constraintLeft_toLeftOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tv_rent_long_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_deposit_return"
+                        android:layout_marginLeft="190dp"
+                        android:layout_marginTop="10dp"
+                        android:text="租用时长:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/tv_deposit_return"/>
 
 
-				<LinearLayout
-						android:layout_below="@id/rv_pic_return"
-						android:id="@+id/ll_content_return"
-						android:orientation="vertical"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content">
-
-					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-							app:qmui_radius="5dp"
-							android:layout_margin="10dp"
-							app:qmui_borderColor="@color/bg_gray"
-							app:qmui_backgroundColor="@color/bg_gray"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content">
-
-						<EditText
-								android:minHeight="40dp"
-								android:layout_margin="10dp"
-								android:textSize="14sp"
-								android:hint="请输入您退还的原因"
-								android:background="@color/transparent"
-								android:id="@+id/et_return"
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"/>
-					</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
-
-					<FrameLayout
-							android:layout_marginTop="15dp"
-							android:paddingTop="10dp"
-							android:paddingBottom="10dp"
-							android:orientation="horizontal"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_rent_start_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_rent_long_return"
+                        android:layout_marginLeft="190dp"
+                        android:layout_marginTop="10dp"
+                        android:text="起租时间:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/tv_rent_long_return"/>
 
 
-						<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-								android:id="@+id/fl_battery_broke_return"
-								app:qmui_borderWidth="2dp"
-								app:qmui_backgroundColor="@color/white"
-								app:qmui_borderColor="@color/app_color"
-								app:qmui_radius="10dp"
-								android:layout_marginLeft="10dp"
-								android:paddingLeft="10dp"
-								android:paddingRight="10dp"
-								android:layout_width="wrap_content"
-								android:layout_height="35dp">
-
-							<LinearLayout
-									android:layout_gravity="center"
-									android:orientation="horizontal"
-									android:layout_width="wrap_content"
-									android:layout_height="wrap_content">
-
-								<TextView
-										android:id="@+id/tv_battery_broke_return"
-										android:text="电池已损坏"
-										android:textColor="@color/app_color"
-										android:layout_width="wrap_content"
-										android:layout_height="wrap_content"/>
-
-								<ImageView
-										android:id="@+id/iv_battery_broke_return"
-										android:layout_marginLeft="5dp"
-										android:src="@drawable/face_bad"
-										android:layout_width="20dp"
-										android:layout_height="20dp"/>
-							</LinearLayout>
-						</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+                    <TextView
+                        android:id="@+id/tv_u_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_rent_start_return"
+                        android:layout_marginLeft="190dp"
+                        android:layout_marginTop="10dp"
+                        android:text="电压:"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@id/tv_rent_start_return"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
 
-						<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-								android:id="@+id/fl_battery_fine_return"
-								app:qmui_borderWidth="2dp"
-								app:qmui_backgroundColor="@color/app_color"
-								app:qmui_borderColor="@color/app_color"
-								app:qmui_radius="10dp"
-								android:layout_gravity="right"
-								android:layout_marginRight="10dp"
-								android:paddingLeft="10dp"
-								android:paddingRight="10dp"
-								android:layout_width="wrap_content"
-								android:layout_height="35dp">
+                    <TextView
+                        android:id="@+id/tv_pay_money_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="30dp"
+                        android:text="电池:**元"
+						android:visibility="gone"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toTopOf="parent"/>
 
-							<LinearLayout
-									android:layout_gravity="center"
-									android:orientation="horizontal"
-									android:layout_width="wrap_content"
-									android:layout_height="wrap_content">
-
-								<TextView
-										android:id="@+id/tv_battery_fine_return"
-										android:text="电池未损坏"
-										android:textColor="@color/white"
-										android:layout_width="wrap_content"
-										android:layout_height="wrap_content"/>
-
-								<ImageView
-										android:id="@+id/iv_battery_fine_return"
-										android:layout_marginLeft="5dp"
-										android:src="@drawable/face_smile_white"
-										android:layout_width="20dp"
-										android:layout_height="20dp"/>
-							</LinearLayout>
-						</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
-
-					</FrameLayout>
-
-					<TextView
-							android:textSize="14sp"
-							android:paddingLeft="10dp"
-							android:text="是否退还车架："
-							android:gravity="center_vertical"
-							android:layout_width="match_parent"
-							android:layout_height="40dp"/>
-
-					<LinearLayout
-							android:paddingTop="10dp"
-							android:paddingBottom="10dp"
-							android:orientation="horizontal"
-							android:layout_width="match_parent"
-							android:layout_height="70dp">
-
-						<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-								android:layout_width="0dp"
-								android:elevation="2dp"
-								android:id="@+id/btn_yes_return"
-								android:layout_marginRight="10dp"
-								android:layout_marginLeft="10dp"
-								android:layout_weight="1"
-								app:qmui_radius="2dp"
-								android:text="是"
-								android:textColor="@color/white"
-								app:qmui_backgroundColor="@color/black"
-								app:qmui_borderColor="@color/black"
-								android:layout_gravity="center"
-								android:layout_height="50dp"/>
-
-						<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-								android:layout_width="0dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginLeft="10dp"
-								android:layout_weight="1"
-								app:qmui_radius="2dp"
-								android:elevation="2dp"
-								android:id="@+id/btn_no_return"
-								android:text="否"
-								android:textColor="@color/black"
-								app:qmui_backgroundColor="@color/white"
-								app:qmui_borderColor="@color/white"
-								android:layout_gravity="center"
-								android:layout_height="50dp"/>
-
-					</LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_km_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="共行驶:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintTop_toBottomOf="@id/tv_model_return"
+						app:layout_constraintLeft_toLeftOf="parent"
+						android:layout_marginLeft="14dp"/>
 
 
-					<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-							android:layout_marginBottom="50dp"
-							android:layout_width="match_parent"
-							android:layout_marginLeft="20dp"
-							android:layout_marginRight="20dp"
-							android:layout_marginTop="35dp"
-							android:textColor="@color/white"
-							android:text="确认退还"
-							android:id="@+id/btn_submit_return"
-							app:qmui_borderColor="@color/app_color"
-							app:qmui_backgroundColor="@color/app_color"
-							android:layout_height="40dp"/>
-				</LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_charge_num_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="充电次数:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintTop_toBottomOf="@id/tv_km_return"
+						app:layout_constraintLeft_toLeftOf="parent"
+						android:layout_marginLeft="14dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_energy_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="电 量:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintTop_toBottomOf="@id/tv_charge_num_return"
+						app:layout_constraintLeft_toLeftOf="parent"
+						android:layout_marginLeft="14dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_wh_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="功  率:"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+						app:layout_constraintTop_toBottomOf="@id/tv_energy_return"
+						app:layout_constraintLeft_toLeftOf="parent"
+						android:layout_marginLeft="14dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/rectangle_gray_bg"
+                    android:layout_below="@id/rl_device_info_return">
+                    <TextView
+                        android:id="@+id/tv_tips1_reutrn"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="14dp"
+                        android:textColor="@color/white"
+                        android:text="请上传电池和车架图片："
+                        android:textSize="14sp" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_pic_return"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:minHeight="150dp" />
+                </LinearLayout>
 
 
-				<TextView
-						android:layout_alignParentBottom="true"
-						android:id="@+id/tv_delete_return"
-						android:layout_width="match_parent"
-						android:layout_height="@dimen/article_post_delete"
-						android:layout_gravity="bottom"
-						android:background="@android:color/holo_red_light"
-						android:gravity="center"
-						android:text="@string/post_delete_tv_d"
-						android:textColor="@color/white"
-						android:visibility="gone"/>
 
-			</RelativeLayout>
 
-		</ScrollView>
 
-		<com.scwang.smartrefresh.layout.SmartRefreshLayout
-				android:background="@color/white"
-				android:layout_width="match_parent"
-				android:visibility="gone"
-				android:id="@+id/srl_reapair_log"
-				android:layout_height="match_parent">
 
-			<com.scwang.smartrefresh.header.MaterialHeader
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
 
-			<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/rv_return_log"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"/>
-		</com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-	</FrameLayout>
+                <LinearLayout
+                    android:id="@+id/ll_content_return"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layout_pic"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginLeft="12dp"
+                  
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rectangle_gray_bg"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="请输入退还的原因："
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginTop="16dp"
+                            />
+
+
+                        <EditText
+                            android:id="@+id/et_return"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:background="@color/transparent"
+                            android:hint="请输入..."
+                            android:gravity="top"
+                            android:layout_marginTop="8dp"
+                            android:minHeight="100dp"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="107dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/rectangle_gray_bg">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="电池是否损坏"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginTop="18dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+                        <TextView
+                            android:id="@+id/tv_broke_return"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="是"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginRight="14dp"
+                            android:layout_marginTop="18dp"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/arrow_right"
+                            />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@drawable/shape_line"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="是否退还车架"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginBottom="18dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_reback"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="是"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginRight="14dp"
+                            android:layout_marginBottom="18dp"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/arrow_right"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                   
+
+
+
+
+                    <TextView
+                        android:id="@+id/btn_submit_return"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="42dp"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginRight="42dp"
+                        android:layout_marginBottom="50dp"
+                        android:text="确认退还"
+                        android:gravity="center"
+                        android:textColor="#ff272934"
+                        android:textSize="15sp"
+                        android:background="@drawable/bg_btn_common1"
+                         />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_delete_return"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/article_post_delete"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:background="@android:color/holo_red_light"
+                    android:gravity="center"
+                    android:text="@string/post_delete_tv_d"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/srl_reapair_log"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.scwang.smartrefresh.header.MaterialHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_return_log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </FrameLayout>
 </LinearLayout>

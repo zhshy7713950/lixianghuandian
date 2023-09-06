@@ -2,6 +2,7 @@ package com.ruimeng.things.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.amap.api.maps.AMap
@@ -13,6 +14,8 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.TrajectoryPointsBean
+import com.utils.TextUtil
+import kotlinx.android.synthetic.main.fgt_return.tv_model_return
 import kotlinx.android.synthetic.main.fgt_trajectory.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -33,9 +36,11 @@ class FgtTrajectory : BaseBackFragment() {
         super.onLazyInitView(savedInstanceState)
 
         initTopbar(topbar, "轨迹")
-        topbar.addRightImageButton(R.drawable.date_picker_trajectory, R.id.right).setOnClickListener { view ->
+        tv_select.setOnClickListener {
             showTimePicker {
                 selectedDate = it.time.getTime(false)
+                tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期:",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+
                 getPoints()
             }
         }
@@ -52,7 +57,8 @@ class FgtTrajectory : BaseBackFragment() {
 
         selectedDate = "$year-$month-$day"
 
-        tv_selected_date_trajectory.text = "当前轨迹日期:$selectedDate"
+        tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期:",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+
         getPoints()
     }
 
@@ -84,11 +90,12 @@ class FgtTrajectory : BaseBackFragment() {
             .setTitleText("选择日期")//标题文字
             .setOutSideCancelable(false)//点击屏幕，点在控件外部范围时，是否取消显示
             .isCyclic(true)//是否循环滚动
-            .setTitleColor(Color.BLACK)//标题文字颜色
-            .setSubmitColor(Color.BLUE)//确定按钮文字颜色
-            .setCancelColor(Color.BLUE)//取消按钮文字颜色
-            .setTitleBgColor(-0x99999a)//标题背景颜色 Night mode
-            .setBgColor(-0xcccccd)//滚轮背景颜色 Night mode
+            .setTitleColor(Color.TRANSPARENT)//标题文字颜色
+            .setSubmitColor(Color.parseColor("#29EBB6"))//确定按钮文字颜色
+            .setCancelColor(Color.WHITE)//取消按钮文字颜色
+            .setTitleBgColor(Color.parseColor("#404E59"))//标题背景颜色 Night mode
+            .setBgColor(Color.parseColor("#404E59"))//滚轮背景颜色 Night mode
+            .setTextColorCenter(Color.WHITE)
             .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
             .setRangDate(startDate, endDate)//起始终止年月日设定
             .setLabel("年", "月", "日", "时", "分", "秒")//默认设置为年月日时分秒
@@ -112,7 +119,7 @@ class FgtTrajectory : BaseBackFragment() {
 
         http {
             url = Path.LBSHISTORICAL
-            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+            params["device_id"] = FgtHome.CURRENT_DEVICEID
             params["day"] = selectedDate
 
 
@@ -131,13 +138,24 @@ class FgtTrajectory : BaseBackFragment() {
 
                 drawPoints(latLngList)
             }
+            onFail{ i: Int, s: String ->
+                Log.i("TAG", "getPoints: "+s)
+                val latLngList: MutableList<LatLng> = mutableListOf()
+                latLngList.add(LatLng(30.54800,104.06398))
+                latLngList.add(LatLng(30.55303,104.06932))
+                latLngList.add(LatLng(30.55293,104.07994))
+                latLngList.add(LatLng(30.55678,104.06781))
+                latLngList.add(LatLng(30.56316,104.07878))
+                latLngList.add(LatLng(30.56316,104.07878))
+                drawPoints(latLngList)
+            }
         }
     }
 
     private var mMapview: MapView? = null
     private var amap: AMap? = null
 
-    private fun drawPoints(points: List<com.amap.api.maps.model.LatLng>) {
+    private fun drawPoints(points: List<LatLng>) {
 
         amap?.clear()
 

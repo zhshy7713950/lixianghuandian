@@ -1,27 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:id="@+id/ll_bg"
-              android:layout_width="match_parent"
-              android:layout_height="45dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="horizontal"
+	android:id="@+id/ll_bg"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="12dp"
+	android:layout_marginRight="12dp"
+	android:layout_marginTop="12dp"
+	android:paddingBottom="12dp"
+	android:background="@drawable/rectangle_gray_bg">
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@mipmap/ic_reback1"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginLeft="8dp"
+		android:layout_marginTop="14dp"/>
 
 	<TextView
-			android:id="@+id/tv_time"
-			android:textSize="12sp"
-			android:layout_marginLeft="10dp"
-			android:gravity="center_vertical"
-			android:text="报修时间"
-			android:layout_width="0dp"
-			android:layout_weight="1"
-			android:layout_height="match_parent"/>
-
+		android:id="@+id/tv_battery_code"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="电池编号：36291"
+		android:textColor="#ffffffff"
+		android:textSize="16sp"
+		android:gravity="center_vertical"
+		android:layout_marginTop="14dp"
+		android:layout_marginLeft="44dp"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		/>
 	<TextView
-			android:id="@+id/tv_type"
+		android:id="@+id/tv_time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="2023-04-24 15:24"
+		android:textColor="#ffffffff"
+		android:textSize="13sp"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginTop="16dp"
+		android:layout_marginRight="12dp"
+		/>
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:background="@drawable/shape_line"
+		app:layout_constraintTop_toBottomOf="@id/tv_battery_code"
+		android:layout_marginTop="10dp"/>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintTop_toBottomOf="@id/tv_battery_code"
+		android:layout_marginTop="15dp">
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rv_photo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+
+			android:visibility="gone"/>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp">
+			<TextView
+				android:id="@+id/tv_broke_return"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="电池是否损坏：否"
+				android:textColor="#ffffffff"
+				android:textSize="12sp"
+				android:layout_weight="1"
+				android:layout_marginLeft="12dp"
+				/>
+			<TextView
+				android:id="@+id/tv_return_back"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="车架是否退还：是"
+				android:textColor="#ffffffff"
+				android:textSize="12sp"
+				android:layout_weight="1"
+				/>
+		</LinearLayout>
+		<TextView
+			android:id="@+id/tv_desc"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="退还原因：电气化的到来听来像是实现可持续能源和公路环保旅行最理想不过的路径，但有一个大问题成为实现理想的障碍。目前，通常用于电动车和存储可再生能源的超大容量电池是锂离子电池（简称锂电池），而锂电池很难做到回收利用。"
+			android:textColor="#ffffffff"
 			android:textSize="12sp"
-			android:layout_marginRight="10dp"
-			android:gravity="center_vertical"
-			android:text="报修类型"
-			android:layout_width="0dp"
-			android:layout_weight="1"
-			android:layout_height="match_parent"/>
-</LinearLayout>
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"
+			android:layout_marginTop="10dp"
+			/>
+
+	</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

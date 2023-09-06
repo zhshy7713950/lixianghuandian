@@ -165,6 +165,36 @@
 			app:layout_constraintBottom_toTopOf="@id/iv_wechat_login"
 			android:layout_marginBottom="20dp"
 			/>
+		<LinearLayout
+			android:layout_width="match_parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp">
+			<TextView
+				android:id="@+id/tv_phone1"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="18081016948"
+				android:textColor="@color/white"
+				/>
+			<TextView
+				android:id="@+id/tv_phone2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="15120173447"
+				android:textColor="@color/white"
+				android:layout_marginLeft="20dp"
+				/>
+			<TextView
+				android:id="@+id/tv_phone3"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="17348000945"
+				android:textColor="@color/white"
+				android:layout_marginLeft="20dp"
+				/>
+		</LinearLayout>
+
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.TextUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import android.view.Gravity
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
@@ -35,6 +37,8 @@ import com.ruimeng.things.home.checkImgs.*
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.CommonDialogCallBackHelper
 import com.utils.CommonPromptDialogHelper
+import com.utils.TextUtil
+import com.view.YesNoBottomSheetDialog
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -67,9 +71,9 @@ class FgtReturn : BaseBackFragment() {
 
         tab_return.addTab(QMUITabSegment.Tab("退还"))
             .addTab(QMUITabSegment.Tab("退还记录"))
-            .setDefaultSelectedColor(resources.getColor(R.color.app_color))
+            .setDefaultSelectedColor(Color.parseColor("#29EBB6"))
 
-        tab_return.setDefaultNormalColor(Color.parseColor("#BDBDBD"))
+        tab_return.setDefaultNormalColor(Color.parseColor("#929FAB"))
 
         tab_return.mode = QMUITabSegment.MODE_FIXED
         tab_return.setHasIndicator(true)
@@ -101,11 +105,7 @@ class FgtReturn : BaseBackFragment() {
         })
 
 
-        fl_battery_broke_return.setOnClickListener { setCheckedTag(1) }
-        fl_battery_fine_return.setOnClickListener { setCheckedTag(0) }
 
-        btn_yes_return.setOnClickListener { setHostIndex(1) }
-        btn_no_return.setOnClickListener { setHostIndex(0) }
 
 
         btn_submit_return.setOnClickListener {
@@ -127,10 +127,10 @@ class FgtReturn : BaseBackFragment() {
                     ""
                 } else images.substring(0, images.lastIndex)
 
-                params["damage"] = currentTagIndex.toString()
-                params["retrun_host"] = hostIndex.toString()
+                params["damage"] = if(tv_broke_return.text.toString().equals("是"))  "1" else "0"
+                params["retrun_host"] =if(tv_reback.text.toString().equals("是"))  "1" else "0"
                 params["msg"] = msg
-                params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+                params["device_id"] = FgtHome.CURRENT_DEVICEID
                 params["contract_id"] = FgtHomeBack.CURRENT_CONTRACT_ID
 
                 onSuccessWithMsg { res, msg ->
@@ -155,8 +155,33 @@ class FgtReturn : BaseBackFragment() {
 
         getLog()
 
-        btn_no_return.performClick()
-        fl_battery_fine_return.performClick()
+
+        tv_broke_return.setOnClickListener {
+            val dialog = activity?.let { it1 ->
+                YesNoBottomSheetDialog(it1,object : YesNoBottomSheetDialog.YesNoDialogCallback {
+                    override fun onClickedItem(item: String) {
+                        tv_broke_return.text = item
+                    }
+                })
+            }
+            if (dialog != null) {
+                dialog.show()
+            }
+        }
+        tv_reback.setOnClickListener {
+            val dialog = activity?.let { it1 ->
+                YesNoBottomSheetDialog(it1,object : YesNoBottomSheetDialog.YesNoDialogCallback {
+                    override fun onClickedItem(item: String) {
+                        tv_reback.text = item
+                    }
+                })
+            }
+            if (dialog != null) {
+                dialog.show()
+            }
+        }
+
+
     }
 
 
@@ -189,7 +214,7 @@ class FgtReturn : BaseBackFragment() {
         http {
             IS_SHOW_MSG = false
             url = "/apiv4/getonedevice"
-            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+            params["device_id"] = FgtHome.CURRENT_DEVICEID
             IS_SHOW_MSG = false
 
             onSuccess {
@@ -218,19 +243,20 @@ class FgtReturn : BaseBackFragment() {
                 if ("0"==result.device_contract.is_sign){
                    signDialog(activity!!,result.device_contract.contract_id)
                 }
+                var textColors = arrayOf("#929FAB","#FFFFFF")
+                tv_battery_code.text =   "电池编号：" + result.device_base.device_id
+                tv_model_return.text =   TextUtil.getSpannableString(arrayOf("电       池：",result.device_base.devicenum),textColors)
+                tv_deposit_return.text = TextUtil.getSpannableString(arrayOf("押       金：",result.device_contract.deposit),textColors)
+                tv_rent_long_return.text = TextUtil.getSpannableString(arrayOf("租用时长：", result.device_contract.rent_day + "月"),textColors)
+                tv_rent_start_return.text = TextUtil.getSpannableString(arrayOf("起租时间：" , result.device_contract.rent_time.toLong().getTime(false)),textColors)
+                tv_u_return.text = TextUtil.getSpannableString(arrayOf("电      压：" , result.device_base.totalvoltage + "V"),textColors)
 
-                tv_model_return.text = "电池型号：" + result.device_base.devicenum
-                tv_deposit_return.text = "押金：" + result.device_contract.deposit
-                tv_rent_long_return.text = "租用时长：" + result.device_contract.rent_day + "月"
-                tv_rent_start_return.text = "起租时间：" + result.device_contract.rent_time.toLong().getTime(false)
-                tv_u_return.text = "电压：" + result.device_base.totalvoltage + "V"
 
-
-                tv_pay_money_return.text = "电池：" + result.device_contract.total_rent_money + "元"
-                tv_km_return.text = "共行驶：" + "*KM"
-                tv_charge_num_return.text = "充电次数：" + result.device_base.loopnum
-                tv_energy_return.text = "电量：" + result.device_base.rsoc + "%"
-                tv_wh_return.text = "功率：" + "*W"
+                tv_pay_money_return.text = TextUtil.getSpannableString(arrayOf("电       池：", result.device_contract.total_rent_money + "元"),textColors)
+                tv_km_return.text = TextUtil.getSpannableString(arrayOf("共  行  驶：" , "*KM"),textColors)
+                tv_charge_num_return.text = TextUtil.getSpannableString(arrayOf("充电次数：" , result.device_base.loopnum),textColors)
+                tv_energy_return.text = TextUtil.getSpannableString(arrayOf("电       量：" , result.device_base.rsoc + "%"),textColors)
+                tv_wh_return.text = TextUtil.getSpannableString(arrayOf("功       率：" , "*W"),textColors)
 
 
             }
@@ -245,78 +271,10 @@ class FgtReturn : BaseBackFragment() {
 
     private var hostIndex = -1
 
-    /**
-     * 设置是否退还车架
-     *
-     * @param index  是否退还车架 1是0否
-     */
-    fun setHostIndex(index: Int) {
 
-        hostIndex = index
-
-        fun dealIsChecked(btn: QMUIRoundButton, isChecked: Boolean) {
-
-            val appColor = resources.getColor(R.color.app_color)
-            val white = resources.getColor(R.color.white)
-
-            val bg = btn.background as QMUIRoundButtonDrawable
-            bg.setStrokeData(SizeUtils.dp2px(1f), ColorStateList.valueOf(appColor))
-            bg.setBgData(ColorStateList.valueOf(if (isChecked) appColor else white))
-
-            btn.setTextColor(if (isChecked) white else appColor)
-
-
-        }
-
-        dealIsChecked(btn_no_return, index == 0)
-        dealIsChecked(btn_yes_return, index == 1)
-    }
 
     private var currentTagIndex = -1
-    /**
-     * 设置选中的tag
-     *
-     * @param index 0未损坏 1部分损坏 2完全损坏
-     */
-    fun setCheckedTag(index: Int) {
 
-        currentTagIndex = index
-
-        fun dealIsChecked(
-            fl: QMUIRoundFrameLayout,
-            tv: TextView,
-            iv: ImageView,
-            isChecked: Boolean,
-            isBroken: Boolean
-        ) {
-
-            val appColor = resources.getColor(R.color.app_color)
-            val white = resources.getColor(R.color.white)
-
-            val bg = fl.background as QMUIRoundButtonDrawable
-            bg.setStrokeData(SizeUtils.dp2px(2f), ColorStateList.valueOf(appColor))
-            bg.setBgData(ColorStateList.valueOf(if (isChecked) appColor else white))
-
-            tv.setTextColor(if (isChecked) white else appColor)
-
-            iv.setImageResource(
-                if (isChecked) {
-                    if (!isBroken)
-                        R.drawable.face_smile_white
-                    else
-                        R.drawable.face_bad_white
-                } else {
-                    if (!isBroken)
-                        R.drawable.face_smile_black
-                    else
-                        R.drawable.face_bad
-                }
-            )
-        }
-
-        dealIsChecked(fl_battery_broke_return, tv_battery_broke_return, iv_battery_broke_return, index == 1, true)
-        dealIsChecked(fl_battery_fine_return, tv_battery_fine_return, iv_battery_fine_return, index == 0, false)
-    }
 
 
     private val adapter by lazy { RvReturnAdapter() }
@@ -353,14 +311,15 @@ class FgtReturn : BaseBackFragment() {
     inner class RvReturnAdapter : BaseQuickAdapter<ReturnLogBean.Data, BaseViewHolder>(R.layout.item_rv_return) {
         override fun convert(helper: BaseViewHolder, item: ReturnLogBean.Data?) {
             bothNotNull(helper, item) { a, b ->
+                var textColors = arrayOf("#FFFFFF","#929FAB")
+                    a.setText(R.id.tv_battery_code,"电池编号：${b.device_id}")
+                        .setText(R.id.tv_time, b.created.toLong().getTime())
+                        .setText(R.id.tv_broke_return,TextUtil.getSpannableString(arrayOf("电池是否损坏：", if ("0".equals(b.damage)) "否" else "是" ),textColors))
+                        .setText(R.id.tv_return_back,TextUtil.getSpannableString(arrayOf("车架是否退还：", if ("0".equals(b.retrun_host)) "否" else "是" ),textColors))
+                        .setGone(R.id.tv_desc,!TextUtils.isEmpty(b.msg))
+                        .setText(R.id.tv_desc,TextUtil.getSpannableString(arrayOf("退还原因：", b.msg ),textColors))
 
-                if (a.layoutPosition % 2 == 0) {
-                    a.setBackgroundColor(R.id.ll_bg, context!!.resources.getColor(R.color.bg_gray))
-                } else
-                    a.setBackgroundColor(R.id.ll_bg, context!!.resources.getColor(R.color.white))
 
-                a.setText(R.id.tv_time, b.created.toLong().getTime())
-                a.setText(R.id.tv_type, b.handle_msg)
             }
         }
     }
@@ -382,15 +341,7 @@ class FgtReturn : BaseBackFragment() {
             initPicData()
             initRv()
         })
-
-
-
-
         et_return.setText("")
-
-        btn_no_return.performClick()
-        fl_battery_fine_return.performClick()
-
     }
 
     private fun initPicView() {

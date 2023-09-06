@@ -96,7 +96,7 @@ class FgtRepair : BaseBackFragment() {
                 }
 
                 params["msg"] = msg
-                params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+                params["device_id"] = FgtHome.CURRENT_DEVICEID
                 params["contract_id"] = FgtHomeBack.CURRENT_CONTRACT_ID
 
                 onSuccessWithMsg { res, msg ->

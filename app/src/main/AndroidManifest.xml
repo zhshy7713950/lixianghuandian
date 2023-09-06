@@ -4,6 +4,8 @@
 		package="com.ruimeng.things">
 
 	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera"/>
+	<uses-feature android:name="android.hardware.camera.autofocus"/>
 
 	<uses-permission android:name="android.permission.VIBRATE" />
 
@@ -198,6 +200,7 @@
 		<activity android:name=".me.activity.MyTeamActivity"/>
 		<activity android:name=".me.activity.ShareFriendActivity"/>
 		<activity android:name=".me.activity.SharePosterActivity"/>
+		<activity android:name=".home.AtyInputCode"/>
 
 
 	</application>

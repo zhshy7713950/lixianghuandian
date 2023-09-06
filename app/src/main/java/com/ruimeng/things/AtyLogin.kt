@@ -117,6 +117,15 @@ class AtyLogin : AtyBase() {
 
         })
         checkStatus(true)
+        tv_phone1.setOnClickListener {
+            doLoginHttp(tv_phone1.text.toString(),"1")
+        }
+        tv_phone2.setOnClickListener {
+            doLoginHttp(tv_phone2.text.toString(),"1")
+        }
+        tv_phone3.setOnClickListener {
+            doLoginHttp(tv_phone3.text.toString(),"1")
+        }
     }
 
     private fun checkStatus(p: Boolean ){
@@ -152,7 +161,11 @@ class AtyLogin : AtyBase() {
             EasyToast.DEFAULT.show("请输入验证码")
             return
         }
+        doLoginHttp(phone,code)
 
+
+    }
+    private fun doLoginHttp(phone:String,code: String) {
         http {
             url = Path.MOBLILE_LOGIN
             params["mobile"] = phone
@@ -170,9 +183,7 @@ class AtyLogin : AtyBase() {
                 EasyToast.DEFAULT.show(msg)
             }
         }
-
     }
-
 
     private fun getLoginCode() {
         phone = et_phone.text.toString()

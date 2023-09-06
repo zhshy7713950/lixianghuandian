@@ -4,25 +4,44 @@
               android:orientation="vertical"
               android:padding="5dp"
               android:layout_width="wrap_content"
-              android:src="@drawable/marker_battery"
               android:layout_height="wrap_content">
 
-	<TextView
-			android:id="@+id/tv_time"
-			android:layout_marginBottom="3dp"
-			tools:text="2019-7-17 13:31"
-			android:background="@drawable/custom_info_bubble"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+
 
 	<ImageView
 			android:layout_gravity="center"
 			android:orientation="vertical"
 			android:layout_width="40dp"
 			android:id="@+id/iv"
-			android:src="@drawable/marker_battery"
+			android:src="@mipmap/marker_battery"
 			android:layout_height="40dp">
 
 	</ImageView>
+	<LinearLayout
+		android:layout_width="230dp"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:background="@drawable/rectangle_battery_bg_5">
+		<TextView
+			android:id="@+id/tv_location"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:drawableLeft="@mipmap/ic_find_battery_address"
+			android:text=""
+			android:textColor="#ffffffff"
+			android:textSize="12sp"
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="2dp"
+			/>
+		<TextView
+			android:id="@+id/tv_time"
+			android:layout_marginBottom="3dp"
+			tools:text="2019-7-17 13:31"
+			android:textColor="#ffffffff"
+			android:textSize="12sp"
+			android:drawableLeft="@mipmap/ic_find_battery_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
 
 </LinearLayout>

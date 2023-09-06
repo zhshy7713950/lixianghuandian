@@ -7,5 +7,9 @@
         <item name="colorPrimaryDark">@color/app_color</item>
         <item name="colorAccent">@color/app_red</item>
     </style>
+    <style name="TransparentDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
 </resources>

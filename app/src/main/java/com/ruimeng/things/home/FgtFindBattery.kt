@@ -1,18 +1,30 @@
 package com.ruimeng.things.home
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.TextView
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
-import com.amap.api.maps.model.*
-import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton
+import com.amap.api.maps.model.BitmapDescriptorFactory
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MarkerOptions
+import com.amap.api.maps.model.MyLocationStyle
+import com.amap.api.services.core.LatLonPoint
+import com.amap.api.services.geocoder.GeocodeResult
+import com.amap.api.services.geocoder.GeocodeSearch
+import com.amap.api.services.geocoder.GeocodeSearch.OnGeocodeSearchListener
+import com.amap.api.services.geocoder.RegeocodeQuery
+import com.amap.api.services.geocoder.RegeocodeResult
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import org.jetbrains.anko.textColor
 import org.json.JSONObject
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -23,6 +35,7 @@ import wongxd.navi.Converter
 import wongxd.navi.CoodinateCovertor
 import wongxd.navi.LngLat
 import wongxd.navi.NaviUtil
+import wongxd.utils.ToastUtils
 
 
 /**
@@ -31,23 +44,23 @@ import wongxd.navi.NaviUtil
 class FgtFindBattery : BaseBackFragment() {
     override fun getLayoutRes(): Int = com.ruimeng.things.R.layout.fgt_find_batter
 
-    private var right: QMUIAlphaImageButton? = null
+    private var right: Button? = null
 
     private val mAnimation by lazy { AnimationUtils.loadAnimation(activity, R.anim.rotate_repeat) }
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
-        initTopbar(topbar, "寻车")
-        right = topbar.addRightImageButton(com.ruimeng.things.R.drawable.icon_refresh, com.ruimeng.things.R.id.right)
+        initTopbar(topbar, "定位")
+        right = topbar.addRightTextButton("刷新", R.id.right)
             .apply {
                 setOnClickListener { view ->
                     clearMarkers()
                     getBatteryLocation()
                 }
-
+                textColor = Color.WHITE
             }
-        mMapView = rootView?.findViewById(com.ruimeng.things.R.id.mapView) as MapView
+        mMapView = rootView?.findViewById(R.id.mapView) as MapView
         mMapView?.onCreate(savedInstanceState) // 此方法必须重写
 
         if (aMap == null) {
@@ -230,7 +243,7 @@ class FgtFindBattery : BaseBackFragment() {
 
             url = Path.DEVICE_GEO
 
-            params["device_id"] = FgtHomeBack.CURRENT_DEVICEID
+            params["device_id"] = FgtHome.CURRENT_DEVICEID
 
             onFinish {
                 right?.clearAnimation()
@@ -266,23 +279,41 @@ class FgtFindBattery : BaseBackFragment() {
      */
     private fun addBatteryMarkder(lat: Double, lng: Double, timeline: Int) {
 
+
         markerOption = MarkerOptions()
             .zIndex(10f)
             .position(LatLng(lat, lng))
             .draggable(false)
 
 
-        val v = View.inflate(activity, com.ruimeng.things.R.layout.layout_battery_marker, null)
-        val tvTime = v.findViewById<TextView>(com.ruimeng.things.R.id.tv_time)
-        val iv = v.findViewById<ImageView>(com.ruimeng.things.R.id.iv)
+        val v = View.inflate(activity, R.layout.layout_battery_marker, null)
+        val tvTime = v.findViewById<TextView>(R.id.tv_time)
+        val tvLocation = v.findViewById<TextView>(R.id.tv_location)
 
         tvTime.text = timeline.toLong().getTime()
+
 
         markerOption?.icon(BitmapDescriptorFactory.fromView(v))
 
         aMap?.addMarker(markerOption)
 
         aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
+
+        val geocoder = GeocodeSearch(activity)
+        geocoder.getFromLocationAsyn(RegeocodeQuery(LatLonPoint(lat,lng),100f,GeocodeSearch.AMAP))
+        geocoder.setOnGeocodeSearchListener(object :OnGeocodeSearchListener{
+            override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
+                if (p1 == 1000 && p0 != null){
+                    tvLocation.text = p0.regeocodeAddress.formatAddress
+                }else{
+                    ToastUtils.showShortSafe("状态码"+p1)
+                }
+            }
+
+            override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+            }
+
+        })
 
     }
 

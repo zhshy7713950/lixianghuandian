@@ -45,7 +45,6 @@ import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http
-import wongxd.utils.utilcode.util.ScreenUtils
 
 
 /**
@@ -202,7 +201,21 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvOpenClose.setOnClickListener {
-            changeBatteryStatus(IS_OPEN)
+            AnyLayer.with(getCurrentAppAty())
+                .contentView(R.layout.alert_dialog_new)
+                .bindData { anyLayer ->
+                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText("是否开启电源？")
+                    anyLayer.contentView.findViewById<TextView>(R.id.tvConfirm).setOnClickListener{
+                        changeBatteryStatus(IS_OPEN)
+                        anyLayer.dismiss()
+                    }
+                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+                        anyLayer.dismiss()
+                    }
+                }.backgroundColorInt(Color.parseColor("#85000000"))
+                .backgroundBlurRadius(10f)
+                .backgroundBlurScale(10f)
+                .show()
         }
         btn_continue_rant.setOnClickListener { doContinueRant() }
 
@@ -437,6 +450,7 @@ class FgtHome : MainTabFragment() {
         showPopMsg(item.popmsg)
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
+        showPackageInfo(item.device_contract)
         tv_remark_num.text = item.device_contract.remark
         if ("0" == item.device_contract.is_sign) {
             signDialog(activity!!, item.device_contract.contract_id)
@@ -461,9 +475,12 @@ class FgtHome : MainTabFragment() {
         pvBattery.maxCount = 100f
         pvBattery.setCurrentCount(info.rsoc.toFloat())
         tvProgress.text = "${info.rsoc}%"
+        tv_voltage.text = "电压 ${info.totalvoltage}V"
         tvBatteryName.text = info.device_id
     }
-    private fun showPackageInfo(){
+    private fun showPackageInfo(item :DeviceDetailBean.Data.DeviceContract){
+        tv_ya_monety.text = item.deposit + "元"
+        tv_rent_money.text = item.rent_money  + "元"
 
     }
     private fun showBatteryInfo(info:DeviceDetailBean.Data.DeviceBase){

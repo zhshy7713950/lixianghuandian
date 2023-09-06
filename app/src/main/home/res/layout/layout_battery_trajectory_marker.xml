@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:padding="5dp"
               android:layout_width="wrap_content"
-              android:src="@drawable/marker_battery"
+              android:src="@mipmap/marker_battery"
               android:layout_height="wrap_content">
 
 	<ImageView
@@ -12,7 +12,7 @@
 			android:orientation="vertical"
 			android:layout_width="40dp"
 			android:id="@+id/iv"
-			android:src="@drawable/marker_battery"
+			android:src="@mipmap/marker_battery"
 			android:layout_height="40dp">
 
 	</ImageView>

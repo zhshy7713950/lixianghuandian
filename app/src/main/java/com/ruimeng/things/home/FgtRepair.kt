@@ -97,7 +97,7 @@ class FgtRepair : BaseBackFragment() {
 
                 params["msg"] = msg
                 params["device_id"] = FgtHome.CURRENT_DEVICEID
-                params["contract_id"] = FgtHomeBack.CURRENT_CONTRACT_ID
+                params["contract_id"] = FgtHome.CURRENT_CONTRACT_ID
 
                 onSuccessWithMsg { res, msg ->
                     EasyToast.DEFAULT.show(msg)

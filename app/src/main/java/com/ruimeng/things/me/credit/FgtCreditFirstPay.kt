@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
-import com.ruimeng.things.home.FgtHomeBack
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_credit_first_pay.*
 import org.greenrobot.eventbus.EventBus
@@ -73,7 +73,7 @@ class FgtCreditFirstPay : BaseBackFragment() {
 
         dlgPayProgress = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
         dlgPaySuccessed = getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") {
-            EventBus.getDefault().post(FgtHomeBack.RefreshMyDeviceList())
+            EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
             pop()
         }
         dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")

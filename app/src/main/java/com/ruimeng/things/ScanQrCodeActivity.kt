@@ -9,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import com.ruimeng.things.home.AtyInputCode
+import com.ruimeng.things.home.AtyScanQrcode
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_scan_qr_code.*
+import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_light
 import wongxd.base.AtyBase
 import wongxd.base.custom.anylayer.AnyLayer
 
@@ -76,42 +79,31 @@ class ScanQrCodeActivity : AtyBase() {
             .commit()
 
 
-        fl_input_code.setOnClickListener {
-            AnyLayer.with(this)
-                .contentView(R.layout.fgt_input_device_code)
-                .bindData { anyLayer ->
+        tv_input_code.setOnClickListener {
+            val intent = Intent(this, AtyInputCode::class.java)
 
-                    val et = anyLayer.contentView.findViewById<EditText>(R.id.et_input_device_code)
-                    val btn = anyLayer.contentView.findViewById<Button>(R.id.btn_submit_device_code)
-
-
-                    btn.setOnClickListener {
-                        val result = et.text.toString()
-                        anyLayer.dismiss()
-                        if (result.isNotBlank()) {
-                            val resultIntent = Intent()
-                            val bundle = Bundle()
-                            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
-                            bundle.putString(CodeUtils.RESULT_STRING, result)
-                            bundle.putString("type", getType)
-                            bundle.putString("contract_id", getContractId)
-                            resultIntent.putExtras(bundle)
-                            setResult(Activity.RESULT_OK, resultIntent)
-                            finish()
-                        }
-
-                    }
-
-
-                }
-                .backgroundBlurScale(10f)
-                .backgroundBlurRadius(10f)
-                .backgroundColorInt(Color.parseColor("#55000000"))
-                .show()
+            startActivityForResult(intent, 1)
+        }
+        tv_light.setOnClickListener {
+            CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
+            tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }
 
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == 1001 && data != null){
+            val resultIntent = Intent()
+            val bundle = Bundle()
+            bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
+            bundle.putString(CodeUtils.RESULT_STRING, data.getStringExtra("code"))
+            bundle.putString("type", getType)
+            bundle.putString("contract_id", getContractId)
+            resultIntent.putExtras(bundle)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }
+    }
 
 
 

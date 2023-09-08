@@ -2,64 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="10dp"
-		android:layout_marginTop="5dp"
-		android:layout_marginRight="10dp"
-		android:background="@color/white"
-		android:orientation="horizontal"
-		android:padding="10dp">
+		android:layout_marginLeft="12dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="12dp"
+		android:background="@drawable/rectangle_gray_bg"
+		android:orientation="vertical"
+	android:paddingBottom="14dp"
+		>
+	<TextView
+		android:id="@+id/tv_battery_num"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="电池编号：283784"
+		android:textColor="#ffffffff"
+		android:textSize="16sp"
+		android:drawableLeft="@mipmap/ic_switch_battery_list"
+		android:layout_marginLeft="12dp"
+		android:layout_marginRight="12dp"
+		android:layout_marginTop="12dp"
+		android:drawablePadding="10dp"
+		/>
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:background="@drawable/shape_line"
+		android:layout_marginTop="8dp"/>
+	<TextView
+		android:id="@+id/tv_battery_status"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="电池状态："
+		android:textColor="#ff929fab"
+		android:textSize="12sp"
+		android:layout_marginLeft="14dp"
+		android:layout_marginTop="10dp"
+		/>
+	<TextView
+		android:id="@+id/tv_battery_hole"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="电池状态："
+		android:textColor="#ff929fab"
+		android:textSize="12sp"
+		android:layout_marginLeft="14dp"
+		android:layout_marginTop="10dp"
+		/>
+	<TextView
+		android:id="@+id/tv_battery_remark"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="电池状态："
+		android:textColor="#ff929fab"
+		android:textSize="12sp"
+		android:layout_marginLeft="14dp"
+		android:layout_marginTop="10dp"
+		/>
 
-	<ImageView
-			android:scaleType="fitXY"
-			android:layout_width="45dp"
-			android:layout_height="60dp"
-			android:background="@color/white"
-			android:src="@drawable/icon_battery_placeholder" />
 
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="60dp"
-			android:orientation="vertical">
-
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="30dp"
-				android:orientation="horizontal"
-				android:paddingBottom="5dp">
-
-
-			<TextView
-					android:id="@+id/tv_battery_num"
-					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:layout_width="0dp"
-					android:gravity="bottom"
-					android:paddingLeft="20dp"
-					android:paddingTop="5dp"
-					android:text="电池编号:xxx"
-					android:textSize="12sp" />
-
-			<TextView
-					android:id="@+id/tv_battery_model"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:gravity="bottom"
-					android:paddingLeft="10dp"
-					android:paddingTop="5dp"
-					android:text="电池型号:xxx"
-					android:textSize="12sp" />
-
-		</LinearLayout>
-
-		<TextView
-				android:id="@+id/tv_battery_remark"
-				android:layout_width="match_parent"
-				android:layout_height="30dp"
-				android:paddingLeft="20dp"
-				android:paddingTop="5dp"
-				android:text="电池备注:xxx"
-				android:textSize="12sp" />
-	</LinearLayout>
 
 </LinearLayout>

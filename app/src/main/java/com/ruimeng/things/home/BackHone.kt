@@ -837,7 +837,7 @@ class FgtHomeBack : MainTabFragment() {
     }
 
     private fun showNewDeviceData(device:DeviceDetailBean.Data){
-       showDeviceInfo(device.device_base)
+        showDeviceInfo(device.device_base)
         tv_remark_num.text = device.device_contract.remark
 
     }

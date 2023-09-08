@@ -14,7 +14,7 @@ import android.widget.EditText
 import androidx.annotation.RequiresApi
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
-import com.ruimeng.things.home.FgtHomeBack.Companion.REQUEST_ZXING_CODE
+import com.ruimeng.things.home.FgtHome.Companion.REQUEST_ZXING_CODE
 import com.utils.FlashUtil
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils

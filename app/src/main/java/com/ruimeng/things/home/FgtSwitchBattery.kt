@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.MyDevicesBean
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_switch_battery.*
 import org.greenrobot.eventbus.EventBus
 import wongxd.base.BaseBackFragment
@@ -109,15 +110,23 @@ class FgtSwitchBattery : BaseBackFragment() {
 
                             val tvNum = view.findViewById<TextView>(R.id.tv_battery_num)
 
-                            val tvModel = view.findViewById<TextView>(R.id.tv_battery_model)
+                            val tvStatus = view.findViewById<TextView>(R.id.tv_battery_status)
 
+                            val tvHole = view.findViewById<TextView>(R.id.tv_battery_hole)
                             val tvRemark = view.findViewById<TextView>(R.id.tv_battery_remark)
 
                             tvNum.text = "电池编号：" + item.device_id
+                            var status = ""
+                            if (item.protect != "0" && item.protect != "4096"){
+                                status = "故障"
+                            }else{
+                                status = if (item.device_status == 1)  "通电" else "断电"
+                            }
+                            var textColors = arrayOf("#FFFFFF","#929FAB")
+                            tvStatus.text = TextUtil.getSpannableString(arrayOf("电池状态：",status),textColors)
+                            tvHole.text = TextUtil.getSpannableString(arrayOf("电池电量：",item.rsoc+"%"),textColors)
+                            tvRemark.text = TextUtil.getSpannableString(arrayOf("电池备注：",item.remark),textColors)
 
-                            tvModel.text = "电池型号：" + item.model_str
-
-                            tvRemark.text = "电池备注：" + item.remark
 
                             view.setOnClickListener {
                                 EventBus.getDefault().post(BatteryInfoChangeEvent(item.device_id))

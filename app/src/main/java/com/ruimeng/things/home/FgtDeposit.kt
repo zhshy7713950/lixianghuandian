@@ -17,7 +17,9 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
 import com.ruimeng.things.wxapi.WXEntryActivity
+import com.utils.OptionPickerUtil
 import kotlinx.android.synthetic.main.fgt_deposit.*
+import kotlinx.android.synthetic.main.fgt_return.tv_broke_return
 import org.json.JSONObject
 import wongxd.Config
 import wongxd.alipay.BaseAlipay
@@ -67,13 +69,14 @@ class FgtDeposit : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
-        initTopbar(topbar, "账户押金")
+        initTopbar(topbar, "支付押金")
 
         WaitViewController.from(scroll_account_deposit) { renderChilds() }
 
         Log.i("data===", "===getIsHost===$getIsHost")
 
         getDeposit()
+        dealPayWay()
 
     }
 
@@ -86,48 +89,59 @@ class FgtDeposit : BaseBackFragment() {
 
         WaitViewController.from(scroll_account_deposit) { removeChilds() }
 
-        tv_battery_num_account_deposit.text = "当前电池编号：" + data.device.device_id
+        tv_battery_num_account_deposit.text = "" + data.device.device_id
 
-        tv_battery_model_account_deposit.text = "当前电池型号：" + data.device.device_model
-//        btn_yes_account_deposit.setOnClickListener {
-//            tv_money_account_deposit.text =
-//                batteryCombinationBean?.deposit_host
-//                    ?: batteryPackageBean?.deposit_host
-//                            ?: data.deposit_host
-//            dealBtnYesAndNo(true)
+        tv_battery_model_account_deposit.text = "" + data.device.device_model
+
+
+//        dealBtnYesAndNo(FgtHome.IsWholeBikeRent)
+        tv_account_deposit.setOnClickListener {
+            var data = arrayOf("是","否").toMutableList();
+            OptionPickerUtil.showOptionPicker(activity,data ,object :
+                OnOptionsSelectListener {
+                override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+                    tv_account_deposit.text = data.get(options1)
+                    FgtHome.IsWholeBikeRent = options1 == 0
+                }
+            })
+        }
+        if (data.deposit_option.size > 0){
+            tv_select_package_deposit.text = data.deposit_option.get(0).name
+            tv_select_package_deposit.setOnClickListener {
+                var filters = data.deposit_option.map { depositOption: GetDepositBean.Data.DepositOption -> depositOption.name }
+                OptionPickerUtil.showOptionPicker(activity,filters ,object :
+                    OnOptionsSelectListener {
+                    override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+                        tv_select_package_deposit.text = filters.get(options1)
+                        batteryCombinationBean = data.deposit_option.get(options1)
+                    }
+                })
+            }
+        }
+
+
+
+//        ll_wechat_account_deposit.setOnClickListener {
+//            dealPayWay(PayWay.WX)
+//        }
+//
+//        ll_alipay_account_deposit.setOnClickListener {
+//            dealPayWay(PayWay.AL)
+//        }
+//
+//
+//        ll_zhima_account_deposit.setOnClickListener {
+//            dealPayWay(PayWay.ZM)
+//        }
+//
+//
+//        ll_credit_account_deposit.setOnClickListener {
+//            dealPayWay(PayWay.BT)
 //        }
 
-//        btn_no_account_deposit.setOnClickListener {
-//            tv_money_account_deposit.text =
-//                batteryCombinationBean?.deposit
-//                    ?: batteryPackageBean?.deposit
-//                            ?: data.deposit
-//            dealBtnYesAndNo(false)
-//        }
+//        groupPayLayout?.setOnClickListener { dealPayWay(PayWay.GROUPPAP) }
 
-        dealBtnYesAndNo(FgtHomeBack.IsWholeBikeRent)
-
-        ll_wechat_account_deposit.setOnClickListener {
-            dealPayWay(PayWay.WX)
-        }
-
-        ll_alipay_account_deposit.setOnClickListener {
-            dealPayWay(PayWay.AL)
-        }
-
-
-        ll_zhima_account_deposit.setOnClickListener {
-            dealPayWay(PayWay.ZM)
-        }
-
-
-        ll_credit_account_deposit.setOnClickListener {
-            dealPayWay(PayWay.BT)
-        }
-
-        groupPayLayout?.setOnClickListener { dealPayWay(PayWay.GROUPPAP) }
-
-        ll_cash_account_deposit.setOnClickListener { dealPayWay(PayWay.XX) }
+//        ll_cash_account_deposit.setOnClickListener { dealPayWay(PayWay.XX) }
 
         btn_pay_now_account_deposit.setOnClickListener {
             if (!IS_CHECKED_PROTOCOL) {
@@ -148,9 +162,9 @@ class FgtDeposit : BaseBackFragment() {
 
         iv_check.setOnClickListener {
             if (IS_CHECKED_PROTOCOL) {
-                iv_check.setImageResource(R.drawable.uncheck)
+                iv_check.setImageResource(R.mipmap.ic_radio_unselect)
             } else {
-                iv_check.setImageResource(R.drawable.check)
+                iv_check.setImageResource(R.mipmap.ic_radio_select)
             }
 
             IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
@@ -162,56 +176,57 @@ class FgtDeposit : BaseBackFragment() {
         }
 
 
+//        ll_wechat_account_deposit.visibility = View.GONE
+//        ll_alipay_account_deposit.visibility = View.GONE
+//        ll_zhima_account_deposit.visibility = View.GONE
+//        groupPayLayout?.visibility = View.GONE
+//        ll_cash_account_deposit.visibility = View.GONE
+//        ll_credit_account_deposit.visibility = View.GONE
 
-
-
-
-        ll_wechat_account_deposit.visibility = View.GONE
-        ll_alipay_account_deposit.visibility = View.GONE
-        ll_zhima_account_deposit.visibility = View.GONE
-        groupPayLayout?.visibility = View.GONE
-        ll_cash_account_deposit.visibility = View.GONE
-        ll_credit_account_deposit.visibility = View.GONE
-
-        data.pay_type.forEach { payType ->
-            // channel string 支付渠道， wx=微信 alipay=支付宝 cash=现金 credit=信用支付 pre_alipay = 芝麻信用（免押） 102=grouppay=集团支付
-            // is_show int  0不显示 1显示
-            val isShow = if (payType.is_show == 1) View.VISIBLE else View.GONE
-            val channel = payType.channel
-
-            when (channel) {
-                "wx" -> ll_wechat_account_deposit.visibility = isShow
-                "alipay" -> ll_alipay_account_deposit.visibility = isShow
-                "pre_alipay" -> ll_zhima_account_deposit.visibility = isShow
-                "cash" -> ll_cash_account_deposit.visibility = isShow
-                "credit" -> ll_credit_account_deposit.visibility = isShow
-                "grouppay" -> groupPayLayout.visibility = isShow
-                else -> {
-
-                }
-            }
-
-        }
-
-
+//        data.pay_type.forEach { payType ->
+//            // channel string 支付渠道， wx=微信 alipay=支付宝 cash=现金 credit=信用支付 pre_alipay = 芝麻信用（免押） 102=grouppay=集团支付
+//            // is_show int  0不显示 1显示
+//            val isShow = if (payType.is_show == 1) View.VISIBLE else View.GONE
+//            val channel = payType.channel
+//
+//            when (channel) {
+//                "wx" -> ll_wechat_account_deposit.visibility = isShow
+//                "alipay" -> ll_alipay_account_deposit.visibility = isShow
+//                "pre_alipay" -> ll_zhima_account_deposit.visibility = isShow
+//                "cash" -> ll_cash_account_deposit.visibility = isShow
+//                "credit" -> ll_credit_account_deposit.visibility = isShow
+//                "grouppay" -> groupPayLayout.visibility = isShow
+//                else -> {
+//
+//                }
+//            }
+//
+//        }
 
 
         fun renderPackage() {
             //套餐
-            ll_package_select_deposit.setOnClickListener {
-                rv_select_package_deposit.visibility =
-                    if (rv_select_package_deposit.visibility == View.VISIBLE) {
-                        iv_enter_select_package_deposit.apply {
-                            rotation = 0f
-                        }
-                        View.GONE
-                    } else {
-                        iv_enter_select_package_deposit.apply {
-                            rotation = 90f
-                        }
-                        View.VISIBLE
-                    }
-            }
+//            tv_select_package_deposit.setOnClickListener {
+//                var data = arrayOf("是","否").toMutableList();
+//                OptionPickerUtil.showOptionPicker(activity,data ,object :
+//                    OnOptionsSelectListener {
+//                    override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+//                        tv_broke_return.text = data.get(options1)
+//                    }
+//                })
+//                rv_select_package_deposit.visibility =
+//                    if (rv_select_package_deposit.visibility == View.VISIBLE) {
+//                        iv_enter_select_package_deposit.apply {
+//                            rotation = 0f
+//                        }
+//                        View.GONE
+//                    } else {
+//                        iv_enter_select_package_deposit.apply {
+//                            rotation = 90f
+//                        }
+//                        View.VISIBLE
+//                    }
+//            }
 
 
             fun checkPackage(pos: Int, packageBean: GetDepositBean.Data.Package) {
@@ -223,15 +238,15 @@ class FgtDeposit : BaseBackFragment() {
 
                 batteryPackageBean = packageBean
                 batteryPackageBean?.let {
-                    tv_select_package_deposit.text = it.name
+//                    tv_select_package_deposit.text = it.name
                     if (pos == 0) {
                         it.deposit = data.deposit
                         it.deposit_host = data.deposit_host
                     }
 
 
-                    tv_money_account_deposit.text =
-                        if (FgtHomeBack.IsWholeBikeRent) it.deposit_host else it.deposit
+                    tv_money_account_deposit.text = "¥ " +
+                        if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
 
                     currentDepositOption.apply {
                         clear()
@@ -248,27 +263,27 @@ class FgtDeposit : BaseBackFragment() {
 
 
 
-            rv_select_package_deposit.linear {
-                data.packageList.forEach { packageBean ->
-
-                    itemDsl {
-                        xml(R.layout.item_rv_select_package_deposit)
-
-                        renderX { position, view ->
-
-                            val tv = view.findViewById<TextView>(R.id.tv)
-
-                            tv.text = packageBean.name
-
-                            view.setOnClickListener {
-                                checkPackage(position, packageBean)
-                                ll_package_select_deposit.performClick()
-                            }
-
-                        }
-                    }
-                }
-            }
+//            rv_select_package_deposit.linear {
+//                data.packageList.forEach { packageBean ->
+//
+//                    itemDsl {
+//                        xml(R.layout.item_rv_select_package_deposit)
+//
+//                        renderX { position, view ->
+//
+//                            val tv = view.findViewById<TextView>(R.id.tv)
+//
+//                            tv.text = packageBean.name
+//
+//                            view.setOnClickListener {
+//                                checkPackage(position, packageBean)
+//                                ll_package_select_deposit.performClick()
+//                            }
+//
+//                        }
+//                    }
+//                }
+//            }
 
             if (data.packageList.isNotEmpty())
                 checkPackage(0, data.packageList[0])
@@ -294,26 +309,26 @@ class FgtDeposit : BaseBackFragment() {
             checkCombination(currentDepositOption[0])
         }
 
-        ll_combination_deposit.setOnClickListener {
-            showCombinationPicker()
-        }
+//        ll_combination_deposit.setOnClickListener {
+//            showCombinationPicker()
+//        }
 
 
         iv_check.performClick()
-        ll_wechat_account_deposit.performClick()
-        dealPayWay(PayWay.NULL)
+//        ll_wechat_account_deposit.performClick()
+//        dealPayWay(PayWay.NULL)
     }
 
 
     private fun checkCombination(combinationBean: GetDepositBean.Data.DepositOption) {
 
-        batteryCombinationBean = combinationBean
-        batteryCombinationBean?.let {
-            tv_combination_deposit?.text = it.name
-            tv_money_account_deposit?.text =
-                if (FgtHomeBack.IsWholeBikeRent) it.deposit_host else it.deposit
-
-        }
+//        batteryCombinationBean = combinationBean
+//        batteryCombinationBean?.let {
+//            tv_combination_deposit?.text = it.name
+//            tv_money_account_deposit?.text =
+//                if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+//
+//        }
     }
 
     /**
@@ -346,7 +361,7 @@ class FgtDeposit : BaseBackFragment() {
 
 
     private fun dealBtnYesAndNo(isYes: Boolean) {
-        FgtHomeBack.IsWholeBikeRent = isYes
+        FgtHome.IsWholeBikeRent = isYes
 
         fun setBtnStatus(isCheck: Boolean, btn: QMUIRoundButton) {
 
@@ -364,64 +379,72 @@ class FgtDeposit : BaseBackFragment() {
             }
         }
 
-        setBtnStatus(isYes, btn_yes_account_deposit)
-        setBtnStatus(!isYes, btn_no_account_deposit)
+//        setBtnStatus(isYes, btn_yes_account_deposit)
+//        setBtnStatus(!isYes, btn_no_account_deposit)
 
     }
 
     private var PAY_WAY_TAG = PayWay.NULL
 
-    private fun dealPayWay(tag: PayWay) {
-
-        PAY_WAY_TAG = tag
-
-        fun isViewShow(v: View, isShow: Boolean) {
-            if (isShow) {
-                v.visibility = View.VISIBLE
-            } else {
-                v.visibility = View.GONE
-            }
-        }
-
-        isViewShow(iv_check_wechat_account_deposit, false)
-        isViewShow(iv_check_alipay_account_deposit, false)
-        isViewShow(iv_check_zhima_account_deposit, false)
-        isViewShow(iv_check_cash_account_deposit, false)
-        isViewShow(iv_check_credit_account_deposit, false)
-        isViewShow(groupPayImage, false)
-
-        when (tag) {
-
-            PayWay.NULL -> {
-            }
-
-            PayWay.WX -> {
-                isViewShow(iv_check_wechat_account_deposit, true)
-            }
-
-            PayWay.AL -> {
-                isViewShow(iv_check_alipay_account_deposit, true)
-            }
-
-            PayWay.ZM -> {
-                isViewShow(iv_check_zhima_account_deposit, true)
-            }
-
-            PayWay.XX -> {
-                isViewShow(iv_check_cash_account_deposit, true)
-            }
-
-            PayWay.BT -> {
-                isViewShow(iv_check_credit_account_deposit, true)
-            }
-            PayWay.GROUPPAP -> {
-                isViewShow(groupPayImage, true)
-            }
-            else -> {
-
+    private fun dealPayWay() {
+        rgDeposit.setOnCheckedChangeListener { group, id ->
+            when (id) {
+                R.id.rbWx -> PAY_WAY_TAG =PayWay.WX
+                R.id.rbAlipay -> PAY_WAY_TAG = PayWay.AL
+                R.id.rbOffline -> PAY_WAY_TAG = PayWay.XX
             }
         }
     }
+//
+//        PAY_WAY_TAG = tag
+//
+//        fun isViewShow(v: View, isShow: Boolean) {
+//            if (isShow) {
+//                v.visibility = View.VISIBLE
+//            } else {
+//                v.visibility = View.GONE
+//            }
+//        }
+//
+//        isViewShow(iv_check_wechat_account_deposit, false)
+//        isViewShow(iv_check_alipay_account_deposit, false)
+//        isViewShow(iv_check_zhima_account_deposit, false)
+//        isViewShow(iv_check_cash_account_deposit, false)
+//        isViewShow(iv_check_credit_account_deposit, false)
+//        isViewShow(groupPayImage, false)
+//
+//        when (tag) {
+//
+//            PayWay.NULL -> {
+//            }
+//
+//            PayWay.WX -> {
+//                isViewShow(iv_check_wechat_account_deposit, true)
+//            }
+//
+//            PayWay.AL -> {
+//                isViewShow(iv_check_alipay_account_deposit, true)
+//            }
+//
+//            PayWay.ZM -> {
+//                isViewShow(iv_check_zhima_account_deposit, true)
+//            }
+//
+//            PayWay.XX -> {
+//                isViewShow(iv_check_cash_account_deposit, true)
+//            }
+//
+//            PayWay.BT -> {
+//                isViewShow(iv_check_credit_account_deposit, true)
+//            }
+//            PayWay.GROUPPAP -> {
+//                isViewShow(groupPayImage, true)
+//            }
+//            else -> {
+//
+//            }
+//        }
+//    }
 
 
     /**
@@ -464,7 +487,7 @@ class FgtDeposit : BaseBackFragment() {
 
     private fun getPayByDeposit() {
 
-        val agentCode = et_agnet_name_deposit.text.toString()
+        val agentCode = et_agnet_name_deposit_code.text.toString()
 
         if (agentCode.isBlank()) {
             dissmissProgressDialog()
@@ -478,7 +501,7 @@ class FgtDeposit : BaseBackFragment() {
             params["device_id"] = deviceId
             params["code"] = agentCode
             params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")
-            params["host"] = if (FgtHomeBack.IsWholeBikeRent) "1" else "2"
+            params["host"] = if (FgtHome.IsWholeBikeRent) "1" else "2"
             //1微信支付2支付宝支付99线下支付 芝麻信用 101
             params["pay_type"] = when (PAY_WAY_TAG) {
                 PayWay.WX -> "1"
@@ -488,7 +511,7 @@ class FgtDeposit : BaseBackFragment() {
                 PayWay.GROUPPAP -> "102"
                 else -> "99"
             }
-            params["package_id"] = batteryPackageBean?.id ?: ""
+            params["package_id"] =  "0"
             params["opt_id"] = batteryCombinationBean?.id?.toString() ?: ""
 
             onSuccessWithMsg { res, msg ->
@@ -598,9 +621,11 @@ class FgtDeposit : BaseBackFragment() {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
                     }
+
                     0 -> {
                         dealShouldRetry()
                     }
+
                     else -> {
                         dlgPayProgress?.dismiss()
                         dlgPayFailed?.show()

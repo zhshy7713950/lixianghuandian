@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.ruimeng.things.*
-import com.ruimeng.things.home.FgtHomeBack
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.shop.PostGlideEngine
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -97,7 +97,7 @@ class FgtTrueName : BaseBackFragment() {
                         pop()
 
                         if (deviceId.isNotBlank()) {
-                            FgtHomeBack.dealScanResult(deviceId)
+                            FgtHome.dealScanResult(deviceId)
                         }
 
                     })

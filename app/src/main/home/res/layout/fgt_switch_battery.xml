@@ -26,6 +26,7 @@
 				android:orientation="horizontal"
 				android:paddingLeft="10dp"
 				android:paddingRight="10dp"
+			android:visibility="gone"
 				app:qmui_backgroundColor="@color/white"
 				app:qmui_borderWidth="0dp"
 				app:qmui_radius="5dp">

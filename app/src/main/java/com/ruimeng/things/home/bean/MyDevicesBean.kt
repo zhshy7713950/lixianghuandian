@@ -13,7 +13,9 @@ data class MyDevicesBean(
         var deposit: String = "", // 100.00
         var deposit_status: String = "", // 1
         var device_id: String = "", // 1025
-        var exp_time: String = "", // 1542252366
+        var device_status: Int = 0, // 1025
+        var exp_time: Int = 0, // 1542252366
+        var protect : String = "",
         var id: String = "", // 1
         var is_default: String = "", // 1
         var is_host: String = "", // 1
@@ -23,6 +25,7 @@ data class MyDevicesBean(
         var rent_status: String = "", // 0
         var rent_time: String = "", // 1542165966
         var total_rent_money: String = "", // 100.00
-        var user_id: String = "" // 2
+        var user_id: String = "" ,// 2
+        var rsoc: String = ""
     )
 }

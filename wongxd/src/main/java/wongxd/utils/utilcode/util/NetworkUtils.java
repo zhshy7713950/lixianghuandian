@@ -366,7 +366,6 @@ public final class NetworkUtils {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
         }
         return null;
     }

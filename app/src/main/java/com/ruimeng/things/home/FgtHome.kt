@@ -63,7 +63,56 @@ class FgtHome : MainTabFragment() {
         var IsWholeBikeRent = true
         var getIsHost = "1"
 
+        fun selectDeviceType() {
 
+            fun doTryScan(anyLayer: AnyLayer) {
+                anyLayer.dismiss()
+                FgtHomeBack.tryToScan()
+            }
+
+            AnyLayer.with(getCurrentAppAty())
+                .contentView(R.layout.layout_check_add_device_type)
+                .bindData { anyLayer ->
+                    val flWholeBike =
+                        anyLayer.contentView.findViewById<FrameLayout>(R.id.fl_whole_bike)
+                    val flBattery = anyLayer.contentView.findViewById<FrameLayout>(R.id.fl_battery)
+                    val ivWholeBike =
+                        anyLayer.contentView.findViewById<ImageView>(R.id.iv_check_whole_bike)
+                    val ivBattery =
+                        anyLayer.contentView.findViewById<ImageView>(R.id.iv_check_battery)
+
+
+                    val btnSubmit =
+                        anyLayer.contentView.findViewById<QMUIRoundButton>(R.id.btn_submit)
+
+
+                    fun resetCheckState() {
+                        ivWholeBike.setImageResource(if (FgtHomeBack.IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
+                        ivBattery.setImageResource(if (!FgtHomeBack.IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
+                    }
+
+                    flWholeBike.setOnClickListener {
+                        FgtHomeBack.IsWholeBikeRent = true
+                        FgtHomeBack.getIsHost = "1"
+                        resetCheckState()
+                    }
+
+                    flBattery.setOnClickListener {
+                        FgtHomeBack.IsWholeBikeRent = false
+                        FgtHomeBack.getIsHost = "2"
+                        resetCheckState()
+                    }
+
+                    btnSubmit.setOnClickListener {
+                        doTryScan(anyLayer)
+                    }
+                    resetCheckState()
+                }
+                .backgroundColorInt(Color.parseColor("#85000000"))
+                .backgroundBlurRadius(10f)
+                .backgroundBlurScale(10f)
+                .show()
+        }
         /**
          * 尝试扫描二维码
          */
@@ -94,9 +143,9 @@ class FgtHome : MainTabFragment() {
                     val status = data.optInt("status")
 
                     when (status) {
-                        0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
+                        2 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
                         1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId))
-                        2 -> {
+                        0 -> {
                             EasyToast.DEFAULT.show(json.optString("errmsg"))
                             showTipDialog(
                                 getCurrentAppAty(),
@@ -517,9 +566,7 @@ class FgtHome : MainTabFragment() {
             intent.putExtra("type", "换电开门")
             startActivityForResult(intent, 1)
         }
-        tv_switch_battery.setOnClickListener {
-            tryToScan(AtyScanQrcode.TYPE_CHANGE, item.device_contract.contract_id, getIsHost)
-        }
+
         tvUnbind.setOnClickListener {
             http {
                 url = Path.UNBIND_BATTERY

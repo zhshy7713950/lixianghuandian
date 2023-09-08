@@ -21,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -37,6 +38,7 @@ import com.ruimeng.things.home.checkImgs.*
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.CommonDialogCallBackHelper
 import com.utils.CommonPromptDialogHelper
+import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.view.YesNoBottomSheetDialog
 import com.zhihu.matisse.Matisse
@@ -58,6 +60,7 @@ import wongxd.utils.utilcode.util.ScreenUtils
 import wongxd.utils.utilcode.util.SizeUtils
 import java.io.File
 import java.lang.ref.WeakReference
+import java.util.Arrays
 
 /**
  * Created by wongxd on 2018/11/23.
@@ -131,7 +134,7 @@ class FgtReturn : BaseBackFragment() {
                 params["retrun_host"] =if(tv_reback.text.toString().equals("是"))  "1" else "0"
                 params["msg"] = msg
                 params["device_id"] = FgtHome.CURRENT_DEVICEID
-                params["contract_id"] = FgtHomeBack.CURRENT_CONTRACT_ID
+                params["contract_id"] = FgtHome.CURRENT_CONTRACT_ID
 
                 onSuccessWithMsg { res, msg ->
                     EasyToast.DEFAULT.show(msg)
@@ -157,28 +160,32 @@ class FgtReturn : BaseBackFragment() {
 
 
         tv_broke_return.setOnClickListener {
-            val dialog = activity?.let { it1 ->
-                YesNoBottomSheetDialog(it1,object : YesNoBottomSheetDialog.YesNoDialogCallback {
-                    override fun onClickedItem(item: String) {
-                        tv_broke_return.text = item
-                    }
-                })
-            }
-            if (dialog != null) {
-                dialog.show()
-            }
+            var data = arrayOf("是","否").toMutableList();
+            OptionPickerUtil.showOptionPicker(activity,data ,object :
+                OnOptionsSelectListener {
+                override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+                    tv_broke_return.text = data.get(options1)
+                }
+            })
+//            val dialog = activity?.let { it1 ->
+//                YesNoBottomSheetDialog(it1,object : YesNoBottomSheetDialog.YesNoDialogCallback {
+//                    override fun onClickedItem(item: String) {
+//                        tv_broke_return.text = item
+//                    }
+//                })
+//            }
+//            if (dialog != null) {
+//                dialog.show()
+//            }
         }
         tv_reback.setOnClickListener {
-            val dialog = activity?.let { it1 ->
-                YesNoBottomSheetDialog(it1,object : YesNoBottomSheetDialog.YesNoDialogCallback {
-                    override fun onClickedItem(item: String) {
-                        tv_reback.text = item
-                    }
-                })
-            }
-            if (dialog != null) {
-                dialog.show()
-            }
+            var data = arrayOf("是","否").toMutableList();
+            OptionPickerUtil.showOptionPicker(activity,data ,object :
+                OnOptionsSelectListener {
+                override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
+                    tv_broke_return.text = data.get(options1)
+                }
+            })
         }
 
 

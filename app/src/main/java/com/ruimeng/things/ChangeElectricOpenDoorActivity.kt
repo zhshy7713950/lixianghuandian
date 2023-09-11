@@ -51,12 +51,12 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                 contentLayout?.visibility = View.VISIBLE
 
                 val data = res.toPOJO<CgScanBean>().data
-                currentNumberText?.text = "编号：${data.old_info.device_id}"
-                currentValueText?.text = "电量：${data.old_info.electricity}%"
-                currentModelText?.text = "型号：${data.old_info.model_str}"
-                newNumberText?.text = "编号：${data.new_info.device_id}"
-                newValueText?.text = "电量：${data.new_info.electricity}%"
-                newModelText?.text = "型号：${data.new_info.model_str}"
+                currentNumberText?.text = "${data.old_info.device_id}"
+                currentValueText?.text = "${data.old_info.electricity}%"
+                currentModelText?.text = "${data.old_info.model_str}"
+                newNumberText?.text = "${data.new_info.device_id}"
+                newValueText?.text = "${data.new_info.electricity}%"
+                newModelText?.text = "${data.new_info.model_str}"
 
                 tipsText?.text = data.exchange_tips
 

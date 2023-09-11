@@ -22,6 +22,7 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
+import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.activity.BalanceWithdrawalActivity
 import com.ruimeng.things.me.contract.FgtContractSignStep1
@@ -62,56 +63,11 @@ class FgtHome : MainTabFragment() {
 
         var IsWholeBikeRent = true
         var getIsHost = "1"
+        var deviceStatus = 0 //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金
+        var userId = ""
 
         fun selectDeviceType() {
 
-            fun doTryScan(anyLayer: AnyLayer) {
-                anyLayer.dismiss()
-                FgtHomeBack.tryToScan()
-            }
-
-            AnyLayer.with(getCurrentAppAty())
-                .contentView(R.layout.layout_check_add_device_type)
-                .bindData { anyLayer ->
-                    val flWholeBike =
-                        anyLayer.contentView.findViewById<FrameLayout>(R.id.fl_whole_bike)
-                    val flBattery = anyLayer.contentView.findViewById<FrameLayout>(R.id.fl_battery)
-                    val ivWholeBike =
-                        anyLayer.contentView.findViewById<ImageView>(R.id.iv_check_whole_bike)
-                    val ivBattery =
-                        anyLayer.contentView.findViewById<ImageView>(R.id.iv_check_battery)
-
-
-                    val btnSubmit =
-                        anyLayer.contentView.findViewById<QMUIRoundButton>(R.id.btn_submit)
-
-
-                    fun resetCheckState() {
-                        ivWholeBike.setImageResource(if (FgtHomeBack.IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
-                        ivBattery.setImageResource(if (!FgtHomeBack.IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
-                    }
-
-                    flWholeBike.setOnClickListener {
-                        FgtHomeBack.IsWholeBikeRent = true
-                        FgtHomeBack.getIsHost = "1"
-                        resetCheckState()
-                    }
-
-                    flBattery.setOnClickListener {
-                        FgtHomeBack.IsWholeBikeRent = false
-                        FgtHomeBack.getIsHost = "2"
-                        resetCheckState()
-                    }
-
-                    btnSubmit.setOnClickListener {
-                        doTryScan(anyLayer)
-                    }
-                    resetCheckState()
-                }
-                .backgroundColorInt(Color.parseColor("#85000000"))
-                .backgroundBlurRadius(10f)
-                .backgroundBlurScale(10f)
-                .show()
         }
         /**
          * 尝试扫描二维码
@@ -134,7 +90,7 @@ class FgtHome : MainTabFragment() {
             http {
                 url = "apiv4/rentstep1"
                 params["device_id"] = deviceId
-                params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")
+                params["cg_mode"] = "1"
                 onSuccess {
                     //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"status":0}}
                     //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
@@ -143,9 +99,9 @@ class FgtHome : MainTabFragment() {
                     val status = data.optInt("status")
 
                     when (status) {
-                        2 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
+                        0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
                         1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId))
-                        0 -> {
+                        2 -> {
                             EasyToast.DEFAULT.show(json.optString("errmsg"))
                             showTipDialog(
                                 getCurrentAppAty(),
@@ -189,6 +145,7 @@ class FgtHome : MainTabFragment() {
             if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1") {
                 startFgt(FgtBindPhone())
             }
+            userId = userInfo.id
             tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else View.GONE
             tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else View.GONE
         }
@@ -233,11 +190,28 @@ class FgtHome : MainTabFragment() {
 
 
     private fun initNoItemView() {
+        if (deviceStatus == 0){
+            tv_log_info.text =""
+            tv_add_device.text  = "点击添加"
+            iv_add_device.visibility = View.VISIBLE
+        }else if (deviceStatus == 1){
+            tv_log_info.text ="您还没有支付押金"
+            tv_add_device.text  = "点击支付押金"
+            iv_add_device.visibility = View.GONE
+        }else if (deviceStatus == 2){
+            tv_log_info.text ="您还没有为电池（编号"+ CURRENT_DEVICEID+"）购买套餐"
+            tv_add_device.text  = "点击购买套餐"
+            iv_add_device.visibility = View.GONE
+        }
+
         val llNoItem = root_no_item
         val addDeviceBtn = llNoItem.findViewById<FrameLayout>(R.id.addDeviceBtn)
         addDeviceBtn.setOnClickListener {
-            //点击添加
-            tryToScan()
+            when (deviceStatus) {
+                0->tryToScan()
+                1 -> FgtMain.instance?.start(FgtDeposit.newInstance(CURRENT_DEVICEID, getIsHost))
+                2 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID))
+            }
         }
 
     }
@@ -396,6 +370,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private var deviceDetailBean: DeviceDetailBean.Data? = null
+    private var paymentDetailBean :PaymentDetailBean.Data ?= null
 
     @SuppressLint("SetTextI18n")
     private fun getBatteryDetailInfo(deviceId: String = "0") {
@@ -407,35 +382,45 @@ class FgtHome : MainTabFragment() {
             IS_SHOW_MSG = false
 
             onSuccess { res ->
-
                 srl_home?.let {
-
+                    deviceStatus = 0
                     dealTwoStatus(true)
-
                     deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
                     deviceDetailBean?.let { item ->
                         showNewDeviceData(item)
-//                        tv_used_money.text = item.device_contract.total_rent_money + "元"
-//                        tv_ya_monety.text = item.device_contract.deposit + "元"
-//                        tv_rant_long.text = item.device_contract.rent_day + "月"
-//                        tv_avg_speed.text = item.device_base.speed_avg + "KM/H"
-//                        tv_total_u.text = item.device_base.totalvoltage + "V"
-//                        tv_rant_time.text = item.device_contract.begin_time.toLong().getTime(isShowHour = false) + "至" +
-//                                    item.device_contract.exp_time.toLong().getTime(isShowHour = false)
-
                     }
                 }
+                getPaymentInfo(deviceId,200)
             }
             onFail { i, s ->
-                dealTwoStatus(false)
-
+                getPaymentInfo(deviceId,i)
             }
             onFinish {
                 srl_home?.finishRefresh()
             }
         }
-
     }
+    private fun getPaymentInfo(deviceId: String = "0",errCode:Int){
+        http {
+            url = "/apiv6/payment/getuserpaymentinfo"
+            params["user_id"] = userId
+            onSuccess {res->
+                srl_home?.let {
+                    paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                    CURRENT_DEVICEID = paymentDetailBean!!.device_id
+                    deviceStatus = 2
+                    dealTwoStatus(false)
+                }
+            }
+            onFail { i, s ->
+                if (errCode == 201 && i == 208){
+                    deviceStatus = 1
+                    dealTwoStatus(false)
+                }
+            }
+        }
+    }
+
 
 
 
@@ -471,11 +456,10 @@ class FgtHome : MainTabFragment() {
                     }
                 }
             }
-
         }
-
-
     }
+
+
 
     private fun requestCgOpenDoor(code: String) {
         http {

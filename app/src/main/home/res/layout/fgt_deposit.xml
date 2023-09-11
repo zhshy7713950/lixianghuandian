@@ -310,6 +310,7 @@
 						android:text="支付宝"
 						android:textColor="@color/white"
 						android:textSize="14sp"
+						android:checked="true"
 						android:layout_marginLeft="14dp"
 						android:layout_marginRight="14dp"
 						android:drawablePadding="12dp"

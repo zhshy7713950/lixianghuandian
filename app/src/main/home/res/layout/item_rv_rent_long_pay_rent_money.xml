@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:background="@color/white"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/item_bg"
+	android:layout_width="140dp"
+	android:layout_height="140dp"
+	android:layout_marginLeft="10dp"
+	android:layout_marginTop="10dp"
+	android:layout_marginRight="5dp"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="@drawable/rectangle_gray_bg_1">
+	<ImageView
+		android:id="@+id/iv_select"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@mipmap/ic_item_rent_select"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"/>
 
 	<TextView
-			android:padding="10dp"
-			android:gravity="center"
-			android:textSize="12sp"
-			android:id="@+id/tv"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
+		android:id="@+id/tv_price"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="¥200"
+		android:textColor="#ffffffff"
+		android:textSize="18sp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginTop="40dp"
+		/>
 
-	<View
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:background="@color/bg_gray"/>
-</LinearLayout>
+	<TextView
+		android:id="@+id/tv_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		tools:text="成都1个月"
+		android:textColor="#ffb2c1ce"
+		android:textSize="13sp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginTop="83dp"
+		/>
+</androidx.constraintlayout.widget.ConstraintLayout>

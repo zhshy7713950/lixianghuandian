@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
@@ -64,6 +67,7 @@ class FgtDeposit : BaseBackFragment() {
 
 
     private var IS_CHECKED_PROTOCOL = false
+    private var agentMap : JSONObject? = null;
 
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
@@ -76,6 +80,7 @@ class FgtDeposit : BaseBackFragment() {
         Log.i("data===", "===getIsHost===$getIsHost")
 
         getDeposit()
+        getAgentList()
         dealPayWay()
 
     }
@@ -107,6 +112,7 @@ class FgtDeposit : BaseBackFragment() {
         }
         if (data.deposit_option.size > 0){
             tv_select_package_deposit.text = data.deposit_option.get(0).name
+            batteryCombinationBean = data.deposit_option.get(0)
             tv_select_package_deposit.setOnClickListener {
                 var filters = data.deposit_option.map { depositOption: GetDepositBean.Data.DepositOption -> depositOption.name }
                 OptionPickerUtil.showOptionPicker(activity,filters ,object :
@@ -175,7 +181,20 @@ class FgtDeposit : BaseBackFragment() {
             dlg.show(childFragmentManager, "protocol")
         }
 
-
+        et_agnet_name_deposit_code.addTextChangedListener( object :TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun afterTextChanged(p0: Editable?) {
+                if (agentMap != null && agentMap!!.has(et_agnet_name_deposit_code.text.toString().trim())){
+                    et_agnet_name_deposit.text = agentMap!!.getString(et_agnet_name_deposit_code.text.toString().trim())
+                }else{
+                    et_agnet_name_deposit.text = ""
+                }
+            }
+        }
+        )
 //        ll_wechat_account_deposit.visibility = View.GONE
 //        ll_alipay_account_deposit.visibility = View.GONE
 //        ll_zhima_account_deposit.visibility = View.GONE
@@ -446,6 +465,21 @@ class FgtDeposit : BaseBackFragment() {
 //        }
 //    }
 
+    private fun getAgentList(){
+        http{
+            url = "/apiv6/payment/getagentlist"
+            params["name"] = ""
+            onSuccess { res ->
+                Log.i("TAG", "getAgentList: "+res)
+                val result = JSONObject(res)
+                if (result.getInt("errcode") == 200){
+                    agentMap = result.getJSONObject("data")
+                }
+            }
+        }
+
+    }
+
 
     /**
      * 获取押金信息
@@ -494,6 +528,7 @@ class FgtDeposit : BaseBackFragment() {
             EasyToast.DEFAULT.show("请输入经销商代码")
             return
         }
+
 
 
         http {

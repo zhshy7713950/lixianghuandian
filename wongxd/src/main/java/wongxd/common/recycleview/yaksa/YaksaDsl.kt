@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class YaksaDsl(dataSet: MutableList<YaksaItem>) {
-    internal var orientation = VERTICAL
+    var orientation = VERTICAL
     internal var reverse = false
     internal var spanCount = 1
 

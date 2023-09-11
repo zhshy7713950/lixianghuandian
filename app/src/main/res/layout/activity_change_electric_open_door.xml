@@ -1,184 +1,350 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/gray_F5"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_F5"
+    android:orientation="vertical">
 
-	<com.qmuiteam.qmui.widget.QMUITopBar
-			android:id="@+id/topbar"
-			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:elevation="2dp" />
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:elevation="2dp" />
 
-	<LinearLayout
-			android:id="@+id/contentLayout"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			android:visibility="gone">
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:padding="10dp"
-				android:text="当前电池"
-				android:textColor="#00A0E9"
-				android:textSize="15sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="当前电池"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
-		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp"
-				android:background="?attr/selectableItemBackground"
-				android:orientation="vertical"
-				android:padding="10dp"
-				app:qmui_backgroundColor="#F6B37F"
-				app:qmui_borderColor="#F6B37F"
-				app:qmui_radius="5dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="28dp"
+            android:background="@mipmap/bg_change_electric_battery"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center"
-					android:orientation="horizontal"
-					android:paddingTop="10dp"
-					android:paddingBottom="10dp">
+            <TextView
+                android:id="@+id/currentValueText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#29EBB6"
+                android:textSize="26sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="25%" />
 
-				<TextView
-						android:id="@+id/currentNumberText"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/black_3"
-						android:textSize="13sp"
-						tools:text="编号：1126" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="电池电量"
+                android:textColor="#ffb2c1ce"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="@id/currentValueText"
+                app:layout_constraintRight_toRightOf="@id/currentValueText"
+                app:layout_constraintTop_toBottomOf="@id/currentValueText" />
 
-				<TextView
-						android:id="@+id/currentValueText"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/black_3"
-						android:textSize="13sp"
-						tools:text="电量：25%" />
-			</LinearLayout>
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_gray_bg"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-			<TextView
-					android:id="@+id/currentModelText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="center_vertical"
-					android:textColor="@color/black_3"
-					android:textSize="13sp"
-					tools:text="型号：72V   20AH" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1">
 
-		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="编号"
+                        android:textColor="#ff929fab"
+                        android:textSize="12sp" />
 
-		<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:padding="10dp"
-				android:text="更换为"
-				android:textColor="#FF0000"
-				android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/currentNumberText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:text="1126" />
 
-		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp"
-				android:background="?attr/selectableItemBackground"
-				android:orientation="vertical"
-				android:padding="10dp"
-				app:qmui_backgroundColor="#00A0E9"
-				app:qmui_borderColor="#00A0E9"
-				app:qmui_radius="5dp">
+                </LinearLayout>
 
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:gravity="center"
-					android:orientation="horizontal"
-					android:paddingTop="10dp"
-					android:paddingBottom="10dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1">
 
-				<TextView
-						android:id="@+id/newNumberText"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/white"
-						android:textSize="13sp"
-						tools:text="编号：1126" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="型号"
+                        android:textColor="#ff929fab"
+                        android:textSize="12sp" />
 
-				<TextView
-						android:id="@+id/newValueText"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/white"
-						android:textSize="13sp"
-						tools:text="电量：25%" />
-			</LinearLayout>
+                    <TextView
+                        android:id="@+id/currentModelText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-			<TextView
-					android:id="@+id/newModelText"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="center_vertical"
-					android:textColor="@color/white"
-					android:textSize="13sp"
-					tools:text="型号：72V   20AH" />
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:text="72V   20AH" />
+                </LinearLayout>
 
-		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+            </LinearLayout>
 
 
-		<TextView
-				android:id="@+id/tipsText"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_marginTop="20dp"
-				android:layout_marginRight="10dp"
-				android:lineSpacingExtra="4dp"
-				android:textColor="@color/gray_9a"
-				android:textSize="13sp"
-				tools:text=" 提示：后台设置提示内容后台设置提示内容后台设置提示内容后台设置提示内容" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="24dp"
+            android:text="替换设备"
+            android:textColor="#ffffffff"
+            android:textSize="15sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="28dp"
+            android:background="@mipmap/bg_change_electric_battery"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/newValueText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#29EBB6"
+                android:textSize="26sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="25%" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="电池电量"
+                android:textColor="#ffb2c1ce"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="@id/newValueText"
+                app:layout_constraintRight_toRightOf="@id/newValueText"
+                app:layout_constraintTop_toBottomOf="@id/newValueText" />
+
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="70dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_gray_bg"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="编号"
+                        android:textColor="#ff929fab"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/newNumberText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:text="1126" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="型号"
+                        android:textColor="#ff929fab"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/newModelText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        tools:text="72V   20AH" />
+                </LinearLayout>
+
+            </LinearLayout>
 
 
-		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-				android:id="@+id/confirmBtn"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:layout_marginLeft="20dp"
-				android:layout_marginTop="20dp"
-				android:layout_marginRight="20dp"
-				android:layout_marginBottom="50dp"
-				android:background="?attr/selectableItemBackground"
-				app:qmui_backgroundColor="@color/app_color"
-				app:qmui_borderColor="@color/app_color"
-				app:qmui_radius="20dp">
 
-			<TextView
-					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					android:gravity="center"
-					android:text="确认更换"
-					android:textColor="@color/white"
-					android:textSize="15sp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="24dp"
+            android:text="套餐信息"
+            android:textColor="#ffffffff"
+            android:textSize="15sp" />
 
-	</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/rectangle_gray_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:text="基础套餐"
+                android:textColor="#ff929fab"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:text="换电类型"
+                android:textColor="#ff929fab"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:text="剩余次数"
+                android:textColor="#ff929fab"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="18dp"
+                android:text="到期时间"
+                android:textColor="#ff929fab"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_line" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tipsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="12dp"
+            android:text="更换提示：取下新电池后，请将原电池放回充电插销，谢谢您的配
+合～"
+            android:textColor="#ff29ebb6"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/confirmBtn"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="42dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_btn_common1"
+            android:gravity="center"
+            android:text="确认更换"
+            android:textColor="#ff272934"
+            android:textSize="15sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

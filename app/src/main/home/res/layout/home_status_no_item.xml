@@ -15,13 +15,14 @@
         android:src="@mipmap/home_bg" />
 
     <TextView
+        android:id="@+id/tv_log_info"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="您还没有添加电池设备"
-        android:textColor="@color/app_color"
-        android:visibility="gone" />
+        android:textColor="@color/white"
+        />
 
 
     <FrameLayout
@@ -43,11 +44,13 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/iv_add_device"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/ic_scan_blank" />
 
             <TextView
+                android:id="@+id/tv_add_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"

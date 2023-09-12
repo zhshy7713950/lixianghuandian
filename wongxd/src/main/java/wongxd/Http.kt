@@ -35,6 +35,10 @@ fun http(init: RequestWrapper.() -> Unit) {
     wrap.params.put("appid", Http.appId)
     wrap.params.put("token", Http.token)
     wrap.params.put("sign", getSign(wrap.params, Http.appKey))
+    wrap.jsonParam.put("timeline", time)
+    wrap.jsonParam.put("appid", Http.appId)
+    wrap.jsonParam.put("token", Http.token)
+    wrap.jsonParam.put("sign", getSign(wrap.params, Http.appKey))
 
     wrap.url = Http.host + wrap.url
     wrap._tokenLost = Http.TOKEN_LOST_FUN

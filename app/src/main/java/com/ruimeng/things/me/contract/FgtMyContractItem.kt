@@ -15,6 +15,7 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_my_contract_item.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -210,12 +211,12 @@ class FgtMyContractItem : MainTabFragment() {
         BaseQuickAdapter<MyContractListBean.Data, BaseViewHolder>(R.layout.item_rv_my_contract) {
         override fun convert(helper: BaseViewHolder, item: MyContractListBean.Data?) {
             bothNotNull(helper, item) { a, b ->
-
+                var textColors = arrayOf("#929FAB","#FFFFFF")
                 a.getView<TextView>(R.id.tv_num).text = "${b.device_id}"
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
                 a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
-                a.getView<TextView>(R.id.tv_rent_start_time).text = "租用日期:${b.begin_time}"
-                a.getView<TextView>(R.id.tv_rent_end_time).text = "结束日期:${b.end_time}"
+                a.getView<TextView>(R.id.tv_base_package).text = TextUtil.getSpannableString(arrayOf("基本套餐：",b.contract_id),textColors)
+
 
                 a.getView<QMUIRoundFrameLayout>(R.id.qrf_sign).apply {
                     visibility = if (b.btn_sign == 1) View.VISIBLE else View.GONE

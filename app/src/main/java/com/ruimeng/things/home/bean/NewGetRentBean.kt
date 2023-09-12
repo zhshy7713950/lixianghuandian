@@ -22,7 +22,7 @@ data class NewGetRentBean(
         val model_id: String,
         val model_name: String,
         val modified: String,
-        val options: List<Option>,
+        var options: List<Option>,
         val package_id: String,
         val package_type: String,
         val pname: String,
@@ -31,7 +31,13 @@ data class NewGetRentBean(
         val sname: String,
         val start_time: Any,
         val time_num: String,
-        val time_type: String
+        val time_type: String,
+        val show_start_time: String,
+        val show_end_time: String,
+        val agentName: String,
+        val agentCode: String,
+        val contract_id:String,
+        val btn_return:Int = 0
     ) {
 
         data class Option(
@@ -42,6 +48,8 @@ data class NewGetRentBean(
             val option_id: String="",
             val option_type: String="",
             val package_id: String="",
+            val show_start_time: String ="",
+            val show_end_time: String ="",
             val price: String=""
         )
     }

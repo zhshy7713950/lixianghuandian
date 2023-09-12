@@ -3,6 +3,7 @@ package com.ruimeng.things.home
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -17,13 +18,16 @@ import com.bigkoo.pickerview.view.OptionsPickerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
+import com.google.gson.Gson
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.ruimeng.things.FgtMain
+import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
+import com.ruimeng.things.bean.BaseResultBean
 import com.ruimeng.things.home.adapter.BasePackageAdapter
 import com.ruimeng.things.home.adapter.ChangePackageAdapter
 import com.ruimeng.things.home.bean.GetRentBean
@@ -33,8 +37,13 @@ import com.ruimeng.things.me.FgtTicket
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.ruimeng.things.wxapi.WXEntryActivity
+import com.utils.OnSinglePickerSelectListener
+import com.utils.OptionPickerUtil
+import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.aty_order.refresh
+import kotlinx.android.synthetic.main.fgt_deposit.rgDeposit
+import kotlinx.android.synthetic.main.fgt_deposit.tv_select_package_deposit
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
 import org.greenrobot.eventbus.EventBus
@@ -69,24 +78,18 @@ class FgtPayRentMoney : BaseBackFragment() {
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
     private val basePackageAdapter: BasePackageAdapter by lazy { BasePackageAdapter() }
     private val changePackageAdapter: ChangePackageAdapter by lazy { ChangePackageAdapter() }
-
     override fun getLayoutRes(): Int = R.layout.fgt_pay_rent_money
-
-
     private var IS_CHECKED_PROTOCOL = false
+    private var newGetRentBean: NewGetRentBean.Data? = null;
+    private var selectOption: NewGetRentBean.Data.Option? = null;
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         EventBus.getDefault().register(this)
         initTopbar(topbar, "支付租金")
-
-
         getRent()
-
-        dealIsBuyInsurance(false)
+        dealPayWay()
     }
-
-
     @Subscribe
     fun getEventInstallmentPaymentSuccess(event: EventInstallmentPaymentSuccess) {
         Log.d("w-", "getEventInstallmentPaymentSuccess:${event.isNeedPop}")
@@ -180,128 +183,131 @@ class FgtPayRentMoney : BaseBackFragment() {
             }.show()
 
     }
-    var selectPos = 0
+    private fun dealPayWay() {
+        rgPayRent.setOnCheckedChangeListener { group, id ->
+            when (id) {
+                R.id.rbWx -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
+                R.id.rbAlipay -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
+                R.id.rbOffline -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.XX
+            }
+        }
+    }
+    private fun resetSelectOptionList(){
+        var optionList  : ArrayList<NewGetRentBean.Data.Option> = ArrayList()
+        optionList.add(NewGetRentBean.Data.Option())
+        newGetRentBean?.let {
+            optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
+            if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)){
+                tv_rant_long_pay_time.text = "有效期："+ formatTime(it.show_start_time) +"至" + formatTime(it.show_end_time)
+            }else{
+                tv_rant_long_pay_time.text = "无限制"
+            }
+        }
+        changePackageAdapter.setNewData(optionList)
+        tv_select_charge.text = "否"
+        tv_select_platform.text = "否"
+        tv_select_insurance.text = "否"
+    }
+    private fun formatTime(timeStr: String): Any? {
+        return if (TextUtils.isEmpty(timeStr)) ":" else timeStr.substring(0,10)
+    }
     private fun initViewAfterData(list: List<NewGetRentBean.Data>) {
         if (list.isEmpty()){
-            ToastHelper.shortToast(context,"没有设备")
+            ToastHelper.shortToast(context,"没有找到套餐")
             return
         }
-        tv_battery_num_pay_rent_money.text = list.get(0).device_id
-        tv_battery_model_pay_rent_money.text = list.get(0).model_name
-//        list.forEach{it.options[]}
+        newGetRentBean = list.get(0)
+        newGetRentBean.let {
+            tv_battery_num_pay_rent_money.text = newGetRentBean!!.device_id
+            tv_battery_model_pay_rent_money.text = newGetRentBean!!.model_name
+            tv_agnet_name_pay_rent_money.text= newGetRentBean!!.agentCode
+            et_agnet_name_deposit.text = newGetRentBean!!.agentName
+            btn_return_deposit_pay_rent_money.visibility = if (newGetRentBean!!.btn_return == 1) View.VISIBLE else View.GONE
+            btn_return_deposit_pay_rent_money.setOnClickListener {
+                tryReturnDeposit(newGetRentBean!!.contract_id)
+            }
+        }
+
+
+
         basePackageAdapter.setNewData(list)
-        changePackageAdapter.setNewData(list.get(0).options)
+        resetSelectOptionList()
         rv_rant_long_pay_rent_money.layoutManager = LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false)
         rv_rant_long_pay_rent_money.adapter = basePackageAdapter
 
         basePackageAdapter.setOnItemClickListener(object :BaseQuickAdapter.OnItemClickListener{
             override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+                newGetRentBean = list.get(p2)
                 basePackageAdapter.selectPos = p2
                 basePackageAdapter.notifyDataSetChanged()
-                changePackageAdapter.setNewData(list.get(p2).options)
+                computeAmount()
+                resetSelectOptionList()
             }
         })
         rv_change_package.layoutManager = GridLayoutManager(activity,2)
         rv_change_package.adapter = changePackageAdapter
+        changePackageAdapter.setOnItemClickListener(object :BaseQuickAdapter.OnItemClickListener{
+            override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+                selectOption = changePackageAdapter.data.get(p2)
+                changePackageAdapter.selectPos = p2
+                changePackageAdapter.notifyDataSetChanged()
+                computeAmount()
+                selectOption.let {
+                    if (it != null) {
+                        if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)) {
+                            tv_option_time.text =
+                                "有效期：" + formatTime(it.show_start_time) + "至" + formatTime(it.show_end_time)
+                        }
+                    }
+                }
 
-//        agnetCode = data.device_info.code
-
-//        tv_combination_pay_rent_money.text = data.deposit_option_label
-//
-//        qfl_change_combination_pay_rent.setOnClickListener {
-//            startWithPop(FgtChangeDepositCombination.newInstance(data.contract_id))
-//        }
-//
-//        btn_return_deposit_pay_rent_money.visibility =
-//            if (data.btn_return == 1) View.VISIBLE else View.GONE
-//
-//        btn_return_deposit_pay_rent_money.setOnClickListener {
-//            tryReturnDeposit(data.contract_id)
-//        }
-
-//        tv_agnet_name_pay_rent_money.text = "" + agnetCode
-//
-//        tv_battery_num_pay_rent_money.text = "当前电池编号：" + data.device_info.device_id
-//
-//        tv_battery_model_pay_rent_money.text = "当前电池型号：" + data.device_info.device_model
-//
-//        ll_enter_rant_long_pay_rant_now.setOnClickListener {
-//            if (rv_rant_long_pay_rent_money.visibility == View.VISIBLE) {
-//                iv_enter_rant_long.rotation = 0f
-//                rv_rant_long_pay_rent_money.visibility = View.GONE
-//            } else {
-//                iv_enter_rant_long.rotation = 90f
-//                rv_rant_long_pay_rent_money.visibility = View.VISIBLE
-//            }
-//
-//        }
-
-        fun refrenshWithCheckedRent(item: GetRentBean.Data.Payment) {
-//            tv_insurance_money.text = "保费：¥${item.insurance_price}"
-//            tv_rant_long_pay_rent_money.text = item.name
-//            selectedRentLongId = item.id
-//            price = item.price
-//            priceHost = item.price_host
-//
-//            tv_money_pay_rent_money.text = if (data.device_info.is_host == "1") priceHost else price
+            }
+        })
+        tv_select_charge.setOnClickListener {
+            newGetRentBean.let {
+                if (it != null) {
+                    val options = it.options.filter {  it.option_type == "5" }
+                    if (options != null && options.size > 0){
+                        OptionPickerUtil.showSingleOptionPicker(activity, arrayOf("否","是（"+options.get(0).price+"元)").toMutableList())
+                        {  tv_select_charge.text = it
+                            computeAmount()}
+                    }
+                }
+            }
         }
-
-//        refrenshWithCheckedRent(data.payment[0])
-
-
-
-
-//        ll_wechat_pay_rent_money.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.WX)
-//        }
-//
-//        ll_alipay_pay_rent_money.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.AL)
-//        }
-//
-//        ll_installment_pay_rent_money.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.FQ)
-//        }
-//
-//        ll_credit_pay_rent_money.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.BT)
-//        }
-//        groupPayLayout?.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.GROUPPAP)
-//        }
-//
-//        ll_cash_pay_rent_money.setOnClickListener {
-//            dealPayWay(FgtDeposit.Companion.PayWay.XX)
-//        }
-//
-//
-//
-//        ll_wechat_pay_rent_money.visibility = View.GONE
-//        ll_alipay_pay_rent_money.visibility = View.GONE
-//        ll_cash_pay_rent_money.visibility = View.GONE
-//        ll_installment_pay_rent_money.visibility = View.GONE
-//        ll_credit_pay_rent_money.visibility = View.GONE
-//        groupPayLayout.visibility = View.GONE
-
-
-
-//        ll_enter_ticket_pay_rent_money.setOnClickListener {
-//
-//            if (!IS_TICKET_DATA_INIT) {
-//                EasyToast.DEFAULT.show("正在获取优惠券信息")
-//                initTicket()
-//                return@setOnClickListener
-//            } else
-//                pvOptions?.show()
-//
-//        }
-
+        tv_select_platform.setOnClickListener {
+            newGetRentBean.let {
+                if (it != null) {
+                    val options = it.options.filter {  it.option_type == "4" }
+                    if (options != null && options.size > 0){
+                        OptionPickerUtil.showSingleOptionPicker(activity, arrayOf("否","是（"+options.get(0).price+"元)").toMutableList())
+                        {  tv_select_platform.text = it
+                            computeAmount()}
+                    }
+                }
+            }
+        }
+        tv_select_insurance.setOnClickListener {
+            newGetRentBean.let {
+                if (it != null) {
+                    val options = it.options.filter {  it.option_type == "3" }
+                    options.let {
+                        var filters : ArrayList<String> = ArrayList()
+                        filters.add("否")
+                        options.forEach {
+                            filters.add(it.name+"("+it.price+"元)")
+                        }
+                        OptionPickerUtil.showSingleOptionPicker(activity, filters)
+                        {  tv_select_insurance.text = it
+                            computeAmount()
+                        }
+                    }
+                }
+            }
+        }
+        computeAmount()
 
         initTicket()
-
-
-//        btn_yes_buy_insurance.setOnClickListener { dealIsBuyInsurance(true) }
-//        btn_no_buy_insurance.setOnClickListener { dealIsBuyInsurance(false) }
 
         btn_pay_now_pay_rent_money.setOnClickListener { view ->
 
@@ -310,11 +316,6 @@ class FgtPayRentMoney : BaseBackFragment() {
                 return@setOnClickListener
             }
 
-
-            if (agnetCode.isBlank()) {
-                EasyToast.DEFAULT.show("请先输入经销商信息")
-                return@setOnClickListener
-            }
 
             if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.NULL) {
                 EasyToast.DEFAULT.show("请选择支付方式")
@@ -332,20 +333,17 @@ class FgtPayRentMoney : BaseBackFragment() {
 
             http {
 //                url = Path.GET_RENT_PAY
-                url = "apiv5/getrentpay"
-                params["device_id"] = deviceId
-                params["pack_id"] = selectedRentLongId
+//                url = "apiv5/getrentpay"
+                url = "apiv6/payment/payrentmoney"
+                jsonParam  = getSubmitParam()
                 //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权
-                params["pay_type"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
+                params["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
                 else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.AL) "2"
                 else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.BT) "3"
                 else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.FQ) "4"
                 else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.GROUPPAP) "102"
                 else "99"
 
-                params["coupon_id"] = couponId
-                params["code"] = agnetCode
-//                params["insurance"] = if (isBuyInsurance) "1" else "0"
 
 
                 onFail { code, msg ->
@@ -433,9 +431,9 @@ class FgtPayRentMoney : BaseBackFragment() {
 
         iv_check_pay_rent_money.setOnClickListener {
             if (IS_CHECKED_PROTOCOL) {
-                iv_check_pay_rent_money.setImageResource(R.drawable.uncheck)
+                iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_unselect)
             } else {
-                iv_check_pay_rent_money.setImageResource(R.drawable.check)
+                iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
             }
 
             IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
@@ -449,42 +447,11 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         iv_check_pay_rent_money.performClick()
-//        dealPayWay(FgtDeposit.Companion.PayWay.NULL)
-    }
-
-
-
-
-    private var isBuyInsurance = false
-
-    /**
-     * 是否购买保险
-     */
-    private fun dealIsBuyInsurance(isBuy: Boolean) {
-        isBuyInsurance = isBuy
-
-//        tv_insurance_money_tip.visibility = if (isBuy) View.VISIBLE else View.GONE
-//        tv_insurance_money.visibility = if (isBuy) View.VISIBLE else View.GONE
-
-        fun setBtnStatus(isCheck: Boolean, btn: QMUIRoundButton) {
-
-            val appColor = activity?.resources?.getColor(R.color.app_color)!!
-            val btnDrawable: QMUIRoundButtonDrawable = btn.background as QMUIRoundButtonDrawable
-
-            if (isCheck) {
-                btnDrawable.setStrokeData(1, ColorStateList.valueOf(appColor))
-                btnDrawable.setBgData(ColorStateList.valueOf(appColor))
-                btn.setTextColor(Color.WHITE)
-            } else {
-                btnDrawable.setStrokeData(1, ColorStateList.valueOf(Color.WHITE))
-                btnDrawable.setBgData(ColorStateList.valueOf(Color.WHITE))
-                btn.setTextColor(appColor)
-            }
+        tv_ticket_pay_rent_money.setOnClickListener {
+            pvOptions?.show()
         }
-
-//        setBtnStatus(isBuy, btn_yes_buy_insurance)
-//        setBtnStatus(!isBuy, btn_no_buy_insurance)
     }
+
 
     private var dlgPayProgress: SweetAlertDialog? = null
 
@@ -561,7 +528,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     /**
      * 选中的优惠券的id
      */
-    private var couponId = ""
+    private var couponId = 0
 
     /**
      * 是否从网络中获取到了优惠券信息
@@ -590,7 +557,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                         //返回的分别是三个级别的选中位置
                         val item = list[options1]
                         tv_ticket_pay_rent_money.text = item.coupon_label
-                        couponId = item.coupon_id
+                        couponId = item.id
                         tv_ticket_pay_rent_money.performClick()
                     })
                     .build<MyCouponBean.Data>()
@@ -605,59 +572,8 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
 
-    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.NULL
+    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
 
-//    private fun dealPayWay(tag: FgtDeposit.Companion.PayWay) {
-//
-//        PAY_WAY_TAG = tag
-//
-//        fun isViewShow(v: View, isShow: Boolean) {
-//            if (isShow) {
-//                v.visibility = View.VISIBLE
-//            } else {
-//                v.visibility = View.GONE
-//            }
-//        }
-//
-//        isViewShow(iv_check_wechat_pay_rent_money, false)
-//        isViewShow(iv_check_alipay_pay_rent_money, false)
-//        isViewShow(iv_check_installment_pay_rent_money, false)
-//        isViewShow(iv_check_credit_pay_rent_money, false)
-//        isViewShow(groupPayImage, false)
-//        isViewShow(iv_check_cash_pay_rent_money, false)
-//
-//        when (tag) {
-//
-//            FgtDeposit.Companion.PayWay.NULL -> {
-//            }
-//
-//            FgtDeposit.Companion.PayWay.WX -> {
-//                isViewShow(iv_check_wechat_pay_rent_money, true)
-//            }
-//
-//            FgtDeposit.Companion.PayWay.AL -> {
-//                isViewShow(iv_check_alipay_pay_rent_money, true)
-//            }
-//
-//            FgtDeposit.Companion.PayWay.XX -> {
-//                isViewShow(iv_check_cash_pay_rent_money, true)
-//            }
-//
-//            FgtDeposit.Companion.PayWay.FQ -> {
-//                isViewShow(iv_check_installment_pay_rent_money, true)
-//            }
-//
-//            FgtDeposit.Companion.PayWay.BT -> {
-//                isViewShow(iv_check_credit_pay_rent_money, true)
-//            }
-//            FgtDeposit.Companion.PayWay.GROUPPAP -> {
-//                isViewShow(groupPayImage, true)
-//            }
-//            else -> {
-//
-//            }
-//        }
-//    }
 
     /**
      * 获取设备租用信息
@@ -680,5 +596,46 @@ class FgtPayRentMoney : BaseBackFragment() {
                 }
             }
         }
+    }
+    private fun computeAmount() {
+        http {
+            url = "/apiv6/payment/computeamount"
+            jsonParam = getSubmitParam()
+            onSuccessWithMsg { res, msg ->
+                val result = res.toPOJO<BaseResultBean<Double>>().data
+                tv_total_price.text  = "¥${result}"
+            }
+        }
+    }
+    private fun getSubmitParam(): MutableMap<String, Any> {
+        var params: MutableMap<String, Any> = mutableMapOf()
+        params["deviceId"] = deviceId
+        params["user_id"] =  "${InfoViewModel.getDefault().userInfo.value?.id}"
+        params["couponId"] = "${couponId}"
+
+        if (newGetRentBean != null) {
+            params["payment_id"] = newGetRentBean!!.id
+            params["package_id"] = newGetRentBean!!.package_id
+            params["price"] = "${newGetRentBean!!.price}"
+            val options: ArrayList<NewGetRentBean.Data.Option> = ArrayList();
+            if (selectOption != null && selectOption!!.id != "") {
+                options.add(selectOption!!)
+            }
+            newGetRentBean!!.options.forEach {
+                if (tv_select_charge.text.toString() != "否" && it.option_type == "5") {
+                    options.add(it)
+                }
+                if (tv_select_platform.text.toString() != "否" && it.option_type == "4") {
+                    options.add(it)
+                }
+                if (tv_select_insurance.text.toString() != "否" && it.option_type == "3") {
+                    if (tv_select_insurance.text.toString().startsWith(it.name)) {
+                        options.add(it)
+                    }
+                }
+            }
+            params["options"] =  options
+        }
+        return params
     }
 }

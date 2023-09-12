@@ -2,6 +2,7 @@ package wongxd.common.net.netDSL
 
 import android.os.Handler
 import android.os.Looper
+import com.google.gson.Gson
 import org.json.JSONObject
 import wongxd.common.EasyToast
 import wongxd.utils.utilcode.util.LogUtils
@@ -156,7 +157,7 @@ object BaseHttpUrlConnectionHelper {
 
         val isMutipart = wrap.imgs.isNotEmpty() || wrap.files.isNotEmpty()
 
-        val isPostJson = wrap.jsonParam.isNotBlank()
+        val isPostJson = wrap.jsonParam.size > 4
 
         if (isMutipart || isPostJson) {
             if (!isPost) {
@@ -302,7 +303,7 @@ object BaseHttpUrlConnectionHelper {
 //                writer.write(wrap.jsonParam)
 //                writer.close()
 
-                    dataOutputStream.write(wrap.jsonParam.toByteArray())
+                    dataOutputStream.write(Gson().toJson(wrap.jsonParam).toByteArray())
                     dataOutputStream.flush()
                     dataOutputStream.close()
 

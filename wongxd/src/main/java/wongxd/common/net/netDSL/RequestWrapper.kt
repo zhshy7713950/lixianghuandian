@@ -17,7 +17,9 @@ class RequestWrapper {
 
     var method: String = "POST"
 
-    var jsonParam: String = ""
+    var jsonParam: MutableMap<String, Any> = mutableMapOf()
+
+    var isJson = false
 
     var params: MutableMap<String, String> = mutableMapOf()
 

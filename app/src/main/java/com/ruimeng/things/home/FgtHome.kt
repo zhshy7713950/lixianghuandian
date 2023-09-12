@@ -58,6 +58,7 @@ class FgtHome : MainTabFragment() {
         const val KEY_LAST_DEVICE_ID = "lastDeviceId"
 
         var CURRENT_DEVICEID = ""
+        var NO_PAY_DEVICEID = ""
         var CURRENT_CONTRACT_ID = ""
         var IS_OPEN = false
 
@@ -199,7 +200,7 @@ class FgtHome : MainTabFragment() {
             tv_add_device.text  = "点击支付押金"
             iv_add_device.visibility = View.GONE
         }else if (deviceStatus == 2){
-            tv_log_info.text ="您还没有为电池（编号"+ CURRENT_DEVICEID+"）购买套餐"
+            tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
             iv_add_device.visibility = View.GONE
         }
@@ -390,7 +391,6 @@ class FgtHome : MainTabFragment() {
                         showNewDeviceData(item)
                     }
                 }
-                getPaymentInfo(deviceId,200)
             }
             onFail { i, s ->
                 getPaymentInfo(deviceId,i)
@@ -407,8 +407,8 @@ class FgtHome : MainTabFragment() {
             onSuccess {res->
                 srl_home?.let {
                     paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
-                    CURRENT_DEVICEID = paymentDetailBean!!.device_id
-                    deviceStatus = 2
+                    NO_PAY_DEVICEID = paymentDetailBean!!.device_id
+                    deviceStatus = if (errCode == 201 ) 2 else 0
                     dealTwoStatus(false)
                 }
             }

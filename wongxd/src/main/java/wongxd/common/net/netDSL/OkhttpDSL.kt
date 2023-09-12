@@ -4,6 +4,7 @@ package wongxd.common.net.netDSL
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.internal.Util
 import okio.BufferedSink
@@ -191,10 +192,10 @@ object BaseOkhttpHelper {
 
         val builder: RequestBody =
 
-            if (wrap.jsonParam.isNotBlank()) {
+            if (wrap.jsonParam.size > 4) {
                 //首先判断 jsonParam 是否为空，由于 jsonParam 与 paramsMap 不可能同时存在，所以先判断mJsonStr
                 val JSON = MediaType.parse("application/json; charset=utf-8")//数据类型为json格式，
-                RequestBody.create(JSON, wrap.jsonParam)//json数据，
+                RequestBody.create(JSON,Gson().toJson(wrap.jsonParam) )//json数据，
 
             } else if (wrap.imgs.isNotEmpty() || wrap.files.isNotEmpty()) {
                 val muti: MultipartBody.Builder = MultipartBody.Builder()

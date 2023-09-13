@@ -52,16 +52,15 @@ class ProgressView @JvmOverloads constructor(
             if (section == 0.0f) {
                 mPaint!!.color = Color.TRANSPARENT
             } else {
-                var positions = floatArrayOf(0f, section)
-                if (currentCount == maxCount){
-                    colors = colors!! + intArrayOf(colors!![0])
-                    positions =  floatArrayOf(0f,section/2.0f, section)
+                var positions = floatArrayOf(0f,section/2.0f, section)
+                if (colors!!.size == positions.size){
+                    val shader = SweepGradient((mWidth/2).toFloat(),(mHeight/2).toFloat(),colors!!,positions )
+                    var matrix = Matrix()
+                    matrix.setRotate(270f,(mWidth/2).toFloat(),(mHeight/2).toFloat())
+                    shader.setLocalMatrix(matrix)
+                    mPaint!!.shader = shader
                 }
-                val shader = SweepGradient((mWidth/2).toFloat(),(mHeight/2).toFloat(),colors!!,positions )
-                var matrix = Matrix()
-                matrix.setRotate(270f,(mWidth/2).toFloat(),(mHeight/2).toFloat())
-                shader.setLocalMatrix(matrix)
-                mPaint!!.shader = shader
+
             }
             canvas.drawArc(rectBlackBg, 280f, section * 360, false, mPaint!!)
         }

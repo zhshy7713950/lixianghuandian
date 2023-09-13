@@ -3,7 +3,6 @@ package com.ruimeng.things.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,22 +10,17 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.me.FgtTrueName
-import com.ruimeng.things.me.activity.BalanceWithdrawalActivity
 import com.ruimeng.things.me.contract.FgtContractSignStep1
-import com.ruimeng.things.me.credit.FgtCreditReckoning
+import com.ruimeng.things.net_station.MapSelectPopup
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
@@ -66,6 +60,7 @@ class FgtHome : MainTabFragment() {
         var getIsHost = "1"
         var deviceStatus = 0 //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金
         var userId = ""
+        var hasChangePackege = false //是否有换电套餐
 
         fun selectDeviceType() {
 
@@ -191,6 +186,13 @@ class FgtHome : MainTabFragment() {
 
 
     private fun initNoItemView() {
+        if (deviceCode == 201 && paymentCode == 208){
+            deviceStatus = 1
+        }else if (deviceCode == 201 && paymentCode == 200){
+            deviceStatus = 2
+        }else{
+            deviceStatus = 0
+        }
         if (deviceStatus == 0){
             tv_log_info.text =""
             tv_add_device.text  = "点击添加"
@@ -302,13 +304,13 @@ class FgtHome : MainTabFragment() {
             tvOpenClose.text = "关闭电源"
             tvOpenClose.textColor = Color.WHITE
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(activity?.getDrawable(R.mipmap.ic_switch_battery),null,null,null)
-            pvBattery.colors = intArrayOf(Color.parseColor("#1CFFE6"),Color.parseColor("#2FE19C"))
+            pvBattery.colors = intArrayOf(Color.parseColor("#1CFFE6"),Color.parseColor("#2FE19C"),Color.parseColor("#1CFFE6"))
             tvProgress.setTextColor(Color.parseColor("#29EBB6"))
         } else {
             tvOpenClose.text = "开启电源"
             tvOpenClose.textColor = Color.parseColor("#29EBB6")
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(activity?.getDrawable(R.mipmap.ic_switch_battery_close),null,null,null)
-            pvBattery.colors = intArrayOf(Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"))
+            pvBattery.colors = intArrayOf(Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"))
             tvProgress.setTextColor(Color.parseColor("#DEF0E9"))
         }
         pvBattery.refreshView()
@@ -372,6 +374,8 @@ class FgtHome : MainTabFragment() {
 
     private var deviceDetailBean: DeviceDetailBean.Data? = null
     private var paymentDetailBean :PaymentDetailBean.Data ?= null
+    private var paymentCode = 200
+    private var deviceCode = 200
 
     @SuppressLint("SetTextI18n")
     private fun getBatteryDetailInfo(deviceId: String = "0") {
@@ -384,39 +388,43 @@ class FgtHome : MainTabFragment() {
 
             onSuccess { res ->
                 srl_home?.let {
-                    deviceStatus = 0
                     dealTwoStatus(true)
                     deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
                     deviceDetailBean?.let { item ->
                         showNewDeviceData(item)
                     }
                 }
+                deviceCode = 200
             }
             onFail { i, s ->
-                getPaymentInfo(deviceId,i)
+                deviceCode = i
             }
             onFinish {
-                srl_home?.finishRefresh()
+                getPaymentInfo()
             }
         }
+
     }
-    private fun getPaymentInfo(deviceId: String = "0",errCode:Int){
+    private fun getPaymentInfo(){
         http {
             url = "/apiv6/payment/getuserpaymentinfo"
             params["user_id"] = userId
+            params["device_id"] = CURRENT_DEVICEID
             onSuccess {res->
+                paymentCode = 200
                 srl_home?.let {
                     paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                     NO_PAY_DEVICEID = paymentDetailBean!!.device_id
-                    deviceStatus = if (errCode == 201 ) 2 else 0
-                    dealTwoStatus(false)
+                    initNoItemView()
+                    showPackageInfo()
                 }
             }
             onFail { i, s ->
-                if (errCode == 201 && i == 208){
-                    deviceStatus = 1
-                    dealTwoStatus(false)
-                }
+                paymentCode = i
+                initNoItemView()
+            }
+            onFinish {
+                srl_home?.finishRefresh()
             }
         }
     }
@@ -441,8 +449,11 @@ class FgtHome : MainTabFragment() {
                         LogHelper.i("data===", "===getContractId===${getContractId}")
                         if (!TextUtils.isEmpty(result)) {
                             if ("换电开门" == getType) {
-                                requestCgOpenDoor(result!!)
+                                //扫码开门
+//                                requestCgOpenDoor(result!!)
+                                startFgt(FgtScanOpen.newInstance(CURRENT_DEVICEID,result!!))
                             } else {
+                                //手动换电
                                 val intent =
                                     Intent(activity, ChangeElectricOpenDoorActivity::class.java)
                                 intent.putExtra("type", "换电")
@@ -483,7 +494,6 @@ class FgtHome : MainTabFragment() {
         showPopMsg(item.popmsg)
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
-        showPackageInfo(item.device_contract)
         tv_remark_num.text = item.device_contract.remark
         if ("0" == item.device_contract.is_sign) {
             signDialog(activity!!, item.device_contract.contract_id)
@@ -499,7 +509,7 @@ class FgtHome : MainTabFragment() {
             //故障状态
             ivWrongBt.visibility  = View.VISIBLE
             tvProgress.setTextColor(Color.parseColor("#FFE177"))
-            pvBattery.colors = intArrayOf(Color.parseColor("#FFE177"),Color.parseColor("#FF7A5A"))
+            pvBattery.colors = intArrayOf(Color.parseColor("#FFE177"),Color.parseColor("#FF7A5A"),Color.parseColor("#FFE177"))
         }else{
             // 通电或者关电状态
             ivWrongBt.visibility  = View.GONE
@@ -511,11 +521,7 @@ class FgtHome : MainTabFragment() {
         tv_voltage.text = "电压 ${info.totalvoltage}V"
         tvBatteryName.text = info.device_id
     }
-    private fun showPackageInfo(item :DeviceDetailBean.Data.DeviceContract){
-        tv_ya_monety.text = item.deposit + "元"
-        tv_rent_money.text = item.rent_money  + "元"
 
-    }
     private fun showBatteryInfo(info:DeviceDetailBean.Data.DeviceBase){
         //详细信息
         tv_detail_standard_ah.text = info.standardcapacity + "A"
@@ -525,6 +531,41 @@ class FgtHome : MainTabFragment() {
         tv_detail_protect_status.text = info.protect
         tv_detail_fet.text = info.fet
         tv_detail_software_ver.text = info.softversion
+    }
+    private fun showPackageInfo(){
+        hasChangePackege = false
+        if (paymentDetailBean != null){
+            tv_ya_monety.text =  "${paymentDetailBean!!.deposit}元"
+            tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
+            if (paymentDetailBean!!.paymentInfo != null){
+                tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
+                if (paymentDetailBean!!.paymentInfo.userOptions.size > 0 && paymentDetailBean!!.paymentInfo.userOptions.count { it.option_type == "2" } > 0){
+                    cl_change_package.visibility = View.VISIBLE
+                    tv_no_package.visibility = View.GONE
+                    var option  = paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" }.first()
+                    if (option != null){
+                        tv_change_package_type.text ="包次换电"
+                        tv_change_package_left_times.text = "剩余${option.change_times}次"
+                        tv_change_package_time.text = formatTime(option.show_start_time) +"至" + formatTime(option.show_end_time)
+                        val statusRes = if(option.active_time == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
+                        tv_change_package_title.setCompoundDrawables(null,null,resources.getDrawable(statusRes),null)
+
+                    }
+                    hasChangePackege = true
+                }else{
+                    cl_change_package.visibility = View.GONE
+                    tv_btn_change_package.text = "购买换电套餐"
+                    tv_no_package.visibility = View.VISIBLE
+                }
+            }
+            tv_package_time.text = formatTime(paymentDetailBean!!.begin_time) +"至" + formatTime(paymentDetailBean!!.exp_time)
+            tv_btn_change_package.setOnClickListener {
+                buyChangePackage()
+            }
+        }
+    }
+    fun formatTime (time:String):String{
+        return   if (time.length > 10) time.substring(0,10) else time
     }
     private fun initInfoEvent(item:DeviceDetailBean.Data){
         tvFindLocation.setOnClickListener {
@@ -546,9 +587,13 @@ class FgtHome : MainTabFragment() {
         }
         tvReback.setOnClickListener {startFgt(FgtReturn())  }
         changeOpenDoor?.setOnClickListener {
-            val intent = Intent(activity, ScanQrCodeActivity::class.java)
-            intent.putExtra("type", "换电开门")
-            startActivityForResult(intent, 1)
+            if (hasChangePackege){
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                intent.putExtra("type", "换电开门")
+                startActivityForResult(intent, 1)
+            }else{
+                buyChangePackage()
+            }
         }
 
         tvUnbind.setOnClickListener {
@@ -561,6 +606,26 @@ class FgtHome : MainTabFragment() {
                     getBatteryDetailInfo()
                 }
             }
+        }
+    }
+
+    /**
+     * 购买换电套餐
+     */
+    private fun buyChangePackage() {
+        activity.let {
+            if (it != null) {
+                var listener = View.OnClickListener {
+                    when (it.id) {
+                        R.id.option1 -> {
+                            FgtMain.instance?.start(FgtSinglePay.newInstance(CURRENT_DEVICEID))
+                        }
+                        R.id.option2 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+                    }
+                }
+                ChangePackagePopup(it, listener)
+            }
+
         }
     }
 

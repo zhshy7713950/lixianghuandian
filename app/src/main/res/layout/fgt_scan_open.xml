@@ -120,6 +120,7 @@
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
+            android:id="@+id/tv_base_package"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="成都1个月"
@@ -136,6 +137,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="111dp"/>
         <TextView
+            android:id="@+id/tv_package_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="开始时间："
@@ -149,6 +151,7 @@
             android:layout_marginRight="24dp"
             />
         <TextView
+            android:id="@+id/tv_package_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="结束时间："
@@ -163,6 +166,7 @@
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
+        android:id="@+id/tv_change_package_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="换电套餐（当前为包月套餐）"

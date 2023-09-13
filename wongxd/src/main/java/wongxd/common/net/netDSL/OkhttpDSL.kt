@@ -4,6 +4,7 @@ package wongxd.common.net.netDSL
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.internal.Util
@@ -22,6 +23,7 @@ import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.logging.Logger
 
 
 /**
@@ -181,22 +183,22 @@ object BaseOkhttpHelper {
             sb.append(key + "--" + wrap.params[key])
             sb.append("\r\n")
         }
-
-
-       try{
-           LogUtils.iTag("requsest ${wrap.url}", headers.toString(), sb.toString())
-       }catch (e:Exception){
-           e.printStackTrace()
-       }
+        Log.i("TAG", "Req:${wrap.url}")
+        Log.i("TAG", Gson().toJson(wrap.params))
+//       try{
+//           LogUtils.iTag("requsest ${wrap.url}", headers.toString(), sb.toString())
+//       }catch (e:Exception){
+//           e.printStackTrace()
+//       }
 
 
         val builder: RequestBody =
 
             if (wrap.jsonParam.size > 4) {
+                Log.i("TAG", Gson().toJson(wrap.jsonParam))
                 //首先判断 jsonParam 是否为空，由于 jsonParam 与 paramsMap 不可能同时存在，所以先判断mJsonStr
                 val JSON = MediaType.parse("application/json; charset=utf-8")//数据类型为json格式，
                 RequestBody.create(JSON,Gson().toJson(wrap.jsonParam) )//json数据，
-
             } else if (wrap.imgs.isNotEmpty() || wrap.files.isNotEmpty()) {
                 val muti: MultipartBody.Builder = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -312,8 +314,9 @@ object BaseOkhttpHelper {
                     MainLooper.runOnUiThread { wrap._finish.invoke() }
                     response?.let {
                         val res = response.body()?.string() ?: ""
-
-                        LogUtils.iTag("requsest", " ${wrap.url} \n", res)
+                        Log.i("TAG", "Resp: ${wrap.url} ")
+                        Log.i("TAG", "${res}")
+//                        LogUtils.iTag("requsest", " ${wrap.url} \n", res)
 
                         if (res.isNotBlank()) {
                             try {
@@ -338,6 +341,7 @@ object BaseOkhttpHelper {
                                            wrap._successWithMsg.invoke(res, errMsg)
                                        }catch (e: Exception){
                                            e.printStackTrace()
+                                           Log.e("TAG", e.message)
                                        }
                                     }
                                 }

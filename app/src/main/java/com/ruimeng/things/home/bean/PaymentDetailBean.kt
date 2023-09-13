@@ -40,14 +40,12 @@ data class Data(
     val payment_id: String,
     val remark: String,
     val rent_day: String,
-    val rent_money: Int,
+    val rent_money: Double,
     val rent_status: String,
     val rent_time: String,
-    val total_rent_money: Int,
+    val total_rent_money: Double,
     val user_id: String
 )
 
-data class PaymentInfo(
-    val userOptions: List<Any>
-)
+
 }

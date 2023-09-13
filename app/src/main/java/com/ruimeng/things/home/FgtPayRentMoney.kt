@@ -30,9 +30,14 @@ import com.ruimeng.things.R
 import com.ruimeng.things.bean.BaseResultBean
 import com.ruimeng.things.home.adapter.BasePackageAdapter
 import com.ruimeng.things.home.adapter.ChangePackageAdapter
+import com.ruimeng.things.home.bean.CountAmountBean
 import com.ruimeng.things.home.bean.GetRentBean
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.NewGetRentBean
+import com.ruimeng.things.home.bean.PaymentDetailBean
+import com.ruimeng.things.home.bean.PaymentInfo
+import com.ruimeng.things.home.bean.PaymentOption
+import com.ruimeng.things.home.bean.UpdateGetRentBean
 import com.ruimeng.things.me.FgtTicket
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.credit.FgtCreditSystem
@@ -56,6 +61,7 @@ import wongxd.common.getSweetDialog
 import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http
+import java.util.Arrays
 
 
 /**
@@ -66,22 +72,26 @@ class FgtPayRentMoney : BaseBackFragment() {
     data class EventInstallmentPaymentSuccess(val isNeedPop: Boolean = false)
 
     companion object {
-        fun newInstance(deviceId: String): FgtPayRentMoney {
+        public val PAGE_TYPE_CREATE  = 0
+        public val PAGE_TYPE_UPDATE  = 1
+        fun newInstance(deviceId: String,type:Int = PAGE_TYPE_CREATE): FgtPayRentMoney {
             val fgt = FgtPayRentMoney()
             val b = Bundle()
             b.putString("deviceId", deviceId)
+            b.putInt("pageType",type)
             fgt.arguments = b
             return fgt
         }
     }
 
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
+    val pageType: Int by lazy { arguments?.getInt("pageType") ?: PAGE_TYPE_CREATE } //页面类型 0 创建租金，1 续费升级
     private val basePackageAdapter: BasePackageAdapter by lazy { BasePackageAdapter() }
     private val changePackageAdapter: ChangePackageAdapter by lazy { ChangePackageAdapter() }
     override fun getLayoutRes(): Int = R.layout.fgt_pay_rent_money
     private var IS_CHECKED_PROTOCOL = false
-    private var newGetRentBean: NewGetRentBean.Data? = null;
-    private var selectOption: NewGetRentBean.Data.Option? = null;
+    private var newGetRentBean: PaymentInfo? = null;
+    private var selectOption: PaymentOption? = null;
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
@@ -89,6 +99,18 @@ class FgtPayRentMoney : BaseBackFragment() {
         initTopbar(topbar, "支付租金")
         getRent()
         dealPayWay()
+        initView()
+    }
+    private fun initView(){
+        if (pageType == PAGE_TYPE_CREATE){
+            tv_base_package_title.text = "基础套餐 (必选)"
+            ll_base_package.visibility = View.GONE
+            tv_base_package_update_title.visibility = View.GONE
+        }else{
+            tv_base_package_title.text = "基础套餐"
+            ll_base_package.visibility = View.VISIBLE
+            tv_base_package_update_title.visibility = View.VISIBLE
+        }
     }
     @Subscribe
     fun getEventInstallmentPaymentSuccess(event: EventInstallmentPaymentSuccess) {
@@ -193,8 +215,9 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
     private fun resetSelectOptionList(){
-        var optionList  : ArrayList<NewGetRentBean.Data.Option> = ArrayList()
-        optionList.add(NewGetRentBean.Data.Option())
+        var optionList  : ArrayList<PaymentOption> = ArrayList()
+        val paymentName = if(pageType==PAGE_TYPE_CREATE) "暂不购买" else "暂不续期"
+        optionList.add(PaymentOption(name = paymentName))
         newGetRentBean?.let {
             optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
             if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)){
@@ -211,12 +234,12 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun formatTime(timeStr: String): Any? {
         return if (TextUtils.isEmpty(timeStr)) ":" else timeStr.substring(0,10)
     }
-    private fun initViewAfterData(list: List<NewGetRentBean.Data>) {
+    private fun initViewAfterData(list: List<PaymentInfo>) {
         if (list.isEmpty()){
             ToastHelper.shortToast(context,"没有找到套餐")
             return
         }
-        newGetRentBean = list.get(0)
+        newGetRentBean = list.get(list.size-1)
         newGetRentBean.let {
             tv_battery_num_pay_rent_money.text = newGetRentBean!!.device_id
             tv_battery_model_pay_rent_money.text = newGetRentBean!!.model_name
@@ -579,31 +602,49 @@ class FgtPayRentMoney : BaseBackFragment() {
      * 获取设备租用信息
      */
     private fun getRent() {
-
-        http {
-            url = PathV3.GET_RENT
-            params["deviceId"] = deviceId
-
-            onSuccessWithMsg { res, msg ->
-
-                iv_battery_pay_rent_money?.let {
-                    val result = res.toPOJO<NewGetRentBean>().data
-                    try {
+        if (pageType == PAGE_TYPE_CREATE){
+            http {
+                url = PathV3.GET_RENT
+                params["deviceId"] = deviceId
+                onSuccessWithMsg { res, msg ->
+                    iv_battery_pay_rent_money?.let {
+                        val result = res.toPOJO<NewGetRentBean>().data
                         initViewAfterData(result)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+
+                    }
+                }
+            }
+        }else{
+            http {
+                url = "/apiv6/payment/upgrade"
+                params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
+                params["device_id"] = deviceId
+                onSuccessWithMsg { res, msg ->
+                    iv_battery_pay_rent_money?.let {
+                        val result = res.toPOJO<UpdateGetRentBean>().data
+                        var payments = ArrayList<PaymentInfo>();
+                        payments.add(PaymentInfo(sname = "暂不续期", options = result.options))
+                        payments.addAll(result.paymentInfo)
+                        initViewAfterData(payments)
+                        showBaseInfo(result.baseInfo)
                     }
                 }
             }
         }
     }
+    private fun showBaseInfo(paymentInfo: PaymentInfo){
+
+    }
+
     private fun computeAmount() {
         http {
             url = "/apiv6/payment/computeamount"
             jsonParam = getSubmitParam()
             onSuccessWithMsg { res, msg ->
-                val result = res.toPOJO<BaseResultBean<Double>>().data
-                tv_total_price.text  = "¥${result}"
+
+                val result = res.toPOJO<CountAmountBean>().data
+                tv_total_price.text  = "¥${result.totalPrice}"
+                tv_coupon_price.text  = "已优惠¥${result.couponAmount}"
             }
         }
     }
@@ -617,7 +658,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             params["payment_id"] = newGetRentBean!!.id
             params["package_id"] = newGetRentBean!!.package_id
             params["price"] = "${newGetRentBean!!.price}"
-            val options: ArrayList<NewGetRentBean.Data.Option> = ArrayList();
+            val options: ArrayList<PaymentOption> = ArrayList();
             if (selectOption != null && selectOption!!.id != "") {
                 options.add(selectOption!!)
             }

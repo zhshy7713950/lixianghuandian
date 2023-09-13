@@ -355,12 +355,15 @@
 						android:layout_height="wrap_content"
 						android:layout_marginTop="41dp"
 						android:text="套餐内容"
+						android:drawablePadding="6dp"
 						android:textColor="#ff9eaab3"
 						android:textSize="11sp"
+						android:drawableRight="@mipmap/ic_pakage_status01"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
 
 					<TextView
+						android:id="@+id/tv_package_name"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="62dp"
@@ -381,6 +384,7 @@
 						app:layout_constraintTop_toTopOf="parent" />
 
 					<TextView
+						android:id="@+id/tv_package_time"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="112dp"
@@ -424,59 +428,82 @@
 						android:textSize="12sp"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
+					<androidx.constraintlayout.widget.ConstraintLayout
+						android:id="@+id/cl_change_package"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent">
+						<TextView
+							android:id="@+id/tv_change_package_title"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="41dp"
+							android:text="套餐内容"
+							android:drawableRight="@mipmap/ic_pakage_status01"
+							android:textColor="#ff9eaab3"
+							android:drawablePadding="6dp"
+							android:textSize="11sp"
+							app:layout_constraintLeft_toLeftOf="parent"
+							app:layout_constraintTop_toTopOf="parent" />
 
+						<TextView
+							android:id="@+id/tv_change_package_type"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="62dp"
+							android:textColor="#ffffffff"
+							android:textSize="12sp"
+							app:layout_constraintLeft_toLeftOf="parent"
+							app:layout_constraintTop_toTopOf="parent"
+							tools:text="单次付费" />
+
+						<TextView
+							android:id="@+id/tv_change_package_left_times"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="62dp"
+							android:layout_marginRight="10dp"
+							android:textColor="#ff29ebb6"
+							android:textSize="12sp"
+							app:layout_constraintRight_toRightOf="parent"
+							app:layout_constraintTop_toTopOf="parent"
+							tools:text="剩余28次" />
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="91dp"
+							android:text="有效期"
+							android:textColor="#ff9eaab3"
+							android:textSize="11sp"
+							app:layout_constraintLeft_toLeftOf="parent"
+							app:layout_constraintTop_toTopOf="parent" />
+
+						<TextView
+							android:id="@+id/tv_change_package_time"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="112dp"
+							android:textColor="#ffffffff"
+							android:textSize="12sp"
+							app:layout_constraintLeft_toLeftOf="parent"
+							app:layout_constraintTop_toTopOf="parent"
+							tools:text="2023/06/01至2023/07/01" />
+					</androidx.constraintlayout.widget.ConstraintLayout>
 					<TextView
+						android:id="@+id/tv_no_package"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginTop="41dp"
-						android:text="套餐内容"
+						android:layout_marginTop="60dp"
+						android:text="当前暂无套餐"
 						android:textColor="#ff9eaab3"
 						android:textSize="11sp"
 						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toTopOf="parent" />
-
-					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="62dp"
-						android:textColor="#ffffffff"
-						android:textSize="12sp"
-						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent"
-						tools:text="单次付费" />
+						app:layout_constraintRight_toRightOf="parent" />
+
 
 					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="62dp"
-						android:layout_marginRight="10dp"
-						android:textColor="#ff29ebb6"
-						android:textSize="12sp"
-						app:layout_constraintRight_toRightOf="parent"
-						app:layout_constraintTop_toTopOf="parent"
-						tools:text="剩余28次" />
-
-					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="91dp"
-						android:text="有效期"
-						android:textColor="#ff9eaab3"
-						android:textSize="11sp"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toTopOf="parent" />
-
-					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="112dp"
-						android:textColor="#ffffffff"
-						android:textSize="12sp"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toTopOf="parent"
-						tools:text="2023/06/01至2023/07/01" />
-
-					<TextView
+						android:id="@+id/tv_btn_change_package"
 						android:layout_width="0dp"
 						android:layout_height="24dp"
 						android:layout_marginRight="10dp"

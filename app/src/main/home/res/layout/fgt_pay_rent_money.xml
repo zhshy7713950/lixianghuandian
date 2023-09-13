@@ -180,14 +180,87 @@
 
 <!--            </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>-->
             <TextView
+                android:id="@+id/tv_base_package_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="基础套餐 (必选)"
+                android:text="基础套餐 "
                 android:textColor="#ffffffff"
                 android:textSize="15sp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="24dp"
                 />
+            <LinearLayout
+                android:id="@+id/ll_base_package"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle_gray_bg"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现有套餐"
+                    android:textColor="#ff29ebb6"
+                    android:textSize="14sp"
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="套餐内容"
+                        android:drawableRight="@mipmap/ic_pakage_status01"
+                        android:drawablePadding="6dp"
+                        android:textColor="#ff9eaab3"
+                        android:layout_marginTop="10dp"
+                        android:textSize="12sp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="成都2个月"
+                        android:layout_marginTop="6dp"
+                        android:textColor="#ffffffff"
+                        android:textSize="14sp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="有效期"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#ff9eaab3"
+                        android:textSize="12sp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        tools:text="2023/06/01至2023/08/01"
+                        android:textColor="#ffffffff"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_base_package_update_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="可选续期套餐"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#ff29ebb6"
+                android:textSize="14sp"
+                />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_rant_long_pay_rent_money"
                 android:layout_width="match_parent"
@@ -585,6 +658,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/rectangle_gray_bg">
                 <TextView
                     android:layout_width="wrap_content"
@@ -600,22 +674,23 @@
                     android:id="@+id/tv_total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¥200.00"
+                    tools:text="¥200.00"
                     android:textColor="#ff29ebb6"
                     android:textSize="14sp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginLeft="60dp"
                     android:gravity="center_vertical"
                     />
                 <TextView
+                    android:id="@+id/tv_coupon_price"
                     android:layout_width="53dp"
                     android:layout_height="16dp"
-                    android:text="已优惠¥88"
+                    tools:text="已优惠¥88"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:layout_marginLeft="60dp"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:textColor="#ff929fab"
                     android:textSize="11sp"
@@ -640,7 +715,6 @@
                 android:textColor="#ffd7e0e8"
                 android:textSize="15sp"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginBottom="20dp"

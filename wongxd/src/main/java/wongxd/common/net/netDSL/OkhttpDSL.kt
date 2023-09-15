@@ -341,7 +341,6 @@ object BaseOkhttpHelper {
                                            wrap._successWithMsg.invoke(res, errMsg)
                                        }catch (e: Exception){
                                            e.printStackTrace()
-                                           Log.e("TAG", e.message)
                                        }
                                     }
                                 }

@@ -212,14 +212,15 @@ class FgtNetStationItem : MainTabFragment() {
                                 b.id
                             )
                         )
-                    }else{
-                        (parentFragment as FgtNetStation).start(
-                            FgtNetStationDetail.newInstance(
-                                b.site_name,
-                                b.id
-                            )
-                        )
                     }
+//                    else{
+//                        (parentFragment as FgtNetStation).start(
+//                            FgtNetStationDetail.newInstance(
+//                                b.site_name,
+//                                b.id
+//                            )
+//                        )
+//                    }
 
                 }
 

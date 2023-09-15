@@ -1,15 +1,21 @@
 package com.ruimeng.things
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
+import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_change_electric_open_door.*
+import wongxd.Config
 import wongxd.base.AtyBase
 import wongxd.common.toPOJO
 import wongxd.http
+import wongxd.utils.SystemUtils
 
 
 class ChangeElectricOpenDoorActivity : AtyBase() {
@@ -63,6 +69,48 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                 confirmBtn?.setOnClickListener {
                     requestConfirmCgDevice(getContractId, data.new_info.device_id)
                 }
+                var textColors = arrayOf("#929FAB","#FFFFFF")
+                tv_base_package_name.text = TextUtil.getSpannableString(arrayOf("基础套餐    ",intent.getStringExtra("name")),textColors)
+                if (data.singleChangeInfo != null){
+                    tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ","单次换电"),textColors)
+                    tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ","1"),textColors)
+                    tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(data.singleChangeInfo.start_time,data.singleChangeInfo.end_time)),textColors)
+                }else{
+                    val option = data.userOptions.filter { it.active_status == "1" }.first()
+                    if (option != null){
+                        tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ",option.name),textColors)
+                        tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ",option.change_times),textColors)
+                        tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(option.start_time,option.end_time)),textColors)
+                    }else if (data.userOptions.count { it.active_status == "2" } > 0){
+                        NormalDialog(mActivity).apply {
+                            style(NormalDialog.STYLE_TWO)
+                            title("当前您的换电套餐剩余次数已为0，是否立即启动待生效套餐：${data.userOptions.filter { it.active_status == "2" }.first().name}")
+                            titleTextColor(Color.parseColor("#131414"))
+                            btnText("确认启用", "暂不启用")
+                            btnTextColor(Color.parseColor("#29EBB6"), Color.parseColor("#FF6464"))
+                            setOnBtnClickL(OnBtnClickL {
+                                dismiss()
+                            }, OnBtnClickL {
+                                http {
+                                    url = "/apiv6/payment/activeoption"
+                                    params["user_option_id"] = "${data.userOptions.filter { it.active_status == "2" }.first().option_id}"
+                                    onSuccess {
+                                        ToastHelper.shortToast(this@ChangeElectricOpenDoorActivity,"启用成功")
+                                        dismiss()
+                                    }
+                                    onFail { i, s ->
+                                        ToastHelper.shortToast(this@ChangeElectricOpenDoorActivity,s)
+                                        dismiss()
+                                    }
+                                }
+
+                            })
+                            show()
+                        }
+                    }else{
+                        ToastHelper.shortToast(this@ChangeElectricOpenDoorActivity,"没有找到生效的套餐，请开启")
+                    }
+                  }
             }
 
             onFail { i, msg ->

@@ -44,7 +44,8 @@ data class Data(
     val rent_status: String,
     val rent_time: String,
     val total_rent_money: Double,
-    val user_id: String
+    val user_id: String,
+    val singleChangeInfo:PaymentOption
 )
 
 

@@ -2,6 +2,7 @@ package com.ruimeng.things.me.contract
 
 import MyContractListBean
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.FrameLayout
@@ -211,11 +212,30 @@ class FgtMyContractItem : MainTabFragment() {
         BaseQuickAdapter<MyContractListBean.Data, BaseViewHolder>(R.layout.item_rv_my_contract) {
         override fun convert(helper: BaseViewHolder, item: MyContractListBean.Data?) {
             bothNotNull(helper, item) { a, b ->
-                var textColors = arrayOf("#929FAB","#FFFFFF")
+                var textColors = arrayOf("#929FAB", "#FFFFFF")
                 a.getView<TextView>(R.id.tv_num).text = "${b.device_id}"
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
                 a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
-                a.getView<TextView>(R.id.tv_base_package).text = TextUtil.getSpannableString(arrayOf("基本套餐：",b.contract_id),textColors)
+                a.getView<TextView>(R.id.tv_base_package).text =
+                    TextUtil.getSpannableString(arrayOf("基本套餐：", b.renttime_str), textColors)
+                a.setText(
+                    R.id.tv_base_package_time,
+                    "${formatTime(b.begin_time)}至${formatTime(b.end_time)}"
+                )
+
+
+                val option = b.userOptions.filter { it.option_type == "2" }
+                if (option.isEmpty()) {
+                    a.setVisible(R.id.tv_change_package_time, false)
+                        .setText(R.id.tv_change_package,  TextUtil.getSpannableString(arrayOf("换电套餐：", "暂无"), textColors))
+                } else {
+                    a.setVisible(R.id.tv_change_package_time, true)
+                        .setText(
+                            R.id.tv_change_package_time,
+                            "${formatTime(option[0].start_time)}至${formatTime(option[0].end_time)}"
+                        )
+                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "${option[0].name}"), textColors))
+                }
 
 
                 a.getView<QMUIRoundFrameLayout>(R.id.qrf_sign).apply {
@@ -241,5 +261,10 @@ class FgtMyContractItem : MainTabFragment() {
                 }
             }
         }
+
+        private fun formatTime(time: String): String {
+            return if ( !TextUtils.isEmpty(time) && time.length > 10) time.replace("-","/").substring(0, 10) else time
+        }
+
     }
 }

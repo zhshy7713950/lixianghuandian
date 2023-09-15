@@ -26,8 +26,8 @@ class FgtTicket : BaseBackFragment() {
 
         initTopbar(topbar, "优惠券")
 
-        tab_ticket.addTab(QMUITabSegment.Tab("未使用"))
-            .addTab(QMUITabSegment.Tab("已使用"))
+        tab_ticket.addTab(QMUITabSegment.Tab("可用"))
+            .addTab(QMUITabSegment.Tab("不可用"))
             .setDefaultNormalColor(Color.parseColor("#929FAB"))
         tab_ticket.setDefaultSelectedColor(Color.parseColor("#29EBB6"))
 
@@ -99,6 +99,20 @@ class FgtTicket : BaseBackFragment() {
                 a.setText(R.id.tv_money,"¥"+ b.coupon_price)
                     .setText(R.id.tv_limit,b.limit_day)
                     .setText(R.id.tv_use,b.is_use)
+                if (item != null) {
+                    if (item.is_use.equals("未使用")){
+                        a.setTextColor(R.id.tv_money,Color.parseColor("#F9BB6C"))
+                            .setTextColor(R.id.tv_coupon_name,Color.parseColor("#F9BB6C"))
+                            .setTextColor(R.id.tv_limit,Color.parseColor("#FFFFFF"))
+                            .setText(R.id.tv_use,"未使用")
+
+                    }else{
+                        a.setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))
+                            .setTextColor(R.id.tv_coupon_name,Color.parseColor("#C3B199"))
+                            .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
+                            .setText(R.id.tv_use,"已使用")
+                    }
+                }
             }
         }
     }

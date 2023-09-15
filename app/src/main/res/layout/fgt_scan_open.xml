@@ -10,9 +10,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       tools:text="电池信息"
+        android:text="电池信息"
         android:textColor="#ffffffff"
         android:textSize="15sp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -107,29 +109,18 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rectangle_gray_bg">
-        <TextView
-            android:id="@+id/tv_rent_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="27dp"
-            android:layout_marginTop="8dp"
-           tools:text="¥200"
-            android:textColor="#ffffffff"
-            android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+
         <TextView
             android:id="@+id/tv_base_package"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="成都1个月"
-            android:textColor="#ffb2c1ce"
-            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="27dp"
+            android:layout_marginLeft="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginBottom="9dp"
             />
         <View
             android:layout_width="0.5dp"
@@ -146,7 +137,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="#ff929fab"
             android:layout_marginTop="12dp"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="24dp"
             />
@@ -164,12 +155,18 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="24dp"
             />
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/lin_ver"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="110dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:id="@+id/tv_change_package_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="换电套餐（当前为包月套餐）"
+        android:text="换电套餐"
         android:textColor="#ffffffff"
         android:textSize="15sp"
         android:layout_marginLeft="12dp"
@@ -181,34 +178,32 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rectangle_gray_bg">
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/lin_ver"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="110dp"/>
         <TextView
+            android:id="@+id/tv_change_package_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="27dp"
-            android:layout_marginTop="8dp"
-            tools:text="¥200"
+            android:layout_marginLeft="20dp"
+            tools:text="单次换电"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="#ffffffff"
             android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           tools:text="成都1个月"
-            android:textColor="#ffb2c1ce"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="27dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginBottom="9dp"
-            />
+
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="111dp"/>
         <TextView
+            android:id="@+id/tv_change_package_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="开始时间："
@@ -217,11 +212,12 @@
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="#ff929fab"
             android:layout_marginTop="12dp"
-            android:textSize="15sp"
+            android:textSize="12sp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="24dp"
             />
         <TextView
+            android:id="@+id/tv_change_package_end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
            tools:text="结束时间："
@@ -245,6 +241,7 @@
         android:textSize="15sp"
         />
     <TextView
+        android:id="@+id/tv_change_times"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:text="不限次数"
@@ -261,6 +258,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/tv_update_package"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:text="升级套餐"
@@ -274,6 +272,7 @@
             android:layout_marginBottom="80dp"
             />
         <TextView
+            android:id="@+id/tv_change_battery"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:text="立即换电"

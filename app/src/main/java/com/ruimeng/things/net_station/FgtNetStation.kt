@@ -67,13 +67,13 @@ class FgtNetStation : MainTabFragment() {
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<NetWorkShowBean>().data
                 titleList.clear()
-                if (data.cg_show != 0){
+                if (data.cg_show != null){
                     fragmentList.add( FgtNetStationItem.newInstance("3"))
                     titleList.add("换电站点")
                 }
-                if (data.cg_rent_show != 0){
-                    fragmentList.add( FgtNetStationItem.newInstance("2"))
-                    titleList.add("换电站点")
+                if (data.cg_rent_show == 0){
+//                    fragmentList.add( FgtNetStationItem.newInstance("2"))
+//                    titleList.add("换电站点")
                 }
                 if (data.cg_service_show != null){
                     fragmentList.add( FgtNetStationItem.newInstance("1"))

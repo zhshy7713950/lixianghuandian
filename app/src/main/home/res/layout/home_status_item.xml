@@ -516,6 +516,36 @@
 						app:layout_constraintBottom_toBottomOf="parent"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintRight_toRightOf="parent" />
+					<TextView
+						android:id="@+id/tv_more"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="更多"
+						android:drawablePadding="4dp"
+						android:drawableRight="@mipmap/arrow_right"
+						app:layout_constraintRight_toRightOf="parent"
+						app:layout_constraintTop_toTopOf="parent"
+						android:layout_marginTop="13dp"
+						android:layout_marginRight="12dp"
+						android:textColor="#ff29ebb6"
+						android:textSize="11sp"
+						/>
+					<com.flyco.roundview.RoundTextView
+						android:id="@+id/tv_btn_change_package_update"
+						android:layout_width="50dp"
+						android:layout_height="18dp"
+						android:layout_marginTop="12dp"
+						android:layout_marginRight="10dp"
+						android:gravity="center"
+						android:text="续期"
+						android:textColor="#ff29ebb6"
+						android:textSize="11sp"
+						app:layout_constraintRight_toRightOf="parent"
+						app:layout_constraintTop_toTopOf="parent"
+						app:rv_backgroundColor="#404E59"
+						app:rv_cornerRadius="9dp"
+						app:rv_strokeColor="#29EBB6"
+						app:rv_strokeWidth="0.5dp" />
 				</androidx.constraintlayout.widget.ConstraintLayout>
 			</LinearLayout>
 		</LinearLayout>

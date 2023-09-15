@@ -535,7 +535,7 @@ class FgtDeposit : BaseBackFragment() {
             url = "apiv5/getpaybydeposit"
             params["device_id"] = deviceId
             params["code"] = agentCode
-            params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")
+            params["cg_mode"] = "1"
             params["host"] = if (FgtHome.IsWholeBikeRent) "1" else "2"
             //1微信支付2支付宝支付99线下支付 芝麻信用 101
             params["pay_type"] = when (PAY_WAY_TAG) {

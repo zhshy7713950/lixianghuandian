@@ -1,3 +1,5 @@
+import com.ruimeng.things.home.bean.PaymentOption
+
 data class MyContractListBean(
     var `data`: List<Data> = listOf(),
     var errcode: Int = 0, // 200
@@ -11,6 +13,7 @@ data class MyContractListBean(
         var device_id: Int = 0, // 499
         var end_time: String = "", // 2019-12-3
         var model_str: String = "", // 型号a70
-        var renttime_str: String = "" // 8 个月
+        var renttime_str: String = "", // 8 个月
+    var userOptions : List<PaymentOption>
     )
 }

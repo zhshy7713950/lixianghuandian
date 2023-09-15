@@ -13,7 +13,8 @@ class PaymentInfo (
     val id: String= "",
     val is_limit: String= "",
     val model_id: String= "",
-    val model_name: String= "",
+    var model_name: String= "",
+    val modelName: String= "",
     val modified: String= "",
     var options: List<PaymentOption> = ArrayList(),
     var userOptions: List<PaymentOption> = ArrayList(),
@@ -29,6 +30,8 @@ class PaymentInfo (
     val show_start_time: String= "",
     val show_end_time: String= "",
     val agentName: String= "",
+    val paymentName: String= "",
+    val exp_time: String= "",
     val agentCode: String= "",
     val contract_id:String= "",
     val btn_return:Int = 0

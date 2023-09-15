@@ -11,7 +11,9 @@
         android:id="@+id/topbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:elevation="2dp" />
+        android:elevation="2dp"
+        app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+        app:qmui_topbar_title_color="@color/white"/>
 
     <LinearLayout
         android:id="@+id/contentLayout"
@@ -53,6 +55,7 @@
                 tools:text="25%" />
 
             <TextView
+                android:id="@+id/tv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -64,11 +67,13 @@
                 app:layout_constraintTop_toBottomOf="@id/currentValueText" />
 
             <LinearLayout
-                android:layout_width="170dp"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/rectangle_gray_bg"
                 android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="133dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -162,6 +167,7 @@
                 tools:text="25%" />
 
             <TextView
+                android:id="@+id/tv2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -173,11 +179,13 @@
                 app:layout_constraintTop_toBottomOf="@id/newValueText" />
 
             <LinearLayout
-                android:layout_width="170dp"
+                android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/rectangle_gray_bg"
                 android:orientation="vertical"
+                android:layout_marginLeft="133dp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -259,6 +267,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_base_package_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -274,6 +283,7 @@
                 android:background="@drawable/shape_line" />
 
             <TextView
+                android:id="@+id/tv_change_package_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -289,6 +299,7 @@
                 android:background="@drawable/shape_line" />
 
             <TextView
+                android:id="@+id/tv_package_left_times"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -304,6 +315,7 @@
                 android:background="@drawable/shape_line" />
 
             <TextView
+                android:id="@+id/tv_change_package_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"

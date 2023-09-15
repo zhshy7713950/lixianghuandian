@@ -18,9 +18,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
+import com.ruimeng.things.home.bean.PaymentOption
+import com.ruimeng.things.home.view.BuyChangePackagePopup
+import com.ruimeng.things.home.view.ChangePackageListPopup
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
-import com.ruimeng.things.net_station.MapSelectPopup
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
@@ -40,6 +42,7 @@ import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http
+import kotlin.math.sin
 
 
 /**
@@ -79,7 +82,7 @@ class FgtHome : MainTabFragment() {
         /**
          * 处理扫码后的信息
          */
-        fun dealScanResult(deviceId: String?) {
+        fun dealScanResult(deviceId: String?,type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
 
             deviceId ?: return
 
@@ -96,7 +99,7 @@ class FgtHome : MainTabFragment() {
 
                     when (status) {
                         0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
-                        1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId))
+                        1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId,type))
                         2 -> {
                             EasyToast.DEFAULT.show(json.optString("errmsg"))
                             showTipDialog(
@@ -287,7 +290,7 @@ class FgtHome : MainTabFragment() {
      * 续租
      */
     private fun doContinueRant() {
-        dealScanResult(CURRENT_DEVICEID)
+        dealScanResult(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
     }
 
     class RefreshMyDeviceList
@@ -416,7 +419,9 @@ class FgtHome : MainTabFragment() {
                     paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                     NO_PAY_DEVICEID = paymentDetailBean!!.device_id
                     initNoItemView()
+
                     showPackageInfo()
+
                 }
             }
             onFail { i, s ->
@@ -459,6 +464,7 @@ class FgtHome : MainTabFragment() {
                                 intent.putExtra("type", "换电")
                                 intent.putExtra("contract_id", getContractId)
                                 intent.putExtra("new_deviceid", result)
+                                intent.putExtra("name", paymentDetailBean!!.paymentInfo.pname)
                                 startActivity(intent)
                             }
                         }
@@ -532,41 +538,79 @@ class FgtHome : MainTabFragment() {
         tv_detail_fet.text = info.fet
         tv_detail_software_ver.text = info.softversion
     }
+    private fun showSinglePackageInfo(){
+        val option = paymentDetailBean?.singleChangeInfo
+        if (option != null){
+            tv_change_package_type.text ="单次换电"
+            tv_change_package_left_times.text = "剩余1次"
+            tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
+            val statusRes = if(option.active_time == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
+            tv_change_package_title.setCompoundDrawables(null,null,resources.getDrawable(statusRes),null)
+            hasChangePackege = true
+        }else{
+            hasChangePackege = false
+        }
+    }
     private fun showPackageInfo(){
         hasChangePackege = false
         if (paymentDetailBean != null){
+
+
             tv_ya_monety.text =  "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
             if (paymentDetailBean!!.paymentInfo != null){
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
-                if (paymentDetailBean!!.paymentInfo.userOptions.size > 0 && paymentDetailBean!!.paymentInfo.userOptions.count { it.option_type == "2" } > 0){
+                tv_package_time.text = TextUtil.formatTime(paymentDetailBean!!.begin_time,paymentDetailBean!!.exp_time)
+                //看是否有单次换电
+                val options = ArrayList<PaymentOption>()
+                if ( paymentDetailBean?.singleChangeInfo != null){
+                    val singleOption = paymentDetailBean!!.singleChangeInfo
+                   singleOption.change_times = "1"
+                    singleOption.show_start_time = singleOption.start_time
+                    singleOption.show_end_time = singleOption.end_time
+                    singleOption.name = "单次换电"
+                    singleOption.active_status = "1"
+                    singleOption.single_option = true
+                   options.add(singleOption)
+                }
+                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
+
+                if (!options.isEmpty()){
                     cl_change_package.visibility = View.VISIBLE
                     tv_no_package.visibility = View.GONE
-                    var option  = paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" }.first()
+                    var option  = options[0]
                     if (option != null){
-                        tv_change_package_type.text ="包次换电"
+                        tv_change_package_type.text = if(option.single_option) "单次换电" else "包次换电"
                         tv_change_package_left_times.text = "剩余${option.change_times}次"
-                        tv_change_package_time.text = formatTime(option.show_start_time) +"至" + formatTime(option.show_end_time)
+                        tv_change_package_time.text = TextUtil.formatTime(option.show_start_time,option.show_end_time)
                         val statusRes = if(option.active_time == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
                         tv_change_package_title.setCompoundDrawables(null,null,resources.getDrawable(statusRes),null)
-
                     }
+
+
                     hasChangePackege = true
+                    tv_btn_change_package.visibility = View.GONE
+                    tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
+                    tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
+                    tv_btn_change_package_update.setOnClickListener {
+                        doContinueRant()
+                    }
+                    tv_more.setOnClickListener {
+                        activity?.let { it1 -> ChangePackageListPopup(it1, options) }
+                    }
                 }else{
                     cl_change_package.visibility = View.GONE
                     tv_btn_change_package.text = "购买换电套餐"
                     tv_no_package.visibility = View.VISIBLE
+                    tv_btn_change_package.visibility = View.VISIBLE
                 }
             }
-            tv_package_time.text = formatTime(paymentDetailBean!!.begin_time) +"至" + formatTime(paymentDetailBean!!.exp_time)
             tv_btn_change_package.setOnClickListener {
                 buyChangePackage()
             }
         }
     }
-    fun formatTime (time:String):String{
-        return   if (time.length > 10) time.substring(0,10) else time
-    }
+
     private fun initInfoEvent(item:DeviceDetailBean.Data){
         tvFindLocation.setOnClickListener {
             getPermissions(activity,
@@ -617,13 +661,11 @@ class FgtHome : MainTabFragment() {
             if (it != null) {
                 var listener = View.OnClickListener {
                     when (it.id) {
-                        R.id.option1 -> {
-                            FgtMain.instance?.start(FgtSinglePay.newInstance(CURRENT_DEVICEID))
-                        }
+                        R.id.option1 -> FgtMain.instance?.start(FgtSinglePay.newInstance(CURRENT_DEVICEID))
                         R.id.option2 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
                     }
                 }
-                ChangePackagePopup(it, listener)
+                BuyChangePackagePopup(it, listener)
             }
 
         }

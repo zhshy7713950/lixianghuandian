@@ -1,4 +1,4 @@
-package com.ruimeng.things.home
+package com.ruimeng.things.home.view
 
 import android.app.Activity
 import android.graphics.drawable.ColorDrawable
@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.ruimeng.things.R
-import wongxd.common.checkPackage
 
-class ChangePackagePopup(
+class BuyChangePackagePopup(
     private val activity: Activity,
     private val listener:View.OnClickListener
 ) : PopupWindow(activity) {

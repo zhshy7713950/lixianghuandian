@@ -1,38 +1,60 @@
-package com.utils;
+package com.utils
 
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
+import java.lang.Exception
 
-public class TextUtil {
-
-    public static String formatTime(String startTime,String endTime){
-        if (TextUtils.isEmpty(startTime) || TextUtils.isEmpty(endTime)){
-            return "暂无";
-        }else if (startTime.length() > 10 && endTime.length() > 10){
-            return startTime.replace("-","/").substring(0,10) + "至"+ endTime.replace("-","/").substring(0,10);
-        }else {
-            return startTime + "至" + endTime;
+object TextUtil {
+    fun formatTime(startTime: String?, endTime: String?): String {
+        try {
+            val time =  if (startTime== null || endTime == null) {
+                "暂无"
+            } else if (startTime.length > 10 && endTime.length > 10) {
+                startTime.replace("-", "/").substring(0, 10) + "至" + endTime.replace("-", "/")
+                    .substring(0, 10)
+            } else {
+                startTime + "至" + endTime
+            }
+            return time
+        }catch (e :Exception){
+            e.printStackTrace()
+            return  "暂无"
         }
+
+
     }
 
-    public static SpannableString getSpannableString(String[] text,String[] colors){
-        if (text.length != colors.length){
-            return new SpannableString("");
+    fun getSpannableString(text: Array<String>, colors: Array<String> = arrayOf("#929FAB","#FFFFFF")): SpannableString {
+        try {
+            if (text.size != colors.size) {
+                return SpannableString("")
+            }
+            var s = ""
+            for (t in text) {
+                s = s + t
+            }
+            val spannableString = SpannableString(s)
+            var startPos = 0
+            for (i in text.indices) {
+                if (!TextUtils.isEmpty(text[i])) {
+                    val colorSpan = ForegroundColorSpan(Color.parseColor(colors[i]))
+                    spannableString.setSpan(
+                        colorSpan,
+                        startPos,
+                        startPos + text[i].length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    startPos += text[i].length
+                }
+            }
+            return spannableString
+        }catch (e :Exception){
+            e.printStackTrace()
+            return SpannableString("");
         }
-        String s = "";
-        for (String t:text){
-            s = s + t;
-        }
-        SpannableString spannableString = new SpannableString(s);
-        int startPos = 0;
-        for (int i = 0; i < text.length; i++) {
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor(colors[i]));
-            spannableString.setSpan(colorSpan, startPos, startPos+text[i].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            startPos += text[i].length() ;
-        }
-        return spannableString;
+
     }
 }

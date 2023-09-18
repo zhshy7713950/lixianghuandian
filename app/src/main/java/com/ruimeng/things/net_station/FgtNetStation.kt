@@ -24,6 +24,7 @@ import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
+import wongxd.utils.utilcode.util.SPUtils
 
 /**
  * Created by wongxd on 2019/7/3.
@@ -47,7 +48,7 @@ class FgtNetStation : MainTabFragment() {
                         "租电服务站点" == titleList[currentIndex] -> {"2"}
                         else -> {"3"}
                     }
-                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,fragmentList.get(currentIndex).getStationList()))
+                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,"",fragmentList.get(currentIndex).getStationList()))
                 }
         }
 
@@ -189,11 +190,13 @@ class FgtNetStation : MainTabFragment() {
             allGranted = {
 
                 AMapLocUtils().getLonLat(activity?.applicationContext) {
-                    Log.e("pos", it.latitude.toString() + "--" + it.longitude.toString())
+                    Log.i("TAG", "setView: ${it.province}:${it.city}")
                     App.lat = it.latitude
                     App.lng = it.longitude
                     App.province = it.province
                     App.city = it.city
+                    SPUtils.getInstance().put("SP_PROVINCE",it.province)
+                    SPUtils.getInstance().put("SP_City",it.city)
                     loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
                     dlg.dismissWithAnimation()
                 }

@@ -279,38 +279,47 @@ class FgtFindBattery : BaseBackFragment() {
      */
     private fun addBatteryMarkder(lat: Double, lng: Double, timeline: Int) {
 
-
         markerOption = MarkerOptions()
             .zIndex(10f)
             .position(LatLng(lat, lng))
             .draggable(false)
-
-
         val v = View.inflate(activity, R.layout.layout_battery_marker, null)
         val tvTime = v.findViewById<TextView>(R.id.tv_time)
         val tvLocation = v.findViewById<TextView>(R.id.tv_location)
-
         tvTime.text = timeline.toLong().getTime()
-
-
         markerOption?.icon(BitmapDescriptorFactory.fromView(v))
-
         aMap?.addMarker(markerOption)
 
         aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
+
+
+
 
         val geocoder = GeocodeSearch(activity)
         geocoder.getFromLocationAsyn(RegeocodeQuery(LatLonPoint(lat,lng),100f,GeocodeSearch.AMAP))
         geocoder.setOnGeocodeSearchListener(object :OnGeocodeSearchListener{
             override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
+                Log.i("TAG", "onRegeocodeSearched: "+p1)
                 if (p1 == 1000 && p0 != null){
+                    aMap?.clear()
+                    val v = View.inflate(activity, R.layout.layout_battery_marker, null)
+                    val tvTime = v.findViewById<TextView>(R.id.tv_time)
+                    val tvLocation = v.findViewById<TextView>(R.id.tv_location)
                     tvLocation.text = p0.regeocodeAddress.formatAddress
+                    tvTime.text = timeline.toLong().getTime()
+                    markerOption?.icon(BitmapDescriptorFactory.fromView(v))
+                    aMap?.addMarker(markerOption)
+
+                    aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
+
+
                 }else{
                     ToastUtils.showShortSafe("状态码"+p1)
                 }
             }
 
             override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+                Log.i("TAG", "onGeocodeSearched: ")
             }
 
         })

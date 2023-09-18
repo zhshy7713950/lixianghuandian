@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+    <LinearLayout
+        android:id="@+id/ll_01"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:paddingLeft="12dp"
+        android:paddingBottom="20dp"
+        android:paddingRight="12dp"
+        android:background="@drawable/rectangle_gray_bg_top">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="换电套餐说明"
+                android:textColor="#ffffffff"
+                android:textSize="15sp"
+                android:layout_gravity="center"
+                />
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/camera_close"
+                android:layout_gravity="right"
+                android:scaleType="centerInside"/>
+        </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="四川享锂来科技有限公司（创立于2018年3月，注册于天府新区自贸区，注册资金1000万元。公司自成立之初，便着力于打造“享锂来”及“精明睿锂”智慧锂电运营平台，力争实现锂电池在全社会的便捷应用，为全社会提供优质、智慧、便捷的能源及能源解决方案。
+
+一、享锂来科技简介
+
+我公司主要从事锂离子电池组租赁、销售业务，致力于解决现行市场上低速电动车能源使用问题，并为电动车提供质量上乘的锂电池及优秀的电池管理系统平台。我公司所研发锂离子电池组属于国内首创，技术水平领先于国内锂电行业，产品上市以来，为广大市民以及大量快递、配送、环卫行业的从业人员带来了方便与安全。现属于西南首家开展锂电共享租赁的能源运营商，目前已经获取了成都、南充、遂宁、隆昌、攀枝花等大部分川内市场，以及贵州、上海、重庆、江苏等部分省外市场。由我公司提供的锂电池共享租赁模式和锂电池物联网平台优势，正逐渐改变整个传统能源运营模式，让整个社会享受“物美价廉”的清洁能源，而且我公司所推出的锂电池在动力电源使用之后，还能够在储能领域继续使用。
+
+二、精明睿锂APP简介
+
+享锂来科技特斥资打造享锂来APP系统平台，采用了先进的物联网技术，拥有电池监测、电池控制、远程租赁等多项自主知识产权，实现了电池状态性能远程评估和大数据分析，最终远程通过智能终端监控、远程设备控制、远程指挥等功能实现对锂电的控制。通过云计算平台与物联网终端的结合，使得服务器能完全自主订单管理、订单结算、客服答疑等完全自助服务。该平台还能最大化全寿命周期的电池利用，提供一个尽可能兼容所有应用场景，使得客户能随时随地准确地监控电池的工作状态、当前位置，这不仅保证了电池的安全使用，更是杜绝了目前电池容易被盗这一长久困扰用户的难题。
+
+主要功能：软件主要是满足广大电动汽车用户对于电池租赁使用需求，降低用户电池使用成本。
+
+技术特点：系统采用软硬件相结合的方式，通过在电池内置GPS芯片，用户随时可以查看设备所在位置。同时，用户也可以通过手机APP及时监控电池状态是否处于正常工作环境，若发生异常，及时将异常反馈给用户，保证用户随时随地都能正常用车。"
+            android:textColor="#ffb1bdc9"
+            android:textSize="15sp"
+            />
+    </LinearLayout>
+
+</FrameLayout>

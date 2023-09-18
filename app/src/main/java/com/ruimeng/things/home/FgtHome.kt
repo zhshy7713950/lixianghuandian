@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
@@ -73,7 +74,6 @@ class FgtHome : MainTabFragment() {
          */
         fun tryToScan(prefix: String = "", oldContractId: String = "", isHost: String = "") {
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                Log.i("data===", "===contract_id2===${oldContractId}")
                 AtyScanQrcode.start(getCurrentAty(), prefix, oldContractId, isHost)
             })
 
@@ -142,12 +142,16 @@ class FgtHome : MainTabFragment() {
         val userInfo = InfoViewModel.getDefault().userInfo.value
         userInfo?.let {
             if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1") {
-                startFgt(FgtBindPhone())
+                val intent = Intent(activity,AtyLogin::class.java)
+                intent.putExtra("pageType",1)
+                activity?.startActivity(intent)
             }
             userId = userInfo.id
             tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else View.GONE
             tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else View.GONE
+            tv_title.text = userInfo.nickname
         }
+
 
         CURRENT_DEVICEID = Config.getDefault().spUtils.getString(KEY_LAST_DEVICE_ID)
 
@@ -464,7 +468,7 @@ class FgtHome : MainTabFragment() {
                                 intent.putExtra("type", "换电")
                                 intent.putExtra("contract_id", getContractId)
                                 intent.putExtra("new_deviceid", result)
-                                intent.putExtra("name", paymentDetailBean!!.paymentInfo.pname)
+                                intent.putExtra("name", if (paymentDetailBean != null && paymentDetailBean!!.paymentInfo != null) paymentDetailBean!!.paymentInfo.pname else "")
                                 startActivity(intent)
                             }
                         }
@@ -538,19 +542,6 @@ class FgtHome : MainTabFragment() {
         tv_detail_fet.text = info.fet
         tv_detail_software_ver.text = info.softversion
     }
-    private fun showSinglePackageInfo(){
-        val option = paymentDetailBean?.singleChangeInfo
-        if (option != null){
-            tv_change_package_type.text ="单次换电"
-            tv_change_package_left_times.text = "剩余1次"
-            tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
-            val statusRes = if(option.active_time == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
-            tv_change_package_title.setCompoundDrawables(null,null,resources.getDrawable(statusRes),null)
-            hasChangePackege = true
-        }else{
-            hasChangePackege = false
-        }
-    }
     private fun showPackageInfo(){
         hasChangePackege = false
         if (paymentDetailBean != null){
@@ -574,39 +565,66 @@ class FgtHome : MainTabFragment() {
                    options.add(singleOption)
                 }
                 options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
-
+                //是否有换电套餐
                 if (!options.isEmpty()){
-                    cl_change_package.visibility = View.VISIBLE
-                    tv_no_package.visibility = View.GONE
-                    var option  = options[0]
-                    if (option != null){
-                        tv_change_package_type.text = if(option.single_option) "单次换电" else "包次换电"
-                        tv_change_package_left_times.text = "剩余${option.change_times}次"
-                        tv_change_package_time.text = TextUtil.formatTime(option.show_start_time,option.show_end_time)
-                        val statusRes = if(option.active_time == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
-                        tv_change_package_title.setCompoundDrawables(null,null,resources.getDrawable(statusRes),null)
-                    }
+                    // 是否有生效套餐
+                    if (options.count { it.active_status == "1" } > 0){
+                        cl_change_package.visibility = View.VISIBLE
+                        tv_no_package.visibility = View.GONE
+                        var option  = options[0]
+                        if (option != null){
+                            tv_change_package_type.text = if(option.single_option) "单次换电" else "换电${option.total_times}次"
+                            tv_change_package_left_times.text = "剩余${option.change_times}次"
+                            tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
+                            val statusRes = if(option.active_status == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
+                            tv_change_package_title.setCompoundDrawablesWithIntrinsicBounds(null,null,
+                                context?.let { ContextCompat.getDrawable(it,statusRes) },null)
+                        }
 
-
-                    hasChangePackege = true
-                    tv_btn_change_package.visibility = View.GONE
-                    tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
-                    tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
-                    tv_btn_change_package_update.setOnClickListener {
-                        doContinueRant()
-                    }
-                    tv_more.setOnClickListener {
-                        activity?.let { it1 -> ChangePackageListPopup(it1, options) }
+                        hasChangePackege = true
+                        tv_btn_change_package.visibility = View.GONE
+                        tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
+                        tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
+                        tv_btn_change_package_update.setOnClickListener {
+                            doContinueRant()
+                        }
+                        tv_more.setOnClickListener {
+                            activity?.let { it1 -> ChangePackageListPopup(it1, options) }
+                        }
+                    }else{
+                        cl_change_package.visibility = View.GONE
+                        tv_btn_change_package.text = "立即启用"
+                        tv_no_package.text = "您有待生效套餐未启用"
+                        tv_no_package.visibility = View.VISIBLE
+                        tv_btn_change_package.visibility = View.VISIBLE
+                        tv_btn_change_package.setOnClickListener {
+                            activeOption(options.filter { it.active_status =="2" }.first().option_id)
+                        }
                     }
                 }else{
                     cl_change_package.visibility = View.GONE
                     tv_btn_change_package.text = "购买换电套餐"
                     tv_no_package.visibility = View.VISIBLE
                     tv_btn_change_package.visibility = View.VISIBLE
+                    tv_btn_change_package.setOnClickListener {
+                        buyChangePackage()
+                    }
                 }
             }
-            tv_btn_change_package.setOnClickListener {
-                buyChangePackage()
+
+        }
+    }
+
+    private fun activeOption(id:String){
+        http {
+            url = "/apiv6/payment/activeoption"
+            params["user_option_id"] = "${id}"
+            onSuccess {
+                ToastHelper.shortToast(context,"启用成功")
+                getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
+            }
+            onFail { i, s ->
+                ToastHelper.shortToast(context,s)
             }
         }
     }
@@ -624,17 +642,22 @@ class FgtHome : MainTabFragment() {
         }
         tvWay.setOnClickListener { startFgt(FgtTrajectory()) }
         tvSwitch.setOnClickListener {
-            val intent = Intent(activity, ScanQrCodeActivity::class.java)
-            intent.putExtra("type", "换电")
-            intent.putExtra("contract_id", item.device_contract.contract_id)
-            startActivityForResult(intent, 1)
+            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                intent.putExtra("type", "换电")
+                intent.putExtra("contract_id", item.device_contract.contract_id)
+                startActivityForResult(intent, 1)
+            })
+
         }
         tvReback.setOnClickListener {startFgt(FgtReturn())  }
         changeOpenDoor?.setOnClickListener {
             if (hasChangePackege){
-                val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                intent.putExtra("type", "换电开门")
-                startActivityForResult(intent, 1)
+                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                    intent.putExtra("type", "换电开门")
+                    startActivityForResult(intent, 1)
+                })
             }else{
                 buyChangePackage()
             }

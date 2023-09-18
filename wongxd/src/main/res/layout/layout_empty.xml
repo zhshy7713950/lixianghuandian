@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="match_parent"
+	android:background="#2E3440"
+	android:orientation="vertical">
+	<ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/bg_empty"
+		android:layout_gravity="center_horizontal"
+		android:layout_marginTop="80dp"/>
 
 
 	<TextView
-			android:textSize="16sp"
-			android:layout_gravity="center"
-			android:id="@+id/tv_page_empty"
-			android:text="这里空空的..."
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+		android:id="@+id/tv_page_empty"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="暂无内容"
+		android:textColor="#ffabb8c4"
+		android:textSize="14sp"
+		android:layout_marginTop="10dp"
+		android:layout_gravity="center_horizontal"
+		/>
 
 
-</FrameLayout>
+</LinearLayout>

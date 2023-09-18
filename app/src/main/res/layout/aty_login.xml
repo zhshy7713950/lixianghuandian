@@ -129,6 +129,7 @@
 			app:layout_constraintLeft_toLeftOf="parent"
 			android:layout_marginLeft="38dp"
 			android:layout_marginBottom="40dp"
+			android:checked="false"
 			android:button="@drawable/check_box"/>
 		<TextView
 			android:id="@+id/tv_login_protocol"
@@ -155,6 +156,7 @@
 			app:layout_constraintBottom_toTopOf="@id/tv_login_protocol"
 			android:layout_marginBottom="40dp"/>
 		<TextView
+			android:id="@+id/tv_3"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="使用其他方式登录"

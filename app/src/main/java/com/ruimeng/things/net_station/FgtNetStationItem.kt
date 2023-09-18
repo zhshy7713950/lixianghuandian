@@ -84,7 +84,9 @@ class FgtNetStationItem : MainTabFragment() {
 
 
         dealSelectCurrentCity()
-
+        qfl_search_station.setOnClickListener {
+            getList()
+        }
     }
 
     /**
@@ -167,6 +169,7 @@ class FgtNetStationItem : MainTabFragment() {
                 }
             }
             params["city_id"] = city?.id ?: ""
+            params["name"] = et_search_station.text.toString()
 
             onFinish { srl_station?.finishRefresh() }
 

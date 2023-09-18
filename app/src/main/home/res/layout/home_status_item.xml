@@ -469,6 +469,7 @@
 							tools:text="剩余28次" />
 
 						<TextView
+							android:id="@+id/tv_change_package_time_title"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_marginTop="91dp"

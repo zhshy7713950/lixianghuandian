@@ -19,6 +19,7 @@ import com.ruimeng.things.PathV3
 import com.ruimeng.things.me.contract.bean.MyContractDetailBean
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManager
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManagerListener
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.*
 import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.doAsync
@@ -151,11 +152,22 @@ class FgtMyContractDetail : BaseBackFragment() {
                             }
                     }
 
-                    tv_device_num_my_contract_detail.text = "编号：${bean.device_id}"
+                    tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
-                    tv_rent_long_my_contract_detail.text = "租期：${bean.renttime_str}"
-                    tv_deposit_my_contract_detail.text = "押金：¥${bean.deposit}"
-                    tv_rent_money_my_contract_detail.text = "租金：¥${bean.rent}"
+                    tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
+                    tv_deposit_my_contract_detail.text = "¥${bean.deposit}"
+                    tv_rent_money_my_contract_detail.text = "¥${bean.rent}"
+                    tv_base_package.text = TextUtil.getSpannableString(arrayOf("基本套餐：",bean.paymentName))
+                    tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
+                    val option = bean.userOptions?.filter { it.option_type == "2" }?.first()
+                    if (option != null){
+
+                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","换电${option.total_times}次"))
+                        tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
+                    }
+
+
+
 
                     pdfUrl = bean.pdf
                     pngs.clear()

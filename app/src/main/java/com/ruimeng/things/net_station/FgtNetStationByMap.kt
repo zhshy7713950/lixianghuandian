@@ -19,6 +19,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
+import kotlinx.android.synthetic.main.fgt_net_station_item.et_search_station
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
@@ -37,10 +38,11 @@ import wongxd.utils.SystemUtils
  */
 class FgtNetStationByMap : BaseBackFragment() {
     companion object {
-        fun newInstance(type: String = "", locations: ArrayList<NetStationBean.Data.X>): FgtNetStationByMap {
+        fun newInstance(type: String = "",name:String = "", locations: ArrayList<NetStationBean.Data.X>): FgtNetStationByMap {
             val fgt = FgtNetStationByMap()
             val b = Bundle()
             b.putString("type", type)
+            b.putString("name",name)
             b.putParcelableArrayList("list",locations)
             fgt.arguments = b
             return fgt
@@ -49,6 +51,7 @@ class FgtNetStationByMap : BaseBackFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_by_map
     private val getType by lazy { arguments?.getString("type", "") ?: "" }
+    private val name by lazy { arguments?.getString("name", "") ?: "" }
     private var mCurrentMemMarker: Marker? = null
     private val markInfoMap: MutableMap<String, NetStationBean.Data.X> = mutableMapOf()
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
@@ -242,6 +245,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                     }
                 }
                 params["city_id"] = ""
+                params["name"] = name
 
                 onSuccess { res ->
                     rootView?.let {

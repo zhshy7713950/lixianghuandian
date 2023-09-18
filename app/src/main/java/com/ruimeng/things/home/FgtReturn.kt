@@ -140,6 +140,7 @@ class FgtReturn : BaseBackFragment() {
                     EasyToast.DEFAULT.show(msg)
                     resetStatus()
                     srl_reapair_log.autoRefresh()
+                    pop()
                 }
 
             }
@@ -325,7 +326,11 @@ class FgtReturn : BaseBackFragment() {
                         .setText(R.id.tv_return_back,TextUtil.getSpannableString(arrayOf("车架是否退还：", if ("0".equals(b.retrun_host)) "否" else "是" ),textColors))
                         .setGone(R.id.tv_desc,!TextUtils.isEmpty(b.msg))
                         .setText(R.id.tv_desc,TextUtil.getSpannableString(arrayOf("退还原因：", b.msg ),textColors))
-
+                        .setVisible(R.id.rv_photo,!TextUtils.isEmpty(b.img))
+                val rvPhoto = a.getView<RecyclerView>(R.id.rv_photo)
+                 val postImgAdapter = PostImgAdapter(mContext, b.img.split(","))
+                rvPhoto.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                rvPhoto.setAdapter(postImgAdapter)
 
             }
         }

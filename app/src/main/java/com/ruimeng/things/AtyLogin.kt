@@ -27,11 +27,14 @@ import java.lang.ref.WeakReference
  */
 class AtyLogin : AtyBase() {
     private  var phone:String = ""
+    private var pageType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_login)
-
+        pageType = intent.getIntExtra("pageType",0)
+        iv_wechat_login.visibility = if (pageType == 0) View.VISIBLE else View.GONE
+        tv_3.visibility = if (pageType == 0) View.VISIBLE else View.GONE
 
         tv_get_code.setOnClickListener { getLoginCode() }
         tv_reget_code.setOnClickListener{getLoginCode()}
@@ -133,7 +136,7 @@ class AtyLogin : AtyBase() {
             ll_code.visibility = View.GONE
             ll_phone.visibility =View.VISIBLE
             ll_other.visibility = View.VISIBLE
-            tv_title1.text ="手机验证码登录"
+            tv_title1.text =  if (pageType == 0) "手机验证码登录" else "绑定手机号码"
             tv_title2.text="未注册的手机号验证后将创建新账号"
         }else{
             ll_code.visibility = View.VISIBLE
@@ -167,15 +170,26 @@ class AtyLogin : AtyBase() {
     }
     private fun doLoginHttp(phone:String,code: String) {
         http {
-            url = Path.MOBLILE_LOGIN
+            url =  if (pageType == 0 ) Path.MOBLILE_LOGIN else Path.BIND_MOBILE
             params["mobile"] = phone
             params["code"] = code
 
-            onSuccess {
-                val loginBean = it.toPOJO<LoginBean>()
-                UserInfoLiveData.setToString(loginBean.data.userinfo)
-                Config.getDefault().token = loginBean.data.token
-                startAty<AtyMain>()
+            onSuccessWithMsg {s,msg->
+                if (pageType == 0){
+                    val loginBean = s.toPOJO<LoginBean>()
+                    UserInfoLiveData.setToString(loginBean.data.userinfo)
+                    Config.getDefault().token = loginBean.data.token
+                    startAty<AtyMain>()
+                }else{
+                    val origin = InfoViewModel.getDefault().userInfo.value
+                    origin?.mobile_bind="1"
+                    origin?.mobile = phone
+                    InfoViewModel.getDefault().userInfo.postValue(origin)
+
+                    UserInfoLiveData.refresh()
+                    EasyToast.DEFAULT.show(msg)
+                }
+
                 finish()
             }
 
@@ -185,7 +199,21 @@ class AtyLogin : AtyBase() {
         }
     }
 
+    override fun onBackPressedSupport() {
+        if (pageType == 1){
+            EasyToast.DEFAULT.show("请先完成绑定手机的操作")
+        }else{
+            super.onBackPressedSupport()
+        }
+
+
+
+    }
     private fun getLoginCode() {
+        if (!isAgree) {
+            EasyToast.DEFAULT.show("请同意《登陆注册协议》")
+            return
+        }
         phone = et_phone.text.toString()
         if (phone.isBlank()) {
             EasyToast.DEFAULT.show("请输入手机号")
@@ -195,7 +223,7 @@ class AtyLogin : AtyBase() {
         http {
             url = Path.GET_CODE
             params["mobile"] = phone
-            params["tag"] = "login"
+            params["tag"] = if (pageType == 0) "login" else "bindmobile"
 
             onSuccess {
                 EasyToast.DEFAULT.show("验证码已发送")
@@ -212,7 +240,7 @@ class AtyLogin : AtyBase() {
         }
     }
 
-    private var isAgree = true
+    private var isAgree = false
 
     private fun postWechatCode(code: String) {
         http {

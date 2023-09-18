@@ -2,12 +2,16 @@ package com.ruimeng.things.me
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.qmuiteam.qmui.widget.QMUITabSegment
+import com.ruimeng.things.FgtMain
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.home.FgtPayRentMoney
 import com.ruimeng.things.me.bean.MyCouponBean
 import kotlinx.android.synthetic.main.fgt_ticket.*
 import wongxd.base.BaseBackFragment
@@ -105,6 +109,9 @@ class FgtTicket : BaseBackFragment() {
                             .setTextColor(R.id.tv_coupon_name,Color.parseColor("#F9BB6C"))
                             .setTextColor(R.id.tv_limit,Color.parseColor("#FFFFFF"))
                             .setText(R.id.tv_use,"未使用")
+                        a.getView<View>(R.id.ll_content).setOnClickListener {
+                            FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+                        }
 
                     }else{
                         a.setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))

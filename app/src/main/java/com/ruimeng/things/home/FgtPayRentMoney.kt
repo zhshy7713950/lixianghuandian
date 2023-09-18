@@ -38,6 +38,8 @@ import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.home.bean.PaymentOption
 import com.ruimeng.things.home.bean.UpdateGetRentBean
+import com.ruimeng.things.home.view.CompanyDescPopup
+import com.ruimeng.things.home.view.SelectCouponPopup
 import com.ruimeng.things.me.FgtTicket
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.credit.FgtCreditSystem
@@ -62,6 +64,7 @@ import wongxd.common.getSweetDialog
 import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http
+import java.lang.Exception
 import java.util.Arrays
 
 
@@ -102,6 +105,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         getRent()
         dealPayWay()
         initView()
+        initTicket()
     }
     private fun initView(){
         if (pageType == PAGE_TYPE_CREATE){
@@ -115,6 +119,9 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_base_package_update_title.text = "可选续期套餐"
             tv_base_package_update_title.textColor = Color.parseColor("#29ebb6")
             tv_expand.visibility = View.VISIBLE
+        }
+        tv_company_desc.setOnClickListener {
+            activity?.let { it1 -> CompanyDescPopup(it1) }
         }
     }
     @Subscribe
@@ -240,11 +247,6 @@ class FgtPayRentMoney : BaseBackFragment() {
         return if (TextUtils.isEmpty(timeStr)) ":" else timeStr.substring(0,10)
     }
     private fun initViewAfterData(list: List<PaymentInfo>) {
-        if (list.isEmpty()){
-            ToastHelper.shortToast(context,"没有找到套餐")
-            return
-        }
-        newGetRentBean = list.get(0)
         baseInfo.let {
             tv_battery_num_pay_rent_money.text = it!!.device_id
             tv_battery_model_pay_rent_money.text = it!!.model_name
@@ -255,6 +257,12 @@ class FgtPayRentMoney : BaseBackFragment() {
                 tryReturnDeposit(baseInfo!!.contract_id)
             }
         }
+        if (list.isEmpty()){
+            ToastHelper.shortToast(context,"没有找到套餐")
+            return
+        }
+        newGetRentBean = list.get(0)
+
 
 
 
@@ -335,7 +343,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         computeAmount()
 
-        initTicket()
+
 
         btn_pay_now_pay_rent_money.setOnClickListener { view ->
 
@@ -351,108 +359,8 @@ class FgtPayRentMoney : BaseBackFragment() {
             }
 
 
-            dlgPayProgress = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
-            dlgPaySuccessed =
-                getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") { paySuccessed() }
-            dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")
 
-
-            dlgPayProgress?.show()
-
-            http {
-//                url = Path.GET_RENT_PAY
-//                url = "apiv5/getrentpay"
-                url =  if(pageType == PAGE_TYPE_CREATE)  "apiv6/payment/payrentmoney" else "/apiv6/payment/upgradepay"
-                jsonParam  = getSubmitParam()
-                //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权
-                jsonParam["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
-                else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.AL) "2"
-                else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.BT) "3"
-                else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.FQ) "4"
-                else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.GROUPPAP) "102"
-                else "99"
-
-
-
-                onFail { code, msg ->
-                    dlgPayProgress?.dismiss()
-                    dlgPayFailed?.apply {
-                        this.contentText = msg
-                        show()
-                    }
-                }
-
-                onSuccessWithMsg { s, msg ->
-                    //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"wxpay":{"appId":"1","partnerId":"2","prepayId":"3","packageValue":"4","nonceStr":"5","timeStamp":"6","sign":"7"},"alipay":{"paystr":1542265595},"orderid":"10c2c019-b4b8-d764-48ba-cb573865b080"}}
-                    val result = s.toPOJO<GetRentPayBean>().data
-
-                    when (PAY_WAY_TAG) {
-                        FgtDeposit.Companion.PayWay.WX -> {
-                            val entity = WXEntryActivity.WxPayEntity()
-                            result.wxpay.let {
-                                entity.appId = it.appId
-                                entity.nonceStr = it.nonceStr
-                                entity.packageValue = it.packageValue
-                                entity.partnerId = it.partnerId
-                                entity.prepayId = it.prepayId
-                                entity.sign = it.sign
-                                entity.timeStamp = it.timeStamp
-                            }
-
-                            WXEntryActivity.wxPay(
-                                activity,
-                                entity,
-                                object : WXEntryActivity.WxCallback {
-                                    override fun onsuccess(code: String?, msg: String?) {
-                                        getServerPayResult(result.orderid, true)
-                                    }
-
-                                    override fun onFail(msg: String?) {
-                                        getServerPayResult(result.orderid, false)
-                                    }
-                                })
-                        }
-                        FgtDeposit.Companion.PayWay.AL -> {
-
-                            BaseAlipay.tryPay(result.alipay.paystr) { resultInfo, resultStatus, isLocalSuccessed ->
-                                getServerPayResult(result.orderid, isLocalSuccessed)
-                            }
-
-                        }
-                        FgtDeposit.Companion.PayWay.BT -> {
-                            dlgPayProgress?.dismiss()
-                            EventBus.getDefault().post(BatteryInfoChangeEvent(deviceId))
-                            EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
-                            startWithPop(FgtCreditSystem())
-                        }
-//                        FgtDeposit.Companion.PayWay.FQ -> {
-//                            dlgPayProgress?.dismiss()
-//                            start(
-//                                FgtRentInstallmentPayment.newInstance(
-//                                    data.contract_id,
-//                                    result.orderid
-//                                )
-//                            )
-//                        }
-                        FgtDeposit.Companion.PayWay.GROUPPAP -> {
-                            dlgPayProgress?.dismiss()
-                            dlgPaySuccessed?.show()
-                        }
-                        else -> {
-                            dlgPayProgress?.dismiss()
-                            dlgPaySuccessed?.show()
-                        }
-                    }
-
-                }
-
-                onFinish {
-                    btn_pay_now_pay_rent_money.postDelayed({
-                        dlgPayProgress?.dismissWithAnimation()
-                    }, 10 * 1000)
-                }
-            }
-
+            computeAmount(true)
 
         }
 
@@ -476,7 +384,26 @@ class FgtPayRentMoney : BaseBackFragment() {
 
         iv_check_pay_rent_money.performClick()
         tv_ticket_pay_rent_money.setOnClickListener {
-            pvOptions?.show()
+            if (!couponList.isEmpty()){
+                activity?.let { it1 ->
+                    SelectCouponPopup(it1, couponList,couponId,object :BaseQuickAdapter.OnItemClickListener{
+                        override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+                            val item = couponList[p2]
+                            if (couponId == item.id){
+                                tv_ticket_pay_rent_money.text = "不使用优惠券"
+                                couponId = 0
+                            }else{
+                                tv_ticket_pay_rent_money.text = item.coupon_label
+                                couponId = item.id
+                            }
+                            computeAmount()
+                        }
+                    })
+                }
+            }
+
+//            pvOptions?.show()
+//            activity?.window?.let { it1 -> couponPopup?.show(it1.decorView) }
         }
     }
 
@@ -489,6 +416,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
     private var retryTime = 0
+    val couponList = mutableListOf<MyCouponBean.Data>()
 
     /**
      * 获取服务器上的支付结果
@@ -574,23 +502,23 @@ class FgtPayRentMoney : BaseBackFragment() {
             onSuccess {
                 IS_TICKET_DATA_INIT = true
                 val result = it.toPOJO<MyCouponBean>().data
-                val list = mutableListOf<MyCouponBean.Data>()
-                list.add(MyCouponBean.Data("", "不使用优惠券", "", "0(不使用)"))
-                list.addAll(result)
+
+                couponList.addAll(result)
+
 
 
                 //条件选择器
-                pvOptions = OptionsPickerBuilder(activity
-                ) { options1, option2, options3, v ->
-                    //返回的分别是三个级别的选中位置
-                    val item = list[options1]
-                    tv_ticket_pay_rent_money.text = item.coupon_label
-                    couponId = item.id
-                    tv_ticket_pay_rent_money.performClick()
-                    computeAmount()
-                }
-                    .build<MyCouponBean.Data>()
-                pvOptions?.setPicker(list)
+//                pvOptions = OptionsPickerBuilder(activity
+//                ) { options1, option2, options3, v ->
+//                    //返回的分别是三个级别的选中位置
+//                    val item = list[options1]
+//                    tv_ticket_pay_rent_money.text = item.coupon_label
+//                    couponId = item.id
+//                    tv_ticket_pay_rent_money.performClick()
+//                    computeAmount()
+//                }
+//                    .build<MyCouponBean.Data>()
+//                pvOptions?.setPicker(list)
             }
 
 
@@ -645,6 +573,9 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
     private fun showBaseInfo(data: UpdateGetRentBean.Data){
 
+        try {
+
+
         tv_base_package_name.text = data.baseInfo.paymentName
         tv_base_package_time.text = data.baseInfo.exp_time
 
@@ -661,11 +592,11 @@ class FgtPayRentMoney : BaseBackFragment() {
             changeOptions.forEach {
                 if (it.active_status == "1") {
                     ll_change_package_active.visibility = View.VISIBLE
-                    tv_change_package_name1.text = it.name
+                    tv_change_package_name1.text = "换电${it.total_times}次"
                     tv_change_package_time1.text = "${TextUtil.formatTime(it.start_time,it.end_time)}"
                 } else if (it.active_status == "2") {
                     ll_change_package_no_active.visibility = View.VISIBLE
-                    tv_change_package_name2.text = it.name
+                    tv_change_package_name2.text = "换电${it.total_times}次"
                     tv_change_package_time2.text = "${TextUtil.formatTime(it.start_time,it.end_time)}"
                 }
             }
@@ -681,20 +612,126 @@ class FgtPayRentMoney : BaseBackFragment() {
                 tv_expand.text = "展开"
             }
         }
+        }catch ( e:Exception){
+            e.printStackTrace()
+            Log.e("TAG", "showBaseInfo: "+e.message )
+        }
     }
 
-    private fun computeAmount() {
+    private fun computeAmount(submit:Boolean = false) {
         http {
             url = "/apiv6/payment/computeamount"
             jsonParam = getSubmitParam()
             onSuccessWithMsg { res, msg ->
-
                 val result = res.toPOJO<CountAmountBean>().data
                 tv_total_price.text  = "¥${result.totalPrice}"
                 tv_coupon_price.text  = "已优惠¥${result.couponAmount}"
+                if (submit){
+                    countPay()
+                }
             }
+
         }
     }
+
+    private fun countPay(){
+        dlgPayProgress = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
+        dlgPaySuccessed = getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") { paySuccessed() }
+        dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")
+        dlgPayProgress?.show()
+        http {
+            url =  if(pageType == PAGE_TYPE_CREATE)  "apiv6/payment/payrentmoney" else "/apiv6/payment/upgradepay"
+            jsonParam  = getSubmitParam()
+            //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权
+            jsonParam["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
+            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.AL) "2"
+            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.BT) "3"
+            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.FQ) "4"
+            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.GROUPPAP) "102"
+            else "99"
+
+            onFail { code, msg ->
+                dlgPayProgress?.dismiss()
+                dlgPayFailed?.apply {
+                    this.contentText = msg
+                    show()
+                }
+            }
+
+            onSuccessWithMsg { s, msg ->
+                //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"wxpay":{"appId":"1","partnerId":"2","prepayId":"3","packageValue":"4","nonceStr":"5","timeStamp":"6","sign":"7"},"alipay":{"paystr":1542265595},"orderid":"10c2c019-b4b8-d764-48ba-cb573865b080"}}
+                val result = s.toPOJO<GetRentPayBean>().data
+
+                when (PAY_WAY_TAG) {
+                    FgtDeposit.Companion.PayWay.WX -> {
+                        val entity = WXEntryActivity.WxPayEntity()
+                        result.wxpay.let {
+                            entity.appId = it.appId
+                            entity.nonceStr = it.nonceStr
+                            entity.packageValue = it.packageValue
+                            entity.partnerId = it.partnerId
+                            entity.prepayId = it.prepayId
+                            entity.sign = it.sign
+                            entity.timeStamp = it.timeStamp
+                        }
+
+                        WXEntryActivity.wxPay(
+                            activity,
+                            entity,
+                            object : WXEntryActivity.WxCallback {
+                                override fun onsuccess(code: String?, msg: String?) {
+                                    getServerPayResult(result.orderid, true)
+                                }
+
+                                override fun onFail(msg: String?) {
+                                    getServerPayResult(result.orderid, false)
+                                }
+                            })
+                    }
+                    FgtDeposit.Companion.PayWay.AL -> {
+
+                        BaseAlipay.tryPay(result.alipay.paystr) { resultInfo, resultStatus, isLocalSuccessed ->
+                            getServerPayResult(result.orderid, isLocalSuccessed)
+                        }
+
+                    }
+                    FgtDeposit.Companion.PayWay.BT -> {
+                        dlgPayProgress?.dismiss()
+                        EventBus.getDefault().post(BatteryInfoChangeEvent(deviceId))
+                        EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
+                        startWithPop(FgtCreditSystem())
+                    }
+//                        FgtDeposit.Companion.PayWay.FQ -> {
+//                            dlgPayProgress?.dismiss()
+//                            start(
+//                                FgtRentInstallmentPayment.newInstance(
+//                                    data.contract_id,
+//                                    result.orderid
+//                                )
+//                            )
+//                        }
+                    FgtDeposit.Companion.PayWay.GROUPPAP -> {
+                        dlgPayProgress?.dismiss()
+                        dlgPaySuccessed?.show()
+                    }
+                    else -> {
+                        dlgPayProgress?.dismiss()
+                        dlgPaySuccessed?.show()
+                    }
+                }
+
+            }
+
+            onFinish {
+                btn_pay_now_pay_rent_money.postDelayed({
+                    dlgPayProgress?.dismissWithAnimation()
+                }, 10 * 1000)
+            }
+        }
+
+    }
+
+
     private fun getSubmitParam(): MutableMap<String, Any> {
         var params: MutableMap<String, Any> = mutableMapOf()
         params["deviceId"] = deviceId

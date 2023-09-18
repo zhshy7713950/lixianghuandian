@@ -197,7 +197,7 @@
                     android:id="@+id/tv_expand"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="收起"
+                    android:text="展开"
                     android:layout_marginLeft="8dp"
                     android:textColor="#29EBB6"
                     android:textSize="12sp" />
@@ -206,6 +206,7 @@
                 android:id="@+id/ll_package"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
 
 
@@ -466,6 +467,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
+                    android:id="@+id/tv_company_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

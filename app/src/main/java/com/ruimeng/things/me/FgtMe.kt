@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.flyco.roundview.RoundViewDelegate
@@ -13,6 +15,7 @@ import com.ruimeng.things.*
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.home.FgtFollowWechatAccount
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.me.contract.FgtMyContract
@@ -22,7 +25,9 @@ import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
 import wongxd.AtyWeb
 import wongxd.base.MainTabFragment
+import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
+import wongxd.common.getCurrentAppAty
 import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
@@ -42,7 +47,7 @@ class FgtMe : MainTabFragment() {
             }
 
             tv_username_me.text =
-                if (userinfo.mobile.isBlank()) userinfo.nickname else userinfo.mobile
+                if (userinfo.nickname.isBlank()) userinfo.mobile else userinfo.nickname
 
 
             rtv_truename_status.apply {
@@ -56,7 +61,7 @@ class FgtMe : MainTabFragment() {
 
                 setCompoundDrawables(dra, null, null, null)
 
-                setTextColor(if (userinfo.realname_auth == 1) Color.GREEN else Color.WHITE)
+                setTextColor(if (userinfo.realname_auth == 1) Color.parseColor("#F79C26") else Color.WHITE)
 
                 text = if (userinfo.realname_auth == 1) "已认证" else "未认证"
 
@@ -139,22 +144,37 @@ class FgtMe : MainTabFragment() {
 
         ll_support_me.setOnClickListener {
             val tel = "4000283969"
-            NormalDialog(activity).apply {
-                style(NormalDialog.STYLE_TWO)
-                title("售后支持")
-                titleTextColor(Color.parseColor("#131414"))
-                content(tel)
-                contentGravity(Gravity.CENTER)
-                btnText("取消", "拨打")
-                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
-                setOnBtnClickL(OnBtnClickL {
-                    dismiss()
-                }, OnBtnClickL {
-                    SystemUtils.call(activity, tel)
-                    dismiss()
-                })
-                show()
-            }
+            AnyLayer.with(getCurrentAppAty())
+                .contentView(R.layout.alert_phone_call_dialog)
+                .bindData { anyLayer ->
+                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(tel)
+                    anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
+                        SystemUtils.call(activity, tel)
+                        anyLayer.dismiss()
+                    }
+                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+                        anyLayer.dismiss()
+                    }
+                }.backgroundColorInt(Color.parseColor("#85000000"))
+                .backgroundBlurRadius(10f)
+                .backgroundBlurScale(10f)
+                .show()
+//            NormalDialog(activity).apply {
+//                style(NormalDialog.STYLE_TWO)
+//                title("售后支持")
+//                titleTextColor(Color.parseColor("#131414"))
+//                content(tel)
+//                contentGravity(Gravity.CENTER)
+//                btnText("取消", "拨打")
+//                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+//                setOnBtnClickL(OnBtnClickL {
+//                    dismiss()
+//                }, OnBtnClickL {
+//                    SystemUtils.call(activity, tel)
+//                    dismiss()
+//                })
+//                show()
+//            }
         }
 
 

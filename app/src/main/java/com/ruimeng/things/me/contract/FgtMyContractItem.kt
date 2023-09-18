@@ -256,7 +256,7 @@ class FgtMyContractItem : MainTabFragment() {
                     setOnClickListener { tryReturnDeposit(b.contract_id) }
                 }
 
-                a.getView<ImageView>(R.id.iv_enter).setOnClickListener {
+                a.getView<View>(R.id.ll_content).setOnClickListener {
                     startFgt(FgtMyContractDetail.newInstance(b.contract_id, b.device_id))
                 }
             }

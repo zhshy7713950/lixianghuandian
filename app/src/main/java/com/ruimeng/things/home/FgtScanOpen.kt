@@ -70,8 +70,8 @@ class FgtScanOpen : BaseBackFragment() {
                 val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}
                 if (!options.isEmpty()){
                     tv_change_package_name.text = "${options[0].name}"
-                    tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(options[0].show_start_time)),textColors)
-                    tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(options[0].show_end_time)),textColors)
+                    tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(options[0].start_time)),textColors)
+                    tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(options[0].end_time)),textColors)
                     tv_change_times.text = "剩余${options[0].change_times}次"
                     if (options[0].change_times == "1"){
                         tv_update_package.text = "立即续期"

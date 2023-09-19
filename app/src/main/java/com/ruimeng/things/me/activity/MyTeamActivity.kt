@@ -61,6 +61,7 @@ class MyTeamActivity : AtyBase() {
     private fun initAdapter() {
         mAdapter = MyTeamAdapter(dataList)
         recyclerView?.adapter = mAdapter
+        mAdapter!!.setEmptyView(R.layout.layout_empty,recyclerView)
     }
 
     private var pageSize = 20

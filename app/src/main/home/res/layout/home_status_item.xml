@@ -106,6 +106,23 @@
 					android:textSize="10sp"
 					android:textColor="@color/white"
 					tools:text="1212323" />
+				<TextView
+					android:id="@+id/tv_error_title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="故障描述"
+					android:textColor="#96A2AA"
+					android:textSize="10sp"
+					android:visibility="gone"
+					android:layout_marginTop="4dp"/>
+				<TextView
+					android:id="@+id/tv_error_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="10sp"
+					android:visibility="gone"
+					android:textColor="@color/white"
+					tools:text="1212323" />
 			</LinearLayout>
 			<com.flyco.roundview.RoundTextView
 				android:id="@+id/tv_switch_battery"

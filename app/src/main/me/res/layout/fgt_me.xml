@@ -84,7 +84,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/iv_header_me"
                     android:drawableLeft="@mipmap/icon_not_truename_me"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="5dp"
                     android:textColor="#B2C1CE"
                     android:textSize="12sp"
                     tools:text="未认证" />
@@ -109,7 +109,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@+id/rtv_truename_status"
                     android:drawableLeft="@mipmap/icon_not_bind_wecaht_me"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="未绑定微信" />
@@ -183,8 +183,8 @@
                         android:text="账号押金"
                         android:textColor="#ffffffff"
                         android:textSize="12sp"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintTop_toBottomOf="@id/tv_ya_money_me"
+                        android:layout_marginBottom="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="@id/tv_ya_money_me"
                         app:layout_constraintRight_toRightOf="@id/tv_ya_money_me"
                         />

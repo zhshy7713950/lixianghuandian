@@ -10,6 +10,7 @@ import com.ruimeng.things.me.adapter.MyProfitAdapter
 import com.ruimeng.things.me.bean.MyInComeBean
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_my_profit.*
+import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
 import wongxd.base.AtyBase
 import wongxd.common.toPOJO
 import wongxd.http
@@ -78,6 +79,7 @@ class MyProfitActivity : AtyBase(){
     private fun initAdapter() {
         mAdapter = MyProfitAdapter(dataList)
         recyclerView?.adapter = mAdapter
+        mAdapter!!.setEmptyView(R.layout.layout_empty,recyclerView)
     }
 
     private var pageSize = 20

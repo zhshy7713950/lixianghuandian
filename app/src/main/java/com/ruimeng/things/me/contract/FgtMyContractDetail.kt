@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
@@ -72,7 +73,7 @@ class FgtMyContractDetail : BaseBackFragment() {
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
-        initTopbar(topbar, "编号:$deviceId")
+        initTopbar(topbar, "合约详情")
 
         FileUtils.createOrExistsDir(rootDir)
 
@@ -133,7 +134,7 @@ class FgtMyContractDetail : BaseBackFragment() {
                     val bean = res.toPOJO<MyContractDetailBean>().data
 
                     if (bean.down_sign == 1) {
-                        topbar.addRightTextButton("下载合约", com.ruimeng.things.R.id.right_text)
+                        topbar.addRightTextButton("下载", com.ruimeng.things.R.id.right_text)
                             .apply {
                                 setTextColor(Color.WHITE)
                                 setOnClickListener {
@@ -155,15 +156,17 @@ class FgtMyContractDetail : BaseBackFragment() {
                     tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
-                    tv_deposit_my_contract_detail.text = "¥${bean.deposit}"
-                    tv_rent_money_my_contract_detail.text = "¥${bean.rent}"
+                    tv_deposit_my_contract_detail.text = "${bean.deposit}元"
+                    tv_rent_money_my_contract_detail.text = "${bean.rent}元"
                     tv_base_package.text = TextUtil.getSpannableString(arrayOf("基本套餐：",bean.paymentName))
                     tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
                     val option = bean.userOptions?.filter { it.option_type == "2" }?.first()
                     if (option != null){
-
                         tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","换电${option.total_times}次"))
                         tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
+                    }else{
+                        tv_change_package.visibility = View.GONE
+                        tv_change_package_time.visibility = View.GONE
                     }
 
 

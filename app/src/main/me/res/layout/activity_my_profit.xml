@@ -133,8 +133,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rectangle_gray_bg"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
                      />
 
             </LinearLayout>

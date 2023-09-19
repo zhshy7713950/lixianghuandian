@@ -54,7 +54,7 @@ class SharePosterActivity : AtyBase() {
     }
 
     private fun initData() {
-        initTopbar(topbar, "分享好友")
+        initTopbar(topbar, "分享赚收益")
         requestSharePosterList()
     }
 

@@ -13,6 +13,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPayRentMoney
 import com.ruimeng.things.me.bean.MyCouponBean
+import kotlinx.android.synthetic.main.activity_my_team.recyclerView
 import kotlinx.android.synthetic.main.fgt_ticket.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.bothNotNull
@@ -56,6 +57,7 @@ class FgtTicket : BaseBackFragment() {
 
         rv_ticket.layoutManager = LinearLayoutManager(activity)
         rv_ticket.adapter = adapter
+        adapter!!.setEmptyView(R.layout.layout_empty,rv_ticket)
 
         srl_ticket?.setOnRefreshListener { page = 1;getInfo() }
         srl_ticket?.setOnLoadMoreListener { getInfo() }

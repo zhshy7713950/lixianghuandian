@@ -234,10 +234,11 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvOpenClose.setOnClickListener {
+            var title = if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
             AnyLayer.with(getCurrentAppAty())
                 .contentView(R.layout.alert_dialog_new)
                 .bindData { anyLayer ->
-                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText("是否开启电源？")
+                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(title)
                     anyLayer.contentView.findViewById<TextView>(R.id.tvConfirm).setOnClickListener{
                         changeBatteryStatus(IS_OPEN)
                         anyLayer.dismiss()
@@ -337,15 +338,13 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
                 val device_status = data.optInt("device_status")
-
-                if (device_status == 1) {
-                    openOrCloseBatter(BatteryOpenEvent(true))
-                } else {
-                    openOrCloseBatter(BatteryOpenEvent(false))
-                }
-
+                getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
+//                if (device_status == 1) {
+//                    openOrCloseBatter(BatteryOpenEvent(true))
+//                } else {
+//                    openOrCloseBatter(BatteryOpenEvent(false))
+//                }
             }
-
             onFinish {
                 dissmissProgressDialog()
             }
@@ -520,10 +519,15 @@ class FgtHome : MainTabFragment() {
             ivWrongBt.visibility  = View.VISIBLE
             tvProgress.setTextColor(Color.parseColor("#FFE177"))
             pvBattery.colors = intArrayOf(Color.parseColor("#FFE177"),Color.parseColor("#FF7A5A"),Color.parseColor("#FFE177"))
+            tv_error_title.visibility = View.VISIBLE
+            tv_error_info.visibility = View.VISIBLE
+            tv_error_info.text = info.alert_msg
         }else{
             // 通电或者关电状态
             ivWrongBt.visibility  = View.GONE
             openOrCloseBatter(BatteryOpenEvent(info.device_status == "1"))
+            tv_error_title.visibility = View.GONE
+            tv_error_info.visibility = View.GONE
         }
         pvBattery.maxCount = 100f
         pvBattery.setCurrentCount(info.rsoc.toFloat())

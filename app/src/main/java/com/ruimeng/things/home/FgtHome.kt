@@ -218,9 +218,9 @@ class FgtHome : MainTabFragment() {
         val addDeviceBtn = llNoItem.findViewById<FrameLayout>(R.id.addDeviceBtn)
         addDeviceBtn.setOnClickListener {
             when (deviceStatus) {
-                0->tryToScan()
-                1 -> FgtMain.instance?.start(FgtDeposit.newInstance(CURRENT_DEVICEID, getIsHost))
-                2 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID))
+                0-> tryToScan()
+                1 -> tryToScan()
+                2 -> dealScanResult(NO_PAY_DEVICEID)
             }
         }
 
@@ -401,11 +401,12 @@ class FgtHome : MainTabFragment() {
                     }
                 }
                 deviceCode = 200
+                getPaymentInfo()
             }
             onFail { i, s ->
+                Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
+                CURRENT_DEVICEID = ""
                 deviceCode = i
-            }
-            onFinish {
                 getPaymentInfo()
             }
         }

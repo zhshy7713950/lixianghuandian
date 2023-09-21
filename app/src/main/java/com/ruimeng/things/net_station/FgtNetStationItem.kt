@@ -278,16 +278,18 @@ class FgtNetStationItem : MainTabFragment() {
                 val tvCode = a.getView<TextView>(R.id.tv_code)
                 val tvNumber = a.getView<TextView>(R.id.tv_number)
                 val imageView = a.getView<ImageView>(R.id.iv01)
-                tvNumber.text = "可租用电池：${b.count}"
+
                 if (!isReturnStation) {
                     tvCode.text =  "${b.tag}"
                     tvCode.visibility = View.VISIBLE
                     imageView.setImageResource(R.mipmap.ic_shouhou)
                     tvCall.setText("立即联系")
+                    tvNumber.text = "可租电池数：${b.count}"
                 }else{
                     tvCode.visibility = View.GONE
                     imageView.setImageResource(R.mipmap.ic_statation)
                     tvCall.setText("联系经销商")
+                    tvNumber.text = "可换电池数：${b.count}"
                 }
             }
         }

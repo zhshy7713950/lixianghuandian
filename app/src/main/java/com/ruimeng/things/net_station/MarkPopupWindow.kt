@@ -14,6 +14,7 @@ import com.amap.api.maps.model.Marker
 import com.ruimeng.things.App
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.utils.TextUtil
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.utils.SystemUtils
@@ -34,6 +35,19 @@ class MarkPopupWindow(
         val tvStationLocation = v.findViewById<TextView>(R.id.tv_station_location)
         val tvStationTag = v.findViewById<TextView>(R.id.tv_station_tag)
         val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
+        val tv_phone_call = v.findViewById<TextView>(R.id.tv_phone_call)
+        val tv_agent_code = v.findViewById<TextView>(R.id.tv_agent_code)
+
+        if (type == "3"){
+            tv_phone_call.text = "联系经销商"
+            tv_agent_code.visibility = View.VISIBLE
+            tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可换电池数：","${agent.count}"))
+        }else{
+            tv_phone_call.text = "立即联系"
+            tv_agent_code.visibility = View.GONE
+            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("代理编码：",agent.tag))
+            tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可租电池数：","${agent.count}"))
+        }
 
 
         contentView = v
@@ -51,9 +65,9 @@ class MarkPopupWindow(
         val distance = AMapUtils.calculateLineDistance(LatLng(agent.lat, agent.lng), LatLng(App.lat, App.lng))
         val distanceStr =
             if (distance >= 1000)
-                "${String.format("%.2f", (distance / 1000))}km"
+                "${String.format("%.2f", (distance / 1000))}公里"
             else
-                "${String.format("%.2f", distance)}m"
+                "${String.format("%.2f", distance)}米"
 
 
         tvStationName.text = agent.site_name
@@ -67,12 +81,12 @@ class MarkPopupWindow(
             markCallback.click(it, agent)
         }
 //        tvStationBatteryCount.visibility = if (type == "3") View.VISIBLE else View.GONE
-        tvStationBatteryCount.text = "${agent.count}台"
+//        tvStationBatteryCount.text = "${agent.count}台"
 
-        v.findViewById<TextView>(R.id.tv_in_shop).setOnClickListener {
-            dismiss()
-            markCallback.click(it, agent)
-        }
+//        v.findViewById<TextView>(R.id.tv_in_shop).setOnClickListener {
+//            dismiss()
+//            markCallback.click(it, agent)
+//        }
 
         v.findViewById<TextView>(R.id.tv_navi_here).setOnClickListener {
             markCallback.click(it, agent)

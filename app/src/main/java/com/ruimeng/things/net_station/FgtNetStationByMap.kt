@@ -1,9 +1,11 @@
 package com.ruimeng.things.net_station
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
@@ -13,6 +15,8 @@ import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
@@ -21,9 +25,11 @@ import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import kotlinx.android.synthetic.main.fgt_net_station_item.et_search_station
 import wongxd.base.BaseBackFragment
+import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
 import wongxd.common.checkPackage
+import wongxd.common.getCurrentAppAty
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
@@ -99,6 +105,7 @@ class FgtNetStationByMap : BaseBackFragment() {
 
         aMap?.setOnMarkerClickListener {
             selectMarker(it)
+            aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
             false
         }
         showPosInMap()
@@ -142,9 +149,41 @@ class FgtNetStationByMap : BaseBackFragment() {
                  MarkPopupWindow(it,agent,getType,object :MarkPopupWindow.OnMarKCallback{
                      override fun click(view: View,agent:NetStationBean.Data.X) {
                          if (view.id == R.id.tv_phone_call){
-                             getPermissions(activity,
-                                 PermissionType.CALL_PHONE,
-                                 allGranted = { SystemUtils.call(activity, agent.tel) })
+                             NormalDialog(activity).apply {
+                                 style(NormalDialog.STYLE_TWO)
+                                 title("${agent.tel}")
+                                 titleTextColor(Color.parseColor("#131414"))
+                                 btnTextColor(Color.parseColor("#131414"), Color.GRAY)
+                                 btnText("立即拨打", "取消")
+                                     .setOnBtnClickL(OnBtnClickL {
+                                         getPermissions(activity,
+                                             PermissionType.CALL_PHONE,
+                                             allGranted = { SystemUtils.call(activity, agent.tel) })
+
+                                     }, OnBtnClickL {
+                                         dismiss()
+                                     })
+                                 show()
+                             }
+//                             AnyLayer.with(getCurrentAppAty())
+//                                 .contentView(R.layout.alert_phone_call_dialog)
+//                                 .bindData { anyLayer ->
+//                                     anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(agent.tel)
+//                                     anyLayer.contentView.findViewById<TextView>(R.id.tv_name).setText(agent.site_name)
+//                                     anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
+//                                         getPermissions(activity,
+//                                             PermissionType.CALL_PHONE,
+//                                             allGranted = { SystemUtils.call(activity, agent.tel) })
+//                                         anyLayer.dismiss()
+//                                     }
+//                                     anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+//                                         anyLayer.dismiss()
+//                                     }
+//                                 }.backgroundColorInt(Color.parseColor("#85000000"))
+//                                 .backgroundBlurRadius(10f)
+//                                 .backgroundBlurScale(10f)
+//                                 .show()
+
                          }else if (view.id == R.id.tv_in_shop){
                              if ("3"==getType){
                                  start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
@@ -334,6 +373,7 @@ class FgtNetStationByMap : BaseBackFragment() {
             latLng = LatLng(list[0].lat, list[0].lng)
         }
         aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
+
     }
 
     var selectMarker:Marker? = null
@@ -372,15 +412,15 @@ class FgtNetStationByMap : BaseBackFragment() {
             bothNotNull(helper, item) { a, b ->
                 val distance = AMapUtils.calculateLineDistance(LatLng(b.lat, b.lng), LatLng(App.lat, App.lng))
                 val distanceStr = if (distance >= 1000)
-                        "${String.format("%.2f", (distance / 1000))}km"
+                        "${String.format("%.2f", (distance / 1000))}公里"
                     else
-                        "${String.format("%.2f", distance)}m"
+                        "${String.format("%.2f", distance)}米"
                 a.setText(R.id.tv_title,b.site_name)
                     .setText(R.id.tv_distance,"距离我${distanceStr}")
                     .setText(R.id.tv_location,"${b.address}")
                     .setImageResource(R.id.iv01,if(getType == "3")  R.mipmap.marker_net_station_big else R.mipmap.service_station_big)
                 if (getType == "3"){
-                    a.setText(R.id.tv_number,"${b.count}台")
+                    a.setText(R.id.tv_number,"${b.count}")
                         .setText(R.id.text2,"可换电池数：")
                 }else{
                     a.setText(R.id.tv_number,"${b.tel}")

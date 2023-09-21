@@ -26,8 +26,11 @@ import wongxd.common.EasyToast
 import wongxd.common.getSweetDialog
 import wongxd.common.toPOJO
 import wongxd.http
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
 
 class FgtSinglePay : BaseBackFragment() {
     companion object{
@@ -72,13 +75,11 @@ class FgtSinglePay : BaseBackFragment() {
         tv_battery_model_pay_rent_money.text = paymentInfo.model_name
         tv_price.text = TextUtil.getMoneyText("${paymentInfo.single_price}")
         tv_total_price.text = TextUtil.getMoneyText( "${paymentInfo.single_price}")
-         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-             val currentDate =  LocalDate.now()
-             val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
-             tv_time.text = "有效期：${currentDate.format(formatter)}至${currentDate.plusMonths(1).format(formatter)}"
-        } else {
+        var formatter = SimpleDateFormat("yyyy-MM-dd")
+        var calendar = Calendar.getInstance()
+        calendar.add(Calendar.MONTH,+1)
 
-        }
+        tv_time.text = "有效期：${formatter.format(Date())}至${formatter.format(calendar.time)}"
         rgPayRent.setOnCheckedChangeListener { group, id ->
             when (id) {
                 R.id.rbWx -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX

@@ -13,8 +13,8 @@ import java.lang.Exception
 object TextUtil {
     fun formatTime(startTime: String?, endTime: String?): String {
         try {
-            val time =  if (startTime== null || endTime == null) {
-                "暂无"
+            val time =  if (startTime== null || endTime == null || startTime == "" || endTime == "") {
+                "无"
             } else if (startTime.length > 10 && endTime.length > 10) {
                 startTime.replace("-", "/").substring(0, 10) + "至" + endTime.replace("-", "/")
                     .substring(0, 10)

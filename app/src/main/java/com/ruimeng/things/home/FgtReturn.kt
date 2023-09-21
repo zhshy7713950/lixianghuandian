@@ -253,11 +253,11 @@ class FgtReturn : BaseBackFragment() {
                 }
                 var textColors = arrayOf("#929FAB","#FFFFFF")
                 tv_battery_code.text =   "电池编号：" + result.device_base.device_id
-                tv_model_return.text =   TextUtil.getSpannableString(arrayOf("电       池：",result.device_base.devicenum),textColors)
+                tv_model_return.text =   TextUtil.getSpannableString(arrayOf("电池型号：",FgtHome.modelName),textColors)
                 tv_deposit_return.text = TextUtil.getSpannableString(arrayOf("押       金：",result.device_contract.deposit),textColors)
                 tv_rent_long_return.text = TextUtil.getSpannableString(arrayOf("租用时长：", result.device_contract.rent_day + "月"),textColors)
                 tv_rent_start_return.text = TextUtil.getSpannableString(arrayOf("起租时间：" , result.device_contract.rent_time.toLong().getTime(false)),textColors)
-                tv_u_return.text = TextUtil.getSpannableString(arrayOf("电      压：" , result.device_base.totalvoltage + "V"),textColors)
+                tv_u_return.text = TextUtil.getSpannableString(arrayOf("电       压：" , result.device_base.totalvoltage + "V"),textColors)
 
 
                 tv_pay_money_return.text = TextUtil.getSpannableString(arrayOf("电       池：", result.device_contract.total_rent_money + "元"),textColors)
@@ -327,10 +327,13 @@ class FgtReturn : BaseBackFragment() {
                         .setGone(R.id.tv_desc,!TextUtils.isEmpty(b.msg))
                         .setText(R.id.tv_desc,TextUtil.getSpannableString(arrayOf("退还原因：", b.msg ),textColors))
                         .setVisible(R.id.rv_photo,!TextUtils.isEmpty(b.img))
-                val rvPhoto = a.getView<RecyclerView>(R.id.rv_photo)
-                 val postImgAdapter = PostImgAdapter(mContext, b.img.split(","))
-                rvPhoto.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                rvPhoto.setAdapter(postImgAdapter)
+                if (!TextUtils.isEmpty(b.img)){
+                    val rvPhoto = a.getView<RecyclerView>(R.id.rv_photo)
+                    val postImgAdapter = PostImgAdapter(mContext, b.img.split(","))
+                    rvPhoto.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                    rvPhoto.setAdapter(postImgAdapter)
+                }
+
 
             }
         }

@@ -89,8 +89,6 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                             btnText("确认启用", "暂不启用")
                             btnTextColor(Color.parseColor("#29EBB6"), Color.parseColor("#FF6464"))
                             setOnBtnClickL(OnBtnClickL {
-                                dismiss()
-                            }, OnBtnClickL {
                                 http {
                                     url = "/apiv6/payment/activeoption"
                                     params["user_option_id"] = "${data.userOptions.filter { it.active_status == "2" }.first().option_id}"
@@ -104,6 +102,8 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                                     }
                                 }
 
+                            }, OnBtnClickL {
+                                dismiss()
                             })
                             show()
                         }

@@ -65,6 +65,7 @@ class FgtHome : MainTabFragment() {
         var deviceStatus = 0 //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金
         var userId = ""
         var hasChangePackege = false //是否有换电套餐
+        var modelName = ""
 
         fun selectDeviceType() {
 
@@ -555,6 +556,7 @@ class FgtHome : MainTabFragment() {
             tv_ya_monety.text =  "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
             if (paymentDetailBean!!.paymentInfo != null){
+                modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
                 tv_package_time.text = TextUtil.formatTime(paymentDetailBean!!.begin_time,paymentDetailBean!!.exp_time)
                 //看是否有单次换电
@@ -610,6 +612,7 @@ class FgtHome : MainTabFragment() {
                     cl_change_package.visibility = View.GONE
                     tv_btn_change_package.text = "购买换电套餐"
                     tv_no_package.visibility = View.VISIBLE
+                    tv_btn_change_package_update.visibility = View.GONE
                     tv_btn_change_package.visibility = View.VISIBLE
                     tv_btn_change_package.setOnClickListener {
                         buyChangePackage()
@@ -685,6 +688,7 @@ class FgtHome : MainTabFragment() {
      * 购买换电套餐
      */
     private fun buyChangePackage() {
+        ToastHelper.shortToast(context,"当前没有换电套餐，请先购买换电套餐")
         activity.let {
             if (it != null) {
                 var listener = View.OnClickListener {

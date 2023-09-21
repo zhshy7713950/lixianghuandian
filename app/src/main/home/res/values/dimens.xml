@@ -5,4 +5,6 @@
     <dimen name="article_img_margin_top">10dp</dimen>
     <dimen name="article_img_dimens">80dp</dimen>
     <dimen name="paddingLR">15dp</dimen>
+    <dimen name="packageLeft">20dp</dimen>
+    <dimen name="packageNormal">10dp</dimen>
 </resources>

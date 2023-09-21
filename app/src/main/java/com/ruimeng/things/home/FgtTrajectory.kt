@@ -39,7 +39,8 @@ class FgtTrajectory : BaseBackFragment() {
         tv_select.setOnClickListener {
             showTimePicker {
                 selectedDate = it.time.getTime(false)
-                tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期:",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+                selectedDate = selectedDate.replaceFirst("-","年").replaceFirst("-","月") + "日"
+                tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDate),arrayOf("#929FAB","#FFFFFF"))
 
                 getPoints()
             }
@@ -55,9 +56,9 @@ class FgtTrajectory : BaseBackFragment() {
         val month = calendar.get(Calendar.MONTH) + 1
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        selectedDate = "$year-$month-$day"
+        selectedDate = "${year}年${month}月${day}日"
 
-        tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期:",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+        tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDate),arrayOf("#929FAB","#FFFFFF"))
 
         getPoints()
     }
@@ -70,12 +71,12 @@ class FgtTrajectory : BaseBackFragment() {
         val endDate = Calendar.getInstance()
 
         val year = selectedDate.get(Calendar.YEAR)
-        val month = selectedDate.get(Calendar.MONTH) + 1
+        val month = selectedDate.get(Calendar.MONTH)
         val day = selectedDate.get(Calendar.DAY_OF_MONTH)
 
         //正确设置方式 原因：注意事项有说明
-        startDate.set(year - 1, 1, 1)
-        endDate.set(year + 1, 1, 1)
+        startDate.set(year - 5, 1, 1)
+        endDate.set(year , month, day)
 
         val pvTime = TimePickerBuilder(activity, object : OnTimeSelectListener {
             override fun onTimeSelect(date: Date, v: View?) {//选中事件回调
@@ -125,7 +126,7 @@ class FgtTrajectory : BaseBackFragment() {
 
             onSuccess {
 
-                tv_selected_date_trajectory.text = "当前轨迹日期:$selectedDate"
+//                tv_selected_date_trajectory.text = "当前日期:$selectedDate"
 
                 val result = it.toPOJO<TrajectoryPointsBean>().data
                 val latLngList: MutableList<com.amap.api.maps.model.LatLng> = mutableListOf()
@@ -140,14 +141,14 @@ class FgtTrajectory : BaseBackFragment() {
             }
             onFail{ i: Int, s: String ->
                 Log.i("TAG", "getPoints: "+s)
-                val latLngList: MutableList<LatLng> = mutableListOf()
-                latLngList.add(LatLng(30.54800,104.06398))
-                latLngList.add(LatLng(30.55303,104.06932))
-                latLngList.add(LatLng(30.55293,104.07994))
-                latLngList.add(LatLng(30.55678,104.06781))
-                latLngList.add(LatLng(30.56316,104.07878))
-                latLngList.add(LatLng(30.56316,104.07878))
-                drawPoints(latLngList)
+//                val latLngList: MutableList<LatLng> = mutableListOf()
+//                latLngList.add(LatLng(30.54800,104.06398))
+//                latLngList.add(LatLng(30.55303,104.06932))
+//                latLngList.add(LatLng(30.55293,104.07994))
+//                latLngList.add(LatLng(30.55678,104.06781))
+//                latLngList.add(LatLng(30.56316,104.07878))
+//                latLngList.add(LatLng(30.56316,104.07878))
+//                drawPoints(latLngList)
             }
         }
     }

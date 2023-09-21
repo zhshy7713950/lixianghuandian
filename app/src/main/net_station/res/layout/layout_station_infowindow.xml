@@ -21,7 +21,6 @@
             android:id="@+id/iv01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="30dp"
             android:src="@mipmap/marker_net_station_big"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -69,6 +68,7 @@
 
                 <TextView
                     android:id="@+id/tv_in_shop"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -79,6 +79,15 @@
                     android:textSize="12sp" />
             </FrameLayout>
 
+            <TextView
+                android:id="@+id/tv_agent_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="代理编码："
+                android:layout_marginTop="6dp"
+                android:textColor="#ff929fab"
+                android:textSize="12sp"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,27 +144,15 @@
                     android:textSize="12sp"
                     tools:text="10800950560" />
             </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_station_battery_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp">
+                android:textColor="#ffffffff"
+                android:textSize="12sp"
+                android:layout_marginTop="6dp"
+                tools:text="206台" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="可换电池数："
-                    android:textColor="#ff929fab"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tv_station_battery_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#ffffffff"
-                    android:textSize="12sp"
-                    tools:text="206台" />
-            </LinearLayout>
         </LinearLayout>
 
 

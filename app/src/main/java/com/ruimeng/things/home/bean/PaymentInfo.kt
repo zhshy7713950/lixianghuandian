@@ -32,6 +32,7 @@ class PaymentInfo (
     val agentName: String= "",
     val paymentName: String= "",
     val exp_time: String= "",
+    val begin_time: String= "",
     val agentCode: String= "",
     val contract_id:String= "",
     val btn_return:Int = 0

@@ -14,13 +14,15 @@
 			android:id="@+id/viewfinder_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:inner_corner_length="30dp"
-			app:inner_corner_width="5dp"
+			app:inner_corner_length="20dp"
+			app:inner_corner_width="2dp"
 			app:inner_height="200dp"
 			app:inner_margintop="150dp"
 			app:inner_scan_iscircle="false"
 			app:inner_scan_speed="10"
-			app:inner_width="200dp" />
+			app:inner_width="200dp"
+		app:inner_corner_color="#20E8AE"
+		/>
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -28,6 +30,6 @@
 		android:textColor="#ff9eaab3"
 		android:textSize="14sp"
 		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="380dp"
+		android:layout_marginTop="375dp"
 		/>
 </FrameLayout>

@@ -53,6 +53,7 @@ import kotlinx.android.synthetic.main.fgt_deposit.rgDeposit
 import kotlinx.android.synthetic.main.fgt_deposit.tv_select_package_deposit
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
+import kotlinx.android.synthetic.main.home_status_item.tv_package_time
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.textColor
@@ -65,7 +66,9 @@ import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http
 import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.Arrays
+import java.util.Date
 
 
 /**
@@ -101,7 +104,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         EventBus.getDefault().register(this)
-        initTopbar(topbar, "支付租金")
+        initTopbar(topbar, if (pageType == PAGE_TYPE_CREATE) "支付租金" else "续期升级")
         getRent()
         dealPayWay()
         initView()
@@ -109,21 +112,29 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
     private fun initView(){
         val colors= arrayOf("#FFFFFF","#929FAB")
-        tv_change_package_update_title.text = TextUtil.getSpannableString(arrayOf("换电套餐","(可选)"),colors)
+        tv_change_package_create_title.text = TextUtil.getSpannableString(arrayOf("换电套餐","(可选)"),colors)
+        tv_base_package_create_title.text = TextUtil.getSpannableString(arrayOf("基础套餐","(必选)"),colors)
         if (pageType == PAGE_TYPE_CREATE){
             ll_package.visibility = View.GONE
-            tv_base_package_update_title.text = TextUtil.getSpannableString(arrayOf("基础套餐","(必选)"),colors)
-            tv_base_package_update_title.textColor = Color.WHITE
+            ll_change_package_create_title.visibility= View.VISIBLE
+            tv_change_package_update_title.visibility= View.GONE
             ll_expand.visibility = View.GONE
+            tv_base_package_create_title.visibility = View.VISIBLE
+            cl_update_package_title.visibility = View.GONE
         }else{
             ll_package.visibility = View.VISIBLE
             tv_base_package_update_title.text = "可选续期套餐"
-            tv_base_package_update_title.textColor = Color.parseColor("#29ebb6")
+            ll_change_package_create_title.visibility= View.GONE
+            tv_change_package_update_title.visibility= View.VISIBLE
             ll_expand.visibility = View.VISIBLE
+            tv_base_package_create_title.visibility = View.GONE
+            cl_update_package_title.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {
             activity?.let { it1 -> CompanyDescPopup(it1) }
         }
+        tv_option_time.text = showExpireTitle() +"无"
+        tv_rant_long_pay_time.text = showExpireTitle() +"无"
     }
     @Subscribe
     fun getEventInstallmentPaymentSuccess(event: EventInstallmentPaymentSuccess) {
@@ -233,14 +244,11 @@ class FgtPayRentMoney : BaseBackFragment() {
         optionList.add(PaymentOption(name = paymentName))
         newGetRentBean?.let {
             optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
-            if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)){
-                tv_rant_long_pay_time.text = "有效期："+ formatTime(it.show_start_time) +"至" + formatTime(it.show_end_time)
-            }else{
-                tv_rant_long_pay_time.text = "有效期：无"
-            }
+            tv_rant_long_pay_time.text = showExpireTitle()+ TextUtil.formatTime(it.show_start_time,it.show_end_time)
         }
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
+        tv_option_time.text = showExpireTitle() + "无"
         tv_select_charge.text = "否"
         tv_select_platform.text = "否"
         tv_select_insurance.text = "否"
@@ -292,10 +300,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 computeAmount()
                 selectOption.let {
                     if (it != null) {
-                        if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)) {
-                            tv_option_time.text =
-                                "有效期：" + formatTime(it.show_start_time) + "至" + formatTime(it.show_end_time)
-                        }
+                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(it.show_start_time,it.show_end_time)
                     }
                 }
 
@@ -407,6 +412,10 @@ class FgtPayRentMoney : BaseBackFragment() {
 //            pvOptions?.show()
 //            activity?.window?.let { it1 -> couponPopup?.show(it1.decorView) }
         }
+    }
+    private fun showExpireTitle(): String {
+        val expire = if (pageType == PAGE_TYPE_CREATE) "有效期：" else "  有效期："
+        return expire
     }
 
 
@@ -584,12 +593,19 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         tv_base_package_name.text = data.baseInfo.paymentName
-        tv_base_package_time.text = data.baseInfo.exp_time
-
-        val userOptions = data.userOptions;
-        tv_other_option1.text ="是否带充电器     ${if (userOptions.filter { it.option_type == "5" }.count() > 0) "是" else "否"}"
-        tv_other_option2.text ="是否租赁车架     ${if (userOptions.filter { it.option_type == "4" }.count() > 0) "是" else "否"}"
-        tv_other_option3.text ="是否购买保险     ${if (userOptions.filter { it.option_type == "3" }.count() > 0) "是" else "否"}"
+            try {
+                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                tv_base_package_time.text =
+                    sdf.format(Date(data.baseInfo.begin_time.toLong() * 1000)) + "至" + sdf.format(
+                        Date(data.baseInfo.exp_time.toLong() * 1000)
+                    )
+            } catch (e: Exception) {
+                tv_base_package_time.text = "暂无"
+            }
+        val userOptions = data.userOptions
+        tv_other_option1.text ="${if (userOptions.count { it.option_type == "5" } > 0) "是(${userOptions.filter { it.option_type == "5" }.first().price}元)" else "否"}"
+        tv_other_option2.text ="${if (userOptions.count { it.option_type == "4" } > 0) "是(${userOptions.filter { it.option_type == "4" }.first().price}元)" else "否"}"
+        tv_other_option3.text ="${if (userOptions.count { it.option_type == "3" } > 0) "是(${userOptions.filter { it.option_type == "3" }.first().price}元)" else "否"}"
         val changeOptions = userOptions.filter { it.option_type == "2" }
         ll_change_package_no_active.visibility = View.GONE
         ll_change_package_active.visibility = View.GONE

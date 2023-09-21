@@ -15,11 +15,11 @@ class BasePackageAdapter :BaseQuickAdapter<PaymentInfo,BaseViewHolder>(R.layout.
     override fun convert(p0: BaseViewHolder,item: PaymentInfo?) {
         if (item != null){
             p0.setText(R.id.tv_price,"¥"+item.price)
-                .setText(R.id.tv_name, item.sname)
+                .setText(R.id.tv_name, item.pname)
                 .setText(R.id.tv_base_price,"¥"+item.basePrice)
                 .setVisible(R.id.tv_base_price,!TextUtils.isEmpty(item.id) && item.gdiscount != "100")
                 .setVisible(R.id.tv_no_package,TextUtils.isEmpty(item.id))
-                .setText(R.id.tv_no_package, item.sname)
+                .setText(R.id.tv_no_package, item.pname)
                 .setVisible(R.id.tv_price,!TextUtils.isEmpty(item.id))
                 .setVisible(R.id.tv_name,!TextUtils.isEmpty(item.id))
             val textView = p0.getView<TextView>(R.id.tv_base_price)

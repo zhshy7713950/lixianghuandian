@@ -14,6 +14,7 @@ data class MyContractListBean(
         var end_time: String = "", // 2019-12-3
         var model_str: String = "", // 型号a70
         var renttime_str: String = "", // 8 个月
+        var paymentName: String = "", // 8 个月
     var userOptions : List<PaymentOption>
     )
 }

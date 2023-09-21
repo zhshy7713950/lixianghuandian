@@ -62,23 +62,23 @@ class WithdrawalAccountActivity : AtyBase() {
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<DistrCashInfoBean>().data
                 if ("1" == data.is_alipay) {
-                    aliPayAccountText?.text = "账号："+data.alipay_acct
+                    aliPayAccountText?.text = "账号："+secretAccount(data.alipay_acct)
                     aliPayBindBtn?.text = "重新绑定"
                     aliPayBindBtn.setBackgroundResource(R.drawable.bg_btn_common2)
                     aliPayBindBtn.setTextColor(resources.getColor(R.color.white))
                 } else {
-                    aliPayAccountText?.text = "还未绑定支付宝账户"
+                    aliPayAccountText?.text = "未绑定"
                     aliPayBindBtn?.text = "立即绑定"
                     aliPayBindBtn.setBackgroundResource(R.drawable.bg_btn_common1)
                     aliPayBindBtn.setTextColor(resources.getColor(R.color.black_3))
                 }
                 if ("1" ==data.is_wx ) {
-                    weChatAccountText?.text = "账号："+data.wx_nickname
+                    weChatAccountText?.text = "账号："+secretAccount(data.wx_nickname)
                     weChatBindBtn?.text = "重新授权"
                     weChatBindBtn.setBackgroundResource(R.drawable.bg_btn_common2)
                     weChatBindBtn.setTextColor(resources.getColor(R.color.white))
                 } else {
-                    weChatAccountText?.text = "还未授权绑定微信账户"
+                    weChatAccountText?.text = "未授权"
                     weChatBindBtn?.text = "立即授权"
                     weChatBindBtn.setBackgroundResource(R.drawable.bg_btn_common1)
                     weChatBindBtn.setTextColor(resources.getColor(R.color.black_3))
@@ -111,6 +111,15 @@ class WithdrawalAccountActivity : AtyBase() {
             onFail { _, msg ->
                 ToastHelper.shortToast(mActivity, msg)
             }
+        }
+    }
+    private fun secretAccount(string: String):String{
+        if (string.length == 2){
+            return "*${string.substring(1,2)}"
+        }else if (string.length > 2){
+            return "${string.substring(0,1)}**${string.substring(string.length-2,string.length-1)}"
+        }else{
+            return string
         }
     }
 

@@ -3,8 +3,11 @@ package com.utils
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import java.lang.Exception
 
 object TextUtil {
@@ -55,6 +58,16 @@ object TextUtil {
             e.printStackTrace()
             return SpannableString("");
         }
+
+    }
+
+    fun  getMoneyText(text :String): SpannableStringBuilder {
+        var builder = SpannableStringBuilder()
+        val tag = SpannableString("¥")
+        tag.setSpan(RelativeSizeSpan(0.7f),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.append(tag)
+        builder.append(text)
+        return builder
 
     }
 }

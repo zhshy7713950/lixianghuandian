@@ -1,5 +1,6 @@
 package com.ruimeng.things.net_station
 
+import android.graphics.Color
 import android.media.Image
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,8 +26,10 @@ import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.base.MainTabFragment
+import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.bothNotNull
 import wongxd.common.checkPackage
+import wongxd.common.getCurrentAppAty
 import wongxd.common.getSweetDialog
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
@@ -228,9 +231,25 @@ class FgtNetStationItem : MainTabFragment() {
                 }
 
                 tvCall.setOnClickListener {
-                    getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
-                        SystemUtils.call(context, b.tel)
-                    })
+                    AnyLayer.with(getCurrentAppAty())
+                        .contentView(R.layout.alert_phone_call_dialog)
+                        .bindData { anyLayer ->
+                            anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(b.tel)
+                            anyLayer.contentView.findViewById<TextView>(R.id.tv_name).setText(b.site_name)
+                            anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
+                                getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
+                                    SystemUtils.call(context, b.tel)
+                                })
+                                anyLayer.dismiss()
+                            }
+                            anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+                                anyLayer.dismiss()
+                            }
+                        }.backgroundColorInt(Color.parseColor("#85000000"))
+                        .backgroundBlurRadius(10f)
+                        .backgroundBlurScale(10f)
+                        .show()
+
                 }
 
                 tvTitle.text = b.site_name
@@ -239,15 +258,20 @@ class FgtNetStationItem : MainTabFragment() {
                     AMapUtils.calculateLineDistance(LatLng(b.lat, b.lng), LatLng(App.lat, App.lng))
                 val distanceStr =
                     if (distance >= 1000)
-                        "${String.format("%.2f", (distance / 1000))}km"
+                        "${String.format("%.2f", (distance / 1000))}公里"
                     else
-                        "${String.format("%.2f", distance)}m"
+                        "${String.format("%.2f", distance)}米"
                 tvDistance.text = "距离我${distanceStr}"
 
                 tvLocation.text = "地址：${b.address}"
 
                 a.getView<TextView>(R.id.tv_nav).setOnClickListener {
-                    naviToLocation(b.lat, b.lng, b.site_name)
+//                    naviToLocation(b.lat, b.lng, b.site_name)
+                    (parentFragment as FgtNetStation).start(
+                        FgtNetStationByMap.newInstance(
+                            getType,"",b.id, data as ArrayList<NetStationBean.Data.X>
+                        )
+                    )
                 }
                 val isReturnStation = "1" != getType
 
@@ -259,9 +283,11 @@ class FgtNetStationItem : MainTabFragment() {
                     tvCode.text =  "${b.tag}"
                     tvCode.visibility = View.VISIBLE
                     imageView.setImageResource(R.mipmap.ic_shouhou)
+                    tvCall.setText("立即联系")
                 }else{
                     tvCode.visibility = View.GONE
                     imageView.setImageResource(R.mipmap.ic_statation)
+                    tvCall.setText("联系经销商")
                 }
             }
         }

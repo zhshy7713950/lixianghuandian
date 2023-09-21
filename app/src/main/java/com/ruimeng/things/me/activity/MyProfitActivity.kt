@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.ruimeng.things.R
 import com.ruimeng.things.me.adapter.MyProfitAdapter
 import com.ruimeng.things.me.bean.MyInComeBean
+import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_my_profit.*
 import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
@@ -93,8 +94,8 @@ class MyProfitActivity : AtyBase(){
 
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<MyInComeBean>().data
-                allBalanceText?.text="￥${data.distr_all_income}"
-                balanceTextView?.text="￥${data.distr_balance}"
+                allBalanceText?.text= TextUtil.getMoneyText("${data.distr_all_income}")
+                balanceTextView?.text=TextUtil.getMoneyText("${data.distr_balance}")
 
                 if (page == 1) {
                     mAdapter?.setNewData(data.list)

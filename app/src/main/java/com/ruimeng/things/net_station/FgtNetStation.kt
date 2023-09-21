@@ -36,7 +36,7 @@ class FgtNetStation : MainTabFragment() {
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
 
         mView?.findViewById<QMUITopBar>(R.id.topbar)?.apply {
-            initTopbar(this, "服务网点", false)
+            initTopbar(this, "网点", false)
             addRightImageButton(R.mipmap.map, R.id.right)
                 .setOnClickListener {
                     LogHelper.i(
@@ -48,7 +48,7 @@ class FgtNetStation : MainTabFragment() {
                         "租电服务站点" == titleList[currentIndex] -> {"2"}
                         else -> {"3"}
                     }
-                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,"",fragmentList.get(currentIndex).getStationList()))
+                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,"","",fragmentList.get(currentIndex).getStationList()))
                 }
         }
 

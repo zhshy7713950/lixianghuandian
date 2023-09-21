@@ -16,7 +16,11 @@
 		<FrameLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@mipmap/bg_home_top">
+			android:background="@drawable/gradiant_bg_home">
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:src="@mipmap/bg_home_top"/>
 
 			<com.view.ProgressView
 				android:id="@+id/pvBattery"

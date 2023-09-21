@@ -145,33 +145,16 @@
             android:id="@+id/rgPayRent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginLeft="14dp">
-            <RadioButton
-                android:id="@+id/rbAlipay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layoutDirection="rtl"
-                android:text="支付宝"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:checked="true"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:drawablePadding="12dp"
-                android:layout_marginTop="16dp"
-                android:drawableLeft="@mipmap/ic_withdrawal_alipay"
-                android:drawableRight="@drawable/radio_select"
-                android:button="@null">
-            </RadioButton>
+            android:layout_marginTop="14dp">
             <RadioButton
                 android:id="@+id/rbWx"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layoutDirection="rtl"
-                android:text="微信"
+                android:text="微信支付"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                android:checked="true"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:drawablePadding="12dp"
@@ -180,6 +163,23 @@
                 android:drawableRight="@drawable/radio_select"
                 android:button="@null">
             </RadioButton>
+            <RadioButton
+                android:id="@+id/rbAlipay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:text="支付宝支付"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:drawablePadding="12dp"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@mipmap/ic_withdrawal_alipay"
+                android:drawableRight="@drawable/radio_select"
+                android:button="@null">
+            </RadioButton>
+
 
         </RadioGroup>
     </LinearLayout>
@@ -241,7 +241,7 @@
             android:layout_height="wrap_content"
             tools:text="¥200.00"
             android:textColor="#ff29ebb6"
-            android:textSize="14sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"

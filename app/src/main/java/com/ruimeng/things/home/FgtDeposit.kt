@@ -21,6 +21,7 @@ import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
 import com.ruimeng.things.wxapi.WXEntryActivity
 import com.utils.OptionPickerUtil
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_return.tv_broke_return
 import org.json.JSONObject
@@ -264,8 +265,8 @@ class FgtDeposit : BaseBackFragment() {
                     }
 
 
-                    tv_money_account_deposit.text = "¥ " +
-                        if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+                    tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
+                    tv_total.text = tv_money_account_deposit.text
 
                     currentDepositOption.apply {
                         clear()

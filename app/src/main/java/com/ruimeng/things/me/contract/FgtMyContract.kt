@@ -29,10 +29,13 @@ import wongxd.common.dp2px
  */
 class FgtMyContract : MainTabFragment() {
 
+    companion object{
+        var qStr = ""
+    }
     override fun getLayoutRes(): Int = R.layout.fgt_my_contract
 
 
-    private var qStr = ""
+
     private var currentTabIndex = 0
 
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
@@ -73,7 +76,6 @@ class FgtMyContract : MainTabFragment() {
                         }else{
                             tabBg.setBackgroundColor(resources.getColor(R.color.transparent))
                         }
-
                     }
                 }
             })
@@ -143,7 +145,7 @@ class FgtMyContract : MainTabFragment() {
             if (suffixNotComplete > 0){
                 var tab = tab_my_contract.getTab(2)
                 tab.setSignCountMargin(-QMUIDisplayHelper.dp2px(context, 8), -QMUIDisplayHelper.dp2px(context, 8))
-                tab.showSignCountView(context,2)
+                tab.showSignCountView(context,suffixNotComplete)
             }
 
             notifyDataChanged()

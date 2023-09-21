@@ -6,7 +6,8 @@
     <color name="app_red">#FF5757</color>
     <color name="bg_gray">#2E3440</color>
     <color name="gray_E5">#E5E5E5</color>
-
+    <color name="default_selected_dot_color">#ffffff</color>
+    <color name="default_dot_color">#e8e8e8</color>
 
 
 

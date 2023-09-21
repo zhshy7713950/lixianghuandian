@@ -120,22 +120,22 @@ public class AtyWeb extends BaseBackActivity {
             webView.loadData(web_url,"text/html","utf-8");
         }
 
-        setLeftCloseButton("关闭", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (webView != null) {
-                    webView.getSettings().setJavaScriptEnabled(false);
-                    webView.getSettings().setBuiltInZoomControls(false);
-                }
-                finish();
-            }
-        });
-        setRightButton("更多", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMenu(webView);
-            }
-        });
+//        setLeftCloseButton("关闭", new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (webView != null) {
+//                    webView.getSettings().setJavaScriptEnabled(false);
+//                    webView.getSettings().setBuiltInZoomControls(false);
+//                }
+//                finish();
+//            }
+//        });
+//        setRightButton("更多", new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showMenu(webView);
+//            }
+//        });
     }
 
     protected TextView middleTitle;

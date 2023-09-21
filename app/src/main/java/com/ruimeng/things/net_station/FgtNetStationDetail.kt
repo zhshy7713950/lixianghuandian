@@ -1,6 +1,9 @@
 package com.ruimeng.things.net_station
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -10,8 +13,12 @@ import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationDetailBean
 import kotlinx.android.synthetic.main.fgt_net_station_detail.*
 import wongxd.base.BaseBackFragment
+import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
+import wongxd.common.getCurrentAppAty
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.SystemUtils
@@ -99,7 +106,24 @@ class FgtNetStationDetail : BaseBackFragment() {
                         tv_batter_num_net_station_detail.text = "电池数量：${bean.count}"
 
                         tv_call_net_station_detail.setOnClickListener {
-                            SystemUtils.call(activity, bean.tel)
+                            AnyLayer.with(getCurrentAppAty())
+                                .contentView(R.layout.alert_phone_call_dialog)
+                                .bindData { anyLayer ->
+                                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(bean.tel)
+                                    anyLayer.contentView.findViewById<TextView>(R.id.tv_name).setText(bean.site_name)
+                                    anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
+                                        getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
+                                            SystemUtils.call(context, bean.tel)
+                                        })
+                                        anyLayer.dismiss()
+                                    }
+                                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+                                        anyLayer.dismiss()
+                                    }
+                                }.backgroundColorInt(Color.parseColor("#85000000"))
+                                .backgroundBlurRadius(10f)
+                                .backgroundBlurScale(10f)
+                                .show()
                         }
 
                         rvAdapter.setNewData(bean.data)

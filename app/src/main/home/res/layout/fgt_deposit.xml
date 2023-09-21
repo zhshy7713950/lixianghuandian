@@ -289,30 +289,14 @@
 					android:layout_marginTop="14dp"
 					android:layout_marginLeft="14dp">
 					<RadioButton
-						android:id="@+id/rbAlipay"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layoutDirection="rtl"
-						android:text="支付宝"
-						android:textColor="@color/white"
-						android:textSize="14sp"
-						android:checked="true"
-						android:layout_marginLeft="14dp"
-						android:layout_marginRight="14dp"
-						android:drawablePadding="12dp"
-						android:layout_marginTop="16dp"
-						android:drawableLeft="@mipmap/ic_withdrawal_alipay"
-						android:drawableRight="@drawable/radio_select"
-						android:button="@null">
-					</RadioButton>
-					<RadioButton
 						android:id="@+id/rbWx"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layoutDirection="rtl"
-						android:text="微信"
+						android:text="微信支付"
 						android:textColor="@color/white"
 						android:textSize="14sp"
+						android:checked="true"
 						android:layout_marginLeft="14dp"
 						android:layout_marginRight="14dp"
 						android:drawablePadding="12dp"
@@ -321,6 +305,23 @@
 						android:drawableRight="@drawable/radio_select"
 						android:button="@null">
 					</RadioButton>
+					<RadioButton
+						android:id="@+id/rbAlipay"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layoutDirection="rtl"
+						android:text="支付宝支付"
+						android:textColor="@color/white"
+						android:textSize="14sp"
+						android:layout_marginLeft="14dp"
+						android:layout_marginRight="14dp"
+						android:drawablePadding="12dp"
+						android:layout_marginTop="16dp"
+						android:drawableLeft="@mipmap/ic_withdrawal_alipay"
+						android:drawableRight="@drawable/radio_select"
+						android:button="@null">
+					</RadioButton>
+
 					<RadioButton
 						android:id="@+id/rbOffline"
 						android:layout_width="match_parent"
@@ -400,11 +401,12 @@
 					android:layout_marginLeft="14dp"
 					/>
 				<TextView
+					android:id="@+id/tv_total"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:text="¥200.00"
 					android:textColor="#ff29ebb6"
-					android:textSize="14sp"
+					android:textSize="20sp"
 					app:layout_constraintLeft_toLeftOf="parent"
 					android:layout_marginLeft="60dp"
 					android:gravity="center_vertical"

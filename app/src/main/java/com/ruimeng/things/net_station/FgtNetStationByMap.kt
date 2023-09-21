@@ -38,11 +38,12 @@ import wongxd.utils.SystemUtils
  */
 class FgtNetStationByMap : BaseBackFragment() {
     companion object {
-        fun newInstance(type: String = "",name:String = "", locations: ArrayList<NetStationBean.Data.X>): FgtNetStationByMap {
+        fun newInstance(type: String = "",name:String = "",id:String = "0", locations: ArrayList<NetStationBean.Data.X>): FgtNetStationByMap {
             val fgt = FgtNetStationByMap()
             val b = Bundle()
             b.putString("type", type)
             b.putString("name",name)
+            b.putString("id",id)
             b.putParcelableArrayList("list",locations)
             fgt.arguments = b
             return fgt
@@ -52,6 +53,7 @@ class FgtNetStationByMap : BaseBackFragment() {
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_by_map
     private val getType by lazy { arguments?.getString("type", "") ?: "" }
     private val name by lazy { arguments?.getString("name", "") ?: "" }
+    private val id by lazy { arguments?.getString("id", "") ?: "" }
     private var mCurrentMemMarker: Marker? = null
     private val markInfoMap: MutableMap<String, NetStationBean.Data.X> = mutableMapOf()
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
@@ -64,7 +66,7 @@ class FgtNetStationByMap : BaseBackFragment() {
     }
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
-        initTopbar(topbar, "地图查找")
+        initTopbar(topbar, if(getType == "3") "换电地图查找" else "售后服务地图查找")
         getPermissions(
             activity,
             PermissionType.COARSE_LOCATION,
@@ -270,6 +272,7 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
         setSuitZoom(locations)
         stationAdapter.setNewData(locations)
+        selectMarker?.let { selectMarker(it) }
     }
 
 
@@ -333,7 +336,7 @@ class FgtNetStationByMap : BaseBackFragment() {
         aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
     }
 
-
+    var selectMarker:Marker? = null
 
     /**
      * 在地图上添加marker
@@ -356,6 +359,9 @@ class FgtNetStationByMap : BaseBackFragment() {
             agent.markerId = marker.id
             markInfoMap.put(marker.id, agent)
             markerMap.put(marker.id,marker)
+            if (id == agent.id){
+                selectMarker = marker
+            }
         }
 
     }

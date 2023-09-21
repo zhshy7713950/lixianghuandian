@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.ruimeng.things.R
 import com.ruimeng.things.me.bean.DistrHomeBean
+import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_distribution_center.*
 import wongxd.base.AtyBase
@@ -73,9 +74,9 @@ class DistributionCenterActivity : AtyBase() {
             url = "apiv5/distrhome"
             onSuccessWithMsg { res, _ ->
                 val data = res.toPOJO<DistrHomeBean>().data
-                textViewOne?.text = "￥${data.distr_all_income}"
-                textViewTwo?.text = "￥${data.distr_balance}"
-                textViewThree?.text = "${data.team_num}人"
+                textViewOne?.text = TextUtil.getMoneyText("${data.distr_all_income}")
+                textViewTwo?.text = TextUtil.getMoneyText("${data.distr_balance}")
+                textViewThree?.text = "${data.team_num}"
             }
 
             onFail { _, msg ->

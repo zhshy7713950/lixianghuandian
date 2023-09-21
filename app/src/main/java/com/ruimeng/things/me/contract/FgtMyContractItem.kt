@@ -47,10 +47,8 @@ class FgtMyContractItem : MainTabFragment() {
 
 
     private val contractType by lazy { arguments?.getInt("contractType") ?: 1 }
-
-
+    private var qStr = ""
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-
         EventBus.getDefault().register(this)
 
         srl_my_contract?.apply {
@@ -95,7 +93,7 @@ class FgtMyContractItem : MainTabFragment() {
         getInfo()
     }
 
-    private var qStr = ""
+//    private var qStr = ""
     private var page = 1
     private val pageSize = 10
 
@@ -108,7 +106,7 @@ class FgtMyContractItem : MainTabFragment() {
 
             //	0正常1过期2未完成3历史
             params["type"] = contractType.toString()
-            params["q"] = qStr
+            params["q"] = FgtMyContract.qStr
             params["page"] = page.toString()
             params["pagesize"] = pageSize.toString()
 
@@ -216,12 +214,17 @@ class FgtMyContractItem : MainTabFragment() {
                 a.getView<TextView>(R.id.tv_num).text = "${b.device_id}"
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
                 a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
-                a.getView<TextView>(R.id.tv_base_package).text =
-                    TextUtil.getSpannableString(arrayOf("基本套餐：", b.renttime_str), textColors)
-                a.setText(
-                    R.id.tv_base_package_time,
-                    "${formatTime(b.begin_time)}至${formatTime(b.end_time)}"
-                )
+                if (b.paymentName != ""){
+                    a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
+                        .setVisible(R.id.tv_base_package_time,true)
+                        .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("基本套餐：",   b.paymentName), textColors))
+                }else{
+                    a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
+                        .setVisible(R.id.tv_base_package_time,false)
+                        .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("基本套餐：",   "暂无"), textColors))
+                }
+
+
 
 
                 val option = b.userOptions.filter { it.option_type == "2" }

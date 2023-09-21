@@ -108,17 +108,18 @@ class FgtPayRentMoney : BaseBackFragment() {
         initTicket()
     }
     private fun initView(){
+        val colors= arrayOf("#FFFFFF","#929FAB")
+        tv_change_package_update_title.text = TextUtil.getSpannableString(arrayOf("换电套餐","(可选)"),colors)
         if (pageType == PAGE_TYPE_CREATE){
             ll_package.visibility = View.GONE
-            tv_base_package_update_title.visibility = View.GONE
-            tv_base_package_update_title.text = "基础套餐（必选）"
+            tv_base_package_update_title.text = TextUtil.getSpannableString(arrayOf("基础套餐","(必选)"),colors)
             tv_base_package_update_title.textColor = Color.WHITE
-            tv_expand.visibility = View.GONE
+            ll_expand.visibility = View.GONE
         }else{
             ll_package.visibility = View.VISIBLE
             tv_base_package_update_title.text = "可选续期套餐"
             tv_base_package_update_title.textColor = Color.parseColor("#29ebb6")
-            tv_expand.visibility = View.VISIBLE
+            ll_expand.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {
             activity?.let { it1 -> CompanyDescPopup(it1) }
@@ -235,9 +236,10 @@ class FgtPayRentMoney : BaseBackFragment() {
             if (!TextUtils.isEmpty(it.show_start_time) && !TextUtils.isEmpty(it.show_end_time)){
                 tv_rant_long_pay_time.text = "有效期："+ formatTime(it.show_start_time) +"至" + formatTime(it.show_end_time)
             }else{
-                tv_rant_long_pay_time.text = "无限制"
+                tv_rant_long_pay_time.text = "有效期：无"
             }
         }
+        changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
         tv_select_charge.text = "否"
         tv_select_platform.text = "否"
@@ -502,6 +504,11 @@ class FgtPayRentMoney : BaseBackFragment() {
             onSuccess {
                 IS_TICKET_DATA_INIT = true
                 val result = it.toPOJO<MyCouponBean>().data
+                if (result.isEmpty()){
+                    tv_ticket_pay_rent_money.text = "暂无可用优惠券"
+                }else{
+                    tv_ticket_pay_rent_money.text = "请选择"
+                }
 
                 couponList.addAll(result)
 
@@ -529,7 +536,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
 
-    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
+    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
 
 
     /**
@@ -559,7 +566,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<UpdateGetRentBean>().data
                         var payments = ArrayList<PaymentInfo>();
-                        payments.add(PaymentInfo(sname = "暂不续期", options = result.options))
+                        payments.add(PaymentInfo(pname = "暂不续期", options = result.options))
                         payments.addAll(result.paymentInfo)
                         baseInfo = result.baseInfo
                         baseInfo!!.model_name = baseInfo!!.modelName
@@ -624,7 +631,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             jsonParam = getSubmitParam()
             onSuccessWithMsg { res, msg ->
                 val result = res.toPOJO<CountAmountBean>().data
-                tv_total_price.text  = "¥${result.totalPrice}"
+                tv_total_price.text  = TextUtil.getMoneyText( "${result.totalPrice}")
                 tv_coupon_price.text  = "已优惠¥${result.couponAmount}"
                 if (submit){
                     countPay()

@@ -232,7 +232,7 @@ class BalanceWithdrawalActivity : AtyBase() {
 
     @SuppressLint("SetTextI18n")
     private fun setFinalMoney(money: String) {
-        finalCouponText?.text = "￥${money}"
+        finalCouponText?.text = TextUtil.getMoneyText("${money}")
     }
 
     private fun setWithdrawalTypeLayoutStatus() {
@@ -277,7 +277,7 @@ class BalanceWithdrawalActivity : AtyBase() {
                 if (!TextUtils.isEmpty(data.distr_balance)) {
                     getBalance = data.distr_balance.toDouble()
                 }
-                balanceTextView?.text = "￥${getBalance}"
+                balanceTextView?.text = TextUtil.getMoneyText("${getBalance}")
                 getAliPayAccountName = data.alipay_acct
                 getWeChatName = data.wx_nickname
                 setWithdrawalTypeLayoutStatus()

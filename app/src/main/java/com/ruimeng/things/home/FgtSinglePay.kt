@@ -12,6 +12,7 @@ import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.ruimeng.things.wxapi.WXEntryActivity
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.btn_pay_now_pay_rent_money
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.iv_check_pay_rent_money
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.rgPayRent
@@ -38,7 +39,7 @@ class FgtSinglePay : BaseBackFragment() {
             return fgt
         }
     }
-    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
+    private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
     private var IS_CHECKED_PROTOCOL = false
     private var dlgPayProgress: SweetAlertDialog? = null
 
@@ -69,11 +70,15 @@ class FgtSinglePay : BaseBackFragment() {
     private fun showView(paymentInfo : PaymentInfo){
         tv_battery_num_pay_rent_money.text = paymentInfo.device_id
         tv_battery_model_pay_rent_money.text = paymentInfo.model_name
-        tv_price.text = "¥${paymentInfo.single_price}"
-        tv_total_price.text = "¥${paymentInfo.single_price}"
-        val currentDate = LocalDate.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
-        tv_time.text = "有效期：${currentDate.format(formatter)}至${currentDate.plusMonths(1).format(formatter)}"
+        tv_price.text = TextUtil.getMoneyText("${paymentInfo.single_price}")
+        tv_total_price.text = TextUtil.getMoneyText( "${paymentInfo.single_price}")
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+             val currentDate =  LocalDate.now()
+             val formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM")
+             tv_time.text = "有效期：${currentDate.format(formatter)}至${currentDate.plusMonths(1).format(formatter)}"
+        } else {
+
+        }
         rgPayRent.setOnCheckedChangeListener { group, id ->
             when (id) {
                 R.id.rbWx -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX

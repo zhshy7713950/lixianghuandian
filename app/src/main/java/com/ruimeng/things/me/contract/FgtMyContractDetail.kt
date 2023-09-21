@@ -158,19 +158,22 @@ class FgtMyContractDetail : BaseBackFragment() {
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
                     tv_deposit_my_contract_detail.text = "${bean.deposit}元"
                     tv_rent_money_my_contract_detail.text = "${bean.rent}元"
-                    tv_base_package.text = TextUtil.getSpannableString(arrayOf("基本套餐：",bean.paymentName))
-                    tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
-                    val option = bean.userOptions?.filter { it.option_type == "2" }?.first()
-                    if (option != null){
-                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","换电${option.total_times}次"))
-                        tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
+                    if (bean.paymentName == ""){
+                        tv_base_package.text = TextUtil.getSpannableString(arrayOf("基本套餐：","暂无"))
+                        tv_base_package_time.visibility = View.GONE
                     }else{
-                        tv_change_package.visibility = View.GONE
-                        tv_change_package_time.visibility = View.GONE
+                        tv_base_package.text = TextUtil.getSpannableString(arrayOf("基本套餐：",bean.paymentName))
+                        tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
                     }
 
-
-
+                    val options = bean.userOptions?.filter { it.option_type == "2" }
+                    if (options != null && !options.isEmpty()){
+                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","换电${options[0].total_times}次"))
+                        tv_change_package_time.text = TextUtil.formatTime(options[0].start_time,options[0].end_time)
+                    }else{
+                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","暂无"))
+                        tv_change_package_time.visibility = View.GONE
+                    }
 
                     pdfUrl = bean.pdf
                     pngs.clear()

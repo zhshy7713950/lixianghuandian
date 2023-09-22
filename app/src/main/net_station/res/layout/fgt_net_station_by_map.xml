@@ -8,11 +8,13 @@
 	<include layout="@layout/layout_topbar"/>
 
 
+
 	<com.amap.api.maps.MapView
 			android:id="@+id/mapView_nearby"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-		android:layout_marginTop="@dimen/topbar_height"/>
+		android:layout_marginTop="@dimen/topbar_height"
+		android:layout_marginBottom="230dp"/>
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/rvStation"

@@ -1,11 +1,9 @@
 package com.ruimeng.things.net_station
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
@@ -17,26 +15,18 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
-import kotlinx.android.synthetic.main.fgt_net_station_item.et_search_station
 import wongxd.base.BaseBackFragment
-import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
-import wongxd.common.checkPackage
-import wongxd.common.getCurrentAppAty
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
-import wongxd.navi.CoodinateCovertor
-import wongxd.navi.LngLat
-import wongxd.navi.NaviUtil
 import wongxd.utils.SystemUtils
 
 /**
@@ -159,31 +149,12 @@ class FgtNetStationByMap : BaseBackFragment() {
                                          getPermissions(activity,
                                              PermissionType.CALL_PHONE,
                                              allGranted = { SystemUtils.call(activity, agent.tel) })
-
+                                         dismiss()
                                      }, OnBtnClickL {
                                          dismiss()
                                      })
                                  show()
                              }
-//                             AnyLayer.with(getCurrentAppAty())
-//                                 .contentView(R.layout.alert_phone_call_dialog)
-//                                 .bindData { anyLayer ->
-//                                     anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(agent.tel)
-//                                     anyLayer.contentView.findViewById<TextView>(R.id.tv_name).setText(agent.site_name)
-//                                     anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
-//                                         getPermissions(activity,
-//                                             PermissionType.CALL_PHONE,
-//                                             allGranted = { SystemUtils.call(activity, agent.tel) })
-//                                         anyLayer.dismiss()
-//                                     }
-//                                     anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
-//                                         anyLayer.dismiss()
-//                                     }
-//                                 }.backgroundColorInt(Color.parseColor("#85000000"))
-//                                 .backgroundBlurRadius(10f)
-//                                 .backgroundBlurScale(10f)
-//                                 .show()
-
                          }else if (view.id == R.id.tv_in_shop){
                              if ("3"==getType){
                                  start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
@@ -308,10 +279,32 @@ class FgtNetStationByMap : BaseBackFragment() {
     fun showMarkList(){
         locations.forEach { loc ->
             addMarker(loc)
+            pointList.add(LatLng(loc.lat,loc.lng))
         }
         setSuitZoom(locations)
         stationAdapter.setNewData(locations)
         selectMarker?.let { selectMarker(it) }
+        zoomToSpan()
+    }
+    var pointList = ArrayList<LatLng>()
+    fun zoomToSpan() {
+        if (pointList != null && pointList.size > 0) {
+            if (aMap == null) return
+            val bounds: LatLngBounds = getLatLngBounds(pointList)
+            aMap!!.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50))
+        }
+    }
+
+    /**
+     * 根据自定义内容获取缩放bounds
+     */
+    private fun getLatLngBounds(pointList: List<LatLng>): LatLngBounds {
+        val b = LatLngBounds.builder()
+        for (i in pointList.indices) {
+            val p = pointList[i]
+            b.include(p)
+        }
+        return b.build()
     }
 
 

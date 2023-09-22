@@ -117,7 +117,7 @@ class WithdrawalAccountActivity : AtyBase() {
         if (string.length == 2){
             return "*${string.substring(1,2)}"
         }else if (string.length > 2){
-            return "${string.substring(0,1)}**${string.substring(string.length-2,string.length-1)}"
+            return "${string.substring(0,string.length-3)}**${string.substring(string.length-2,string.length-1)}"
         }else{
             return string
         }

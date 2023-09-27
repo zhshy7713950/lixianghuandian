@@ -66,6 +66,7 @@ class FgtHome : MainTabFragment() {
         var userId = ""
         var hasChangePackege = false //是否有换电套餐
         var modelName = ""
+        var contractId = ""
 
         fun selectDeviceType() {
 
@@ -74,9 +75,21 @@ class FgtHome : MainTabFragment() {
          * 尝试扫描二维码
          */
         fun tryToScan(prefix: String = "", oldContractId: String = "", isHost: String = "") {
-            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                AtyScanQrcode.start(getCurrentAty(), prefix, oldContractId, isHost)
-            })
+            val userInfo = InfoViewModel.getDefault().userInfo.value
+            userInfo?.let {
+                if (it.realname_auth == 1){
+                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        AtyScanQrcode.start(getCurrentAty(), prefix, oldContractId, isHost)
+                    })
+                }else{
+                    showTipDialog(
+                        getCurrentAppAty(),
+                        msg = "您还没有实名认证",
+                        click = {
+                            FgtMain.instance?.start(FgtTrueName())
+                        })
+                }
+            }
 
         }
 
@@ -201,18 +214,13 @@ class FgtHome : MainTabFragment() {
         }else{
             deviceStatus = 0
         }
-        if (deviceStatus == 0){
-            tv_log_info.text =""
-            tv_add_device.text  = "点击添加"
-            iv_add_device.visibility = View.VISIBLE
-        }else if (deviceStatus == 1){
-            tv_log_info.text ="您还没有支付押金"
-            tv_add_device.text  = "点击支付押金"
-            iv_add_device.visibility = View.GONE
-        }else if (deviceStatus == 2){
+       if (deviceStatus == 2){
             tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
             iv_add_device.visibility = View.GONE
+        }else{
+            tv_add_device.text  = "点击添加"
+            iv_add_device.visibility = View.VISIBLE
         }
 
         val llNoItem = root_no_item
@@ -523,7 +531,7 @@ class FgtHome : MainTabFragment() {
             pvBattery.colors = intArrayOf(Color.parseColor("#FFE177"),Color.parseColor("#FF7A5A"),Color.parseColor("#FFE177"))
             tv_error_title.visibility = View.VISIBLE
             tv_error_info.visibility = View.VISIBLE
-            tv_error_info.text = info.alert_msg
+            tv_error_info.text = info.protect_desc
         }else{
             // 通电或者关电状态
             ivWrongBt.visibility  = View.GONE
@@ -638,6 +646,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun initInfoEvent(item:DeviceDetailBean.Data){
+        contractId = item.device_contract.contract_id
         tvFindLocation.setOnClickListener {
             getPermissions(activity,
                 PermissionType.COARSE_LOCATION,

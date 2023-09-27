@@ -164,11 +164,12 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
                 index = if (index == -1) 4 else index
 
                 a.setText(R.id.positionText,(b.pos.toInt() + 1).toString())
-                    .setText(R.id.tvPercent,"${b.electricity}%")
+                    .setText(R.id.tvPercent,if(index < 2)  "${b.electricity}%" else "0%")
                     .setTextColor(R.id.tvPercent,Color.parseColor(colors[index]))
                     .setImageResource(R.id.imageView,resources[index])
                     .setText(R.id.tvCode,"${b.device_id}")
                     .setText(R.id.tvStatus,statusTxt[index])
+
 
             }
         }

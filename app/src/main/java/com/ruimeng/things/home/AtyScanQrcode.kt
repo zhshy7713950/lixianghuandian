@@ -15,7 +15,9 @@ import androidx.annotation.RequiresApi
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
 import com.ruimeng.things.home.FgtHome.Companion.REQUEST_ZXING_CODE
+import com.ruimeng.things.home.helper.ScanResultCheck
 import com.utils.FlashUtil
+import com.utils.ToastHelper
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.aty_scan_qrcode.*
@@ -79,35 +81,11 @@ class AtyScanQrcode : AtyBase() {
         //二维码解析回调函数
         captureFragment.analyzeCallback = object : CodeUtils.AnalyzeCallback {
             override fun onAnalyzeSuccess(mBitmap: Bitmap, result: String) {
-
-
-                this@AtyScanQrcode.apply {
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtras(Bundle().apply {
-                            putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
-                            putString(RESULT_PREFIX, resultPrefix)
-                            putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
-                            putString(IS_HOST, getIsHost)
-                            putString(CodeUtils.RESULT_STRING, result)
-                        })
-                    })
-                    finish()
-                }
+                checkScanResult(result)
             }
 
             override fun onAnalyzeFailed() {
-                this@AtyScanQrcode.apply {
-                    setResult(Activity.RESULT_OK, Intent().apply {
-                        putExtras(Bundle().apply {
-                            putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED)
-                            putString(RESULT_PREFIX, resultPrefix)
-                            putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
-                            putString(IS_HOST, getIsHost)
-                            putString(CodeUtils.RESULT_STRING, "")
-                        })
-                    })
-                    finish()
-                }
+                ToastHelper.shortToast(this@AtyScanQrcode,"二维码错误")
             }
         }
         /**
@@ -117,6 +95,7 @@ class AtyScanQrcode : AtyBase() {
 
         tv_input_code.setOnClickListener {
             val intent = Intent(this, AtyInputCode::class.java)
+            intent.putExtra("type",3)
             startActivityForResult(intent, 1)
 
 //            AnyLayer.with(this)
@@ -164,21 +143,31 @@ class AtyScanQrcode : AtyBase() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == 1001 && data != null){
-            this@AtyScanQrcode.apply {
-                setResult(Activity.RESULT_OK, Intent().apply {
-                    putExtras(Bundle().apply {
-                        putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
-                        putString(RESULT_PREFIX, resultPrefix)
-                        putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
-                        putString(IS_HOST, getIsHost)
-                        putString(CodeUtils.RESULT_STRING, data.getStringExtra("code"))
-                    })
-                })
-                finish()
-            }
+            checkScanResult(data.getStringExtra("code"))
         }
     }
+    private fun checkScanResult(result:String){
+        ScanResultCheck().checkResult(3,result,object :
+            ScanResultCheck.CheckResultListener{
+            override fun checkStatus(pass: Boolean) {
+                if (pass) {
+                    this@AtyScanQrcode.apply {
+                        setResult(Activity.RESULT_OK, Intent().apply {
+                            putExtras(Bundle().apply {
+                                putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
+                                putString(RESULT_PREFIX, resultPrefix)
+                                putString(RESULT_OLD_CONTRACT_ID, resultOldContractId)
+                                putString(IS_HOST, getIsHost)
+                                putString(CodeUtils.RESULT_STRING, result)
+                            })
+                        })
+                        finish()
+                    }
+                }
+            }
+        })
 
+    }
 
 
 

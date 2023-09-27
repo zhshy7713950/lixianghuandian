@@ -237,7 +237,7 @@ class FgtMyContractItem : MainTabFragment() {
                             R.id.tv_change_package_time,
                             "${formatTime(option[0].start_time)}至${formatTime(option[0].end_time)}"
                         )
-                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "${option[0].name}"), textColors))
+                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "换电${option[0].total_times}次"), textColors))
                 }
 
 

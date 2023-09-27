@@ -1,6 +1,7 @@
 package com.ruimeng.things
 
 import android.app.Activity
+import android.graphics.Color
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 
@@ -22,7 +23,12 @@ fun showTipDialog(
             btnNum(1)
             title(title)
             content(msg)
+            bgColor(Color.parseColor("#404E59"))
+            titleTextColor(Color.WHITE)
+            contentTextColor(Color.WHITE)
+            titleLineColor(Color.parseColor("#999999"))
             btnText(clickText)
+            btnTextColor(Color.WHITE)
             setOnBtnClickL(OnBtnClickL {
                 dismiss()
                 click.invoke()
@@ -48,6 +54,11 @@ fun showConfirmDialog(
             btnNum(2)
             title(title)
             content(msg)
+            bgColor(Color.parseColor("#404E59"))
+            titleTextColor(Color.WHITE)
+            contentTextColor(Color.WHITE)
+            titleLineColor(Color.parseColor("#999999"))
+            btnTextColor(Color.WHITE)
             btnText(confirmText, dismissText)
             setOnBtnClickL(OnBtnClickL {
                 dismiss()

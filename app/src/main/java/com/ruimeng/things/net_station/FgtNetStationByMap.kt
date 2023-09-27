@@ -95,7 +95,7 @@ class FgtNetStationByMap : BaseBackFragment() {
 
         aMap?.setOnMarkerClickListener {
             selectMarker(it)
-            aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
+
             false
         }
         showPosInMap()
@@ -109,6 +109,8 @@ class FgtNetStationByMap : BaseBackFragment() {
             marker?.startAnimation()
             setClickedMarkerAnim()
             var agent = markInfoMap[marker.id]
+            aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(agent!!.lat,agent.lng)))
+            aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
             if (agent != null){
                 showInfoPop(agent)
             }
@@ -158,8 +160,6 @@ class FgtNetStationByMap : BaseBackFragment() {
                          }else if (view.id == R.id.tv_in_shop){
                              if ("3"==getType){
                                  start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
-                             }else{
-                                 start(FgtNetStationDetail.newInstance(agent.site_name, agent.id))
                              }
                          }else if (view.id == R.id.tv_navi_here){
                              CommonUtil.naviToLocation(activity!!,agent.lat,agent.lng, agent.site_name)
@@ -283,8 +283,12 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
         setSuitZoom(locations)
         stationAdapter.setNewData(locations)
-        selectMarker?.let { selectMarker(it) }
         zoomToSpan()
+        selectMarker?.let {
+            selectMarker(it)
+        }
+
+
     }
     var pointList = ArrayList<LatLng>()
     fun zoomToSpan() {
@@ -426,6 +430,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                         selectMarker(marker)
                         var latLng = LatLng(b.lat,b.lng)
                         aMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                        aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
                     }
                 }
 

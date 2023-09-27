@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/rectangle_gray_bg_top"
         android:padding="10dp"
@@ -68,7 +68,6 @@
 
                 <TextView
                     android:id="@+id/tv_in_shop"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

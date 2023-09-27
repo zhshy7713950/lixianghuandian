@@ -244,6 +244,18 @@
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
 				android:textSize="13sp"/>
+
+			<TextView
+				android:id="@+id/tvStop"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:drawableTop="@mipmap/ic_stop_contract"
+				android:text="暂停合约"
+				android:gravity="center_horizontal"
+				android:drawablePadding="8dp"
+				android:textColor="#ffffffff"
+				android:textSize="13sp"/>
 			<TextView
 				android:id="@+id/tvReback"
 				android:layout_width="wrap_content"

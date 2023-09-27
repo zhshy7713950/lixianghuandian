@@ -37,16 +37,23 @@ class MarkPopupWindow(
         val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
         val tv_phone_call = v.findViewById<TextView>(R.id.tv_phone_call)
         val tv_agent_code = v.findViewById<TextView>(R.id.tv_agent_code)
+        val tv_in_shop = v.findViewById<TextView>(R.id.tv_in_shop)
 
         if (type == "3"){
             tv_phone_call.text = "联系经销商"
             tv_agent_code.visibility = View.VISIBLE
             tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可换电池数：","${agent.count}"))
+            tv_in_shop.visibility = View.VISIBLE
         }else{
             tv_phone_call.text = "立即联系"
             tv_agent_code.visibility = View.GONE
             tv_agent_code.text = TextUtil.getSpannableString(arrayOf("代理编码：",agent.tag))
             tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可租电池数：","${agent.count}"))
+            tv_in_shop.visibility = View.GONE
+        }
+        tv_in_shop.setOnClickListener {
+            markCallback.click(it, agent)
+            dismiss()
         }
 
 

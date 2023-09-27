@@ -120,7 +120,7 @@
             android:textColor="#ffffffff"
             android:drawableLeft="@mipmap/ic_trajector_calendar"
             android:drawablePadding="2dp"
-            android:textSize="12sp"
+            android:textSize="11sp"
             />
     </LinearLayout>
     <View
@@ -153,7 +153,7 @@
             android:textColor="#ffffffff"
             android:drawableLeft="@mipmap/ic_trajector_calendar"
             android:drawablePadding="5dp"
-            android:textSize="12sp"
+            android:textSize="11sp"
             />
     </LinearLayout>
     <View

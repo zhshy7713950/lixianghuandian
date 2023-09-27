@@ -58,6 +58,7 @@ data class DeviceDetailBean(
             var ntc: String = "", // 2
             var productiondate: String = "", // 9554
             var protect: String = "", // 0
+            var protect_desc: String = "", // 0
             var rsoc: String = "", // 63
             var signallength: String = "", // 14
             var silenttime: String = "", // 65535

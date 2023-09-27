@@ -565,6 +565,11 @@ class FgtPayRentMoney : BaseBackFragment() {
                         }
                     }
                 }
+                onFail { i, s ->
+                    iv_battery_pay_rent_money.postDelayed({
+                       pop()
+                    },1000)
+                }
             }
         }else{
             http {

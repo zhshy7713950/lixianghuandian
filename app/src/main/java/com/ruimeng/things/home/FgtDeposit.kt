@@ -108,12 +108,14 @@ class FgtDeposit : BaseBackFragment() {
                 override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
                     tv_account_deposit.text = data.get(options1)
                     FgtHome.IsWholeBikeRent = options1 == 0
+                    showTotalMoney()
                 }
             })
         }
         if (data.deposit_option.size > 0){
             tv_select_package_deposit.text = data.deposit_option.get(0).name
             batteryCombinationBean = data.deposit_option.get(0)
+            showTotalMoney()
             tv_select_package_deposit.setOnClickListener {
                 var filters = data.deposit_option.map { depositOption: GetDepositBean.Data.DepositOption -> depositOption.name }
                 OptionPickerUtil.showOptionPicker(activity,filters ,object :
@@ -121,6 +123,7 @@ class FgtDeposit : BaseBackFragment() {
                     override fun onOptionsSelect(options1: Int, options2: Int, options3: Int, v: View?) {
                         tv_select_package_deposit.text = filters.get(options1)
                         batteryCombinationBean = data.deposit_option.get(options1)
+                        showTotalMoney()
                     }
                 })
             }
@@ -222,6 +225,7 @@ class FgtDeposit : BaseBackFragment() {
 //            }
 //
 //        }
+
 
 
         fun renderPackage() {
@@ -339,7 +343,15 @@ class FgtDeposit : BaseBackFragment() {
 //        dealPayWay(PayWay.NULL)
     }
 
+    private  fun showTotalMoney(){
+        batteryCombinationBean.let {
+            if (it != null) {
+                tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
+                tv_total.text = tv_money_account_deposit.text
+            }
+        }
 
+    }
     private fun checkCombination(combinationBean: GetDepositBean.Data.DepositOption) {
 
 //        batteryCombinationBean = combinationBean
@@ -490,8 +502,8 @@ class FgtDeposit : BaseBackFragment() {
         http {
             url = "apiv4/getdeposit"
             params["device_id"] = deviceId
-            params["is_host"] = getIsHost
-            params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")
+            params["is_host"] = "2"
+            params["cg_mode"] = "1"
             onSuccess { res ->
 
                 scroll_account_deposit?.let {

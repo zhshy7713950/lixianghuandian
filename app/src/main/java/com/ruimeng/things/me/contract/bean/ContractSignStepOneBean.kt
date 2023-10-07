@@ -8,7 +8,7 @@ data class ContractSignStepOneBean(
     data class Data(
         var contract_id: String = "", // dcf28bf7-1edb-84c8-5487-1eaf6bfa3bb0
         var deposit: String = "", // 2161
-        var device_id: Int = 0, // 858
+        var device_id: String = "", // 858
         var model_str: String = "", // 型号a55
         var rent: String = "", // 970
         var renttime_str: String = "", // 5 个月

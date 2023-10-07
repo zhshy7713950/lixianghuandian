@@ -426,6 +426,7 @@ class FgtHome : MainTabFragment() {
             url = "/apiv6/payment/getuserpaymentinfo"
             params["user_id"] = userId
             params["device_id"] = CURRENT_DEVICEID
+            IS_SHOW_MSG = false
             onSuccess {res->
                 paymentCode = 200
                 srl_home?.let {
@@ -711,6 +712,8 @@ class FgtHome : MainTabFragment() {
 
         }
     }
+
+
 
     private fun initTabLayout() {
         tabBattery.apply {

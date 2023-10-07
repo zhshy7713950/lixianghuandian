@@ -10,6 +10,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.home.bean.PaymentInfo
+import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.ruimeng.things.wxapi.WXEntryActivity
 import com.utils.TextUtil
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.fgt_pay_rent_money.rgPayRent
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_view_rant_protocol_pay_rent_money
 import kotlinx.android.synthetic.main.fgt_single_pay.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.json.JSONObject
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
@@ -95,8 +97,7 @@ class FgtSinglePay : BaseBackFragment() {
             IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
         }
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-            val dlg = DialogFragmentRentProtocol()
-            dlg.show(childFragmentManager, "protocol")
+           start(FgtContractSignStep1.newInstance(FgtHome.contractId,"",0,1))
         }
         btn_pay_now_pay_rent_money.setOnClickListener {
             if (!IS_CHECKED_PROTOCOL) {
@@ -176,6 +177,11 @@ class FgtSinglePay : BaseBackFragment() {
             }
         }
     private var retryTime = 0
+    @Subscribe
+    fun checkContract(event: ContractCheckEvent) {
+        IS_CHECKED_PROTOCOL = true
+        iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
+    }
     /**
      * 获取服务器上的支付结果
      */

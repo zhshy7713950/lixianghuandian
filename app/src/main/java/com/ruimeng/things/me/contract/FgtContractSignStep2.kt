@@ -17,12 +17,14 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
+import com.ruimeng.things.home.ContractCheckEvent
 import com.ruimeng.things.me.widget.signature_view.SignatureView
 import com.ruimeng.things.shop.PostGlideEngine
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
 import kotlinx.android.synthetic.main.fgt_contract_sign_step_2.*
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -62,46 +64,57 @@ class FgtContractSignStep2 : BaseBackFragment() {
 
         initTopbar(topbar, "合同签约")
 
-        fl_front_id_card.setOnClickListener { getPic() }
 
-        fl_hw.setOnClickListener { sign(activity) }
+//
+//        fl_front_id_card.setOnClickListener { getPic() }
+//
+//        fl_hw.setOnClickListener { sign(activity) }
 
 
         btn_submit.setOnClickListener {
 
-            fun doSubmit() {
-                http {
-                    url = PathV3.CONFIRM_SIGN
+            fun checkSign(){
+                val fileDirName =activity?.application?.externalCacheDir?.absolutePath + File.separator + "img"//应用缓存地址
 
-                    params["contract_id"] = contractId
-                    params["id_png"] = frontImgUrl
-                    params["usersign_png"] = hwImgUrl
-
-                    onSuccessWithMsg { res, msg ->
-                        EasyToast.DEFAULT.show(msg)
-                        UserInfoLiveData.refresh()
-                        setFragmentResult(FgtContractSignStep1.RESULT_CODE_SHOULD_POP, Bundle())
-                        pop()
+                val dirFile = File(fileDirName)
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs()
+                }
+                val lasSignFilePath = File(dirFile, "ec_signature.jpg").absolutePath
+                val lastFile = File(lasSignFilePath)
+                if (lastFile.exists()) {
+                    val delete = lastFile.delete()
+                    if (delete) {
+                        //删除图片
+                        Log.e("w-", "删除电子签名成功")
+                    } else {
+                        Log.e("w-", "删除电子签名失败")
                     }
+                } else {
+                    lastFile.createNewFile()
+                }
 
-                    onFail { code, msg ->
-                        EasyToast.DEFAULT.show(msg)
-                    }
+                val signatureBitmap = signatureView.signatureBitmap
+
+                if (trySaveBmp2Jpg(signatureBitmap, lastFile)) {
+                    upLoadImg(lasSignFilePath, true)
+                } else {
+                    EasyToast.DEFAULT.show("保存失败")
                 }
             }
 
-            if (frontImgUrl.isBlank()) {
-                EasyToast.DEFAULT.show("请上传身份证人脸照片")
-                return@setOnClickListener
-            }
+//            if (frontImgUrl.isBlank()) {
+//                EasyToast.DEFAULT.show("请上传身份证人脸照片")
+//                return@setOnClickListener
+//            }
 
             QMUIDialog.MessageDialogBuilder(activity)
-                .setTitle("请阅读后点击确认!")
-                .setMessage("是否确认签约？ ")
+                .setTitle("请确认是否提交!")
+                .setMessage("")
 
                 .addAction("确认") { dialog, index ->
                     dialog.dismiss()
-                    doSubmit()
+                    checkSign()
                 }
 
                 .addAction("取消") { dialog, index ->
@@ -114,19 +127,19 @@ class FgtContractSignStep2 : BaseBackFragment() {
     }
 
 
-    private fun setFrontImg(imgUrl: String) {
-        frontImgUrl = imgUrl
-        rl_front_id_card.visibility = View.GONE
-        iv_front_id_card.visibility = View.VISIBLE
-        iv_front_id_card.loadImg(frontImgUrl)
-    }
-
-    private fun setHwImg(imgUrl: String) {
-        hwImgUrl = imgUrl
-        tv_hw.visibility = View.GONE
-        iv_hw.visibility = View.VISIBLE
-        iv_hw.loadImg(imgUrl)
-    }
+//    private fun setFrontImg(imgUrl: String) {
+//        frontImgUrl = imgUrl
+//        rl_front_id_card.visibility = View.GONE
+//        iv_front_id_card.visibility = View.VISIBLE
+//        iv_front_id_card.loadImg(frontImgUrl)
+//    }
+//
+//    private fun setHwImg(imgUrl: String) {
+//        hwImgUrl = imgUrl
+//        tv_hw.visibility = View.GONE
+//        iv_hw.visibility = View.VISIBLE
+//        iv_hw.loadImg(imgUrl)
+//    }
 
     private fun getPic() {
         getPermissions(getCurrentAty(), PermissionType.CAMERA,PermissionType.WRITE_EXTERNAL_STORAGE, allGranted = {
@@ -179,7 +192,31 @@ class FgtContractSignStep2 : BaseBackFragment() {
                 val data = json.optJSONObject("data")
                 val imgUrl = data.optString("string")
 
-                if (!isHwImg) setFrontImg(imgUrl) else setHwImg(imgUrl)
+//                if (!isHwImg) setFrontImg(imgUrl) else setHwImg(imgUrl)
+                doSubmit()
+
+            }
+        }
+
+    }
+    private fun   doSubmit() {
+        http {
+            url = PathV3.CONFIRM_SIGN
+
+            params["contract_id"] = contractId
+//            params["id_png"] = frontImgUrl
+            params["usersign_png"] = hwImgUrl
+
+            onSuccessWithMsg { res, msg ->
+                EasyToast.DEFAULT.show(msg)
+                UserInfoLiveData.refresh()
+                setFragmentResult(FgtContractSignStep1.RESULT_CODE_SHOULD_POP, Bundle())
+                EventBus.getDefault().post(ContractCheckEvent(true))
+                pop()
+            }
+
+            onFail { code, msg ->
+                EasyToast.DEFAULT.show(msg)
             }
         }
     }
@@ -210,8 +247,7 @@ class FgtContractSignStep2 : BaseBackFragment() {
 
     private fun sign(aty: Activity?) {
 
-        val fileDirName =
-            activity?.application?.externalCacheDir?.absolutePath + File.separator + "img"//应用缓存地址
+        val fileDirName =activity?.application?.externalCacheDir?.absolutePath + File.separator + "img"//应用缓存地址
 
         val dirFile = File(fileDirName)
         if (!dirFile.exists()) {

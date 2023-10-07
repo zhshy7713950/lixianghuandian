@@ -46,19 +46,19 @@ class FgtMyContractDetail : BaseBackFragment() {
 
     companion object {
 
-        fun newInstance(contractId: String, deviceId: Int): FgtMyContractDetail {
+        fun newInstance(contractId: String, deviceId: String): FgtMyContractDetail {
 
             return FgtMyContractDetail().apply {
                 arguments = Bundle().apply {
                     putString("contractId", contractId)
-                    putInt("deviceId", deviceId)
+                    putString("deviceId", deviceId)
                 }
             }
         }
     }
 
     private val contractId by lazy { arguments?.getString("contractId", "") ?: "" }
-    private val deviceId by lazy { arguments?.getInt("deviceId", 0) ?: 0 }
+    private val deviceId by lazy { arguments?.getString("deviceId", "") ?: "" }
 
     override fun getLayoutRes(): Int = com.ruimeng.things.R.layout.fgt_my_contract_detail
 

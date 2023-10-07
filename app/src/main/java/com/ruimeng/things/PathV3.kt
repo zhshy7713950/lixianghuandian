@@ -28,6 +28,7 @@ object PathV3 {
      * V3-合同签约信息
      */
     val SIGN_CONTRACT = "/apiv3/signcontract"
+    val PAYMENT_SIGN_CONTRACT = "/apiv6/payment/signcontract"
 
 
     /**

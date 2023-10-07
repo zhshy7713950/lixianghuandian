@@ -15,8 +15,11 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtViewBigImg
+import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
+import com.ruimeng.things.home.ContractCheckEvent
+import com.ruimeng.things.home.FgtDeposit
 import com.ruimeng.things.me.FgtUploadAuthInfo
 import com.ruimeng.things.me.contract.bean.ContractSignStepOneBean
 import com.utils.DensityHelper
@@ -28,6 +31,7 @@ import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_device_num_my_co
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_rent_long_my_contract_detail
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_rent_money_my_contract_detail
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import wongxd.base.BaseBackFragment
 import wongxd.base.custom.bannerByRv.BannerRecyclerView.OnPageChangeListener
 import wongxd.common.*
@@ -44,12 +48,13 @@ class FgtContractSignStep1 : BaseBackFragment() {
 
         val RESULT_CODE_SHOULD_POP = 1002
 
-        fun newInstance(contractId: String, qStr: String, contractType: Int): FgtContractSignStep1 {
+        fun newInstance(contractId: String, qStr: String, contractType: Int,pageType:Int = 0): FgtContractSignStep1 {
             val fgt = FgtContractSignStep1()
             val b = Bundle()
             b.putString("contractId", contractId)
             b.putString("qStr", qStr)
             b.putInt("contractType", contractType)
+            b.putInt("pageType", pageType)
             fgt.arguments = b
             return fgt
         }
@@ -61,11 +66,13 @@ class FgtContractSignStep1 : BaseBackFragment() {
 
     private val qStr by lazy { arguments?.getString("qStr") ?: "" }
     private val contractType by lazy { arguments?.getInt("contractType") ?: 1 }
+    // 0 从合约列表进入， 1 查看合约（支付押金、单次购买、续期升级）  2 查看合约需要签名（支付租金）
+    private val getPageType by lazy { arguments?.getInt("pageType",0) }
     private val colors = arrayOf("#FFFFFF","#B2C1CE")
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
-        initTopbar(topbar, "在线签约")
+        initTopbar(topbar, if (getPageType == 1) "租赁协议" else "合同签约")
         progressDlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "加载中", false)
         progressDlg?.show()
         getContractInfo()
@@ -79,12 +86,17 @@ class FgtContractSignStep1 : BaseBackFragment() {
             pop()
         }
     }
-
+    @Subscribe
+    fun checkContract(event: ContractCheckEvent) {
+        pop()
+    }
     private fun getContractInfo() {
 
         http {
-            url = PathV3.SIGN_CONTRACT
-            params["contract_id"] = contractId
+            url = if (getPageType == 1) PathV3.PAYMENT_SIGN_CONTRACT else PathV3.SIGN_CONTRACT
+            if (getPageType != 1){
+                params["contract_id"] = contractId
+            }
 
             onFinish {
                 progressDlg?.dismissWithAnimation()
@@ -100,12 +112,26 @@ class FgtContractSignStep1 : BaseBackFragment() {
                     val data = bean.data
 
 
+                    if (getPageType != 0){
+                        layout_battery1.visibility = View.VISIBLE
+                        layout_battery2.visibility = View.GONE
+                        if (getPageType == 1){
+                            tv_battery_num_pay_rent_money.text = FgtDeposit.deviceId
+                            tv_battery_model_pay_rent_money.text = FgtDeposit.deviceModel
+                        }else{
+                            tv_battery_num_pay_rent_money.text = "${data.device_id}"
+                            tv_battery_model_pay_rent_money.text = "${data.model_str}"
+                        }
+                    }else{
+                        layout_battery1.visibility = View.GONE
+                        layout_battery2.visibility = View.VISIBLE
+                        tv_device_num_my_contract_detail.text = "电池编号：${data.device_id}"
+                        tv_device_model_my_contract_detail.text = "${data.model_str}"
+                        tv_rent_long_my_contract_detail.text = "${data.renttime_str}"
+                        tv_deposit_my_contract_detail.text = "${data.deposit}元"
+                        tv_rent_money_my_contract_detail.text = "${data.rent}元"
+                    }
 
-                    tv_device_num_my_contract_detail.text = "电池编号：${data.device_id}"
-                    tv_device_model_my_contract_detail.text = "${data.model_str}"
-                    tv_rent_long_my_contract_detail.text = "${data.renttime_str}"
-                    tv_deposit_my_contract_detail.text = "${data.deposit}元"
-                    tv_rent_money_my_contract_detail.text = "${data.rent}元"
 
 
                     vp_sign_contract.apply {
@@ -130,28 +156,43 @@ class FgtContractSignStep1 : BaseBackFragment() {
                     indicator.attachToViewPager(vp_sign_contract)
                     tv_contract_page.text = TextUtil.getSpannableString(arrayOf("合同预览","(${1}/${data.sign_pngs.size})"),colors)
 
-
-                    object : CountDownTimer((data.wait_sec * 1000).toLong(), 1000.toLong()) {
-                        override fun onTick(millisUntilFinished: Long) {
-                            MainLooper.runOnUiThread {
-                                btn_sign_contract?.text =
-                                    "我已阅读并同意合同内容(${millisUntilFinished / 1000}s)"
-                                btn_sign_contract?.setOnClickListener {}
-                            }
-                        }
-                        override fun onFinish() {
-                            MainLooper.runOnUiThread {
-                                btn_sign_contract?.text = "我已阅读并同意合同内容"
-                                btn_sign_contract?.setOnClickListener {
-                                    startForResult(
-                                        FgtContractSignStep2.newInstance(data.contract_id),
-                                        RESULT_CODE_SHOULD_POP
-                                    )
+                    if (getPageType != 1){
+                        object : CountDownTimer((data.wait_sec * 1000).toLong(), 1000.toLong()) {
+                            override fun onTick(millisUntilFinished: Long) {
+                                MainLooper.runOnUiThread {
+                                    btn_sign_contract?.text =
+                                        "我已阅读并同意合同内容(${millisUntilFinished / 1000}s)"
+                                    btn_sign_contract?.setOnClickListener {}
                                 }
                             }
+                            override fun onFinish() {
+                                MainLooper.runOnUiThread {
+                                    btn_sign_contract?.text = "我已阅读并同意合同内容"
+                                    btn_sign_contract?.setOnClickListener {
+                                        startForResult(
+                                            FgtContractSignStep2.newInstance(data.contract_id),
+                                            RESULT_CODE_SHOULD_POP
+                                        )
+                                    }
+                                }
+                            }
+                        }.start()
+                    }else{
+                        btn_sign_contract?.text = "我已确认"
+                        btn_sign_contract.setOnClickListener {
+                            EventBus.getDefault().post(ContractCheckEvent(true))
                         }
-                    }.start()
-
+                    }
+                    sv_contract.postDelayed({
+                        if (sv_contract != null) {
+                            sv_contract.fullScroll(View.FOCUS_DOWN)
+                        }
+                    },500)
+                    sv_contract.postDelayed({
+                        if (sv_contract != null){
+                            sv_contract.fullScroll(View.FOCUS_UP)
+                        }},
+                    1500)
 
                 }
 
@@ -209,7 +250,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
             val imageView = view.findViewById(R.id.iv) as ImageView
 
 //            val tv = view.findViewById(R.id.tv) as TextView
-//            tv.text = "${position + 1}/${list.size}"
+//            tv.text = "${position + 1}/${list.size}"`
             imageView.setOnClickListener {
                 start(
                     FgtViewBigImg.newInstance(

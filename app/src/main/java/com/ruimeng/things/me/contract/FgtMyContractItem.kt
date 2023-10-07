@@ -260,7 +260,7 @@ class FgtMyContractItem : MainTabFragment() {
                 }
 
                 a.getView<View>(R.id.ll_content).setOnClickListener {
-                    startFgt(FgtMyContractDetail.newInstance(b.contract_id, b.device_id))
+                    startFgt(FgtMyContractDetail.newInstance(b.contract_id, b.device_id.toString()))
                 }
             }
         }

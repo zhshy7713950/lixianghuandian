@@ -587,6 +587,7 @@
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_select_charge"
                     android:layout_width="match_parent"
                     android:layout_height="48dp">
 
@@ -623,6 +624,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_select_platform"
                     android:layout_width="match_parent"
                     android:layout_height="48dp">
 
@@ -659,6 +661,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_select_insurance"
                     android:layout_width="match_parent"
                     android:layout_height="48dp">
 

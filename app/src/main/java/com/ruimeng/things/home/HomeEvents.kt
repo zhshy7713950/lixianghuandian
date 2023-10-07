@@ -7,3 +7,5 @@ package com.ruimeng.things.home
 data class BatteryOpenEvent(val isOpen:Boolean)
 
 data class BatteryInfoChangeEvent(val device_id:String)
+
+data class ContractCheckEvent(val check:Boolean)

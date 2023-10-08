@@ -184,7 +184,7 @@ class FgtDeposit : BaseBackFragment() {
 //            val dlg = DialogFragmentRentProtocol()
 //            dlg.show(childFragmentManager, "protocol")
             start(
-                FgtContractSignStep1.newInstance("", "", 0, 1)
+                FgtContractSignStep1.newInstance("", "", 0, 1,deviceId,data.device.device_model)
             )
         }
 

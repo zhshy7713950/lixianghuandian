@@ -156,39 +156,19 @@
             android:textSize="11sp"
             />
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@drawable/shape_line" />
+
 
     <FrameLayout
+        android:id="@+id/layout_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="40dp"
         android:layout_marginRight="18dp"
        >
-
-        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-            android:id="@+id/qrf_sign"
-            app:qmui_backgroundColor="#F4A060"
-            app:qmui_radius="14dp"
-            android:layout_width="102dp"
-            android:layout_height="27dp"
-            android:layout_gravity="left"
-            android:layout_marginLeft="20dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="3dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="3dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="补签合同"
-                android:layout_gravity="center"
-                android:textColor="#343646"
-                android:textSize="13sp" />
-        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/shape_line"
+            android:layout_gravity="top"/>
 
 
         <FrameLayout
@@ -196,7 +176,7 @@
             android:background="@drawable/bg_btn_common1"
             android:layout_width="102dp"
             android:layout_height="27dp"
-            android:layout_gravity="right"
+            android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
             android:paddingLeft="10dp"
             android:paddingTop="3dp"

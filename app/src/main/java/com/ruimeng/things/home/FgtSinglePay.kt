@@ -57,6 +57,7 @@ class FgtSinglePay : BaseBackFragment() {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, "单次换电")
         getPaymentInfo()
+        EventBus.getDefault().register(this)
     }
     private fun getPaymentInfo(){
         http {
@@ -73,8 +74,8 @@ class FgtSinglePay : BaseBackFragment() {
         }
     }
     private fun showView(paymentInfo : PaymentInfo){
-        tv_battery_num_pay_rent_money.text = paymentInfo.device_id
-        tv_battery_model_pay_rent_money.text = paymentInfo.model_name
+        tv_battery_num_pay_rent_money.text = deviceId
+        tv_battery_model_pay_rent_money.text = paymentInfo.modelName
         tv_price.text = TextUtil.getMoneyText("${paymentInfo.single_price}")
         tv_total_price.text = TextUtil.getMoneyText( "${paymentInfo.single_price}")
         var formatter = SimpleDateFormat("yyyy-MM-dd")
@@ -97,7 +98,7 @@ class FgtSinglePay : BaseBackFragment() {
             IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
         }
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-           start(FgtContractSignStep1.newInstance(FgtHome.contractId,"",0,1))
+           start(FgtContractSignStep1.newInstance(FgtHome.contractId,"",0,1,deviceId,paymentInfo.modelName))
         }
         btn_pay_now_pay_rent_money.setOnClickListener {
             if (!IS_CHECKED_PROTOCOL) {

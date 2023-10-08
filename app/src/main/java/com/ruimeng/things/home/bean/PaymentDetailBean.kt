@@ -42,6 +42,7 @@ data class Data(
     val rent_day: String,
     val rent_money: Double,
     val rent_status: String,
+    val active_status: String,
     val rent_time: String,
     val total_rent_money: Double,
     val user_id: String,

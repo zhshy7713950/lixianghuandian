@@ -62,7 +62,7 @@ class FgtHome : MainTabFragment() {
 
         var IsWholeBikeRent = true
         var getIsHost = "1"
-        var deviceStatus = 0 //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金
+        var deviceStatus = 0 //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金 3 已过期
         var userId = ""
         var hasChangePackege = false //是否有换电套餐
         var modelName = ""
@@ -211,14 +211,20 @@ class FgtHome : MainTabFragment() {
             deviceStatus = 1
         }else if (deviceCode == 201 && paymentCode == 200){
             deviceStatus = 2
-        }else{
+        }else if (paymentCode == 202){
+            deviceStatus = 3
+        } else{
             deviceStatus = 0
         }
        if (deviceStatus == 2){
             tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
             iv_add_device.visibility = View.GONE
-        }else{
+        }else if (deviceStatus == 3){
+           tv_log_info.text ="您的基础套餐已过期，清及时续费"
+           tv_add_device.text  = "点击购买套餐"
+           iv_add_device.visibility = View.GONE
+       } else{
             tv_add_device.text  = "点击添加"
             iv_add_device.visibility = View.VISIBLE
         }
@@ -230,6 +236,7 @@ class FgtHome : MainTabFragment() {
                 0-> tryToScan()
                 1 -> tryToScan()
                 2 -> dealScanResult(NO_PAY_DEVICEID)
+                3-> dealScanResult(NO_PAY_DEVICEID)
             }
         }
 
@@ -432,6 +439,11 @@ class FgtHome : MainTabFragment() {
                 srl_home?.let {
                     paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                     NO_PAY_DEVICEID = paymentDetailBean!!.device_id
+                    //套餐已失效
+                    if (paymentDetailBean!!.active_status != "1"){
+                        dealTwoStatus(false)
+                        paymentCode = 202
+                    }
                     initNoItemView()
 
                     showPackageInfo()

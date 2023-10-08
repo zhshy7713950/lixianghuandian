@@ -48,11 +48,13 @@ class FgtContractSignStep1 : BaseBackFragment() {
 
         val RESULT_CODE_SHOULD_POP = 1002
 
-        fun newInstance(contractId: String, qStr: String, contractType: Int,pageType:Int = 0): FgtContractSignStep1 {
+        fun newInstance(contractId: String, qStr: String, contractType: Int,pageType:Int = 0,deviceId:String ="",deviceModel:String=""): FgtContractSignStep1 {
             val fgt = FgtContractSignStep1()
             val b = Bundle()
             b.putString("contractId", contractId)
             b.putString("qStr", qStr)
+            b.putString("deviceId", deviceId)
+            b.putString("deviceModel", deviceModel)
             b.putInt("contractType", contractType)
             b.putInt("pageType", pageType)
             fgt.arguments = b
@@ -65,6 +67,8 @@ class FgtContractSignStep1 : BaseBackFragment() {
     private val contractId: String by lazy { arguments?.getString("contractId") ?: "" }
 
     private val qStr by lazy { arguments?.getString("qStr") ?: "" }
+    private val deviceModel by lazy { arguments?.getString("deviceModel") ?: "" }
+    private val deviceId by lazy { arguments?.getString("deviceId") ?: "" }
     private val contractType by lazy { arguments?.getInt("contractType") ?: 1 }
     // 0 从合约列表进入， 1 查看合约（支付押金、单次购买、续期升级）  2 查看合约需要签名（支付租金）
     private val getPageType by lazy { arguments?.getInt("pageType",0) }
@@ -76,6 +80,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
         progressDlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "加载中", false)
         progressDlg?.show()
         getContractInfo()
+        EventBus.getDefault().register(this)
     }
 
 
@@ -116,8 +121,8 @@ class FgtContractSignStep1 : BaseBackFragment() {
                         layout_battery1.visibility = View.VISIBLE
                         layout_battery2.visibility = View.GONE
                         if (getPageType == 1){
-                            tv_battery_num_pay_rent_money.text = FgtDeposit.deviceId
-                            tv_battery_model_pay_rent_money.text = FgtDeposit.deviceModel
+                            tv_battery_num_pay_rent_money.text = deviceId
+                            tv_battery_model_pay_rent_money.text = deviceModel
                         }else{
                             tv_battery_num_pay_rent_money.text = "${data.device_id}"
                             tv_battery_model_pay_rent_money.text = "${data.model_str}"

@@ -241,24 +241,12 @@ class FgtMyContractItem : MainTabFragment() {
                 }
 
 
-                a.getView<QMUIRoundFrameLayout>(R.id.qrf_sign).apply {
-                    visibility = if (b.btn_sign == 1) View.VISIBLE else View.GONE
-                    setOnClickListener {
-                        startFgt(
-                            FgtContractSignStep1.newInstance(
-                                b.contract_id,
-                                qStr,
-                                contractType
-                            )
-                        )
-                    }
-                }
-
                 a.getView<FrameLayout>(R.id.qrf_return).apply {
                     visibility = if (b.btn_return == 1) View.VISIBLE else View.GONE
                     setOnClickListener { tryReturnDeposit(b.contract_id) }
                 }
 
+                a.setGone(R.id.layout_btn,b.btn_return == 1)
                 a.getView<View>(R.id.ll_content).setOnClickListener {
                     startFgt(FgtMyContractDetail.newInstance(b.contract_id, b.device_id.toString()))
                 }

@@ -592,6 +592,7 @@
                     android:layout_height="48dp">
 
                     <TextView
+                        android:id="@+id/tv_select_charge_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"
@@ -629,6 +630,7 @@
                     android:layout_height="48dp">
 
                     <TextView
+                        android:id="@+id/tv_select_platform_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"
@@ -958,8 +960,8 @@
 
                 <TextView
                     android:id="@+id/tv_coupon_price"
-                    android:layout_width="53dp"
-                    android:layout_height="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="60dp"
                     android:layout_marginBottom="5dp"
                     android:textColor="#ff929fab"

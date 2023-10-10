@@ -70,4 +70,14 @@ object TextUtil {
         return builder
 
     }
+
+    fun  getDoubleSizeText(text1 :String,text2:String,ratio: Float): SpannableStringBuilder {
+        var builder = SpannableStringBuilder()
+        builder.append(text1)
+        val tag = SpannableString(text2)
+        tag.setSpan(RelativeSizeSpan(ratio),0,text2.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.append(tag)
+        return builder
+
+    }
 }

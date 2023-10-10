@@ -205,17 +205,29 @@ class FgtHome : MainTabFragment() {
         }
     }
 
-
-    private fun initNoItemView() {
+    private fun showHomePageInfo(){
+        //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金 3 已过期
         if (deviceCode == 201 && paymentCode == 208){
             deviceStatus = 1
         }else if (deviceCode == 201 && paymentCode == 200){
             deviceStatus = 2
-        }else if (paymentCode == 202){
+        }else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status != "1"){
             deviceStatus = 3
         } else{
             deviceStatus = 0
         }
+        if (deviceStatus == 0){
+            dealTwoStatus(true)
+            deviceDetailBean?.let { item ->
+                showNewDeviceData(item)
+                showPackageInfo()
+            }
+        }else{
+            dealTwoStatus(false)
+        }
+    }
+
+    private fun initNoItemView() {
        if (deviceStatus == 2){
             tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
@@ -224,9 +236,12 @@ class FgtHome : MainTabFragment() {
            tv_log_info.text ="您的基础套餐已过期，清及时续费"
            tv_add_device.text  = "点击购买套餐"
            iv_add_device.visibility = View.GONE
+           root_has_item.visibility = View.GONE
+           root_no_item.visibility = View.VISIBLE
        } else{
             tv_add_device.text  = "点击添加"
             iv_add_device.visibility = View.VISIBLE
+
         }
 
         val llNoItem = root_no_item
@@ -409,13 +424,7 @@ class FgtHome : MainTabFragment() {
             IS_SHOW_MSG = false
 
             onSuccess { res ->
-                srl_home?.let {
-                    dealTwoStatus(true)
-                    deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
-                    deviceDetailBean?.let { item ->
-                        showNewDeviceData(item)
-                    }
-                }
+                deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
                 deviceCode = 200
                 getPaymentInfo()
             }
@@ -423,6 +432,8 @@ class FgtHome : MainTabFragment() {
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
                 CURRENT_DEVICEID = ""
                 deviceCode = i
+            }
+            onFinish {
                 getPaymentInfo()
             }
         }
@@ -436,23 +447,13 @@ class FgtHome : MainTabFragment() {
             IS_SHOW_MSG = false
             onSuccess {res->
                 paymentCode = 200
-                srl_home?.let {
-                    paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
-                    NO_PAY_DEVICEID = paymentDetailBean!!.device_id
-                    //套餐已失效
-                    if (paymentDetailBean!!.active_status != "1"){
-                        dealTwoStatus(false)
-                        paymentCode = 202
-                    }
-                    initNoItemView()
-
-                    showPackageInfo()
-
-                }
+                paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                NO_PAY_DEVICEID = paymentDetailBean!!.device_id
+                showHomePageInfo()
             }
             onFail { i, s ->
                 paymentCode = i
-                initNoItemView()
+                showHomePageInfo()
             }
             onFinish {
                 srl_home?.finishRefresh()

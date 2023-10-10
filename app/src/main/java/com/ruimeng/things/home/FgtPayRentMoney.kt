@@ -270,6 +270,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
         tv_option_time.text = showExpireTitle() + "无"
+        selectOption = null
         setSelectOption()
         computeAmount()
     }
@@ -415,8 +416,8 @@ class FgtPayRentMoney : BaseBackFragment() {
             val filterOptions = paymentInfo.options.filter { it.option_type == type }
             if (filterOptions != null && filterOptions.size > 0){
                 when (type){
-                    "5"->titleText.text = "是否带充电器(${filterOptions[0].price}元/月)"
-                    "4"->titleText.text ="是否租赁车架(${filterOptions[0].price}元/月)"
+                    "5"->titleText.text = TextUtil.getDoubleSizeText("是否带充电器","(${filterOptions[0].price}元/月)",0.9f)
+                    "4"->titleText.text =TextUtil.getDoubleSizeText("是否租赁车架","(${filterOptions[0].price}元/月)",0.9f)
                     "3"->titleText.text = "是否购买保险"
                 }
 
@@ -430,7 +431,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 }
                 if (alreadyBuy){
                     val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
-                    textView.text = "是（${ price.toDouble() }元)"
+                    textView.text = "是(${ price.toDouble() }元)"
                     textView.textColor = Color.parseColor("#929FAB")
                 }else{
                     textView.textColor = Color.WHITE
@@ -448,7 +449,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                             }
                         }else{
                             val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
-                            filters.add("是（${ price.toDouble() }元)")
+                            filters.add("是(${ price.toDouble() }元)")
                         }
                         OptionPickerUtil.showSingleOptionPicker(activity,filters){
                             textView.text = it
@@ -593,22 +594,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 } else {
                     tv_ticket_pay_rent_money.text = "请选择"
                 }
-
                 couponList.addAll(result)
-
-
-                //条件选择器
-//                pvOptions = OptionsPickerBuilder(activity
-//                ) { options1, option2, options3, v ->
-//                    //返回的分别是三个级别的选中位置
-//                    val item = list[options1]
-//                    tv_ticket_pay_rent_money.text = item.coupon_label
-//                    couponId = item.id
-//                    tv_ticket_pay_rent_money.performClick()
-//                    computeAmount()
-//                }
-//                    .build<MyCouponBean.Data>()
-//                pvOptions?.setPicker(list)
             }
 
 

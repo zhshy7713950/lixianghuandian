@@ -130,7 +130,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_base_package_create_title.visibility = View.VISIBLE
             cl_update_package_title.visibility = View.GONE
         } else {
-            ll_package.visibility = View.VISIBLE
+            ll_package.visibility = View.GONE
             tv_base_package_update_title.text = "可选续期套餐"
             ll_change_package_create_title.visibility = View.GONE
             tv_change_package_update_title.visibility = View.VISIBLE
@@ -139,7 +139,16 @@ class FgtPayRentMoney : BaseBackFragment() {
             cl_update_package_title.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {
-            activity?.let { it1 -> CompanyDescPopup(it1) }
+            activity?.let { it1 -> CompanyDescPopup(it1,"","") }
+        }
+        tv_option_desc.setOnClickListener {
+            var text = "选择”基础套餐“后，”带充电器“和”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+            if (pageType == PAGE_TYPE_UPDATE){
+                text = "1.若在”已购套餐“中，已经选择过”带充电器“或”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择使用\n" +
+                        "2.若选择暂不续期”基础套餐“，则无需选择”带充电器“和”租赁车架“选项\n" +
+                        "3.选择其他”基础套餐“后，”带充电器“和”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+            }
+            activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
         }
         tv_option_time.text = showExpireTitle() + "无"
         tv_rant_long_pay_time.text = showExpireTitle() + "无"
@@ -392,77 +401,73 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
 
 
-    private fun showOptionSelector(options:List<PaymentOption>,type:String,textView: TextView,clickView: View){
-        val filterOptions = options.filter { it.option_type == type }
-        if (filterOptions != null && filterOptions.size > 0){
-            textView.textColor = Color.WHITE
-            textView.text = "请选择"
-            clickView.setOnClickListener {
-                var filters: ArrayList<String> = ArrayList()
-                filters.add("否")
-                if (type == "3"){
-                    filterOptions.forEach {
-                        filters.add("${it.name }(${it.price}元)")
-                    }
-                }else{
-                    filters.add("是（${ filterOptions.get(0).price}元)")
-                }
-                OptionPickerUtil.showSingleOptionPicker(activity,filters){
-                    textView.text = it
-                    computeAmount()
-                }
-            }
+    private fun showOptionSelector(paymentInfo: PaymentInfo,type:String,textView: TextView,clickView: View,titleText:TextView){
+        when (type) {
+            "5" -> titleText.text = "是否带充电器"
+            "4" -> titleText.text = "是否租赁车架"
+            "3" -> titleText.text = "是否购买保险"
+        }
+        textView.textColor = Color.parseColor("#929FAB")
+        clickView.setOnClickListener {}
+        if (paymentInfo.pname == "暂不续期"){
+            textView.text = "无需选择"
         }else{
-            textView.text ="否"
-            textView.textColor = Color.parseColor("#929FAB")
+            val filterOptions = paymentInfo.options.filter { it.option_type == type }
+            if (filterOptions != null && filterOptions.size > 0){
+                when (type){
+                    "5"->titleText.text = "是否带充电器(${filterOptions[0].price}元/月)"
+                    "4"->titleText.text ="是否租赁车架(${filterOptions[0].price}元/月)"
+                    "3"->titleText.text = "是否购买保险"
+                }
+
+                var alreadyBuy = false
+                if (pageType == PAGE_TYPE_UPDATE){
+                    if (type == "5" && tv_other_option1.text.toString() !="否"){
+                        alreadyBuy = true
+                    }else if (type == "4" && tv_other_option2.text.toString() !="否"){
+                        alreadyBuy = true
+                    }
+                }
+                if (alreadyBuy){
+                    val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
+                    textView.text = "是（${ price.toDouble() }元)"
+                    textView.textColor = Color.parseColor("#929FAB")
+                }else{
+                    textView.textColor = Color.WHITE
+                    textView.text = "请选择"
+                }
+                clickView.setOnClickListener {
+                    if (alreadyBuy){
+                        ToastHelper.shortToast(context,"”已购套餐“中已经选择过”"+(if (type=="5") "带充电器" else "租赁车架")+"“，无法进行更改")
+                    }else{
+                        var filters: ArrayList<String> = ArrayList()
+                        filters.add("否")
+                        if (type == "3"){
+                            filterOptions.forEach {
+                                filters.add("${it.name }(${it.price}元)")
+                            }
+                        }else{
+                            val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
+                            filters.add("是（${ price.toDouble() }元)")
+                        }
+                        OptionPickerUtil.showSingleOptionPicker(activity,filters){
+                            textView.text = it
+                            computeAmount()
+                        }
+                    }
+
+                }
+            }else {
+                textView.text = "否"
+            }
         }
     }
     private fun setSelectOption(){
         newGetRentBean.let {
             if (it != null) {
-                if (pageType == PAGE_TYPE_CREATE){
-                    showOptionSelector(it.options,"5",tv_select_charge,cl_select_charge)
-                    showOptionSelector(it.options,"4",tv_select_platform,cl_select_platform)
-                    showOptionSelector(it.options,"3",tv_select_insurance,cl_select_insurance)
-                }else{
-                    if (it.pname == "暂不续期"){
-                        // 如果用户选择的暂不续期-请选择改为无需选择，文字置灰
-                        tv_select_charge.text = "无需选择"
-                        tv_select_platform.text = "无需选择"
-                        tv_select_insurance.text = "无需选择"
-                        tv_select_charge.textColor = Color.parseColor("#929FAB")
-                        tv_select_platform.textColor = Color.parseColor("#929FAB")
-                        tv_select_insurance.textColor = Color.parseColor("#929FAB")
-                    }else{
-                        tv_select_charge.textColor = Color.WHITE
-                        tv_select_platform.textColor = Color.WHITE
-                        tv_select_insurance.textColor = Color.WHITE
-                        tv_select_charge.text = "请选择"
-                        tv_select_platform.text = "请选择"
-                        tv_select_insurance.text = "请选择"
-                        if (tv_other_option1.text.toString() !="否"){
-                            val option = it.options.filter { it.option_type =="5" }.first()
-                            if (option != null){
-                                tv_select_charge_title.text = "是否带充电器(${option.price}元/月)"
-                                val price = BigDecimal(option.price).multiply(BigDecimal(it.time_num))
-                                tv_select_charge.text = "是(${price.toDouble()}元)"
-                            }
-                        }else{
-                            showOptionSelector(it.options,"5",tv_select_charge,cl_select_charge)
-                        }
-                        if (tv_other_option2.text.toString() !="否"){
-                            val option = it.options.filter { it.option_type =="4" }.first()
-                            if (option != null){
-                                tv_select_platform_title.text = "是否租赁车架(${option.price}元/月)"
-                                val price = BigDecimal(option.price).multiply(BigDecimal(it.time_num))
-                                tv_select_platform.text = "是(${price.toDouble()}元)"
-                            }
-                        }else{
-                            showOptionSelector(it.options,"4",tv_select_platform,cl_select_platform)
-                        }
-                        showOptionSelector(it.options,"3",tv_select_insurance,cl_select_insurance)
-                    }
-                }
+                showOptionSelector(it,"5",tv_select_charge,cl_select_charge,tv_select_charge_title)
+                showOptionSelector(it,"4",tv_select_platform,cl_select_platform,tv_select_platform_title)
+                showOptionSelector(it,"3",tv_select_insurance,cl_select_insurance,tv_select_insurance_title)
             }
         }
     }

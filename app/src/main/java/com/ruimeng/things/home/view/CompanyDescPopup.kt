@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -16,11 +17,15 @@ import com.ruimeng.things.R
 import com.ruimeng.things.me.bean.MyCouponBean
 import wongxd.common.bothNotNull
 
-class CompanyDescPopup (private val activity: Activity
+class CompanyDescPopup (private val activity: Activity,private val title:String,private val text:String
 
 ) : PopupWindow(activity)  {
     init {
         contentView = View.inflate(activity, R.layout.popup_company_descl, null)
+        val titleView = contentView.findViewById<TextView>(R.id.tv_title)
+        val contentText = contentView.findViewById<TextView>(R.id.tv_content)
+        titleView.text = title
+        contentText.text = text
         contentView.setOnClickListener { dismiss() }
         width = ViewGroup.LayoutParams.MATCH_PARENT
         height = ViewGroup.LayoutParams.MATCH_PARENT

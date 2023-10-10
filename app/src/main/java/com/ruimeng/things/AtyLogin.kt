@@ -121,13 +121,13 @@ class AtyLogin : AtyBase() {
         })
         checkStatus(true)
         tv_phone1.setOnClickListener {
-            doLoginHttp(tv_phone1.text.toString(),"1")
+            doLoginHttp(tv_phone1.text.toString(),"220525")
         }
         tv_phone2.setOnClickListener {
-            doLoginHttp(tv_phone2.text.toString(),"1")
+            doLoginHttp(tv_phone2.text.toString(),"220525")
         }
         tv_phone3.setOnClickListener {
-            doLoginHttp(tv_phone3.text.toString(),"1")
+            doLoginHttp(tv_phone3.text.toString(),"220525")
         }
     }
 

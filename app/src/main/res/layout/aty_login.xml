@@ -173,7 +173,7 @@
 				android:id="@+id/tv_phone1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="18081016948"
+				android:text="13550160009"
 				android:textColor="@color/white"
 				/>
 			<TextView

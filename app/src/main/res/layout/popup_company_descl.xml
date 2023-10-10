@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp">
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="换电套餐说明"
@@ -36,6 +37,7 @@
                 android:scaleType="centerInside"/>
         </FrameLayout>
         <TextView
+            android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="四川享锂来科技有限公司（创立于2018年3月，注册于天府新区自贸区，注册资金1000万元。公司自成立之初，便着力于打造“享锂来”及“精明睿锂”智慧锂电运营平台，力争实现锂电池在全社会的便捷应用，为全社会提供优质、智慧、便捷的能源及能源解决方案。

@@ -416,7 +416,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             val filterOptions = paymentInfo.options.filter { it.option_type == type }
             if (filterOptions != null && filterOptions.size > 0){
                 when (type){
-                    "5"->titleText.text = TextUtil.getDoubleSizeText("是否带充电器","(${filterOptions[0].price}元/月)",0.9f)
+                    "5"->titleText.text = TextUtil.getDoubleSizeText("是否带充电器","(押金${filterOptions[0].price}元)",0.9f)
                     "4"->titleText.text =TextUtil.getDoubleSizeText("是否租赁车架","(${filterOptions[0].price}元/月)",0.9f)
                     "3"->titleText.text = "是否购买保险"
                 }
@@ -447,7 +447,9 @@ class FgtPayRentMoney : BaseBackFragment() {
                             filterOptions.forEach {
                                 filters.add("${it.name }(${it.price}元)")
                             }
-                        }else{
+                        }else if (type == "5"){
+                            filters.add("是(${ filterOptions.get(0).price }元)")
+                        } else{
                             val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
                             filters.add("是(${ price.toDouble() }元)")
                         }
@@ -461,6 +463,10 @@ class FgtPayRentMoney : BaseBackFragment() {
             }else {
                 textView.text = "否"
             }
+        }
+        if (type == "5" && tv_other_option1.text.toString() !="否" && pageType == PAGE_TYPE_UPDATE){
+            textView.text = "押金已付"
+            textView.textColor = Color.parseColor("#929FAB")
         }
     }
     private fun setSelectOption(){

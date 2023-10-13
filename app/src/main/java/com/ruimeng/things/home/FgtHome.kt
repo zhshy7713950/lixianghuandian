@@ -67,6 +67,11 @@ class FgtHome : MainTabFragment() {
         var hasChangePackege = false //是否有换电套餐
         var modelName = ""
         var contractId = ""
+        var deposit = 0.0
+        var rent_day = ""
+        var rent_time = ""
+        var totalvoltage = ""
+        var rsoc = ""
 
         fun selectDeviceType() {
 
@@ -232,15 +237,18 @@ class FgtHome : MainTabFragment() {
             tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
             iv_add_device.visibility = View.GONE
+           btnReturn.visibility = View.VISIBLE
         }else if (deviceStatus == 3){
            tv_log_info.text ="您的基础套餐已过期，清及时续费"
            tv_add_device.text  = "点击购买套餐"
            iv_add_device.visibility = View.GONE
            root_has_item.visibility = View.GONE
            root_no_item.visibility = View.VISIBLE
+           btnReturn.visibility = View.VISIBLE
        } else{
             tv_add_device.text  = "点击添加"
             iv_add_device.visibility = View.VISIBLE
+           btnReturn.visibility = View.GONE
 
         }
 
@@ -253,6 +261,9 @@ class FgtHome : MainTabFragment() {
                 2 -> dealScanResult(NO_PAY_DEVICEID)
                 3-> dealScanResult(NO_PAY_DEVICEID)
             }
+        }
+        btnReturn.setOnClickListener {
+            startFgt(FgtReturn.newInstance(NO_PAY_DEVICEID))
         }
 
     }
@@ -426,6 +437,8 @@ class FgtHome : MainTabFragment() {
             onSuccess { res ->
                 deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
                 deviceCode = 200
+                rent_day = deviceDetailBean!!.device_contract.rent_day
+                rent_time = deviceDetailBean!!.device_contract.rent_time
                 getPaymentInfo()
             }
             onFail { i, s ->
@@ -449,6 +462,11 @@ class FgtHome : MainTabFragment() {
                 paymentCode = 200
                 paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                 NO_PAY_DEVICEID = paymentDetailBean!!.device_id
+                modelName = paymentDetailBean!!.battery.model_name
+                totalvoltage = paymentDetailBean!!.battery.totalvoltage
+                rsoc = paymentDetailBean!!.battery.rsoc
+                deposit = paymentDetailBean!!.deposit
+
                 showHomePageInfo()
             }
             onFail { i, s ->
@@ -581,8 +599,9 @@ class FgtHome : MainTabFragment() {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
                 tv_package_time.text = TextUtil.formatTime(paymentDetailBean!!.begin_time,paymentDetailBean!!.exp_time)
-                //看是否有单次换电
                 val options = ArrayList<PaymentOption>()
+                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
+                //看是否有单次换电
                 if ( paymentDetailBean?.singleChangeInfo != null){
                     val singleOption = paymentDetailBean!!.singleChangeInfo
                    singleOption.change_times = "1"
@@ -593,7 +612,6 @@ class FgtHome : MainTabFragment() {
                     singleOption.single_option = true
                    options.add(singleOption)
                 }
-                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
                 //是否有换电套餐
                 if (!options.isEmpty()){
                     // 是否有生效套餐
@@ -681,7 +699,7 @@ class FgtHome : MainTabFragment() {
             })
 
         }
-        tvReback.setOnClickListener {startFgt(FgtReturn())  }
+        tvReback.setOnClickListener {startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))  }
         changeOpenDoor?.setOnClickListener {
             if (hasChangePackege){
                 getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {

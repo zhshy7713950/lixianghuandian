@@ -68,6 +68,9 @@ import java.util.Arrays
 class FgtReturn : BaseBackFragment() {
     override fun getLayoutRes(): Int = R.layout.fgt_return
 
+
+    val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
+
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, "退还")
@@ -218,62 +221,21 @@ class FgtReturn : BaseBackFragment() {
 
     @SuppressLint("SetTextI18n")
     fun getBatteryInfo() {
-
-        http {
-            IS_SHOW_MSG = false
-            url = "/apiv4/getonedevice"
-            params["device_id"] = FgtHome.CURRENT_DEVICEID
-            IS_SHOW_MSG = false
-
-            onSuccess {
-                val result = it.toPOJO<DeviceDetailBean>().data
-
-                if (1 == result.popmsg.show_msg) {
-                    CommonPromptDialogHelper.promptCommonDialog(
-                        activity!!,
-                        "",
-                        result.popmsg.msg,
-                        "",
-                        "",
-                        true,
-                        false,
-                        false,
-                        true,
-                        object : CommonDialogCallBackHelper {
-                            override fun back(viewId: Int, msg: String?) {
-
-                            }
-
-                        }
-                    )
-                }
-
-                if ("0"==result.device_contract.is_sign){
-                   signDialog(activity!!,result.device_contract.contract_id)
-                }
-                var textColors = arrayOf("#929FAB","#FFFFFF")
-                tv_battery_code.text =   "电池编号：" + result.device_base.device_id
-                tv_model_return.text =   TextUtil.getSpannableString(arrayOf("电池型号：",FgtHome.modelName),textColors)
-                tv_deposit_return.text = TextUtil.getSpannableString(arrayOf("押       金：",result.device_contract.deposit),textColors)
-                tv_rent_long_return.text = TextUtil.getSpannableString(arrayOf("租用时长：", result.device_contract.rent_day + "月"),textColors)
-                tv_rent_start_return.text = TextUtil.getSpannableString(arrayOf("起租时间：" , result.device_contract.rent_time.toLong().getTime(false)),textColors)
-                tv_u_return.text = TextUtil.getSpannableString(arrayOf("电       压：" , result.device_base.totalvoltage + "V"),textColors)
-
-
-                tv_pay_money_return.text = TextUtil.getSpannableString(arrayOf("电       池：", result.device_contract.total_rent_money + "元"),textColors)
-                tv_km_return.text = TextUtil.getSpannableString(arrayOf("共  行  驶：" , "*KM"),textColors)
-                tv_charge_num_return.text = TextUtil.getSpannableString(arrayOf("充电次数：" , result.device_base.loopnum),textColors)
-                tv_energy_return.text = TextUtil.getSpannableString(arrayOf("电       量：" , result.device_base.rsoc + "%"),textColors)
-                tv_wh_return.text = TextUtil.getSpannableString(arrayOf("功       率：" , "*W"),textColors)
-
-
-            }
-
-            onFail { code, msg ->
-                EasyToast.DEFAULT.show("获取电池信息失败，无法进行后续操作")
-                pop()
-            }
+        var textColors = arrayOf("#929FAB","#FFFFFF")
+        tv_battery_code.text =   "电池编号：" + deviceId
+        tv_model_return.text =   TextUtil.getSpannableString(arrayOf("电池型号：",FgtHome.modelName),textColors)
+        tv_deposit_return.text = TextUtil.getSpannableString(arrayOf("押       金：","${FgtHome.deposit}"),textColors)
+        if (FgtHome.rent_day == ""){
+            tv_rent_long_return.visibility = View.GONE
+            tv_rent_start_return.visibility = View.GONE
+        }else{
+            tv_rent_long_return.visibility = View.VISIBLE
+            tv_rent_start_return.visibility = View.VISIBLE
+            tv_rent_long_return.text = TextUtil.getSpannableString(arrayOf("租用时长：", FgtHome.rent_day + "月"),textColors)
+            tv_rent_start_return.text = TextUtil.getSpannableString(arrayOf("起租时间：" , FgtHome.rent_time.toLong().getTime(false)),textColors)
         }
+        tv_u_return.text = TextUtil.getSpannableString(arrayOf("电       压：" , FgtHome.totalvoltage + "V"),textColors)
+        tv_energy_return.text = TextUtil.getSpannableString(arrayOf("电       量：" , FgtHome.rsoc + "%"),textColors)
     }
 
 
@@ -419,6 +381,13 @@ class FgtReturn : BaseBackFragment() {
         val FILE_DIR_NAME = Wongxd.instance.packageName//应用缓存地址
         val FILE_IMG_NAME = "images"//放置图片缓存
         val REQUEST_IMAGE = 1002
+        fun  newInstance(deviceId: String) : FgtReturn{
+            val fgt = FgtReturn()
+            val b = Bundle()
+            b.putString("deviceId", deviceId)
+            fgt.arguments = b
+            return fgt
+        }
     }
 
 

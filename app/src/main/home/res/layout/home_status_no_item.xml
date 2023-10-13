@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     android:background="#272831"
     android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -64,6 +73,21 @@
                 android:textSize="15sp"
                 android:textColor="#272934" />
         </LinearLayout>
-
     </FrameLayout>
+    <TextView
+
+        android:id="@+id/btnReturn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="50dp"
+        android:text="点击退还电池"
+        android:textSize="15sp"
+        android:textColor="#272934"
+        android:gravity="center"
+        android:background="@drawable/bg_btn_common1"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

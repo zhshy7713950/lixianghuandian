@@ -142,11 +142,13 @@ class FgtPayRentMoney : BaseBackFragment() {
             activity?.let { it1 -> CompanyDescPopup(it1,"","") }
         }
         tv_option_desc.setOnClickListener {
-            var text = "选择”基础套餐“后，”带充电器“和”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+            var text = "1.选择”基础套餐“后，”带充电器“选项，将会显示对应押金支付金额\n" +
+                    "2.同时，”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
             if (pageType == PAGE_TYPE_UPDATE){
-                text = "1.若在”已购套餐“中，已经选择过”带充电器“或”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择使用\n" +
-                        "2.若选择暂不续期”基础套餐“，则无需选择”带充电器“和”租赁车架“选项\n" +
-                        "3.选择其他”基础套餐“后，”带充电器“和”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+                text = "1.若在”已购套餐“中，已经支付过”充电器“的押金，则后续无需再次支付\n" +
+                        "2.若在”已购套餐“中，已经选择过”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择如下：\n" +
+                        "1）选择暂不续期”基础套餐“，则无需选择”租赁车架“选项\n" +
+                        "2）选择其他”基础套餐“，”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
             }
             activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
         }
@@ -439,7 +441,11 @@ class FgtPayRentMoney : BaseBackFragment() {
                 }
                 clickView.setOnClickListener {
                     if (alreadyBuy){
-                        ToastHelper.shortToast(context,"”已购套餐“中已经选择过”"+(if (type=="5") "带充电器" else "租赁车架")+"“，无法进行更改")
+                        if (type == "5"){
+                            ToastHelper.shortToast(context,"”已购套餐“中已支付过充电器押金，无需再次支付")
+                        }else{
+                            ToastHelper.shortToast(context,"”已购套餐“中已经选择过租赁车架“，无法进行更改")
+                        }
                     }else{
                         var filters: ArrayList<String> = ArrayList()
                         filters.add("否")

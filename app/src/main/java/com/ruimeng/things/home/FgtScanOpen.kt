@@ -130,7 +130,7 @@ class FgtScanOpen : BaseBackFragment() {
             setOnBtnClickL(OnBtnClickL {
                 http {
                     url = "/apiv6/payment/activeoption"
-                    params["user_option_id"] = "${option.option_id}"
+                    params["user_option_id"] = "${option.id}"
                     onSuccess {
                         ToastHelper.shortToast(context,"启用成功")
                         dismiss()

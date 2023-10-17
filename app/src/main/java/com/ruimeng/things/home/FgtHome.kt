@@ -645,7 +645,7 @@ class FgtHome : MainTabFragment() {
                         tv_no_package.visibility = View.VISIBLE
                         tv_btn_change_package.visibility = View.VISIBLE
                         tv_btn_change_package.setOnClickListener {
-                            activeOption(options.filter { it.active_status =="2" }.first().option_id)
+                            activeOption(options.filter { it.active_status =="2" }.first().id)
                         }
                     }
                 }else{

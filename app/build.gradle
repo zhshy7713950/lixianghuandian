@@ -10,7 +10,7 @@ apply from: '../wongxd/config.gradle'
 //读取Git commit number
 static def getGitCommitNumber() {
 //    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
-    return 594
+    return 596
 }
 
 
@@ -39,7 +39,7 @@ static def getGitVersionInfo() {
 android {
 
     defaultConfig {
-        applicationId "com.ruimeng.things"
+        applicationId "com.xianglilai.lixianghuandian"
         versionCode getGitCommitNumber()
         versionName "1.0.${getGitCommitNumber()}"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -51,20 +51,20 @@ android {
     }
 
 
-    signingConfigs {
-        debug {
-            storeFile file("app.keystore")
-            storePassword "123456"
-            keyAlias "jh"
-            keyPassword "123456"
-        }
-        release {
-            storeFile file("app.keystore")
-            storePassword "123456"
-            keyAlias "jh"
-            keyPassword "123456"
-        }
-    }
+//    signingConfigs {
+//        debug {
+//            storeFile file("app.keystore")
+//            storePassword "123456"
+//            keyAlias "jh"
+//            keyPassword "123456"
+//        }
+//        release {
+//            storeFile file("app.keystore")
+//            storePassword "123456"
+//            keyAlias "jh"
+//            keyPassword "123456"
+//        }
+//    }
 
 
     buildTypes {

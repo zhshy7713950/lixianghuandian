@@ -7,8 +7,8 @@ class CountAmountBean (
 
         ){
     data class Data(
-        var totalPrice: Int = 0,
-        var couponAmount: Int = 0
+        var totalPrice: Double = 0.0,
+        var couponAmount: Double = 0.0
     )
 
 }

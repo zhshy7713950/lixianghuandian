@@ -46,6 +46,8 @@ data class Data(
     val rent_time: String,
     val total_rent_money: Double,
     val user_id: String,
+    val exp_remind:Int,
+    val exp_remind_msg:String,
     val singleChangeInfo:PaymentOption,
     val battery : BatteryInfo
 )

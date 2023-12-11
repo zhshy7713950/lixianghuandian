@@ -167,7 +167,7 @@
 			android:layout_width="match_parent"
 			app:layout_constraintBottom_toBottomOf="parent"
 			android:layout_height="wrap_content"
-			android:visibility="gone"
+			android:visibility="visible"
 			android:layout_marginBottom="10dp">
 			<TextView
 				android:id="@+id/tv_phone1"
@@ -188,7 +188,7 @@
 				android:id="@+id/tv_phone3"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="17348000945"
+				android:text="13541349134"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>

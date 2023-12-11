@@ -546,9 +546,9 @@ class FgtHome : MainTabFragment() {
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
         tv_remark_num.text = item.device_contract.remark
-        if ("0" == item.device_contract.is_sign) {
-            signDialog(activity!!, item.device_contract.contract_id)
-        }
+//        if ("0" == item.device_contract.is_sign) {
+//            signDialog(activity!!, item.device_contract.contract_id)
+//        }
         initInfoEvent(item)
         tabBattery.selectTab(0)
         layoutPackage.visibility =View.VISIBLE

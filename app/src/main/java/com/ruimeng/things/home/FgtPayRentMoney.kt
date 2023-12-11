@@ -69,6 +69,7 @@ import wongxd.common.toPOJO
 import wongxd.http
 import java.lang.Exception
 import java.math.BigDecimal
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Arrays
 import java.util.Date
@@ -741,8 +742,8 @@ class FgtPayRentMoney : BaseBackFragment() {
             jsonParam = getSubmitParam()
             onSuccessWithMsg { res, msg ->
                 val result = res.toPOJO<CountAmountBean>().data
-                tv_total_price.text = TextUtil.getMoneyText("${result.totalPrice}")
-                tv_coupon_price.text = "已优惠¥${result.couponAmount}"
+                tv_total_price.text = TextUtil.getMoneyText("${DecimalFormat("#.##").format(result.totalPrice)}")
+                tv_coupon_price.text = "已优惠¥${ DecimalFormat("#.##").format(result.couponAmount)}"
                 if (submit) {
                     countPay()
                 }

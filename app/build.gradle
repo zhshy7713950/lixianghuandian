@@ -51,20 +51,20 @@ android {
     }
 
 
-//    signingConfigs {
-//        debug {
-//            storeFile file("app.keystore")
-//            storePassword "123456"
-//            keyAlias "jh"
-//            keyPassword "123456"
-//        }
-//        release {
-//            storeFile file("app.keystore")
-//            storePassword "123456"
-//            keyAlias "jh"
-//            keyPassword "123456"
-//        }
-//    }
+    signingConfigs {
+        debug {
+            storeFile file("lxhd.jks")
+            storePassword "123456"
+            keyAlias "lxhd"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("lxhd.jks")
+            storePassword "123456"
+            keyAlias "lxhd"
+            keyPassword "123456"
+        }
+    }
 
 
     buildTypes {
@@ -85,11 +85,11 @@ android {
             //def date = new Date().format("yyyyMMdd" , TimeZone.getTimeZone("Asia/Shanghai"))
 //            def date = new Date().format("yyyy-MM-dd hh.mm", TimeZone.getTimeZone("GMT+08"))
             if (variant.buildType.name == 'debug') {
-                outputFileName = "享锂来租赁_${versionName}-debug.apk"
+                outputFileName = "锂享换电_${versionName}-debug.apk"
             }
             if (variant.buildType.name == 'release') {
 //                outputFileName = "享锂来租赁_${date}_${versionName}-release.apk"
-                outputFileName = "享锂来租赁_${versionName}.apk"
+                outputFileName = "锂享换电_${versionName}.apk"
             }
         }
     }

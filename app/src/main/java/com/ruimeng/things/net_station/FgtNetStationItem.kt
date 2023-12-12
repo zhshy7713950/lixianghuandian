@@ -2,6 +2,7 @@ package com.ruimeng.things.net_station
 
 import android.graphics.Color
 import android.media.Image
+import android.opengl.Visibility
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
@@ -278,18 +279,25 @@ class FgtNetStationItem : MainTabFragment() {
                 val tvCode = a.getView<TextView>(R.id.tv_code)
                 val tvNumber = a.getView<TextView>(R.id.tv_number)
                 val imageView = a.getView<ImageView>(R.id.iv01)
-
+                helper.setGone(R.id.tv_change_number,isReturnStation)
+                    .setGone(R.id.tv_change_title,isReturnStation)
+                    .setGone(R.id.tv_number,!isReturnStation)
+                    .setGone(R.id.tv_code,!isReturnStation)
                 if (!isReturnStation) {
                     tvCode.text =  "${b.tag}"
-                    tvCode.visibility = View.VISIBLE
                     imageView.setImageResource(R.mipmap.ic_shouhou)
                     tvCall.setText("立即联系")
                     tvNumber.text = "可租电池数：${b.count}"
                 }else{
-                    tvCode.visibility = View.GONE
                     imageView.setImageResource(R.mipmap.ic_statation)
                     tvCall.setText("联系经销商")
                     tvNumber.text = "可换电池数：${b.count}"
+                    helper.setText(R.id.tv_change_number,"${b.count}");
+                    if (b.count.toInt() > 2 ){
+                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#29EBB6"))
+                    }else{
+                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#FEB41E"))
+                    }
                 }
             }
         }

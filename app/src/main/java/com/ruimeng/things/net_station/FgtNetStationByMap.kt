@@ -1,5 +1,7 @@
 package com.ruimeng.things.net_station
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -18,6 +20,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.App
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.utils.BitmapUtil
 import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import wongxd.base.BaseBackFragment
@@ -383,8 +386,25 @@ class FgtNetStationByMap : BaseBackFragment() {
             .zIndex(10f)
             .position(LatLng(agent.lat, agent.lng))
             .draggable(false)
+        var markerBitmap:Bitmap
+        if(getType == "3") {
+            markerBitmap =
+                context?.let { BitmapUtil().overlayTextOnImage(it,
+                    if(agent.count.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
+                    agent.count,
+                    if(agent.count.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
 
-        markerOption?.icon(bitmap)
+        }else {
+            markerBitmap =
+                context?.let {
+                    BitmapFactory.decodeResource(
+                        context!!.resources,
+                        R.mipmap.service_station_small
+                    )
+                }!!
+        }
+        markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
+
 
         var marker = aMap?.addMarker(markerOption)
         if (marker != null){
@@ -417,12 +437,18 @@ class FgtNetStationByMap : BaseBackFragment() {
                     .setText(R.id.tv_location,"${b.address}")
                     .setImageResource(R.id.iv01,if(getType == "3")  R.mipmap.marker_net_station_big else R.mipmap.service_station_big)
                 if (getType == "3"){
-                    a.setText(R.id.tv_number,"${b.count}")
-                        .setText(R.id.text2,"可换电池数：")
+                    a.setText(R.id.tv_count,"${b.count}")
+                        .setGone(R.id.tv_count,true)
+                        .setGone(R.id.tv_count_title,true)
+                        .setTextColor(R.id.tv_count,if (b.count.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                    a.setGone(R.id.iv01,false)
                 }else{
-                    a.setText(R.id.tv_number,"${b.tel}")
-                        .setText(R.id.text2,"电话：")
+                    a.setGone(R.id.iv01,true)
+                        .setGone(R.id.tv_count,false)
+                        .setGone(R.id.tv_count_title,false)
                 }
+                a.setText(R.id.tv_number,"${b.tel}")
+                    .setText(R.id.text2,"电话：")
                 a.itemView.setOnClickListener{
                     var marker = markerMap[b.markerId]
                     if (marker != null){

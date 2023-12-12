@@ -599,12 +599,19 @@ class FgtHome : MainTabFragment() {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
                 tv_package_time.text = TextUtil.formatTime(paymentDetailBean!!.begin_time,paymentDetailBean!!.exp_time)
+                if (paymentDetailBean!!.exp_remind == 1){
+                    tv_exp_remind.visibility =  View.VISIBLE
+                    tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
+                }else{
+                    tv_exp_remind.visibility =  View.GONE
+                }
+
                 val options = ArrayList<PaymentOption>()
                 options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
                 //看是否有单次换电
                 if ( paymentDetailBean?.singleChangeInfo != null){
                     val singleOption = paymentDetailBean!!.singleChangeInfo
-                   singleOption.change_times = "1"
+                    singleOption.change_times = "1"
                     singleOption.show_start_time = singleOption.start_time
                     singleOption.show_end_time = singleOption.end_time
                     singleOption.name = "单次换电"

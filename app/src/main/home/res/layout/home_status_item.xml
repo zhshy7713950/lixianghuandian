@@ -410,6 +410,7 @@
 						tools:text="成都2个月" />
 
 					<TextView
+						android:id="@+id/tv_package_time_name"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="91dp"
@@ -418,6 +419,24 @@
 						android:textSize="11sp"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
+
+					<com.flyco.roundview.RoundTextView
+						android:id="@+id/tv_exp_remind"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="即将到期，请及时续费"
+						android:textColor="@color/white"
+						android:textSize="8sp"
+						app:layout_constraintLeft_toRightOf="@id/tv_package_time_name"
+						app:layout_constraintTop_toTopOf="@id/tv_package_time_name"
+						app:layout_constraintBottom_toBottomOf="@id/tv_package_time_name"
+						app:rv_backgroundColor="#DE3F4C"
+						app:rv_cornerRadius="2dp"
+						android:paddingLeft="2dp"
+						android:paddingRight="2dp"
+						android:layout_marginLeft="5dp"
+						android:gravity="center_vertical"
+						/>
 
 					<TextView
 						android:id="@+id/tv_package_time"

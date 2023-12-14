@@ -246,6 +246,7 @@ class AtyLogin : AtyBase() {
         http {
             url = Path.WX_LOGIN
             params["code"] = code
+            params["appType"] = "lxhd"
 
             onSuccess {
                 val loginBean = it.toPOJO<LoginBean>()

@@ -245,6 +245,14 @@ class FgtDeposit : BaseBackFragment() {
                 val result = JSONObject(res)
                 if (result.getInt("errcode") == 200){
                     agentMap = result.getJSONObject("data")
+                    if (deviceId.startsWith("8") && deviceId.length == 8){
+                        if (agentMap != null && agentMap!!.has(FgtHome.AGENT_CODE)) {
+                            et_agnet_name_deposit_code.setText(FgtHome.AGENT_CODE)
+                            et_agnet_name_deposit.text = agentMap!!.getString(FgtHome.AGENT_CODE)
+                        } else {
+                            et_agnet_name_deposit.text = ""
+                        }
+                    }
                 }
             }
         }
@@ -307,6 +315,7 @@ class FgtDeposit : BaseBackFragment() {
             params["device_id"] = deviceId
             params["code"] = agentCode
             params["cg_mode"] = "1"
+            params["appType"] = "lxhd"
             params["host"] = if (FgtHome.IsWholeBikeRent) "1" else "2"
             //1微信支付2支付宝支付99线下支付 芝麻信用 101
             params["pay_type"] = when (PAY_WAY_TAG) {

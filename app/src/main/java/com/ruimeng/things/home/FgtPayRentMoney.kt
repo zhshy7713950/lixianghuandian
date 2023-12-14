@@ -859,6 +859,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         var params: MutableMap<String, Any> = mutableMapOf()
         params["deviceId"] = deviceId
         params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
+        params["appType"] = "lxhd"
         if (couponId != 0) {
             params["couponId"] = "${couponId}"
         }

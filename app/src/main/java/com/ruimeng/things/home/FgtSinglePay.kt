@@ -116,6 +116,7 @@ class FgtSinglePay : BaseBackFragment() {
                 url ="/apiv6/payment/singlechangePay"
                 params["user_id"] = FgtHome.userId
                 params["device_id"] = deviceId
+                params["appType"] = "lxhd"
                 params["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1" else "2"
                 params["price"] = paymentInfo.single_price
                 onFail { code, msg ->

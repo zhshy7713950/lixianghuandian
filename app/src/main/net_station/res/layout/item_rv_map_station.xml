@@ -86,6 +86,8 @@
             android:layout_height="wrap_content"
             android:text="新街里荟锦路南城都汇8期（海博牙科旁）"
             android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="12sp"
             />
     </LinearLayout>

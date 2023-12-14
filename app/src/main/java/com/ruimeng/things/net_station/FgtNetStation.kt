@@ -183,9 +183,6 @@ class FgtNetStation : MainTabFragment() {
         getPermissions(activity,
             PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION,
-            PermissionType.ACCESS_NETWORK_STATE,
-            PermissionType.ACCESS_WIFI_STATE,
-            PermissionType.READ_PHONE_STATE,
 
             allGranted = {
 

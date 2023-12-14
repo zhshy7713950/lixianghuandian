@@ -12,7 +12,7 @@ import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
 import android.text.TextUtils
 import android.util.Log
-import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
+//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.bean.ConfigBean
@@ -20,6 +20,8 @@ import com.ruimeng.things.home.AtyScanQrcode
 import com.ruimeng.things.home.FgtChangeRentBattery
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPackageBind
+import com.ruimeng.things.home.FgtPayRentMoney
+import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.shop.tkLogin
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import com.vector.update_app.UpdateAppBean
@@ -65,10 +67,10 @@ class AtyMain : BaseBackActivity() {
         }
 
 
-        dealNotification()
+//        dealNotification()
 
-        val pushService = PushServiceFactory.getCloudPushService()
-        bindPush(pushService.deviceId, pushService.deviceId)
+//        val pushService = PushServiceFactory.getCloudPushService()
+//        bindPush(pushService.deviceId, pushService.deviceId)
 
 
     }
@@ -318,7 +320,8 @@ class AtyMain : BaseBackActivity() {
                         }
 
                     } else {
-                        FgtHome.dealScanResult(result)
+                        EventBus.getDefault().post(ScanResultEvent(result, FgtPayRentMoney.PAGE_TYPE_CREATE))
+//                        FgtHome.dealScanResult(result)
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     EasyToast.DEFAULT.show("未能正确识别设备码")

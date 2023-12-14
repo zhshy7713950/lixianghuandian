@@ -127,6 +127,7 @@ class WithdrawalAccountActivity : AtyBase() {
         http {
             url = "apiv5/bandwx"
             params["code"] = code
+            params["appType"] = "lxhd"
             onSuccessWithMsg { _, msg ->
                 ToastHelper.shortToast(mActivity, msg)
                 requestDistrCashInfo()

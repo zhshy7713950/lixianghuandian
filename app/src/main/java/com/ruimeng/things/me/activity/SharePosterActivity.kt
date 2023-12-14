@@ -85,6 +85,7 @@ class SharePosterActivity : AtyBase() {
     private fun requestSharePosterList() {
         http {
             url = "apiv5/shareposetlist"
+            params["appType"] = "lxhd"
             onSuccess {
                 val result = it.toPOJO<SharePosterListBean>().data
                 if (result.isNotEmpty()) {
@@ -111,7 +112,7 @@ class SharePosterActivity : AtyBase() {
         http {
             url = "apiv5/shareposter"
             params["poster_id"] = posterId
-
+            params["appType"] = "lxhd"
             onSuccess {
                 val result = it.toPOJO<SharePosterBean>().data
                 if ("copy"==clickType){

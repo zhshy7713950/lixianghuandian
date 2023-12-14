@@ -7,11 +7,14 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.ruimeng.things.*
 import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.home.FgtPayRentMoney
+import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.shop.PostGlideEngine
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
 import kotlinx.android.synthetic.main.fgt_true_name_v3.*
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -97,7 +100,8 @@ class FgtTrueName : BaseBackFragment() {
                         pop()
 
                         if (deviceId.isNotBlank()) {
-                            FgtHome.dealScanResult(deviceId)
+//                            FgtHome.dealScanResult(deviceId)
+                            EventBus.getDefault().post(ScanResultEvent(deviceId, FgtPayRentMoney.PAGE_TYPE_CREATE))
                         }
 
                     })

@@ -151,9 +151,9 @@ dependencies {
 //    //搜索功能
 //    implementation 'com.amap.api:search:latest.integration'
 
-    implementation("com.aliyun.ams:alicloud-android-push:3.1.6") {
-        exclude group: 'com.ta.utdid2' //by group
-        exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
-    }
+//    implementation("com.aliyun.ams:alicloud-android-push:3.1.6") {
+//        exclude group: 'com.ta.utdid2' //by group
+//        exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
+//    }
 
 }

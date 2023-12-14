@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.alibaba.sdk.android.push.CommonCallback
-import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
+//import com.alibaba.sdk.android.push.CommonCallback
+//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import com.ruimeng.things.shop.TkHttp
 import com.ruimeng.things.shop.tkLogin
 import wongxd.Http
@@ -75,24 +75,24 @@ class App : Wongxd() {
      * @param applicationContext
      */
     private fun initCloudChannel(applicationContext: Context) {
-        try{
-            PushServiceFactory.init(applicationContext)
-            val pushService = PushServiceFactory.getCloudPushService()
-            pushService.register(applicationContext, object : CommonCallback {
-                override fun onSuccess(p0: String?) {
-                    Log.d("w-", "init cloudchannel success   $p0")
-                }
-
-                override fun onFailed(p0: String?, p1: String?) {
-                    Log.d(
-                        "w-", "init cloudchannel failed -- errorcode:$p0 -- errorMessage:$p1"
-                    )
-                }
-
-            })
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
+//        try{
+//            PushServiceFactory.init(applicationContext)
+//            val pushService = PushServiceFactory.getCloudPushService()
+//            pushService.register(applicationContext, object : CommonCallback {
+//                override fun onSuccess(p0: String?) {
+//                    Log.d("w-", "init cloudchannel success   $p0")
+//                }
+//
+//                override fun onFailed(p0: String?, p1: String?) {
+//                    Log.d(
+//                        "w-", "init cloudchannel failed -- errorcode:$p0 -- errorMessage:$p1"
+//                    )
+//                }
+//
+//            })
+//        }catch (e:Exception){
+//            e.printStackTrace()
+//        }
     }
 
 

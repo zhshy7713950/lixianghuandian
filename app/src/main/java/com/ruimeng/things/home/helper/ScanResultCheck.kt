@@ -45,17 +45,24 @@ class ScanResultCheck {
                 }
             }
             3->{
-                http {
-                    url = "apiv4/rentstep1"
-                    params["device_id"] = result
-                    params["cg_mode"] = "1"
-                    onSuccess {
-                        listener.checkStatus(true)
-                    }
-                    onFail { i, s ->
-                        listener.checkStatus(false)
-                    }
-                }
+                listener.checkStatus(true)
+//                val userInfo = InfoViewModel.getDefault().userInfo.value
+//                userInfo.let {
+//                    http {
+//                        url = "apiv6/cabinet/newRent"
+//                        params["code"] = result
+//                        if (userInfo != null) {
+//                            params["user_id"] = userInfo.id
+//                        }
+//                        onSuccess {
+//                            listener.checkStatus(true)
+//                        }
+//                        onFail { i, s ->
+//                            listener.checkStatus(false)
+//                        }
+//                    }
+//                }
+
             }
         }
 

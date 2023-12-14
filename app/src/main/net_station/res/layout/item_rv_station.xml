@@ -36,8 +36,10 @@
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintRight_toLeftOf="@id/tv_change_number"
+                android:layout_marginRight="10dp"
                 android:text="新街里137#柜"
                 android:textColor="#ffffffff"
                 android:textSize="16sp"

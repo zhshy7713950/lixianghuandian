@@ -87,32 +87,32 @@
 		<!-- 消息接收监听器 （用户可自主扩展） -->
 
 
-		<meta-data
-				android:name="com.alibaba.app.appkey"
-				android:value="28227795" /> <!-- 请填写你自己的- appKey -->
-		<meta-data
-				android:name="com.alibaba.app.appsecret"
-				android:value="b0b5881e335679ee04fb61ce94310d00" /> <!-- 请填写你自己的appSecret -->
+<!--		<meta-data-->
+<!--				android:name="com.alibaba.app.appkey"-->
+<!--				android:value="28227795" /> &lt;!&ndash; 请填写你自己的- appKey &ndash;&gt;-->
+<!--		<meta-data-->
+<!--				android:name="com.alibaba.app.appsecret"-->
+<!--				android:value="b0b5881e335679ee04fb61ce94310d00" /> &lt;!&ndash; 请填写你自己的appSecret &ndash;&gt;-->
 
-		<receiver
-				android:name=".ali_push.AliPushMessageReceiver"
-				android:exported="false"> <!-- 为保证receiver安全，建议设置不可导出，如需对其他应用开放可通过android：permission进行限制 -->
-			<intent-filter>
-				<action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="com.alibaba.sdk.android.push.RECEIVE" />
-			</intent-filter>
-		</receiver>
+<!--		<receiver-->
+<!--				android:name=".ali_push.AliPushMessageReceiver"-->
+<!--				android:exported="false"> &lt;!&ndash; 为保证receiver安全，建议设置不可导出，如需对其他应用开放可通过android：permission进行限制 &ndash;&gt;-->
+<!--			<intent-filter>-->
+<!--				<action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED" />-->
+<!--			</intent-filter>-->
+<!--			<intent-filter>-->
+<!--				<action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED" />-->
+<!--			</intent-filter>-->
+<!--			<intent-filter>-->
+<!--				<action android:name="com.alibaba.sdk.android.push.RECEIVE" />-->
+<!--			</intent-filter>-->
+<!--		</receiver>-->
 		<!--		阿里推送-->
 
 
 		<meta-data
 				android:name="com.amap.api.v2.apikey"
-				android:value="0aa11e9642a43ba221c193f9698edfaf" />
+				android:value="cd4256cefad3889bd12a547adaf76382" />
 
 
 		<provider

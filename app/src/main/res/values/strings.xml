@@ -2,7 +2,7 @@
 <!--    <string name="app_name">四美智能动力嵌入式控制软件</string>-->
     <string name="app_name">锂享换电</string>
     <!--微信appID-->
-    <string name="wx_appid">wxbc775f5998093d5a</string>
+    <string name="wx_appid">wxa489c8092492e68d</string>
     <string name="home_url">http://xlltest.scxll.cn/</string>
 <!--    <string name="home_url">http://xianglilai.scxll.cn/</string>-->
 </resources>

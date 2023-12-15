@@ -14,6 +14,8 @@ class ScanResultCheck {
      * type: 1.扫码开门：apiv6/payment/checkpayment
     2.手动换电：apiv4/cgscan
     3.支付押金、租金、实名（”点击添加“按钮、”点击购买套餐“按钮、”右上角扫码“按钮）：apiv4/rentstep1
+     4.租电
+     5.退还
      */
     fun checkResult(type:Int, result:String, listener: CheckResultListener){
         when(type){
@@ -43,27 +45,12 @@ class ScanResultCheck {
                         listener.checkStatus(false)
                     }
                 }
-            }
-            3->{
                 listener.checkStatus(true)
-//                val userInfo = InfoViewModel.getDefault().userInfo.value
-//                userInfo.let {
-//                    http {
-//                        url = "apiv6/cabinet/newRent"
-//                        params["code"] = result
-//                        if (userInfo != null) {
-//                            params["user_id"] = userInfo.id
-//                        }
-//                        onSuccess {
-//                            listener.checkStatus(true)
-//                        }
-//                        onFail { i, s ->
-//                            listener.checkStatus(false)
-//                        }
-//                    }
-//                }
-
             }
+            3->listener.checkStatus(true)
+            4->listener.checkStatus(true)
+            5->listener.checkStatus(true)
+
         }
 
     }

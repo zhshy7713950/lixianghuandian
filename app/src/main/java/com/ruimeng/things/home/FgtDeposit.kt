@@ -1,39 +1,28 @@
 package com.ruimeng.things.home
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
 import com.ruimeng.things.me.contract.FgtContractSignStep1
-import com.ruimeng.things.wxapi.WXEntryActivity
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_deposit.*
-import kotlinx.android.synthetic.main.fgt_return.tv_broke_return
-import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONObject
-import wongxd.Config
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
 import wongxd.common.*
-import wongxd.common.recycleview.yaksa.linear
 import wongxd.http
 
 /**api

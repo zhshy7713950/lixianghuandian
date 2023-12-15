@@ -5,7 +5,7 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
-import com.ruimeng.things.wxapi.WXEntryActivity
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_credit_first_pay.*
 import org.greenrobot.eventbus.EventBus
 import wongxd.alipay.BaseAlipay

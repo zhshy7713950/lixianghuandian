@@ -1,8 +1,6 @@
 package com.ruimeng.things.home
 
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.Path
@@ -11,9 +9,8 @@ import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.me.contract.FgtContractSignStep1
-import com.ruimeng.things.me.credit.FgtCreditSystem
-import com.ruimeng.things.wxapi.WXEntryActivity
 import com.utils.TextUtil
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.btn_pay_now_pay_rent_money
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.iv_check_pay_rent_money
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.rgPayRent
@@ -29,8 +26,6 @@ import wongxd.common.getSweetDialog
 import wongxd.common.toPOJO
 import wongxd.http
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 

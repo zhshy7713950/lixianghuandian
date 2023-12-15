@@ -14,7 +14,7 @@ import com.ruimeng.things.MathUtil
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.ChangeDepositCombinationBean
 import com.ruimeng.things.home.bean.ChangeDepositCombinationPayInfoBean
-import com.ruimeng.things.wxapi.WXEntryActivity
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_change_deposit_combination.*
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment

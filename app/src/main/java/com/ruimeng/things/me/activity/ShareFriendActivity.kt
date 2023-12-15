@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.widget.ImageView
 import com.ruimeng.things.R
 import com.ruimeng.things.me.bean.ShareInfoBean
-import com.ruimeng.things.wxapi.WXEntryActivity
 import com.tencent.mm.opensdk.modelmsg.WXImageObject
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_share.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

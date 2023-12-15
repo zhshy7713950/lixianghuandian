@@ -132,17 +132,7 @@
 				android:value="2.1" />
 
 
-		<activity
-				android:name=".wxapi.WXEntryActivity"
-				android:exported="true"
-				android:launchMode="singleTop" />
-
-		<activity
-				android:name=".wxapi.WXPayEntryActivity"
-				android:exported="true"
-				android:launchMode="singleTop" />
-
-		<!--oem配置开始-->
+        <!--oem配置开始-->
 
 
 		<activity android:name=".AtySplash">
@@ -202,6 +192,19 @@
 		<activity android:name=".me.activity.ShareFriendActivity"/>
 		<activity android:name=".me.activity.SharePosterActivity"/>
 		<activity android:name=".home.AtyInputCode"/>
+		<activity android:name="com.xianglilai.lixianghuandian.wxapi.WXEntryActivity"
+			android:label="@string/app_name"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:exported="true"
+			android:taskAffinity="com.xianglilai.lixianghuandian"
+			android:launchMode="singleTask"/>
+
+		<activity android:name="com.xianglilai.lixianghuandian.wxapi.WXPayEntryActivity"
+			android:label="@string/app_name"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"
+			android:exported="true"
+			android:taskAffinity="com.xianglilai.lixianghuandian"
+			android:launchMode="singleTask"/>
 
 
 	</application>

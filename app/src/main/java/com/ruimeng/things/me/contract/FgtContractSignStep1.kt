@@ -80,7 +80,6 @@ class FgtContractSignStep1 : BaseBackFragment() {
         progressDlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "加载中", false)
         progressDlg?.show()
         getContractInfo()
-        EventBus.getDefault().register(this)
     }
 
 
@@ -91,10 +90,10 @@ class FgtContractSignStep1 : BaseBackFragment() {
             pop()
         }
     }
-    @Subscribe
-    fun checkContract(event: ContractCheckEvent) {
-        pop()
-    }
+//    @Subscribe
+//    fun checkContract(event: ContractCheckEvent) {
+//        pop()
+//    }
     private fun getContractInfo() {
 
         http {

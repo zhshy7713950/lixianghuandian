@@ -209,6 +209,10 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
                 AGENT_CODE =  data.optString("code")
+                if (data.optJSONObject("device") != null){
+                    CURRENT_DEVICEID = data.optJSONObject("device").optString("device_id")
+                    event.deviceId = CURRENT_DEVICEID
+                }
                 if (data.optJSONObject("couponInfo") != null){
                     ShowCouponPopup(getCurrentAppAty(),data.optJSONObject("couponInfo"),object :OnClickListener{
                         override fun onClick(p0: View?) {
@@ -221,6 +225,40 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
+    fun rentStep1( deviceId: String?,type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
+        deviceId ?: return
+        http {
+            url = "apiv4/rentstep1"
+            params["device_id"] = deviceId
+            params["cg_mode"] = "1"
+            onSuccess {
+                //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"status":0}}
+                //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
+                val json = JSONObject(it)
+                val data = json.optJSONObject("data")
+                val status = data.optInt("status")
+
+                when (status) {
+                    0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
+                    1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId,type))
+                    2 -> {
+                        EasyToast.DEFAULT.show(json.optString("errmsg"))
+                        showTipDialog(
+                            getCurrentAppAty(),
+                            msg = json.optString("errmsg"),
+                            click = {
+                                FgtMain.instance?.start(FgtTrueName())
+                            })
+                    }
+
+                    else -> {
+                    }
+                }
+            }
+        }
+    }
+
+
     fun doScanNext(json : JSONObject, event: ScanResultEvent){
         val data = json.optJSONObject("data")
         val status = data.optInt("status")
@@ -308,8 +346,8 @@ class FgtHome : MainTabFragment() {
             when (deviceStatus) {
                 0-> tryToScan()
                 1 -> tryToScan()
-                2 -> dealScanResult(event)
-                3-> dealScanResult(event)
+                2 -> rentStep1(NO_PAY_DEVICEID)
+                3-> rentStep1(NO_PAY_DEVICEID)
             }
         }
         btnReturn.setOnClickListener {
@@ -387,8 +425,7 @@ class FgtHome : MainTabFragment() {
      * 续租
      */
     private fun doContinueRant() {
-        var event  = ScanResultEvent(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
-        dealScanResult(event)
+        rentStep1(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
     }
 
     class RefreshMyDeviceList
@@ -561,7 +598,7 @@ class FgtHome : MainTabFragment() {
                                 intent.putExtra("new_deviceid", result)
                                 intent.putExtra("name", if (paymentDetailBean != null && paymentDetailBean!!.paymentInfo != null) paymentDetailBean!!.paymentInfo.pname else "")
                                 startActivity(intent)
-                            }else if ("扫柜" == getType){
+                            }else if ("租电" == getType){
                                 if (result != null) {
                                     scanBox(result)
                                 }
@@ -584,7 +621,7 @@ class FgtHome : MainTabFragment() {
      */
     private fun scanBox(code: String) {
         http {
-            url = "apiv6/cabinet/retrunBattery"
+            url = "apiv6/cabinet/rentBattery"
             params["user_id"] = userId
             params["code"] = code
             onSuccessWithMsg { res, msg ->
@@ -802,7 +839,7 @@ class FgtHome : MainTabFragment() {
         tv_scan_box.setOnClickListener {
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                intent.putExtra("type", "扫柜")
+                intent.putExtra("type", "租电")
                 startActivityForResult(intent, 1)
             })
         }

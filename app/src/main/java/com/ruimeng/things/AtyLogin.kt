@@ -1,7 +1,6 @@
 package com.ruimeng.things
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.*
 import android.text.method.LinkMovementMethod
@@ -10,9 +9,8 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.ruimeng.things.bean.LoginBean
-import com.ruimeng.things.wxapi.WXEntryActivity
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.aty_login.*
-import kotlinx.android.synthetic.main.item_rv_station.*
 import wongxd.AtyWeb
 import wongxd.Config
 import wongxd.Http

@@ -1,61 +1,41 @@
 package com.ruimeng.things.home
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
-import com.google.gson.Gson
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
-import com.ruimeng.things.bean.BaseResultBean
 import com.ruimeng.things.home.adapter.BasePackageAdapter
 import com.ruimeng.things.home.adapter.ChangePackageAdapter
 import com.ruimeng.things.home.bean.CountAmountBean
-import com.ruimeng.things.home.bean.GetRentBean
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.NewGetRentBean
-import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.home.bean.PaymentOption
 import com.ruimeng.things.home.bean.UpdateGetRentBean
 import com.ruimeng.things.home.view.CompanyDescPopup
 import com.ruimeng.things.home.view.SelectCouponPopup
-import com.ruimeng.things.me.FgtTicket
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.contract.FgtMyContractDetail
 import com.ruimeng.things.me.credit.FgtCreditSystem
-import com.ruimeng.things.wxapi.WXEntryActivity
-import com.utils.OnSinglePickerSelectListener
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
-import kotlinx.android.synthetic.main.aty_order.refresh
-import kotlinx.android.synthetic.main.fgt_deposit.rgDeposit
-import kotlinx.android.synthetic.main.fgt_deposit.tv_select_package_deposit
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
-import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
-import kotlinx.android.synthetic.main.home_status_item.tv_package_time
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.textColor
@@ -64,14 +44,12 @@ import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.getSweetDialog
-import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http
 import java.lang.Exception
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.Arrays
 import java.util.Date
 
 
@@ -106,6 +84,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     private var newGetRentBean: PaymentInfo? = null
     private var selectOption: PaymentOption? = null
     private var baseInfo: PaymentInfo? = null
+    private var sighStatus = false
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
@@ -348,7 +327,18 @@ class FgtPayRentMoney : BaseBackFragment() {
 
         iv_check_pay_rent_money.setOnClickListener {
             if (pageType == PAGE_TYPE_CREATE){
-                getSignStatus(baseInfo!!.contract_id)
+                if (sighStatus){
+                    IS_CHECKED_PROTOCOL = true
+                    iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
+                }else{
+                    baseInfo.let {
+                        if (it != null) {
+                            start(
+                                FgtContractSignStep1.newInstance(baseInfo!!.contract_id, "", 0, if (pageType == PAGE_TYPE_CREATE) 2 else 1,deviceId,baseInfo!!.model_name)
+                            )
+                        }
+                    }
+                }
             }else{
                 if (IS_CHECKED_PROTOCOL) {
                     iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_unselect)
@@ -365,9 +355,18 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
 //            val dlg = DialogFragmentRentProtocol()
 //            dlg.show(childFragmentManager, "protocol")
-            start(
-                FgtContractSignStep1.newInstance(baseInfo!!.contract_id, "", 0, if (pageType == PAGE_TYPE_CREATE) 2 else 1,deviceId,baseInfo!!.model_name)
-            )
+            if (sighStatus){
+                baseInfo.let {
+                    if (it != null) {
+                        start(FgtMyContractDetail.newInstance(it.contract_id,it.device_id))
+                    }
+                }
+            }else{
+                start(
+                    FgtContractSignStep1.newInstance(baseInfo!!.contract_id, "", 0, if (pageType == PAGE_TYPE_CREATE) 2 else 1,deviceId,baseInfo!!.model_name)
+                )
+            }
+
         }
 
 
@@ -495,6 +494,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     @Subscribe
     fun checkContract(event: ContractCheckEvent) {
         IS_CHECKED_PROTOCOL = true
+        sighStatus = true
         iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
             baseInfo.let {
@@ -898,11 +898,13 @@ class FgtPayRentMoney : BaseBackFragment() {
             params["contract_id"] = contractId
             IS_SHOW_MSG = false
             onSuccess {
+                sighStatus = false
 
             }
             onFail { i, s ->
                 if ( i == 202){
-                    EventBus.getDefault().post(ContractCheckEvent(true))
+                    sighStatus = true
+
                 }
             }
         }

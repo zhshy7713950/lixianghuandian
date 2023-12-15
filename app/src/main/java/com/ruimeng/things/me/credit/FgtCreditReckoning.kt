@@ -13,7 +13,7 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.me.credit.bean.CreditReckoningInfoBean
-import com.ruimeng.things.wxapi.WXEntryActivity
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_credit_reckoning.*
 import org.json.JSONObject
 import wongxd.alipay.BaseAlipay

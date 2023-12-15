@@ -1,12 +1,11 @@
 package com.ruimeng.things.me.activity
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import com.ruimeng.things.R
 import com.ruimeng.things.me.bean.DistrCashInfoBean
-import com.ruimeng.things.wxapi.WXEntryActivity
 import com.utils.ToastHelper
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.activity_withdrawal_account.*
 import wongxd.base.AtyBase
 import wongxd.common.bothNotNull

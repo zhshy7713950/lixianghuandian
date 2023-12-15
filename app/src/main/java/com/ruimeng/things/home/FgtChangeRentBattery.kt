@@ -3,7 +3,6 @@ package com.ruimeng.things.home
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -17,7 +16,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.ChangeRentBatteryBean
 import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
 import com.ruimeng.things.showConfirmDialog
-import com.ruimeng.things.wxapi.WXEntryActivity
+import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_change_rent_battery.*
 import org.greenrobot.eventbus.EventBus
 import wongxd.alipay.BaseAlipay

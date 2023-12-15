@@ -63,14 +63,23 @@ class ScanQrCodeActivity : AtyBase() {
 
         tv_input_code.setOnClickListener {
             val intent = Intent(this, AtyInputCode::class.java)
-            intent.putExtra("type",if (getType.equals("换电开门")) 1 else 2)
+            intent.putExtra("type",getTypeCode())
             startActivityForResult(intent, 1)
         }
         tv_light.setOnClickListener {
             CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
             tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }
+    }
+    fun getTypeCode(): Int {
+     return   when(getType){
+            "换电开门"->1
+            "换电"->2
+            "租电"->4
+            "退还"->5
 
+         else -> 0
+     }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -80,7 +89,7 @@ class ScanQrCodeActivity : AtyBase() {
     }
 
     private fun checkScanResult(result:String){
-        ScanResultCheck().checkResult(if (getType.equals("换电开门")) 1 else 2,result,object :ScanResultCheck.CheckResultListener{
+        ScanResultCheck().checkResult(getTypeCode(),result,object :ScanResultCheck.CheckResultListener{
             override fun checkStatus(pass: Boolean) {
                 if (pass){
                     val resultIntent = Intent()

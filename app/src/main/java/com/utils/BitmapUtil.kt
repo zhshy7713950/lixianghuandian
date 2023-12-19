@@ -36,8 +36,8 @@ class BitmapUtil {
 
 
         // 计算文本的位置（居中）
-        val textX = (originalBitmap.width - paint.measureText(text) - DensityUtil.dip2px(4f,context).toFloat()) / 2
-        val textY = (originalBitmap.height - width - DensityUtil.dip2px(0.5f,context).toFloat() ) / 2
+        val textX = (originalBitmap.width - paint.measureText(text) ) / 2
+        val textY = (originalBitmap.height - width  ) / 2
 
         // 绘制文本到Canvas
         canvas.drawText(text, textX, textY, paint)

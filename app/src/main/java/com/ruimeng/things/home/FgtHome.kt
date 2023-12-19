@@ -301,8 +301,12 @@ class FgtHome : MainTabFragment() {
         //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金 3 已过期
         if (deviceCode == 201 && paymentCode == 208){
             deviceStatus = 1
-        }else if (deviceCode == 201 && paymentCode == 200){
-            deviceStatus = 2
+        }else if (deviceCode == 201 && paymentCode == 200 ){
+            if(paymentDetailBean!!.deposit_status == "0"){
+                deviceStatus = 1
+            }else{
+                deviceStatus = 2
+            }
         }else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status != "1"){
             deviceStatus = 3
         } else{

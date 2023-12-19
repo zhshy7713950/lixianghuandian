@@ -122,7 +122,7 @@
 			android:layout_height="35dp"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
-			android:layout_marginLeft="38dp"
+			android:layout_marginLeft="50dp"
 			android:layout_marginBottom="40dp"
 			android:checked="false"
 			android:gravity="center"
@@ -138,9 +138,6 @@
 			app:layout_constraintLeft_toRightOf="@id/cb_login"
 			app:layout_constraintTop_toTopOf="@id/cb_login"
 			app:layout_constraintBottom_toBottomOf="@id/cb_login"
-			app:layout_constraintRight_toRightOf="parent"
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="30dp"
 			/>
 		<ImageView
 			android:id="@+id/iv_wechat_login"

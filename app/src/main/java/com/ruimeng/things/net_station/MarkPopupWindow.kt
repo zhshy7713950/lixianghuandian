@@ -56,7 +56,8 @@ class MarkPopupWindow(
         }else{
             tv_phone_call.text = "立即联系"
             tv_agent_code.visibility = View.VISIBLE
-            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("",agent.tag))
+            var agentTag = if (agent.tag.startsWith("代理编码")) agent.tag.substring(5) else agent.tag
+            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("代理编码：",agentTag))
             tvStationBatteryCount.visibility = View.VISIBLE
             tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可租电池数：","${agent.count}"))
             tv_in_shop.visibility = View.GONE

@@ -45,7 +45,7 @@ class AtyLogin : AtyBase() {
         cb_login.setOnCheckedChangeListener { compoundButton, b ->
             isAgree = b
         }
-        val str = "我已认真阅读并同意接受锂享换电的《用户协议》\n" +
+        val str = "我已认真阅读并同意接受锂享换电的\n《用户协议》" +
                 "以及《隐私政策》"
         val ssb = SpannableStringBuilder()
         ssb.append(str)
@@ -62,13 +62,14 @@ class AtyLogin : AtyBase() {
             override fun onClick(p0: View) {
                 AtyWeb2.start("用户协议", "${Http.host}/appH5/userProtocol.html")
             }
-        }, start, start + 7, 0)
+        }, start, start + 6, 0)
         val end = str.lastIndexOf("《")
         ssb.setSpan(object : ClickableSpan() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 //设置文件颜色
                 ds.color = Color.parseColor("#13C681")
+                ds.bgColor = Color.TRANSPARENT
                 // 去掉下划线
                 ds.isUnderlineText = false
             }
@@ -79,6 +80,7 @@ class AtyLogin : AtyBase() {
         }, end, end + 6, 0)
         tv_login_protocol.setMovementMethod(LinkMovementMethod.getInstance())
         tv_login_protocol.setText(ssb, TextView.BufferType.SPANNABLE)
+        tv_login_protocol.highlightColor =Color.TRANSPARENT
 
 
         iv_wechat_login.setOnClickListener {

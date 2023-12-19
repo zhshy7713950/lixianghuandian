@@ -6,7 +6,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
@@ -22,6 +24,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.BitmapUtil
 import com.utils.CommonUtil
+import com.utils.DensityUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -390,9 +393,9 @@ class FgtNetStationByMap : BaseBackFragment() {
         if(getType == "3") {
             markerBitmap =
                 context?.let { BitmapUtil().overlayTextOnImage(it,
-                    if(agent.count.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
-                    agent.count,
-                    if(agent.count.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
+                    if(agent.available_battery.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
+                    agent.available_battery,
+                    if(agent.available_battery.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
 
         }else {
             markerBitmap =
@@ -437,10 +440,10 @@ class FgtNetStationByMap : BaseBackFragment() {
                     .setText(R.id.tv_location,"${b.address}")
                     .setImageResource(R.id.iv01,if(getType == "3")  R.mipmap.marker_net_station_big else R.mipmap.service_station_big)
                 if (getType == "3"){
-                    a.setText(R.id.tv_count,"${b.count}")
+                    a.setText(R.id.tv_count,"${b.available_battery}")
                         .setGone(R.id.tv_count,true)
                         .setGone(R.id.tv_count_title,true)
-                        .setTextColor(R.id.tv_count,if (b.count.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                        .setTextColor(R.id.tv_count,if (b.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
                     a.setGone(R.id.iv01,false)
                 }else{
                     a.setGone(R.id.iv01,true)
@@ -458,6 +461,12 @@ class FgtNetStationByMap : BaseBackFragment() {
                         aMap?.moveCamera(CameraUpdateFactory.newLatLng(latLng))
                         aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
                     }
+                }
+                var parentView = helper.getView<ConstraintLayout>(R.id.cl_content)
+                if (helper.layoutPosition == 0){
+                    parentView.setPadding(0, DensityUtil.dip2px(30f,context).toInt(),0,0)
+                }else{
+                    parentView.setPadding(0, DensityUtil.dip2px(10f,context).toInt(),0,0)
                 }
 
             }

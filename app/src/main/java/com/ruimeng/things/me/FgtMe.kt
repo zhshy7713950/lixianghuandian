@@ -4,26 +4,19 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.flyco.dialog.listener.OnBtnClickL
-import com.flyco.dialog.widget.NormalDialog
-import com.flyco.roundview.RoundViewDelegate
 import com.ruimeng.things.*
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.home.FgtFollowWechatAccount
-import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
-import com.ruimeng.things.me.contract.FgtMyContract
-import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.ruimeng.things.msg.FgtMsg
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
-import wongxd.AtyWeb
 import wongxd.base.MainTabFragment
 import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
@@ -134,7 +127,7 @@ class FgtMe : MainTabFragment() {
             url = Path.ABOUT_ME
 
             onResponse {
-                AtyWeb.start("关于我们", it)
+                AtyWeb2.start("关于我们", it)
             }
         } }
 

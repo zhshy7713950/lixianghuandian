@@ -69,7 +69,7 @@ class AtyScanQrcode : AtyBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_scan_qrcode)
 
-        initTopbar(topbar, if (resultPrefix == TYPE_CHANGE) "更换设备" else "添加设备")
+        initTopbar(topbar, "扫一扫")
         Log.i("data===","===contract_id4===${intent?.getStringExtra(RESULT_OLD_CONTRACT_ID)}")
         /**
          * 执行扫面Fragment的初始化操作

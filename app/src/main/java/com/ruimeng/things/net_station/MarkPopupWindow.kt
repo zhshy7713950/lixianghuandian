@@ -48,15 +48,15 @@ class MarkPopupWindow(
             tvStationBatteryCount.visibility = View.GONE
             tv_in_shop.visibility = View.VISIBLE
             tv_count.visibility = View.VISIBLE
-            tv_count.setText(agent.count)
-            tv_count.setTextColor(if (agent.count.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+            tv_count.setText(agent.available_battery)
+            tv_count.setTextColor(if (agent.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
             tv_count_title.visibility = View.VISIBLE
             v.findViewById<ImageView>(R.id.iv01).visibility = View.GONE
 
         }else{
             tv_phone_call.text = "立即联系"
             tv_agent_code.visibility = View.VISIBLE
-            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("代理编码：",agent.tag))
+            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("",agent.tag))
             tvStationBatteryCount.visibility = View.VISIBLE
             tvStationBatteryCount.text = TextUtil.getSpannableString(arrayOf("可租电池数：","${agent.count}"))
             tv_in_shop.visibility = View.GONE

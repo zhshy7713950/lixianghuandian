@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.ruimeng.things.bean.LoginBean
+import com.ruimeng.things.me.activity.AtyWeb2
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.aty_login.*
 import wongxd.AtyWeb
@@ -44,8 +45,8 @@ class AtyLogin : AtyBase() {
         cb_login.setOnCheckedChangeListener { compoundButton, b ->
             isAgree = b
         }
-        val str = "我已认真阅读并同意接受享换电的《登录注册协议》\n" +
-                "以及《隐私协议》"
+        val str = "我已认真阅读并同意接受锂享换电的《用户协议》\n" +
+                "以及《隐私政策》"
         val ssb = SpannableStringBuilder()
         ssb.append(str)
         val start = str.indexOf("《")
@@ -59,9 +60,9 @@ class AtyLogin : AtyBase() {
             }
 
             override fun onClick(p0: View) {
-                AtyWeb.start("登录注册协议", "${Http.host}/appweb/regagreement")
+                AtyWeb2.start("用户协议", "${Http.host}/appH5/userProtocol.html")
             }
-        }, start, start + 8, 0)
+        }, start, start + 7, 0)
         val end = str.lastIndexOf("《")
         ssb.setSpan(object : ClickableSpan() {
             override fun updateDrawState(ds: TextPaint) {
@@ -73,7 +74,7 @@ class AtyLogin : AtyBase() {
             }
 
             override fun onClick(p0: View) {
-                AtyWeb.start("登录注册协议", "${Http.host}/appweb/regagreement")
+                AtyWeb2.start("隐私政策", "${Http.host}/appH5/privateProtocol.html")
             }
         }, end, end + 6, 0)
         tv_login_protocol.setMovementMethod(LinkMovementMethod.getInstance())
@@ -82,7 +83,7 @@ class AtyLogin : AtyBase() {
 
         iv_wechat_login.setOnClickListener {
             if (!isAgree) {
-                EasyToast.DEFAULT.show("请同意《登陆注册协议》")
+                EasyToast.DEFAULT.show("请阅读并同意接受协议")
                 return@setOnClickListener
             }
 
@@ -147,7 +148,7 @@ class AtyLogin : AtyBase() {
 
     private fun doLogin() {
         if (!isAgree) {
-            EasyToast.DEFAULT.show("请同意《登陆注册协议》")
+            EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
 
@@ -209,7 +210,7 @@ class AtyLogin : AtyBase() {
     }
     private fun getLoginCode() {
         if (!isAgree) {
-            EasyToast.DEFAULT.show("请同意《登陆注册协议》")
+            EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
         phone = et_phone.text.toString()

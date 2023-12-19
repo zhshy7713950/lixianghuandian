@@ -9,6 +9,7 @@ import com.ruimeng.things.AtyLogin
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.UserInfoLiveData
+import com.ruimeng.things.me.activity.AtyWeb2
 import kotlinx.android.synthetic.main.fgt_setting.*
 import wongxd.AtyWeb
 import wongxd.Config
@@ -38,14 +39,8 @@ class FgtSetting : BaseBackFragment() {
 
 
         ll_help_center_setting.setOnClickListener {
-            http {
-                method = "get"
-                url = Path.HELP
+            AtyWeb2.start("帮助中心", "有任何问题、意见或者建议请联系：</br> 客服电话：4000283969 </br> 客服邮箱:scxllkjyxgs@163.com")
 
-                onResponse {
-                    AtyWeb.start("帮助中心", it)
-                }
-            }
         }
 
 

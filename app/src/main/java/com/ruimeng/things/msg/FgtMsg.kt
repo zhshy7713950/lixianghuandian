@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.R
+import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.msg.bean.MsgListBean
 import kotlinx.android.synthetic.main.fgt_msg.*
 import wongxd.AtyWeb
@@ -103,7 +104,7 @@ class FgtMsg : BaseBackFragment() {
                 }
 
                 a.itemView.setOnClickListener {
-                    AtyWeb.start("消息详情", b.url)
+                    AtyWeb2.start("消息详情", b.url)
                     NoReadLiveData.refresh()
                 }
             }

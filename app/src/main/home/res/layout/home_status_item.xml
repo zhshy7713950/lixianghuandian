@@ -89,7 +89,8 @@
 					android:id="@+id/tvBatteryName"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textSize="10sp"
+					android:textSize="14sp"
+					android:layout_marginTop="2dp"
 					android:textColor="@color/white"
 					tools:text="1212323" />
 				<TextView
@@ -105,9 +106,11 @@
 					/>
 				<TextView
 					android:id="@+id/tv_remark_num"
-					android:layout_width="wrap_content"
+					android:layout_width="60dp"
+					android:layout_marginTop="2dp"
 					android:layout_height="wrap_content"
-					android:textSize="10sp"
+					android:textSize="14sp"
+					android:maxLines="3"
 					android:textColor="@color/white"
 					tools:text="1212323" />
 				<TextView
@@ -121,10 +124,11 @@
 					android:layout_marginTop="4dp"/>
 				<TextView
 					android:id="@+id/tv_error_info"
-					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textSize="10sp"
+					android:textSize="14sp"
+					android:layout_marginTop="2dp"
 					android:visibility="gone"
+					android:layout_width="60dp"
 					android:textColor="@color/white"
 					tools:text="1212323" />
 			</LinearLayout>

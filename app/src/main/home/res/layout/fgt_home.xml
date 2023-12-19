@@ -13,7 +13,7 @@
 			android:id="@+id/tv_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="四川享换电"
+			android:text="锂享换电"
 			android:layout_gravity="center"
 			android:textColor="#ffffffff"
 			android:textSize="17sp"

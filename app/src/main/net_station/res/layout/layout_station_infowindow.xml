@@ -14,7 +14,8 @@
         android:minHeight="250dp"
         android:layout_gravity="bottom"
         android:background="@drawable/rectangle_gray_bg_top"
-        android:padding="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         >
 
 
@@ -22,7 +23,8 @@
             android:id="@+id/iv01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
             android:src="@mipmap/marker_net_station_big"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,8 +35,9 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toLeftOf="@id/ll"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             tools:text="1"
+            android:textStyle="bold"
             android:textSize="40dp"
             />
         <TextView
@@ -52,9 +55,10 @@
 
         <ImageView
             android:id="@+id/iv_close"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:scaleType="centerInside"
+            android:layout_marginRight="10dp"
             android:src="@mipmap/camera_close"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="90dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -76,7 +81,7 @@
                 android:maxLines="2"
                 android:text="新街里137#柜"
                 android:textColor="#ffffffff"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -187,7 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/ll">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
                 android:id="@+id/tv_phone_call"

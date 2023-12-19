@@ -5,6 +5,7 @@ import android.view.View
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import com.ruimeng.things.me.activity.AtyWeb2
 import kotlinx.android.synthetic.main.fgt_agent.*
 import wongxd.AtyWeb
 import wongxd.base.BaseBackFragment
@@ -31,7 +32,7 @@ class FgtAgnet : BaseBackFragment() {
 
         btn_request_agent.setOnClickListener { startWithPop(FgtApplyAgent()) }
         agentLogin?.setOnClickListener {
-            AtyWeb.start("代理商登录", "${getString(R.string.home_url)}agent/login")
+            AtyWeb2.start("代理商登录", "${getString(R.string.home_url)}agent/login")
         }
     }
 }

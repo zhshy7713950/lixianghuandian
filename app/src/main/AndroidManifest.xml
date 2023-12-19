@@ -205,6 +205,7 @@
 			android:exported="true"
 			android:taskAffinity="com.xianglilai.lixianghuandian"
 			android:launchMode="singleTask"/>
+		<activity android:name=".me.activity.AtyWeb2"/>
 
 
 	</application>

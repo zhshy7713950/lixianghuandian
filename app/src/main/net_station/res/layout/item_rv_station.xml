@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="12dp"
@@ -11,7 +12,6 @@
     android:background="@drawable/rectangle_gray_bg"
     android:orientation="vertical"
     android:paddingLeft="10dp"
-    android:paddingTop="10dp"
     android:paddingRight="10dp">
 
     <ImageView
@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_statation"
+        android:layout_marginTop="12dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="46dp"
-        android:layout_marginTop="3dp"
         android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -41,12 +41,12 @@
                 app:layout_constraintRight_toLeftOf="@id/tv_change_number"
                 android:layout_marginRight="10dp"
                 android:text="新街里137#柜"
+                android:layout_marginTop="12dp"
                 android:textColor="#ffffffff"
                 android:textSize="16sp"
                 android:maxLines="1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 />
             <TextView
@@ -64,7 +64,9 @@
                 android:id="@+id/tv_change_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
+                tools:text="1"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp"
                 app:layout_constraintRight_toRightOf="@id/tv_change_title"
                 app:layout_constraintLeft_toLeftOf="@id/tv_change_title"
                 android:textSize="30sp"
@@ -91,7 +93,7 @@
             android:id="@+id/tv_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:text="地址：新街里荟锦路南城都汇8期（海博牙科旁）"
             android:textColor="#ffb2c1ce"
             android:textSize="12sp"

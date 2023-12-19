@@ -24,6 +24,7 @@ data class NetStationBean(
             var site_name: String = "", // 服务中心4
             var tag: String = "",
             var count: String = "",
+            var available_battery : String = "",
             var markerId: String = "" ,
             var tel: String = "" // 028-85214458
         ): Parcelable

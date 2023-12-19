@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
+    android:id="@+id/cl_content"
     android:paddingTop="10dp"
-    android:paddingRight="10dp">
+    >
 
     <ImageView
         android:id="@+id/iv01"
         android:layout_width="67dp"
         android:layout_height="67dp"
+        android:layout_marginLeft="10dp"
         android:src="@mipmap/ic_statation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,6 +21,7 @@
         android:id="@+id/tv_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@id/ll"
@@ -42,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="91dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">

@@ -16,6 +16,7 @@ import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.ConfirmInstallmentBean
 import com.ruimeng.things.home.bean.RentInstallmentPaymentBean
+import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.showTipDialog
 import kotlinx.android.synthetic.main.fgt_rent_installment_payment.*
 import org.greenrobot.eventbus.EventBus
@@ -228,7 +229,7 @@ class FgtRentInstallmentPayment : BaseBackFragment() {
 
                     val data = res.toPOJO<ConfirmInstallmentBean>().data
                     if (data.target == "webview") {
-                        AtyWeb.start("分期支付", data.url)
+                        AtyWeb2.start("分期支付", data.url)
                     } else {
                         SystemUtils.openUrlByBrowser(activity, data.url)
                     }

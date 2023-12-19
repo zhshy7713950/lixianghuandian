@@ -10,7 +10,7 @@ apply from: '../wongxd/config.gradle'
 //读取Git commit number
 static def getGitCommitNumber() {
 //    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
-    return 596
+    return 0
 }
 
 
@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId "com.xianglilai.lixianghuandian"
-        versionCode getGitCommitNumber()
+        versionCode 1
         versionName "1.0.${getGitCommitNumber()}"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 

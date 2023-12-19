@@ -6,9 +6,12 @@ import android.opengl.Visibility
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -23,6 +26,7 @@ import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
 import com.utils.CommonUtil
 import com.utils.DensityHelper
+import com.utils.DensityUtil
 import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -291,9 +295,9 @@ class FgtNetStationItem : MainTabFragment() {
                 }else{
                     imageView.setImageResource(R.mipmap.ic_statation)
                     tvCall.setText("联系经销商")
-                    tvNumber.text = "可换电池数：${b.count}"
-                    helper.setText(R.id.tv_change_number,"${b.count}");
-                    if (b.count.toInt() > 2 ){
+                    tvNumber.text = "可换电池数：${b.available_battery}"
+                    helper.setText(R.id.tv_change_number,"${b.available_battery}");
+                    if (b.available_battery.toInt() > 2 ){
                         helper.setTextColor(R.id.tv_change_number,Color.parseColor("#29EBB6"))
                     }else{
                         helper.setTextColor(R.id.tv_change_number,Color.parseColor("#FEB41E"))

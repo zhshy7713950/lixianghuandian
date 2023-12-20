@@ -9,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_scan_qr_code.*
+import kotlinx.android.synthetic.main.aty_scan_qrcode.qm_light_bg
+import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_open_light
 import wongxd.base.AtyBase
 import wongxd.base.custom.anylayer.AnyLayer
 
@@ -75,6 +78,20 @@ class ScanQrCodeActivity : AtyBase() {
         supportFragmentManager.beginTransaction().replace(R.id.fl_my_container, captureFragment)
             .commit()
 
+        tv_open_light.setOnClickListener {
+            val btnDrawable: QMUIRoundButtonDrawable = qm_light_bg.background as QMUIRoundButtonDrawable
+            if (tv_open_light.tag.toString().equals("1")){
+                CodeUtils.isLightEnable(true)
+                tv_open_light.tag = "0"
+                tv_open_light.text ="\uD83D\uDD26 关闭手电筒"
+                btnDrawable.setColor(Color.RED)
+            }else{
+                CodeUtils.isLightEnable(false)
+                tv_open_light.tag = "1"
+                tv_open_light.text ="\uD83D\uDD26 打开手电筒"
+                btnDrawable.setColor(Color.parseColor("#55bb87"))
+            }
+        }
 
         fl_input_code.setOnClickListener {
             AnyLayer.with(this)

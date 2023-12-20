@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome.Companion.REQUEST_ZXING_CODE
 import com.uuzuche.lib_zxing.activity.CaptureFragment
@@ -110,7 +111,20 @@ class AtyScanQrcode : AtyBase() {
             .commit()
 
 
-
+        tv_open_light.setOnClickListener {
+            val btnDrawable: QMUIRoundButtonDrawable = qm_light_bg.background as QMUIRoundButtonDrawable
+            if (tv_open_light.tag.toString().equals("1")){
+                CodeUtils.isLightEnable(true)
+                tv_open_light.tag = "0"
+                tv_open_light.text ="\uD83D\uDD26 关闭手电筒"
+                btnDrawable.setColor(Color.RED)
+            }else{
+                CodeUtils.isLightEnable(false)
+                tv_open_light.tag = "1"
+                tv_open_light.text ="\uD83D\uDD26 打开手电筒"
+                btnDrawable.setColor(Color.parseColor("#55bb87"))
+            }
+        }
 
         fl_input_code.setOnClickListener {
             AnyLayer.with(this)

@@ -474,7 +474,7 @@ class FgtDeposit : BaseBackFragment() {
 
 
         http {
-            url = "apiv4/getpaybydeposit"
+            url = "apiv5/getpaybydeposit"
             params["device_id"] = deviceId
             params["code"] = agentCode
             params["cg_mode"] = Config.getDefault().spUtils.getString("cg_mode", "0")

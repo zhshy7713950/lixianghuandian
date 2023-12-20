@@ -19,6 +19,33 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>
 
+	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		app:qmui_radius="20dp"
+		android:id="@+id/qm_light_bg"
+		android:elevation="2dp"
+		android:layout_marginBottom="190dp"
+		android:layout_gravity="center_horizontal|bottom"
+		android:foreground="?attr/selectableItemBackground"
+		android:background="?attr/selectableItemBackground"
+		app:qmui_backgroundColor="@color/app_color"
+		app:qmui_borderColor="@color/app_color"
+		android:layout_marginTop="20dp"
+		android:layout_marginLeft="50dp"
+		android:layout_marginRight="50dp"
+		android:layout_width="130dp"
+		android:layout_height="40dp">
+
+	<TextView
+		android:id="@+id/tv_open_light"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:text="🔦 打开手电筒"
+		android:tag="1"
+		android:textColor="@color/white"
+		android:gravity="center"/>
+
+	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
 
 	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 			xmlns:app="http://schemas.android.com/apk/res-auto"

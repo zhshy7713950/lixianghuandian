@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
@@ -21,16 +22,23 @@ import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import wongxd.common.AnyKt;
-import wongxd.common.EasyToast;
-import wongxd.common.MainLooper;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+
+import wongxd.common.AnyKt;
+import wongxd.common.EasyToast;
+import wongxd.common.MainLooper;
 
 
 /**
@@ -42,7 +50,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 
     //更换应用需要修改的部分
-    public static final String APP_ID = "wxa7cf1b6a8ba381c0";
+    public static final String APP_ID = "wxbc775f5998093d5a";
     public static final String SECRET = "";
 
 

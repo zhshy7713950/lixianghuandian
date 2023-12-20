@@ -110,7 +110,7 @@
 
 		<meta-data
 				android:name="com.amap.api.v2.apikey"
-				android:value="bbeb91cfe13918f912c232598c515756" />
+				android:value="0aa11e9642a43ba221c193f9698edfaf" />
 
 
 		<provider

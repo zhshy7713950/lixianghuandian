@@ -397,7 +397,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="12dp"
-						android:text="基础套餐"
+						android:text="租电套餐"
 						android:textColor="#ffffffff"
 						android:textSize="12sp"
 						app:layout_constraintLeft_toLeftOf="parent"

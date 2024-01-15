@@ -264,6 +264,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                 }
                 params["city_id"] = ""
                 params["name"] = name
+                params["appType"] = "lxhd"
 
                 onSuccess { res ->
                     rootView?.let {
@@ -391,11 +392,21 @@ class FgtNetStationByMap : BaseBackFragment() {
             .draggable(false)
         var markerBitmap:Bitmap
         if(getType == "3") {
-            markerBitmap =
-                context?.let { BitmapUtil().overlayTextOnImage(it,
-                    if(agent.available_battery.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
-                    agent.available_battery,
-                    if(agent.available_battery.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
+            if (agent.isOnline == 1){
+                markerBitmap =
+                    context?.let { BitmapUtil().overlayTextOnImage(it,
+                        if(agent.available_battery.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
+                        agent.available_battery,
+                        if(agent.available_battery.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
+
+            }else{
+                markerBitmap = context?.let {
+                    BitmapFactory.decodeResource(
+                        context!!.resources,
+                        R.mipmap.ic_map_marker_off_line
+                    )
+                }!!
+            }
 
         }else {
             markerBitmap =
@@ -443,7 +454,13 @@ class FgtNetStationByMap : BaseBackFragment() {
                     a.setText(R.id.tv_count,"${b.available_battery}")
                         .setGone(R.id.tv_count,true)
                         .setGone(R.id.tv_count_title,true)
-                        .setTextColor(R.id.tv_count,if (b.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                            if (b.isOnline == 1){
+                                a.setTextColor(R.id.tv_count,if (b.isGreen == 1) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                            }else{
+                                a.setTextColor(R.id.tv_count,Color.parseColor("#D5D5D5"))
+                                    .setText(R.id.tv_count,"0").
+                                    setText(R.id.tv_count_title,"设备已离线")
+                            }
                     a.setGone(R.id.iv01,false)
                 }else{
                     a.setGone(R.id.iv01,true)

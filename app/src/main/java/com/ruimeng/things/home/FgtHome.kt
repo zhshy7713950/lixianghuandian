@@ -330,7 +330,7 @@ class FgtHome : MainTabFragment() {
             iv_add_device.visibility = View.GONE
            btnReturn.visibility = View.GONE
         }else if (deviceStatus == 3){
-           tv_log_info.text ="您的基础套餐已过期，清及时续费"
+           tv_log_info.text ="您的租电套餐已过期，清及时续费"
            tv_add_device.text  = "点击购买套餐"
            iv_add_device.visibility = View.GONE
            root_has_item.visibility = View.GONE

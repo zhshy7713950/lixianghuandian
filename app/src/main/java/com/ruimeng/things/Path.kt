@@ -189,7 +189,7 @@ object Path {
     /**
      * 关于我们
      */
-    val ABOUT_ME = "/appweb/aboutme"
+    val ABOUT_ME = "/appweb/aboutme?appType=lxhd"
 
 
     /**

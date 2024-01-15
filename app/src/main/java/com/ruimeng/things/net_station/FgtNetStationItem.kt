@@ -178,6 +178,7 @@ class FgtNetStationItem : MainTabFragment() {
             }
             params["city_id"] = city?.id ?: ""
             params["name"] = et_search_station.text.toString()
+            params["appType"] = "lxhd"
 
             onFinish { srl_station?.finishRefresh() }
 
@@ -296,12 +297,16 @@ class FgtNetStationItem : MainTabFragment() {
                     imageView.setImageResource(R.mipmap.ic_statation)
                     tvCall.setText("联系经销商")
                     tvNumber.text = "可换电池数：${b.available_battery}"
-                    helper.setText(R.id.tv_change_number,"${b.available_battery}");
-                    if (b.available_battery.toInt() > 2 ){
-                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#29EBB6"))
+                    helper.setText(R.id.tv_change_number,"${b.available_battery}")
+                    if (b.isOnline == 1){
+                        helper.setTextColor(R.id.tv_change_number,Color.parseColor(if (b.isGreen == 1) "#29EBB6" else "#FEB41E"))
+                            .setText(R.id.tv_change_title,"设备已离线")
                     }else{
-                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#FEB41E"))
+                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#D5D5D5"))
+                            .setText(R.id.tv_change_number,"0").
+                                setText(R.id.tv_change_title,"设备已离线")
                     }
+
                 }
             }
         }

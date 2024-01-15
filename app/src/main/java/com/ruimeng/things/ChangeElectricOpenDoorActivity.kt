@@ -69,7 +69,7 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
 
 
                 var textColors = arrayOf("#929FAB","#FFFFFF")
-                tv_base_package_name.text = TextUtil.getSpannableString(arrayOf("基础套餐    ",intent.getStringExtra("name")),textColors)
+                tv_base_package_name.text = TextUtil.getSpannableString(arrayOf("租电套餐    ",intent.getStringExtra("name")),textColors)
                 val option = data.userOptions.filter { it.active_status == "1" }.first()
                 if (option != null){
                     tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ",option.name),textColors)

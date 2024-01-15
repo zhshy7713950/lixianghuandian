@@ -327,7 +327,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layoutDirection="rtl"
-						android:text="线下支付"
+						android:text="芝麻信用（免押）"
 						android:textColor="@color/white"
 						android:textSize="14sp"
 						android:layout_marginLeft="14dp"
@@ -335,7 +335,7 @@
 						android:drawablePadding="12dp"
 						android:layout_marginTop="14dp"
 						android:layout_marginBottom="20dp"
-						android:drawableLeft="@mipmap/ic_pay_offline"
+						android:drawableLeft="@mipmap/ic_pay_zhima"
 						android:drawableRight="@drawable/radio_select"
 						android:button="@null">
 					</RadioButton>

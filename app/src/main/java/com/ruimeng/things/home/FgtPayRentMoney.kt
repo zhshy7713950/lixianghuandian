@@ -89,7 +89,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         EventBus.getDefault().register(this)
-        initTopbar(topbar, if (pageType == PAGE_TYPE_CREATE) "支付租金" else "续期升级")
+        initTopbar(topbar, if (pageType == PAGE_TYPE_CREATE) "购买套餐" else "续期升级")
         getRent()
         dealPayWay()
         initView()
@@ -99,9 +99,9 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun initView() {
         val colors = arrayOf("#FFFFFF", "#929FAB")
         tv_change_package_create_title.text =
-            TextUtil.getSpannableString(arrayOf("换电套餐", "(可选)"), colors)
+            TextUtil.getSpannableString(arrayOf("换电套餐", ""), colors)
         tv_base_package_create_title.text =
-            TextUtil.getSpannableString(arrayOf("基础套餐", "(必选)"), colors)
+            TextUtil.getSpannableString(arrayOf("租电套餐", ""), colors)
         if (pageType == PAGE_TYPE_CREATE) {
             ll_package.visibility = View.GONE
             ll_change_package_create_title.visibility = View.VISIBLE
@@ -119,17 +119,26 @@ class FgtPayRentMoney : BaseBackFragment() {
             cl_update_package_title.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {
-            activity?.let { it1 -> CompanyDescPopup(it1,"","") }
+            var text = "1.换电服务的使用资费\n" +
+                    "2.请在【租电套餐】选择完成后，再继续选择对应的换电服务\n" +
+                    "3.本套餐取电起租后，不支持退租金\n" +
+                    "注：【换电套餐】的有效期限取决于【租电套餐】。若【租电套餐】失效，那么【换电套餐】也会无法继续使用"
+            activity?.let { it1 -> CompanyDescPopup(it1,"换电套餐说明",text) }
         }
         tv_option_desc.setOnClickListener {
-            var text = "1.选择”基础套餐“后，”带充电器“选项，将会显示对应押金支付金额\n" +
-                    "2.同时，”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+            var text = "1.【租电套餐】选择完毕后，”带充电器“选项将会显示出对应的押金金额\n" +
+                    "2.同时，”租赁车架“选项，将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
             if (pageType == PAGE_TYPE_UPDATE){
-                text = "1.若在”已购套餐“中，已经支付过”充电器“的押金，则后续无需再次支付\n" +
-                        "2.若在”已购套餐“中，已经选择过”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择如下：\n" +
-                        "1）选择暂不续期”基础套餐“，则无需选择”租赁车架“选项\n" +
-                        "2）选择其他”基础套餐“，”租赁车架“选项，将会依据所选”基础套餐“的月数时长，计算相应所需支付金额"
+                text = "1.若在【已购套餐】中，已经支付过”充电器“的押金，则后续无需再次支付\n" +
+                        "2.若在【已购套餐】中，已经选择过”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择如下：\n" +
+                        "1）选择其他【租电套餐】，”租赁车架“选项将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
             }
+            activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
+        }
+        tv_rent_desc.setOnClickListener {
+            var text = "1.租用电池的基础套餐费用\n" +
+                    "换电操作不会引起租电套餐费用变更\n" +
+                    "2.本套餐取电起租后，不支持退租金"
             activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
         }
         tv_option_time.text = showExpireTitle() + "无"
@@ -242,16 +251,17 @@ class FgtPayRentMoney : BaseBackFragment() {
 
     private fun resetSelectOptionList() {
         var optionList: ArrayList<PaymentOption> = ArrayList()
-        val paymentName = if (pageType == PAGE_TYPE_CREATE) "暂不购买" else "暂不续期"
-        optionList.add(PaymentOption(name = paymentName))
+//        val paymentName = if (pageType == PAGE_TYPE_CREATE) "暂不购买" else "暂不续期"
+//        optionList.add(PaymentOption(name = paymentName))
         newGetRentBean?.let {
             optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
             tv_rant_long_pay_time.text =
                 showExpireTitle() + TextUtil.formatTime(it.show_start_time, it.show_end_time)
+            tv_option_time.text = tv_rant_long_pay_time.text
         }
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
-        tv_option_time.text = showExpireTitle() + "无"
+//        tv_option_time.text = showExpireTitle() + "无"
         selectOption = null
         setSelectOption()
         computeAmount()
@@ -298,14 +308,14 @@ class FgtPayRentMoney : BaseBackFragment() {
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
-                selectOption.let {
-                    if (it != null) {
-                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
-                            it.show_start_time,
-                            it.show_end_time
-                        )
-                    }
-                }
+//                selectOption.let {
+//                    if (it != null) {
+//                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
+//                            it.show_start_time,
+//                            it.show_end_time
+//                        )
+//                    }
+//                }
 
             }
         })

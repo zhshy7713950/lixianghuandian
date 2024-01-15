@@ -207,12 +207,22 @@ class FgtDeposit : BaseBackFragment() {
     }
 
     private  fun showTotalMoney(){
-        batteryCombinationBean.let {
-            if (it != null) {
-                tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
-                tv_total.text = tv_money_account_deposit.text
+        if (PAY_WAY_TAG == PayWay.ZM){
+            showZMInfo()
+        }else{
+            batteryCombinationBean.let {
+                if (it != null) {
+                    tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
+                    tv_total.text = tv_money_account_deposit.text
+                }
             }
         }
+    }
+
+    private fun showZMInfo(){
+        tv_money_account_deposit.text = TextUtil.getMoneyText("0.00")
+        tv_total.text = tv_money_account_deposit.text
+        btn_pay_now_account_deposit.text = "申请免押"
     }
     private var PAY_WAY_TAG = PayWay.NULL
 
@@ -221,7 +231,10 @@ class FgtDeposit : BaseBackFragment() {
             when (id) {
                 R.id.rbWx -> PAY_WAY_TAG =PayWay.WX
                 R.id.rbAlipay -> PAY_WAY_TAG = PayWay.AL
-                R.id.rbOffline -> PAY_WAY_TAG = PayWay.XX
+                R.id.rbOffline -> PAY_WAY_TAG = PayWay.ZM
+            }
+            if (PAY_WAY_TAG == PayWay.ZM){
+                showZMInfo()
             }
         }
     }

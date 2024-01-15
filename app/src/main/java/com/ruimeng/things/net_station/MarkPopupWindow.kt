@@ -48,8 +48,15 @@ class MarkPopupWindow(
             tvStationBatteryCount.visibility = View.GONE
             tv_in_shop.visibility = View.VISIBLE
             tv_count.visibility = View.VISIBLE
-            tv_count.setText(agent.available_battery)
-            tv_count.setTextColor(if (agent.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+
+            if (agent.isOnline == 1){
+                tv_count.setTextColor(if (agent.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                tv_count.text = agent.available_battery
+            }else{
+                tv_count.setTextColor(Color.parseColor("#D5D5D5"))
+                tv_count.text = "0"
+                tv_count_title.text ="设备已离线"
+            }
             tv_count_title.visibility = View.VISIBLE
             v.findViewById<ImageView>(R.id.iv01).visibility = View.GONE
 

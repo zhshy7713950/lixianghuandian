@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 //import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import com.ruimeng.things.shop.TkHttp
 import com.ruimeng.things.shop.tkLogin
+import com.tencent.bugly.crashreport.CrashReport
 import wongxd.Http
 import wongxd.Wongxd
 import wongxd.base.AppManager
@@ -67,6 +68,8 @@ class App : Wongxd() {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             aty.startActivity(i)
         }
+        CrashReport.initCrashReport(getApplicationContext(), "85737815c2", false);
+
     }
 
 

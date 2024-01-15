@@ -144,6 +144,7 @@ dependencies {
 //    api 'com.amap.api:map2d:6.0.0'
     implementation 'io.github.lwjfork:CodeEditText:1.0.5'
     implementation files('libs/Amap_2DMap_V5.2.0_20170627.jar')
+    implementation 'com.tencent.bugly:crashreport:latest.release'
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'
 //    //定位功能

@@ -97,7 +97,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="基础套餐"
+        android:text="租电套餐"
         android:textColor="#ffffffff"
         android:textSize="15sp"
         android:layout_marginTop="20dp"

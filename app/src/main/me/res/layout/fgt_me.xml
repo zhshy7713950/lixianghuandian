@@ -216,6 +216,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:orientation="vertical"
                         android:padding="5dp">
 
@@ -265,6 +266,7 @@
                     <LinearLayout
                         android:id="@+id/withdrawalAccountLayout"
                         android:layout_width="0dp"
+                        android:visibility="gone"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:orientation="vertical"

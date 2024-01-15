@@ -68,7 +68,6 @@ class App : Wongxd() {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             aty.startActivity(i)
         }
-        CrashReport.initCrashReport(getApplicationContext(), "85737815c2", false);
     }
 
 

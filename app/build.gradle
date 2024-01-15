@@ -10,7 +10,7 @@ apply from: '../wongxd/config.gradle'
 //读取Git commit number
 static def getGitCommitNumber() {
 //    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
-    return 594
+    return 597
 }
 
 
@@ -121,6 +121,7 @@ dependencies {
     api project(':wongxd')
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.flyco.roundview:FlycoRoundView_Lib:1.1.4@aar'
+    implementation 'com.tencent.bugly:crashreport:latest.release'
     //高德地图
     //定位
     //noinspection GradleDependency

@@ -3,6 +3,6 @@
     <string name="app_name">享锂来租赁</string>
     <!--微信appID-->
     <string name="wx_appid">wxbc775f5998093d5a</string>
-    <string name="home_url">http://xlltest.scxll.cn/</string>
-<!--    <string name="home_url">http://xianglilai.scxll.cn/</string>-->
+<!--    <string name="home_url">http://xlltest.scxll.cn/</string>-->
+    <string name="home_url">http://xianglilai.scxll.cn/</string>
 </resources>

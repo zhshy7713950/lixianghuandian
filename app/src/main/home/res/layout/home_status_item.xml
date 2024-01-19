@@ -45,6 +45,15 @@
 					android:layout_marginTop="70dp"
 					/>
 				<TextView
+					android:id="@+id/tv_please_change"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="(请进行'扫码换电')"
+					android:textColor="#ff29ebb6"
+					android:textSize="15sp"
+					/>
+				<TextView
+					android:id="@+id/tv_left_battery"
 					android:drawableLeft="@mipmap/ic_left_bt"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -190,7 +199,7 @@
 				app:rv_cornerRadius="22dp"
 				app:rv_strokeColor="#535B66"
 				app:rv_strokeWidth="0.5dp"
-				android:text="扫码开门"
+				android:text="扫码换电"
 				android:gravity="center_vertical"
 				android:layout_gravity="bottom|right"
 				android:textColor="#29EBB6"
@@ -244,6 +253,7 @@
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_switch"
 				android:text="手动换电"
+				android:visibility="gone"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
@@ -269,6 +279,17 @@
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_scan_box"
 				android:text="租电"
+				android:gravity="center_horizontal"
+				android:drawablePadding="8dp"
+				android:textColor="#ffffffff"
+				android:textSize="13sp"/>
+			<TextView
+				android:id="@+id/tv_ice"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:drawableTop="@mipmap/ic_stop_contract"
+				android:text="冻结"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
@@ -403,17 +424,40 @@
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
 
-					<TextView
+					<LinearLayout
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="41dp"
-						android:text="套餐内容"
-						android:drawablePadding="6dp"
-						android:textColor="#ff9eaab3"
-						android:textSize="11sp"
-						android:drawableRight="@mipmap/ic_pakage_status01"
 						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toTopOf="parent" />
+						app:layout_constraintTop_toTopOf="parent"
+						>
+						<TextView
+							android:id="@+id/tv_package_content"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:text="套餐内容"
+							android:drawablePadding="6dp"
+							android:textColor="#ff9eaab3"
+							android:textSize="11sp"
+							 />
+						<TextView
+							android:id="@+id/tv_package_status"
+							android:layout_width="wrap_content"
+							android:layout_height="13dp"
+							android:text="生效中"
+							android:textColor="@color/black"
+							android:textSize="8sp"
+							app:layout_constraintLeft_toRightOf="@id/tv_package_time_name"
+							app:layout_constraintTop_toTopOf="@id/tv_package_time_name"
+							app:layout_constraintBottom_toBottomOf="@id/tv_package_time_name"
+							android:paddingLeft="4dp"
+							android:paddingRight="4dp"
+							android:layout_marginLeft="5dp"
+							android:gravity="center_vertical"
+							android:background="@drawable/shape_green"
+							/>
+					</LinearLayout>
+
 
 					<TextView
 						android:id="@+id/tv_package_name"
@@ -512,7 +556,6 @@
 							android:layout_height="wrap_content"
 							android:layout_marginTop="41dp"
 							android:text="套餐内容"
-							android:drawableRight="@mipmap/ic_pakage_status01"
 							android:textColor="#ff9eaab3"
 							android:drawablePadding="6dp"
 							android:textSize="11sp"

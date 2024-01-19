@@ -248,7 +248,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:drawableRight="@mipmap/ic_pakage_status01"
                     android:drawablePadding="6dp"
                     android:text="套餐内容"
                     android:textColor="#ff9eaab3"
@@ -382,7 +381,6 @@
                     android:textColor="#ff9eaab3"
                     android:textSize="12sp"
                     android:layout_marginTop="12dp"
-                    android:drawableRight="@mipmap/ic_pakage_status01"
                     />
                 <TextView
                     android:id="@+id/tv_change_package_name1"

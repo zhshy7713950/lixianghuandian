@@ -24,12 +24,15 @@ import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.home.view.BuyChangePackagePopup
 import com.ruimeng.things.home.view.ChangePackageListPopup
 import com.ruimeng.things.home.view.ShowCouponPopup
+import com.ruimeng.things.me.FgtMeDeposit
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_home.*
+import kotlinx.android.synthetic.main.fgt_me.tv_ya_money_me
+import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_base_package_time
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
 import me.yokeyword.fragmentation.SupportFragment
@@ -74,6 +77,7 @@ class FgtHome : MainTabFragment() {
         var rent_time = ""
         var totalvoltage = ""
         var rsoc = ""
+        var payType =""
 
         fun selectDeviceType() {
 
@@ -148,6 +152,7 @@ class FgtHome : MainTabFragment() {
     }
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
+
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)
     }
@@ -164,6 +169,9 @@ class FgtHome : MainTabFragment() {
         right?.setOnClickListener {   tryToScan() }
 
         tv_follow_wechat.setOnClickListener { start(FgtFollowWechatAccount()) }
+        tv_right.setOnClickListener {
+            srl_home?.autoRefresh()
+        }
 
 
         val userInfo = InfoViewModel.getDefault().userInfo.value
@@ -558,6 +566,8 @@ class FgtHome : MainTabFragment() {
                 totalvoltage = paymentDetailBean!!.battery.totalvoltage
                 rsoc = paymentDetailBean!!.battery.rsoc
                 deposit = paymentDetailBean!!.deposit
+                payType = paymentDetailBean!!.pay_type
+                contractId = paymentDetailBean!!.contract_id
 
                 showHomePageInfo()
             }
@@ -672,6 +682,7 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    var virtaul = false
     private fun showNewDeviceData(item:DeviceDetailBean.Data){
         CURRENT_DEVICEID = item.device_id.toString()
         CURRENT_CONTRACT_ID = item.device_contract.contract_id
@@ -679,7 +690,9 @@ class FgtHome : MainTabFragment() {
         showPopMsg(item.popmsg)
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
-        tv_remark_num.text = item.device_contract.remark
+        if (!virtaul){
+            tv_remark_num.text = item.device_contract.remark
+        }
 //        if ("0" == item.device_contract.is_sign) {
 //            signDialog(activity!!, item.device_contract.contract_id)
 //        }
@@ -705,11 +718,37 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = View.GONE
             tv_error_info.visibility = View.GONE
         }
-        pvBattery.maxCount = 100f
-        pvBattery.setCurrentCount(info.rsoc.toFloat())
-        tvProgress.text = "${info.rsoc}%"
-        tv_voltage.text = "电压 ${info.totalvoltage}V"
+
         tvBatteryName.text = info.device_id
+        if (info.device_id.startsWith("8") && info.device_id.length == 8 ){
+            tv_remark_num.text = "虚拟编号"
+            tvProgress.textColor = Color.parseColor("#29EBB6")
+            tv_please_change.visibility = View.VISIBLE
+            tv_left_battery.visibility = View.GONE
+            tv_voltage.visibility = View.GONE
+            pvBattery.visibility = View.GONE
+            virtaul = true
+           if (paymentDetailBean?.active_status  == "1"){
+               tvProgress.text = "待取电"
+               tv_please_change.text = "(请进行\"扫码换电\")"
+           }else if (paymentDetailBean?.active_status  == "3"){
+               tvProgress.text = "已冻结"
+               tv_please_change.text = "(请进行\"解冻\"操作)"
+               tv_ice.text = "解冻"
+               tv_package_status.text = "已冻结"
+               tv_package_status.background = context?.getDrawable( R.drawable.shape_yello)
+           }
+
+        }else{
+            pvBattery.maxCount = 100f
+            pvBattery.setCurrentCount(info.rsoc.toFloat())
+            tvProgress.text = "${info.rsoc}%"
+            tv_voltage.text = "电压 ${info.totalvoltage}V"
+            tv_please_change.visibility = View.GONE
+            tv_left_battery.visibility = View.VISIBLE
+            tv_voltage.visibility = View.VISIBLE
+            pvBattery.visibility = View.VISIBLE
+        }
     }
 
     private fun showBatteryInfo(info:DeviceDetailBean.Data.DeviceBase){
@@ -729,6 +768,11 @@ class FgtHome : MainTabFragment() {
 
             tv_ya_monety.text =  "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
+            tv_ya_monety.setOnClickListener {
+                if ( tv_ya_monety.text != "0.00"){
+                    startFgt(FgtMeDeposit())
+                }
+            }
             if (paymentDetailBean!!.paymentInfo != null){
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
@@ -761,18 +805,19 @@ class FgtHome : MainTabFragment() {
                         tv_no_package.visibility = View.GONE
                         var option  = options[0]
                         if (option != null){
-                            tv_change_package_type.text = if(option.single_option) "单次换电" else "换电${option.total_times}次"
-                            tv_change_package_left_times.text = "剩余${option.change_times}次"
-                            tv_change_package_time.text = TextUtil.formatTime(option.start_time,option.end_time)
-                            val statusRes = if(option.active_status == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
-                            tv_change_package_title.setCompoundDrawablesWithIntrinsicBounds(null,null,
-                                context?.let { ContextCompat.getDrawable(it,statusRes) },null)
+                            tv_change_package_type.text = "次数无限制"
+//                            tv_change_package_left_times.text = "剩余${option.change_times}次"
+                            tv_change_package_time.text = tv_package_time.text
+//                            val statusRes = if(option.active_status == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
+//                            tv_change_package_title.setCompoundDrawablesWithIntrinsicBounds(null,null,
+//                                context?.let { ContextCompat.getDrawable(it,statusRes) },null)
                         }
 
                         hasChangePackege = true
                         tv_btn_change_package.visibility = View.GONE
                         tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
-                        tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
+//                        tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
+                        tv_btn_change_package_update.visibility = View.GONE
                         tv_btn_change_package_update.setOnClickListener {
                             doContinueRant()
                         }

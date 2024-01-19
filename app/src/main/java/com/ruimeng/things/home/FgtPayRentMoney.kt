@@ -100,8 +100,8 @@ class FgtPayRentMoney : BaseBackFragment() {
         val colors = arrayOf("#FFFFFF", "#929FAB")
         tv_change_package_create_title.text =
             TextUtil.getSpannableString(arrayOf("换电套餐", ""), colors)
-        tv_base_package_create_title.text =
-            TextUtil.getSpannableString(arrayOf("租电套餐", ""), colors)
+        tv_base_package_create_title.text = "租电套餐"
+
         if (pageType == PAGE_TYPE_CREATE) {
             ll_package.visibility = View.GONE
             ll_change_package_create_title.visibility = View.VISIBLE
@@ -116,6 +116,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_change_package_update_title.visibility = View.VISIBLE
             ll_expand.visibility = View.VISIBLE
             tv_base_package_create_title.visibility = View.GONE
+            tv_rent_desc.visibility = View.GONE
             cl_update_package_title.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {
@@ -225,7 +226,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             .apply {
                 style(NormalDialog.STYLE_TWO)
                 btnNum(2)
-                title("请阅读后点击确认!")
+                title("押金退还结束后，剩余套餐将清零，请确认操作！")
                 content("是否确认退还押金？")
                 btnText("确认", "取消")
                 setOnBtnClickL(OnBtnClickL {
@@ -274,7 +275,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_agnet_name_pay_rent_money.text = it!!.agentCode
             et_agnet_name_deposit.text = it!!.agentName
             btn_return_deposit_pay_rent_money.visibility =
-                if (it!!.btn_return == 1) View.VISIBLE else View.GONE
+                if (it!!.btn_return == 1) View.GONE else View.GONE
             btn_return_deposit_pay_rent_money.setOnClickListener {
                 tryReturnDeposit(baseInfo!!.contract_id)
             }
@@ -718,14 +719,12 @@ class FgtPayRentMoney : BaseBackFragment() {
                 changeOptions.forEach {
                     if (it.active_status == "1") {
                         ll_change_package_active.visibility = View.VISIBLE
-                        tv_change_package_name1.text = "换电${it.total_times}次"
-                        tv_change_package_time1.text =
-                            "${TextUtil.formatTime(it.start_time, it.end_time)}"
+                        tv_change_package_name1.text = "次数无限制"
+                        tv_change_package_time1.text = tv_base_package_time.text
                     } else if (it.active_status == "2") {
                         ll_change_package_no_active.visibility = View.VISIBLE
                         tv_change_package_name2.text = "换电${it.total_times}次"
-                        tv_change_package_time2.text =
-                            "${TextUtil.formatTime(it.start_time, it.end_time)}"
+                        tv_change_package_time2.text = tv_base_package_time.text
                     }
                 }
             }

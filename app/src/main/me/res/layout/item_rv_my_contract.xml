@@ -106,7 +106,7 @@
             android:id="@+id/tv_base_package"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="基本套餐："
+            android:text="租电套餐："
             android:layout_weight="1"
             android:textColor="#ff929fab"
             android:textSize="12sp"

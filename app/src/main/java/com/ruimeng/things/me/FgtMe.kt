@@ -207,6 +207,12 @@ class FgtMe : MainTabFragment() {
         withdrawalAccountLayout?.setOnClickListener {
             startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
+        tv_ya_money_me.setOnClickListener {
+            if ( tv_ya_money_me.text != "0.00"){
+                startFgt(FgtMeDeposit())
+            }
+
+        }
     }
 
 

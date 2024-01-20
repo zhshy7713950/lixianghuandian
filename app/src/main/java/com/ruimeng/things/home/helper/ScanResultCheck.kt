@@ -50,6 +50,7 @@ class ScanResultCheck {
             3->listener.checkStatus(true)
             4->listener.checkStatus(true)
             5->listener.checkStatus(true)
+            6->listener.checkStatus(true)
 
         }
 

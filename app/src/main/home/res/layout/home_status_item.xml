@@ -301,7 +301,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_back"
-				android:text="退还"
+				android:text="退还电池"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"

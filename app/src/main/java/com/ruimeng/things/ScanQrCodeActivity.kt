@@ -77,6 +77,7 @@ class ScanQrCodeActivity : AtyBase() {
             "换电"->2
             "租电"->4
             "退还"->5
+         "冻结"->6
 
          else -> 0
      }

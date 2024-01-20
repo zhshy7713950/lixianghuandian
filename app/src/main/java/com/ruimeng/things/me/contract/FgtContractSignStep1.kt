@@ -101,7 +101,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
             if (getPageType != 1){
                 params["contract_id"] = contractId
             }
-
+            params["appType"] = "lxhd"
             onFinish {
                 progressDlg?.dismissWithAnimation()
             }

@@ -127,6 +127,7 @@ class FgtMyContractDetail : BaseBackFragment() {
         http {
             url = PathV3.MY_CONTRACT_DETAIL
             params["contract_id"] = contractId
+            params["appType"] = "lxhd"
 
             onSuccess { res ->
                 tv_device_num_my_contract_detail?.let {

@@ -66,29 +66,29 @@ class FgtScanOpen : BaseBackFragment() {
             tv_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(checkPayBean!!.exp_time)),textColors)
             val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}
             var needActiveNew = false // 是否需要启用新套餐
-            if (!options.isEmpty()){
-                tv_change_package_name.text = "${options[0].name}"
-                tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(options[0].start_time)),textColors)
-                tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(options[0].end_time)),textColors)
+//            if (!options.isEmpty()){
+                tv_change_package_name.text = "次数无限制"
+                tv_change_package_start_time.text = tv_package_start_time.text
+                tv_change_package_end_time.text =  tv_package_end_time.text
                 tv_change_times.text = "剩余${options[0].change_times}次"
-                if (options[0].change_times == "1"){
-                    tv_update_package.text = "立即续期"
-                    tv_update_package.visibility = View.VISIBLE
-                    needActiveNew = true
-                }else{
-                    tv_update_package.visibility = View.GONE
-                }
-            }else{
-                if (checkPayBean!!.singleChangeInfo != null){
-                    tv_change_package_name.text = "单次换电"
-                    tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(checkPayBean!!.singleChangeInfo.start_time)),textColors)
-                    tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(checkPayBean!!.singleChangeInfo.end_time)),textColors)
-                    tv_change_times.text = "剩余1次"
-                    tv_update_package.text = "升级套餐"
-                    tv_update_package.visibility = View.VISIBLE
-                    needActiveNew = true
-                }
-            }
+//                if (options[0].change_times == "1"){
+//                    tv_update_package.text = "立即续期"
+//                    tv_update_package.visibility = View.VISIBLE
+//                    needActiveNew = true
+//                }else{
+//                    tv_update_package.visibility = View.GONE
+//                }
+//            }else{
+//                if (checkPayBean!!.singleChangeInfo != null){
+//                    tv_change_package_name.text = "单次换电"
+//                    tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(checkPayBean!!.singleChangeInfo.start_time)),textColors)
+//                    tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(checkPayBean!!.singleChangeInfo.end_time)),textColors)
+//                    tv_change_times.text = "剩余1次"
+//                    tv_update_package.text = "升级套餐"
+//                    tv_update_package.visibility = View.VISIBLE
+//                    needActiveNew = true
+//                }
+//            }
             if (needActiveNew){
                 needActiveNew = checkPayBean!!.paymentInfo.userOptions.count{ it.option_type == "2" && it.active_status != "1"} > 0
             }
@@ -105,12 +105,12 @@ class FgtScanOpen : BaseBackFragment() {
                     params["code"] = code
                     onSuccessWithMsg { res, msg ->
                         ToastHelper.shortToast(activity, msg)
-                        if (needActiveNew){
-                            var option =  checkPayBean!!.paymentInfo.userOptions.filter{ it.option_type == "2" && it.active_status != "1"}.first()
-                            activeOption(option)
-                        }else{
-                            pop()
-                        }
+//                        if (needActiveNew){
+//                            var option =  checkPayBean!!.paymentInfo.userOptions.filter{ it.option_type == "2" && it.active_status != "1"}.first()
+//                            activeOption(option)
+//                        }else{
+                        tv_change_battery.postDelayed(Runnable { pop() },2000)
+//                        }
                     }
                     onFail { i, s ->
                         ToastHelper.shortToast(activity, s)

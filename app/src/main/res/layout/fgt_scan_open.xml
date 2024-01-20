@@ -189,7 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            tools:text="单次换电"
+            tools:text="次数无限制"
             app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="#ffffffff"
             android:textSize="18sp"
@@ -237,6 +237,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="20dp"
         android:text="剩余次数"
+        android:visibility="gone"
         android:textColor="#ffffffff"
         android:textSize="15sp"
         />
@@ -244,6 +245,7 @@
         android:id="@+id/tv_change_times"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
+        android:visibility="gone"
         android:text="不限次数"
         android:textColor="#ffffffff"
         android:textSize="18sp"
@@ -268,6 +270,7 @@
             android:layout_marginLeft="42dp"
             android:layout_marginRight="42dp"
             android:layout_gravity="bottom"
+            android:visibility="gone"
             android:background="@drawable/bg_btn_common1"
             android:layout_marginBottom="80dp"
             />

@@ -14,13 +14,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
-import com.ruimeng.things.home.bean.DeviceDetailBean
-import com.ruimeng.things.home.bean.PaymentDetailBean
-import com.ruimeng.things.home.bean.PaymentOption
-import com.ruimeng.things.home.bean.ScanResultEvent
+import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.view.BuyChangePackagePopup
 import com.ruimeng.things.home.view.ChangePackageListPopup
 import com.ruimeng.things.home.view.ShowCouponPopup
@@ -315,9 +314,11 @@ class FgtHome : MainTabFragment() {
             }else{
                 deviceStatus = 2
             }
-        }else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status != "1"){
+        }
+        else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status == "2"){
             deviceStatus = 3
-        } else{
+        }
+        else{
             deviceStatus = 0
         }
         if (deviceStatus == 0){
@@ -356,8 +357,9 @@ class FgtHome : MainTabFragment() {
         var event  = ScanResultEvent(NO_PAY_DEVICEID,FgtPayRentMoney.PAGE_TYPE_CREATE)
         addDeviceBtn.setOnClickListener {
             when (deviceStatus) {
-                0-> tryToScan()
-                1 -> tryToScan()
+                0-> {tryToScan()}
+                1 -> {            ToastHelper.shortToast(context,"请扫描电柜二维码”")
+                    tryToScan()}
                 2 -> rentStep1(NO_PAY_DEVICEID)
                 3-> rentStep1(NO_PAY_DEVICEID)
             }
@@ -376,22 +378,27 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvOpenClose.setOnClickListener {
-            var title = if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
-            AnyLayer.with(getCurrentAppAty())
-                .contentView(R.layout.alert_dialog_new)
-                .bindData { anyLayer ->
-                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(title)
-                    anyLayer.contentView.findViewById<TextView>(R.id.tvConfirm).setOnClickListener{
-                        changeBatteryStatus(IS_OPEN)
-                        anyLayer.dismiss()
-                    }
-                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
-                        anyLayer.dismiss()
-                    }
-                }.backgroundColorInt(Color.parseColor("#85000000"))
-                .backgroundBlurRadius(10f)
-                .backgroundBlurScale(10f)
-                .show()
+            if (checkStatus()) {
+                var title = if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
+                AnyLayer.with(getCurrentAppAty())
+                    .contentView(R.layout.alert_dialog_new)
+                    .bindData { anyLayer ->
+                        anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(title)
+                        anyLayer.contentView.findViewById<TextView>(R.id.tvConfirm)
+                            .setOnClickListener {
+                                changeBatteryStatus(IS_OPEN)
+                                anyLayer.dismiss()
+                            }
+                        anyLayer.contentView.findViewById<ImageView>(R.id.ivClose)
+                            .setOnClickListener {
+                                anyLayer.dismiss()
+                            }
+                    }.backgroundColorInt(Color.parseColor("#85000000"))
+                    .backgroundBlurRadius(10f)
+                    .backgroundBlurScale(10f)
+                    .show()
+            }
+
         }
         btn_continue_rant.setOnClickListener { doContinueRant() }
 
@@ -552,6 +559,7 @@ class FgtHome : MainTabFragment() {
         }
 
     }
+    var activeStatus = "1" //1-生效中，2-已过期，3-已冻结
     private fun getPaymentInfo(){
         http {
             url = "/apiv6/payment/getuserpaymentinfo"
@@ -568,6 +576,7 @@ class FgtHome : MainTabFragment() {
                 deposit = paymentDetailBean!!.deposit
                 payType = paymentDetailBean!!.pay_type
                 contractId = paymentDetailBean!!.contract_id
+                activeStatus = paymentDetailBean!!.active_status
 
                 showHomePageInfo()
             }
@@ -618,7 +627,41 @@ class FgtHome : MainTabFragment() {
                                 }
                             }else if ("退还" == getType){
                                 if (result != null) {
-                                    returnBattery(result)
+                                    NormalDialog(activity)
+                                        .apply {
+                                            style(NormalDialog.STYLE_TWO)
+                                            btnNum(2)
+                                            title("提示")
+                                            content("请将电池放入电柜，退还结束后，剩余套餐将清零，请确认操作！")
+                                            btnText("确认", "取消")
+                                            setOnBtnClickL(OnBtnClickL {
+                                                dismiss()
+                                                returnBattery(result)
+                                            }, OnBtnClickL {
+                                                dismiss()
+                                            })
+
+                                        }.show()
+
+                                }
+                            }else if ("冻结" == getType){
+                                if (result != null) {
+                                    NormalDialog(activity)
+                                        .apply {
+                                            style(NormalDialog.STYLE_TWO)
+                                            btnNum(2)
+                                            title("冻结套餐需要将电池归还至电柜。冻结成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                                            content("请确认是否立即开始冻结？")
+                                            btnText("确认", "取消")
+                                            setOnBtnClickL(OnBtnClickL {
+                                                dismiss()
+                                               frozen(result)
+                                            }, OnBtnClickL {
+                                                dismiss()
+                                            })
+
+                                        }.show()
+
                                 }
                             }
                         }
@@ -640,6 +683,7 @@ class FgtHome : MainTabFragment() {
             params["code"] = code
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, msg)
+                srl_home?.autoRefresh()
             }
 
             onFail { i, msg ->
@@ -647,7 +691,9 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
-
+    private fun autoRefresh(){
+        srl_home.postDelayed( { srl_home.autoRefresh() },2000)
+    }
     /**
      * 柜内租用电池
      */
@@ -658,7 +704,9 @@ class FgtHome : MainTabFragment() {
             params["code"] = code
             params["device_id"] = CURRENT_DEVICEID
             onSuccessWithMsg { res, msg ->
-                ToastHelper.shortToast(activity, msg)
+                ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
+
+                autoRefresh()
             }
 
             onFail { i, msg ->
@@ -762,6 +810,8 @@ class FgtHome : MainTabFragment() {
         tv_detail_software_ver.text = info.softversion
     }
     private fun showPackageInfo(){
+        tv_ice.text = if (activeStatus == "3") "解冻" else "冻结"
+
         hasChangePackege = false
         if (paymentDetailBean != null){
 
@@ -863,10 +913,21 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    private  fun   checkStatus(): Boolean {
+        if (activeStatus == "3"){
+            ToastHelper.shortToast(context,"请先完成解冻操作")
+            return false
+        }else if (virtaul){
+            ToastHelper.shortToast(context,"请先完成取电操作")
+            return false
+        }
+        return true
+    }
     private fun initInfoEvent(item:DeviceDetailBean.Data){
         contractId = item.device_contract.contract_id
         tvFindLocation.setOnClickListener {
-            getPermissions(activity,
+            if (checkStatus()){
+                 getPermissions(activity,
                 PermissionType.COARSE_LOCATION,
                 PermissionType.FINE_LOCATION,
                 PermissionType.ACCESS_WIFI_STATE,
@@ -874,8 +935,11 @@ class FgtHome : MainTabFragment() {
                 allGranted = {
                     startFgt(FgtFindBattery())
                 })
+            }
+
         }
-        tvWay.setOnClickListener { startFgt(FgtTrajectory()) }
+        tvWay.setOnClickListener {
+            if (checkStatus()){startFgt(FgtTrajectory())} }
         tvSwitch.setOnClickListener {
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -886,35 +950,62 @@ class FgtHome : MainTabFragment() {
 
         }
         tv_scan_box.setOnClickListener {
-            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                intent.putExtra("type", "租电")
-                startActivityForResult(intent, 1)
-            })
+            http {
+                url = Path.GET_MY_DEVICE
+                onSuccess {
+                    val result = it.toPOJO<MyDevicesBean>().data
+                    if (result.size >=2 ){
+                        ToastHelper.shortToast(context,"可租用电池数已达上限(2)")
+                    }else{
+                        ToastHelper.shortToast(context,"请扫描电柜二维码")
+                        getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+//                            val intent = Intent(activity, ScanQrCodeActivity::class.java)
+//                            intent.putExtra("type", "租电")
+//                            startActivityForResult(intent, 1)
+                            tryToScan()
+                        })
+                    }
+                }
+            }
+
         }
         tvReback.setOnClickListener {
             //3.【退还】按钮点击后，如果判断是虚拟电池：“8开头 + 8位”，就走老流程，跳转到“退还”页面（需要上传图片、填写原因那个）
             //否则，进入扫码页，获取到电柜码，调用新接口returnBattery】
-            if (CURRENT_DEVICEID.startsWith("8") && CURRENT_DEVICEID.length == 8){
-                startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))
+            if (activeStatus == "3"){
+                ToastHelper.shortToast(context,"没有需要退还的电池")
             }else{
-                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                    intent.putExtra("type", "退还")
-                    startActivityForResult(intent, 1)
-                })
+                if (CURRENT_DEVICEID.startsWith("8") && CURRENT_DEVICEID.length == 8){
+//                    startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))
+                    ToastHelper.shortToast(context,"没有需要退还的电池")
+                }else{
+                    ToastHelper.shortToast(context,"请扫描电柜二维码")
+                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                        intent.putExtra("type", "退还")
+                        startActivityForResult(intent, 1)
+                    })
+                }
             }
+
+
         }
         changeOpenDoor?.setOnClickListener {
-            if (hasChangePackege){
-                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                    intent.putExtra("type", "换电开门")
-                    startActivityForResult(intent, 1)
-                })
+            if (activeStatus == "3"){
+                ToastHelper.shortToast(context,"请先完成解冻操作")
             }else{
-                buyChangePackage()
+                ToastHelper.shortToast(context,"请扫描电柜二维码")
+//                if (hasChangePackege){
+                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                        intent.putExtra("type", if(virtaul) "租电"  else "换电开门")
+                        startActivityForResult(intent, 1)
+                    })
+//                }else{
+//                    buyChangePackage()
+//                }
             }
+
         }
 
         tvUnbind.setOnClickListener {
@@ -928,8 +1019,85 @@ class FgtHome : MainTabFragment() {
                 }
             }
         }
-    }
+        tv_ice.setOnClickListener {
+            if (tv_ice.text.equals("冻结")){
+                if (virtaul){
+                    NormalDialog(activity)
+                        .apply {
+                            style(NormalDialog.STYLE_TWO)
+                            btnNum(2)
+                            title("提示")
+                            content("冻结套餐成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                            btnText("确认", "取消")
+                            setOnBtnClickL(OnBtnClickL {
+                                dismiss()
+                                frozen("")
+                            }, OnBtnClickL {
+                                dismiss()
+                            })
 
+                        }.show()
+                }else{
+                    ToastHelper.shortToast(context,"请扫描电柜二维码")
+                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                        intent.putExtra("type", "冻结")
+                        startActivityForResult(intent, 1)
+                    })
+                }
+            }else{
+                NormalDialog(activity)
+                    .apply {
+                        style(NormalDialog.STYLE_TWO)
+                        btnNum(2)
+                        title("解冻成功后套餐将立即恢复计费，之后您可扫码取电继续使用")
+                        content("请确认是否立即开始解冻？")
+                        btnText("确认", "取消")
+                        setOnBtnClickL(OnBtnClickL {
+                            dismiss()
+                            resumeBattery()
+                        }, OnBtnClickL {
+                            dismiss()
+                        })
+
+                    }.show()
+            }
+
+        }
+    }
+    private fun frozen( code:String){
+        http {
+            url = "/apiv6/cabinet/frozen"
+            params["device_id"] = CURRENT_DEVICEID
+            params["user_id"] = userId
+            if (code != ""){
+                params["code"] = code
+            }
+            onSuccess {
+                if (code != ""){
+                    ToastHelper.shortToast(context,"请将电池放入电柜，然后刷新页面")
+                }else{
+                    ToastHelper.shortToast(context,"操作成功")
+                }
+                autoRefresh()
+            }
+            onFail { i, s ->  }
+        }
+    }
+    private fun resumeBattery( ){
+        http {
+            url = "/apiv6/cabinet/resume"
+            params["device_id"] = CURRENT_DEVICEID
+            params["user_id"] = userId
+
+            onSuccess {
+                ToastHelper.shortToast(context,"操作成功")
+
+                autoRefresh()
+            }
+            onFail { i, s ->  }
+        }
+    }
     /**
      * 购买换电套餐
      */

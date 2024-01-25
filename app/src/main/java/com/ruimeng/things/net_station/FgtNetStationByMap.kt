@@ -395,9 +395,9 @@ class FgtNetStationByMap : BaseBackFragment() {
             if (agent.isOnline == 1){
                 markerBitmap =
                     context?.let { BitmapUtil().overlayTextOnImage(it,
-                        if(agent.available_battery.toInt() > 2 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
+                        if(agent.isGreen == 1 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
                         agent.available_battery,
-                        if(agent.available_battery.toInt() > 2 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
+                        if(agent.isGreen == 1 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
 
             }else{
                 markerBitmap = context?.let {

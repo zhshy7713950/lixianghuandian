@@ -214,33 +214,21 @@ class FgtMyContractItem : MainTabFragment() {
                 a.getView<TextView>(R.id.tv_num).text = "${b.device_id}"
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
                 a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
-                if (b.paymentName != ""){
+                if (b.paymentName != "" && b.paymentName != null){
                     a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
                         .setVisible(R.id.tv_base_package_time,true)
                         .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("租电套餐：",   b.paymentName), textColors))
+                        .setVisible(R.id.tv_change_package_time, true)
+                        .setText(R.id.tv_change_package_time,"${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
+                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "次数无限制"), textColors))
                 }else{
                     a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
                         .setVisible(R.id.tv_base_package_time,false)
                         .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("租电套餐：",   "暂无"), textColors))
-                }
-
-
-
-
-                val option = b.userOptions.filter { it.option_type == "2" }
-                if (option.isEmpty() || b.paymentName == "") {
                     a.setVisible(R.id.tv_change_package_time, false)
                         .setText(R.id.tv_change_package,  TextUtil.getSpannableString(arrayOf("换电套餐：", "暂无"), textColors))
-                        .setVisible(R.id.tv_change_package_time,false)
-                } else {
-                    a.setVisible(R.id.tv_change_package_time, true)
-                        .setText(
-                            R.id.tv_change_package_time,
-                            "${formatTime(option[0].start_time)}至${formatTime(option[0].end_time)}"
-                        )
-                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "次数无限制"), textColors))
-                        .setVisible(R.id.tv_change_package_time,true)
                 }
+
 
 
                 a.getView<FrameLayout>(R.id.qrf_return).apply {

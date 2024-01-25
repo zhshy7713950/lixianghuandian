@@ -122,7 +122,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_company_desc.setOnClickListener {
             var text = "1.换电服务的使用资费\n" +
                     "2.请在【租电套餐】选择完成后，再继续选择对应的换电服务\n" +
-                    "3.本套餐取电起租后，不支持退租金\n" +
+                    "3.本套餐起租后，不支持退租金\n" +
                     "注：【换电套餐】的有效期限取决于【租电套餐】。若【租电套餐】失效，那么【换电套餐】也会无法继续使用"
             activity?.let { it1 -> CompanyDescPopup(it1,"换电套餐说明",text) }
         }
@@ -139,7 +139,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_rent_desc.setOnClickListener {
             var text = "1.租用电池的基础套餐费用\n" +
                     "换电操作不会引起租电套餐费用变更\n" +
-                    "2.本套餐取电起租后，不支持退租金"
+                    "2.本套餐起租后，不支持退租金"
             activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
         }
         tv_option_time.text = showExpireTitle() + "无"
@@ -489,7 +489,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun setSelectOption(){
         newGetRentBean.let {
             if (it != null) {
-                showOptionSelector(it,"5",tv_select_charge,cl_select_charge,tv_select_charge_title)
+//                showOptionSelector(it,"5",tv_select_charge,cl_select_charge,tv_select_charge_title)
                 showOptionSelector(it,"4",tv_select_platform,cl_select_platform,tv_select_platform_title)
                 showOptionSelector(it,"3",tv_select_insurance,cl_select_insurance,tv_select_insurance_title)
             }
@@ -664,7 +664,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<UpdateGetRentBean>().data
                         var payments = ArrayList<PaymentInfo>();
-                        payments.add(PaymentInfo(pname = "暂不续期", options = result.options))
+//                        payments.add(PaymentInfo(pname = "暂不续期", options = result.options))
                         payments.addAll(result.paymentInfo)
                         baseInfo = result.baseInfo
                         baseInfo!!.model_name = baseInfo!!.modelName
@@ -710,24 +710,27 @@ class FgtPayRentMoney : BaseBackFragment() {
             }else{
                 tv_other_option3.text ="否"
             }
-            val changeOptions = userOptions.filter { it.option_type == "2" }
+//            val changeOptions = userOptions.filter { it.option_type == "2" }
             ll_change_package_no_active.visibility = View.GONE
             ll_change_package_active.visibility = View.GONE
             tv_change_package_title.visibility = View.GONE
-            if (!changeOptions.isEmpty()) {
-                tv_change_package_title.visibility = View.VISIBLE
-                changeOptions.forEach {
-                    if (it.active_status == "1") {
-                        ll_change_package_active.visibility = View.VISIBLE
-                        tv_change_package_name1.text = "次数无限制"
-                        tv_change_package_time1.text = tv_base_package_time.text
-                    } else if (it.active_status == "2") {
-                        ll_change_package_no_active.visibility = View.VISIBLE
-                        tv_change_package_name2.text = "换电${it.total_times}次"
-                        tv_change_package_time2.text = tv_base_package_time.text
-                    }
-                }
-            }
+//            if (!changeOptions.isEmpty()) {
+            tv_change_package_title.visibility = View.VISIBLE
+            ll_change_package_active.visibility = View.VISIBLE
+            tv_change_package_name1.text = "次数无限制"
+            tv_change_package_time1.text = tv_base_package_time.text
+//                changeOptions.forEach {
+//                    if (it.active_status == "1") {
+//                        ll_change_package_active.visibility = View.VISIBLE
+//                        tv_change_package_name1.text = "次数无限制"
+//                        tv_change_package_time1.text = tv_base_package_time.text
+//                    } else if (it.active_status == "2") {
+//                        ll_change_package_no_active.visibility = View.VISIBLE
+//                        tv_change_package_name2.text = "换电${it.total_times}次"
+//                        tv_change_package_time2.text = tv_base_package_time.text
+//                    }
+//                }
+//            }
             tv_expand.text = "展开"
             ll_package.visibility = View.GONE
             tv_expand.setOnClickListener {
@@ -905,6 +908,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         http {
             url = PathV3.SIGN_CONTRACT
             params["contract_id"] = contractId
+            params["appType"] = "lxhd"
             IS_SHOW_MSG = false
             onSuccess {
                 sighStatus = false

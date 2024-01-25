@@ -48,7 +48,11 @@ class FgtNetStation : MainTabFragment() {
                         "租电服务站点" == titleList[currentIndex] -> {"2"}
                         else -> {"3"}
                     }
-                    FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,"","",fragmentList.get(currentIndex).getStationList()))
+                    if (fragmentList.get(currentIndex).getStationList().isEmpty()){
+                        ToastHelper.shortToast(context,if (currentIndex == 0 )"暂无可用换电站点" else "暂无可用售后服务站点")
+                    }else{
+                        FgtMain.instance?.start(FgtNetStationByMap.newInstance(type,"","",fragmentList.get(currentIndex).getStationList()))
+                    }
                 }
         }
 

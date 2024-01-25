@@ -37,7 +37,7 @@ class ScanQrCodeActivity : AtyBase() {
         if (!TextUtils.isEmpty(intent.getStringExtra("contract_id"))) {
             getContractId = intent.getStringExtra("contract_id")
         }
-        initTopbar(topbar, getType)
+        initTopbar(topbar, "扫一扫")
         /**
          * 执行扫面Fragment的初始化操作
          */

@@ -114,18 +114,25 @@ class FgtSwitchBattery : BaseBackFragment() {
 
                             val tvHole = view.findViewById<TextView>(R.id.tv_battery_hole)
                             val tvRemark = view.findViewById<TextView>(R.id.tv_battery_remark)
+                            var textColors = arrayOf("#FFFFFF","#929FAB")
 
                             tvNum.text = "电池编号：" + item.device_id
-                            var status = ""
-                            if (item.protect != "0" && item.protect != "4096"){
-                                status = "故障"
+                            if (item.device_id.startsWith("8") && item.device_id.length == 8 ){
+                                tvStatus.text = TextUtil.getSpannableString(arrayOf("电池状态：","-"),textColors)
+                                tvHole.text = TextUtil.getSpannableString(arrayOf("电池电量：","-"),textColors)
+                                tvRemark.text = TextUtil.getSpannableString(arrayOf("电池备注：","虚拟编号-待取电"),textColors)
                             }else{
-                                status = if (item.device_status == 1)  "通电" else "断电"
+                                var status = ""
+                                if (item.protect != "0" && item.protect != "4096"){
+                                    status = "故障"
+                                }else{
+                                    status = if (item.device_status == 1)  "通电" else "断电"
+                                }
+                                tvStatus.text = TextUtil.getSpannableString(arrayOf("电池状态：",status),textColors)
+                                tvHole.text = TextUtil.getSpannableString(arrayOf("电池电量：",item.rsoc+"%"),textColors)
+                                tvRemark.text = TextUtil.getSpannableString(arrayOf("电池备注：",item.remark),textColors)
                             }
-                            var textColors = arrayOf("#FFFFFF","#929FAB")
-                            tvStatus.text = TextUtil.getSpannableString(arrayOf("电池状态：",status),textColors)
-                            tvHole.text = TextUtil.getSpannableString(arrayOf("电池电量：",item.rsoc+"%"),textColors)
-                            tvRemark.text = TextUtil.getSpannableString(arrayOf("电池备注：",item.remark),textColors)
+
 
 
                             view.setOnClickListener {

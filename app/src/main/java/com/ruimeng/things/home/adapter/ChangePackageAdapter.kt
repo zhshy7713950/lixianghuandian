@@ -13,7 +13,7 @@ class ChangePackageAdapter :BaseQuickAdapter<PaymentOption,BaseViewHolder>(R.lay
     override fun convert(p0: BaseViewHolder, item: PaymentOption?) {
         if (item != null ){
             p0.setText(R.id.tv_price,"¥"+item.price)
-                .setText(R.id.tv_name, "次数无限")
+                .setText(R.id.tv_name, "次数无限制")
                 .setVisible(R.id.tv_price,!TextUtils.isEmpty(item.id))
                 .setVisible(R.id.no_pay,TextUtils.isEmpty(item.id))
                 .setText(R.id.no_pay, item.name)

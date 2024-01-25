@@ -16,6 +16,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.bean.ChangeRentBatteryBean
 import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
+import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.showConfirmDialog
 import com.utils.TextUtil
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
@@ -84,7 +85,17 @@ class FgtMeDeposit : BaseBackFragment() {
             tv_remark.text = "退还电池成功后将自动解除免押绑定"
         }
         tv_deposit_return.setOnClickListener {
-            tryReturnDeposit(FgtHome.contractId);
+            http {
+                url = "/apiv6/payment/getuserpaymentinfo"
+                params["user_id"] = FgtHome.userId
+                params["device_id"] = FgtHome.CURRENT_DEVICEID
+                IS_SHOW_MSG = false
+                onSuccess { res ->
+                   var  paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                    tryReturnDeposit(paymentDetailBean.contract_id)
+                }
+            }
+
         }
 
     }

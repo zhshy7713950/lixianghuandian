@@ -44,11 +44,12 @@
                 />
             <TextView
                 android:id="@+id/tvCode"
-                android:layout_width="105dp"
-                android:layout_height="28dp"
-                tools:text="400001122"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="400001ghjghjghjhgjhgjghjhjj122"
+                android:maxLines="2"
                 android:textColor="#ffffffff"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 />
             <TextView
                 android:id="@+id/tvBatteryNum"

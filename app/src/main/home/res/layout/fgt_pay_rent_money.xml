@@ -369,7 +369,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="生效中套餐"
+                    android:text="现有套餐"
                     android:textColor="#ff29ebb6"
                     android:textSize="14sp"
                     android:layout_marginTop="12dp"/>
@@ -550,7 +550,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:text="本套餐取电起租后，不支持退租金"
+                    android:text="本套餐起租后，不支持退租金"
                     android:textColor="#ffb2c1ce"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -618,7 +618,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:text="本套餐取电起租后，不支持退租金"
+                    android:text="本套餐起租后，不支持退租金"
                     android:textColor="#ffb2c1ce"
                     android:textSize="12sp" />
             </LinearLayout>

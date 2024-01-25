@@ -114,6 +114,18 @@
 					android:layout_marginLeft="14dp"
 					/>
 				<TextView
+					android:id="@+id/tv_zm_desc"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="（芝麻信用免押）"
+					android:textColor="#ffffffff"
+					android:textSize="12sp"
+					app:layout_constraintLeft_toRightOf="@id/tv_money_account_deposit"
+					android:layout_marginBottom="28dp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					android:layout_marginLeft="2dp"
+					/>
+				<TextView
 					android:id="@+id/tv4"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -411,6 +423,19 @@
 					android:layout_marginLeft="60dp"
 					android:gravity="center_vertical"
 					/>
+
+				<TextView
+					android:id="@+id/tv_zm_desc1"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="4dp"
+					android:layout_marginBottom="16dp"
+					android:text="（芝麻信用免押）"
+					android:textColor="#ffffffff"
+					android:textSize="10sp"
+					app:layout_constraintBottom_toBottomOf="@id/tv_total"
+					app:layout_constraintLeft_toRightOf="@id/tv_total" />
+
 				<TextView
 					android:id="@+id/btn_pay_now_account_deposit"
 					android:layout_width="100dp"

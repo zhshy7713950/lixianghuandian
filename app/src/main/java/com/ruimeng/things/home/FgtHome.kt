@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -400,7 +401,11 @@ class FgtHome : MainTabFragment() {
             }
 
         }
-        btn_continue_rant.setOnClickListener { doContinueRant() }
+        btn_continue_rant.setOnClickListener {
+            if (checkStatus()){
+                doContinueRant()
+            }
+        }
 
 
 
@@ -444,7 +449,8 @@ class FgtHome : MainTabFragment() {
      * 续租
      */
     private fun doContinueRant() {
-        rentStep1(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
+        FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+//        rentStep1(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
     }
 
     class RefreshMyDeviceList
@@ -546,6 +552,7 @@ class FgtHome : MainTabFragment() {
                 deviceCode = 200
                 rent_day = deviceDetailBean!!.device_contract.rent_day
                 rent_time = deviceDetailBean!!.device_contract.rent_time
+                CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
                 getPaymentInfo()
             }
             onFail { i, s ->
@@ -766,7 +773,9 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = View.GONE
             tv_error_info.visibility = View.GONE
         }
-
+        tv_ice.text = "冻结"
+        tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
+            context?.getDrawable(R.mipmap.ic_stop_contract),null,null)
         tvBatteryName.text = info.device_id
         if (info.device_id.startsWith("8") && info.device_id.length == 8 ){
             tv_remark_num.text = "虚拟编号"
@@ -779,15 +788,20 @@ class FgtHome : MainTabFragment() {
            if (paymentDetailBean?.active_status  == "1"){
                tvProgress.text = "待取电"
                tv_please_change.text = "(请进行\"扫码换电\")"
+               tv_package_status.text = "生效中"
+               tv_package_status.background = context?.getDrawable( R.drawable.shape_green)
            }else if (paymentDetailBean?.active_status  == "3"){
                tvProgress.text = "已冻结"
                tv_please_change.text = "(请进行\"解冻\"操作)"
                tv_ice.text = "解冻"
+               tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
+                   context?.getDrawable(R.mipmap.ic_scan_box),null,null)
                tv_package_status.text = "已冻结"
                tv_package_status.background = context?.getDrawable( R.drawable.shape_yello)
            }
 
         }else{
+            virtaul = false
             pvBattery.maxCount = 100f
             pvBattery.setCurrentCount(info.rsoc.toFloat())
             tvProgress.text = "${info.rsoc}%"
@@ -796,6 +810,7 @@ class FgtHome : MainTabFragment() {
             tv_left_battery.visibility = View.VISIBLE
             tv_voltage.visibility = View.VISIBLE
             pvBattery.visibility = View.VISIBLE
+
         }
     }
 
@@ -834,66 +849,74 @@ class FgtHome : MainTabFragment() {
                     tv_exp_remind.visibility =  View.GONE
                 }
 
-                val options = ArrayList<PaymentOption>()
-                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
-                //看是否有单次换电
-                if ( paymentDetailBean?.singleChangeInfo != null){
-                    val singleOption = paymentDetailBean!!.singleChangeInfo
-                    singleOption.change_times = "1"
-                    singleOption.show_start_time = singleOption.start_time
-                    singleOption.show_end_time = singleOption.end_time
-                    singleOption.name = "单次换电"
-                    singleOption.active_status = "1"
-                    singleOption.single_option = true
-                   options.add(singleOption)
-                }
-                //是否有换电套餐
-                if (!options.isEmpty()){
-                    // 是否有生效套餐
-                    if (options.count { it.active_status == "1" } > 0){
-                        cl_change_package.visibility = View.VISIBLE
-                        tv_no_package.visibility = View.GONE
-                        var option  = options[0]
-                        if (option != null){
-                            tv_change_package_type.text = "次数无限制"
-//                            tv_change_package_left_times.text = "剩余${option.change_times}次"
-                            tv_change_package_time.text = tv_package_time.text
-//                            val statusRes = if(option.active_status == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
-//                            tv_change_package_title.setCompoundDrawablesWithIntrinsicBounds(null,null,
-//                                context?.let { ContextCompat.getDrawable(it,statusRes) },null)
-                        }
+                tv_change_package_type.text = "次数无限制"
+                tv_change_package_left_times.visibility = GONE
+                tv_change_package_time.text =  tv_package_time.text
+                tv_no_package.visibility = View.GONE
+                tv_btn_change_package.visibility = View.GONE
+                tv_more.visibility = View.GONE
+                tv_btn_change_package_update.visibility = GONE
 
-                        hasChangePackege = true
-                        tv_btn_change_package.visibility = View.GONE
-                        tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
-//                        tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
-                        tv_btn_change_package_update.visibility = View.GONE
-                        tv_btn_change_package_update.setOnClickListener {
-                            doContinueRant()
-                        }
-                        tv_more.setOnClickListener {
-                            activity?.let { it1 -> ChangePackageListPopup(it1, options) }
-                        }
-                    }else{
-                        cl_change_package.visibility = View.GONE
-                        tv_btn_change_package.text = "立即启用"
-                        tv_no_package.text = "您有待生效套餐未启用"
-                        tv_no_package.visibility = View.VISIBLE
-                        tv_btn_change_package.visibility = View.VISIBLE
-                        tv_btn_change_package.setOnClickListener {
-                            activeOption(options.filter { it.active_status =="2" }.first().id)
-                        }
-                    }
-                }else{
-                    cl_change_package.visibility = View.GONE
-                    tv_btn_change_package.text = "购买换电套餐"
-                    tv_no_package.visibility = View.VISIBLE
-                    tv_btn_change_package_update.visibility = View.GONE
-                    tv_btn_change_package.visibility = View.VISIBLE
-                    tv_btn_change_package.setOnClickListener {
-                        buyChangePackage()
-                    }
-                }
+//                val options = ArrayList<PaymentOption>()
+//                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })
+//                //看是否有单次换电
+//                if ( paymentDetailBean?.singleChangeInfo != null){
+//                    val singleOption = paymentDetailBean!!.singleChangeInfo
+//                    singleOption.change_times = "1"
+//                    singleOption.show_start_time = singleOption.start_time
+//                    singleOption.show_end_time = singleOption.end_time
+//                    singleOption.name = "单次换电"
+//                    singleOption.active_status = "1"
+//                    singleOption.single_option = true
+//                   options.add(singleOption)
+//                }
+//                //是否有换电套餐
+//                if (!options.isEmpty()){
+//                    // 是否有生效套餐
+//                    if (options.count { it.active_status == "1" } > 0){
+//                        cl_change_package.visibility = View.VISIBLE
+//                        tv_no_package.visibility = View.GONE
+//                        var option  = options[0]
+//                        if (option != null){
+//                            tv_change_package_type.text = "次数无限制"
+////                            tv_change_package_left_times.text = "剩余${option.change_times}次"
+//                            tv_change_package_time.text = tv_package_time.text
+////                            val statusRes = if(option.active_status == "1")  R.mipmap.ic_pakage_status01 else R.mipmap.ic_pakage_status02
+////                            tv_change_package_title.setCompoundDrawablesWithIntrinsicBounds(null,null,
+////                                context?.let { ContextCompat.getDrawable(it,statusRes) },null)
+//                        }
+//
+//                        hasChangePackege = true
+//                        tv_btn_change_package.visibility = View.GONE
+//                        tv_more.visibility = if(options.size > 1) View.VISIBLE else View.GONE
+////                        tv_btn_change_package_update.visibility = if(options.size <= 1) View.VISIBLE else View.GONE
+//                        tv_btn_change_package_update.visibility = View.GONE
+//                        tv_btn_change_package_update.setOnClickListener {
+//                            doContinueRant()
+//                        }
+//                        tv_more.setOnClickListener {
+//                            activity?.let { it1 -> ChangePackageListPopup(it1, options) }
+//                        }
+//                    }else{
+//                        cl_change_package.visibility = View.GONE
+//                        tv_btn_change_package.text = "立即启用"
+//                        tv_no_package.text = "您有待生效套餐未启用"
+//                        tv_no_package.visibility = View.VISIBLE
+//                        tv_btn_change_package.visibility = View.VISIBLE
+//                        tv_btn_change_package.setOnClickListener {
+//                            activeOption(options.filter { it.active_status =="2" }.first().id)
+//                        }
+//                    }
+//                }else{
+//                    cl_change_package.visibility = View.GONE
+//                    tv_btn_change_package.text = "购买换电套餐"
+//                    tv_no_package.visibility = View.VISIBLE
+//                    tv_btn_change_package_update.visibility = View.GONE
+//                    tv_btn_change_package.visibility = View.VISIBLE
+//                    tv_btn_change_package.setOnClickListener {
+//                        buyChangePackage()
+//                    }
+//                }
             }
 
         }
@@ -1026,8 +1049,8 @@ class FgtHome : MainTabFragment() {
                         .apply {
                             style(NormalDialog.STYLE_TWO)
                             btnNum(2)
-                            title("提示")
-                            content("冻结套餐成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                            title("冻结套餐成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                            content("请确认是否立即开始冻结？")
                             btnText("确认", "取消")
                             setOnBtnClickL(OnBtnClickL {
                                 dismiss()

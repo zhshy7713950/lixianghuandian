@@ -300,7 +300,7 @@ class FgtNetStationItem : MainTabFragment() {
                     helper.setText(R.id.tv_change_number,"${b.available_battery}")
                     if (b.isOnline == 1){
                         helper.setTextColor(R.id.tv_change_number,Color.parseColor(if (b.isGreen == 1) "#29EBB6" else "#FEB41E"))
-                            .setText(R.id.tv_change_title,"设备已离线")
+                            .setText(R.id.tv_change_title,"可换电池数")
                     }else{
                         helper.setTextColor(R.id.tv_change_number,Color.parseColor("#D5D5D5"))
                             .setText(R.id.tv_change_number,"0").

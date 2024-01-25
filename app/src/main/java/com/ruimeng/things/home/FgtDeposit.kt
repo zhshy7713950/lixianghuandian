@@ -77,7 +77,7 @@ class FgtDeposit : BaseBackFragment() {
 
         getDeposit()
         getAgentList()
-        dealPayWay()
+
         EventBus.getDefault().register(this)
     }
 
@@ -197,6 +197,7 @@ class FgtDeposit : BaseBackFragment() {
             }
         }
         )
+        dealPayWay()
     }
     private fun setCheckStatus(){
         if (!IS_CHECKED_PROTOCOL) {
@@ -207,24 +208,32 @@ class FgtDeposit : BaseBackFragment() {
     }
 
     private  fun showTotalMoney(){
-        if (PAY_WAY_TAG == PayWay.ZM){
-            showZMInfo()
-        }else{
-            batteryCombinationBean.let {
-                if (it != null) {
-                    tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
-                    tv_total.text = tv_money_account_deposit.text
+
+            if (PAY_WAY_TAG == PayWay.ZM){
+                showZMInfo()
+            }else{
+                tv_zm_desc1.visibility = View.GONE
+                tv_zm_desc.visibility = View.GONE
+                btn_pay_now_account_deposit.text = "立即支付"
+                batteryCombinationBean.let {
+                    if (it != null) {
+                        tv_money_account_deposit.text = TextUtil.getMoneyText(if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit)
+                        tv_total.text = tv_money_account_deposit.text
+                    }
                 }
             }
-        }
+
+
     }
 
     private fun showZMInfo(){
         tv_money_account_deposit.text = TextUtil.getMoneyText("0.00")
+        tv_zm_desc1.visibility = View.VISIBLE
+        tv_zm_desc.visibility = View.VISIBLE
         tv_total.text = tv_money_account_deposit.text
         btn_pay_now_account_deposit.text = "申请免押"
     }
-    private var PAY_WAY_TAG = PayWay.NULL
+    private var PAY_WAY_TAG = PayWay.WX
 
     private fun dealPayWay() {
         rgDeposit.setOnCheckedChangeListener { group, id ->
@@ -233,9 +242,7 @@ class FgtDeposit : BaseBackFragment() {
                 R.id.rbAlipay -> PAY_WAY_TAG = PayWay.AL
                 R.id.rbOffline -> PAY_WAY_TAG = PayWay.ZM
             }
-            if (PAY_WAY_TAG == PayWay.ZM){
-                showZMInfo()
-            }
+            showTotalMoney()
         }
     }
     private fun getAgentList(){

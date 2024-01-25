@@ -50,7 +50,7 @@ class MarkPopupWindow(
             tv_count.visibility = View.VISIBLE
 
             if (agent.isOnline == 1){
-                tv_count.setTextColor(if (agent.available_battery.toInt() > 2) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
+                tv_count.setTextColor(if (agent.isGreen == 1) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E"))
                 tv_count.text = agent.available_battery
             }else{
                 tv_count.setTextColor(Color.parseColor("#D5D5D5"))
@@ -79,11 +79,11 @@ class MarkPopupWindow(
 
 
         contentView = v
-        contentView.setOnClickListener { dismiss() }
+//        contentView.setOnClickListener {  }
         v.findViewById<View>(R.id.cl).setOnClickListener {}
         width = ViewGroup.LayoutParams.MATCH_PARENT
-        height = ViewGroup.LayoutParams.MATCH_PARENT
-        isOutsideTouchable = true
+        height = ViewGroup.LayoutParams.WRAP_CONTENT
+        isOutsideTouchable = false
         isFocusable = true
         setBackgroundDrawable(ColorDrawable(0x55000000))
 

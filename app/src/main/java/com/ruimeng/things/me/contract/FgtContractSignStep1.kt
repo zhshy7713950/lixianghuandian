@@ -185,6 +185,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
                         btn_sign_contract?.text = "我已确认"
                         btn_sign_contract.setOnClickListener {
                             EventBus.getDefault().post(ContractCheckEvent(true))
+                            pop()
                         }
                     }
                     sv_contract.postDelayed({

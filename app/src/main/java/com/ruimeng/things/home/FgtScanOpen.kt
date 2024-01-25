@@ -70,7 +70,7 @@ class FgtScanOpen : BaseBackFragment() {
                 tv_change_package_name.text = "次数无限制"
                 tv_change_package_start_time.text = tv_package_start_time.text
                 tv_change_package_end_time.text =  tv_package_end_time.text
-                tv_change_times.text = "剩余${options[0].change_times}次"
+//                tv_change_times.text = "剩余${options[0].change_times}次"
 //                if (options[0].change_times == "1"){
 //                    tv_update_package.text = "立即续期"
 //                    tv_update_package.visibility = View.VISIBLE

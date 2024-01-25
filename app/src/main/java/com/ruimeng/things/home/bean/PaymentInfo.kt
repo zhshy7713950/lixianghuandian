@@ -21,7 +21,7 @@ class PaymentInfo (
     val package_id: String= "",
     val package_type: String= "",
     var pname: String= "",
-    val price: Int= 0,
+    val price: Double= 0.0,
     val single_price: String= "",
     val sname: String ="",
     val start_time: Any= "",

@@ -162,19 +162,21 @@ class FgtMyContractDetail : BaseBackFragment() {
                     if (bean.paymentName == ""){
                         tv_base_package.text = TextUtil.getSpannableString(arrayOf("租电套餐：","暂无"))
                         tv_base_package_time.visibility = View.GONE
+                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","暂无"))
+                        tv_change_package_time.visibility = View.GONE
                     }else{
                         tv_base_package.text = TextUtil.getSpannableString(arrayOf("租电套餐：",bean.paymentName))
                         tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
-                    }
-
-                    val options = bean.userOptions?.filter { it.option_type == "2" }
-                    if (options != null && !options.isEmpty() && bean.paymentName != ""){
                         tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","次数无限制"))
                         tv_change_package_time.text = tv_base_package_time.text
-                    }else{
-                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","暂无"))
-                        tv_change_package_time.visibility = View.GONE
                     }
+
+//                    val options = bean.userOptions?.filter { it.option_type == "2" }
+//                    if (options != null && !options.isEmpty() && bean.paymentName != ""){
+//
+//                    }else{
+//
+//                    }
 
                     pdfUrl = bean.pdf
                     pngs.clear()

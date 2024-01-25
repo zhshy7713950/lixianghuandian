@@ -277,7 +277,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_scan_box"
+				android:drawableTop="@mipmap/ic_home_switch"
 				android:text="租电"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"

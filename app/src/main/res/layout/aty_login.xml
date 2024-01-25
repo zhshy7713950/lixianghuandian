@@ -177,7 +177,7 @@
 				android:id="@+id/tv_phone2"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="17348000945"
+				android:text="13541349134"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>

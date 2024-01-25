@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.ruimeng.things.bean.LoginBean
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.aty_login.*
@@ -190,7 +191,7 @@ class AtyLogin : AtyBase() {
                     UserInfoLiveData.refresh()
                     EasyToast.DEFAULT.show(msg)
                 }
-
+                Config.getDefault().spUtils.put(FgtHome.KEY_LAST_DEVICE_ID, "")
                 finish()
             }
 

@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import wongxd.base.AppManager
+import wongxd.common.dissmissProgressDialog
 
 
 //
@@ -181,10 +182,13 @@ private fun goSettingWithSweetAlertDialog(aty: Activity?, pers: List<PermissionA
             sb.append("(将会导致应用不能正常运行)")
             it.contentText = sb.toString()
             it.confirmText = "前往设置给予权限"
-            it.setConfirmClickListener { _ ->
-                aty?.let { goSetting(it) }
-            }
+
         }
+    dlg.setConfirmClickListener {
+        aty?.let { goSetting(it)
+        }
+        dlg.dismiss()
+    }
     dlg.setCancelable(true)
     dlg.show()
 

@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
@@ -30,6 +31,7 @@ import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
+import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_home.*
 import kotlinx.android.synthetic.main.fgt_me.tv_ya_money_me
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_base_package_time
@@ -209,10 +211,36 @@ class FgtHome : MainTabFragment() {
     @Subscribe
     public fun dealScanResult( event: ScanResultEvent) {
         var deviceId = event.deviceId
+
+        http {
+            url = "apiv6/cabinet/getbatterytype"
+            params["code"] = event.deviceId
+            onSuccess {
+                val json = JSONObject(it)
+                val data = json.optJSONObject("data")
+
+                OptionPickerUtil.showJsonOptionPicker(activity, "请选择租用的电池型号",data, object :
+                    OptionPickerUtil.OnSelectKey {
+                    override fun selectKey(
+                        key: String
+                    ) {
+                        newRent(event,key)
+                    }
+                })
+            }
+            onFail { i, s ->
+                ToastHelper.shortToast(context,s)
+            }
+        }
+
+    }
+
+    fun newRent( event: ScanResultEvent,modelId:String){
         http {
             url = "apiv6/cabinet/newRent"
             params["code"] = event.deviceId
             params["user_id"] = userId
+            params["modelId"] = modelId
             onSuccess {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
@@ -486,14 +514,19 @@ class FgtHome : MainTabFragment() {
         http {
             url = Path.OPT_DEVICE
             params["device_id"] = CURRENT_DEVICEID
-            params["device_status"] = if (isOpen) "1" else "2"
+            params["device_status"] = if (!isOpen) "1" else "2"
 
             onSuccess {
                 //                device_status int  1当前为开 2当前为关
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
                 val device_status = data.optInt("device_status")
-                getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
+                ToastHelper.shortToast(context,"操作成功")
+                srl_home.postDelayed(Runnable {
+                    getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
+                    IS_OPEN = !IS_OPEN
+                },6000)
+
 //                if (device_status == 1) {
 //                    openOrCloseBatter(BatteryOpenEvent(true))
 //                } else {
@@ -540,7 +573,7 @@ class FgtHome : MainTabFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getBatteryDetailInfo(deviceId: String = "0") {
-
+        CURRENT_DEVICEID = deviceId
 
         http {
             url = "/apiv4/getonedevice"
@@ -557,7 +590,7 @@ class FgtHome : MainTabFragment() {
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
-                CURRENT_DEVICEID = ""
+//                CURRENT_DEVICEID = ""
                 deviceCode = i
             }
             onFinish {

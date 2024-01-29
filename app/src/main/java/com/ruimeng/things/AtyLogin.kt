@@ -131,6 +131,11 @@ class AtyLogin : AtyBase() {
         tv_phone3.setOnClickListener {
             doLoginHttp(tv_phone3.text.toString(),"220525")
         }
+        if (BuildConfig.BUILD_TYPE.equals("debug")){
+            layout_test.visibility = View.VISIBLE
+        }else{
+            layout_test.visibility = View.GONE
+        }
     }
 
     private fun checkStatus(p: Boolean ){

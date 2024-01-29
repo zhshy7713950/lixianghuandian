@@ -3,9 +3,12 @@ package com.ruimeng.things.net_station
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +28,9 @@ import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.BitmapUtil
 import com.utils.CommonUtil
 import com.utils.DensityUtil
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
+import kotlinx.android.synthetic.main.layout_station_infowindow.layout_bottom_info
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
@@ -79,6 +84,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                 afterGetPermission(savedInstanceState)
             }
         )
+        layout_bottom_info.visibility = View.GONE
     }
     private val stationAdapter by lazy { StationRvAdapter() }
 
@@ -144,34 +150,7 @@ class FgtNetStationByMap : BaseBackFragment() {
     private fun showInfoPop(agent:NetStationBean.Data.X){
          activity?.let {
              if (agent != null){
-                 MarkPopupWindow(it,agent,getType,object :MarkPopupWindow.OnMarKCallback{
-                     override fun click(view: View,agent:NetStationBean.Data.X) {
-                         if (view.id == R.id.tv_phone_call){
-                             NormalDialog(activity).apply {
-                                 style(NormalDialog.STYLE_TWO)
-                                 title("${agent.tel}")
-                                 titleTextColor(Color.parseColor("#131414"))
-                                 btnTextColor(Color.parseColor("#131414"), Color.GRAY)
-                                 btnText("立即拨打", "取消")
-                                     .setOnBtnClickL(OnBtnClickL {
-                                         getPermissions(activity,
-                                             PermissionType.CALL_PHONE,
-                                             allGranted = { SystemUtils.call(activity, agent.tel) })
-                                         dismiss()
-                                     }, OnBtnClickL {
-                                         dismiss()
-                                     })
-                                 show()
-                             }
-                         }else if (view.id == R.id.tv_in_shop){
-                             if ("3"==getType){
-                                 start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
-                             }
-                         }else if (view.id == R.id.tv_navi_here){
-                             CommonUtil.naviToLocation(activity!!,agent.lat,agent.lng, agent.site_name)
-                         }
-                     }
-                 })
+                showBottomStationInfo(agent)
              }
         }
     }
@@ -490,4 +469,116 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
 
     }
+
+    private fun showBottomStationInfo(agent: NetStationBean.Data.X) {
+        layout_bottom_info.visibility = View.VISIBLE
+        val v = layout_bottom_info
+        val ivClose = v.findViewById<ImageView>(R.id.iv_close)
+        val tvStationName = v.findViewById<TextView>(R.id.tv_station_name)
+        val tvStationPhone = v.findViewById<TextView>(R.id.tv_station_phone)
+        val tvStationDistance = v.findViewById<TextView>(R.id.tv_station_distance)
+        val tvStationLocation = v.findViewById<TextView>(R.id.tv_station_location)
+        val tvStationTag = v.findViewById<TextView>(R.id.tv_station_tag)
+        val tvStationBatteryCount = v.findViewById<TextView>(R.id.tv_station_battery_count)
+        val tv_phone_call = v.findViewById<TextView>(R.id.tv_phone_call)
+        val tv_agent_code = v.findViewById<TextView>(R.id.tv_agent_code)
+        val tv_in_shop = v.findViewById<TextView>(R.id.tv_in_shop)
+        val tv_count = v.findViewById<TextView>(R.id.tv_count)
+        val tv_count_title = v.findViewById<TextView>(R.id.tv_count_title)
+
+        if (getType == "3") {
+            tv_phone_call.text = "联系经销商"
+            tv_agent_code.visibility = View.GONE
+            tvStationBatteryCount.visibility = View.GONE
+            tv_in_shop.visibility = View.VISIBLE
+            tv_count.visibility = View.VISIBLE
+
+            if (agent.isOnline == 1) {
+                tv_count.setTextColor(
+                    if (agent.isGreen == 1) Color.parseColor("#29EBB6") else Color.parseColor(
+                        "#FEB41E"
+                    )
+                )
+                tv_count.text = agent.available_battery
+            } else {
+                tv_count.setTextColor(Color.parseColor("#D5D5D5"))
+                tv_count.text = "0"
+                tv_count_title.text = "设备已离线"
+            }
+            tv_count_title.visibility = View.VISIBLE
+            v.findViewById<ImageView>(R.id.iv01).visibility = View.GONE
+
+        } else {
+            tv_phone_call.text = "立即联系"
+            tv_agent_code.visibility = View.VISIBLE
+            var agentTag =
+                if (agent.tag.startsWith("代理编码")) agent.tag.substring(5) else agent.tag
+            tv_agent_code.text = TextUtil.getSpannableString(arrayOf("代理编码：", agentTag))
+            tvStationBatteryCount.visibility = View.VISIBLE
+            tvStationBatteryCount.text =
+                TextUtil.getSpannableString(arrayOf("可租电池数：", "${agent.count}"))
+            tv_in_shop.visibility = View.GONE
+            tv_count.visibility = View.GONE
+            tv_count_title.visibility = View.GONE
+            v.findViewById<ImageView>(R.id.iv01).visibility = View.VISIBLE
+        }
+        tv_in_shop.setOnClickListener {
+            if ("3" == getType) {
+                start(FgtNetStationDetailTwo.newInstance(agent.site_name, agent.id))
+            }
+        }
+
+        v.setOnClickListener {  }
+        ivClose.setOnClickListener {
+            layout_bottom_info.visibility = View.GONE
+        }
+        val distance =
+            AMapUtils.calculateLineDistance(LatLng(agent.lat, agent.lng), LatLng(App.lat, App.lng))
+        val distanceStr =
+            if (distance >= 1000)
+                "${String.format("%.2f", (distance / 1000))}公里"
+            else
+                "${String.format("%.2f", distance)}米"
+
+
+        tvStationName.text = agent.site_name
+        tvStationPhone.text = agent.tel
+        tvStationDistance.text = "距离我${distanceStr}"
+        tvStationLocation.text = agent.address
+        tvStationTag.text = agent.tag
+        v.findViewById<ImageView>(R.id.iv01)
+            .setImageResource(if (getType == "3") R.mipmap.marker_net_station_big else R.mipmap.service_station_big)
+
+        v.findViewById<TextView>(R.id.tv_phone_call).setOnClickListener {
+            NormalDialog(activity).apply {
+                style(NormalDialog.STYLE_TWO)
+                title("${agent.tel}")
+                titleTextColor(Color.parseColor("#131414"))
+                btnTextColor(Color.parseColor("#131414"), Color.GRAY)
+                btnText("立即拨打", "取消")
+                    .setOnBtnClickL(OnBtnClickL {
+                        getPermissions(activity,
+                            PermissionType.CALL_PHONE,
+                            allGranted = { SystemUtils.call(activity, agent.tel) })
+                        dismiss()
+                    }, OnBtnClickL {
+                        dismiss()
+                    })
+                show()
+            }
+        }
+//        tvStationBatteryCount.visibility = if (type == "3") View.VISIBLE else View.GONE
+//        tvStationBatteryCount.text = "${agent.count}台"
+
+//        v.findViewById<TextView>(R.id.tv_in_shop).setOnClickListener {
+//            dismiss()
+//            markCallback.click(it, agent)
+//        }
+
+        v.findViewById<TextView>(R.id.tv_navi_here).setOnClickListener {
+            CommonUtil.naviToLocation(activity!!, agent.lat, agent.lng, agent.site_name)
+        }
+
+    }
+
 }

@@ -22,4 +22,6 @@
 		android:layout_height="250dp"
 		android:layout_gravity="bottom"
 		android:background="@drawable/rectangle_gray_bg_top"/>
+
+	<include layout="@layout/layout_station_infowindow"/>
 </FrameLayout>

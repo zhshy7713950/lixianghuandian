@@ -194,7 +194,7 @@ object BaseOkhttpHelper {
 
         val builder: RequestBody =
 
-            if (wrap.jsonParam.size > 4) {
+            if (wrap.jsonParam.size > 5) {
                 Log.i("TAG", Gson().toJson(wrap.jsonParam))
                 //首先判断 jsonParam 是否为空，由于 jsonParam 与 paramsMap 不可能同时存在，所以先判断mJsonStr
                 val JSON = MediaType.parse("application/json; charset=utf-8")//数据类型为json格式，

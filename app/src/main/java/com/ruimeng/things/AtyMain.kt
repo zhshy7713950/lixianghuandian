@@ -98,8 +98,8 @@ class AtyMain : BaseBackActivity() {
 
         params["package_name"] = Config.getDefault().packageName
         params["os"] = "android"
-        params["appType"] = "lhxd"
-        params["ver"] = Config.getDefault().versionCode.toString()
+        params["appType"] = "lxhd"
+        params["ver"] = Config.getDefault().versionName.toString()
 
         val mUpdateUrl = Path.CHECK_UPGRADE
 
@@ -339,7 +339,7 @@ class AtyMain : BaseBackActivity() {
                 url = Path.CHECK_UPGRADE
                 params["package_name"] = Config.getDefault().packageName
                 params["os"] = "android"
-                params["appType"] = "lhxd"
+                params["appType"] = "lxhd"
                 params["ver"] = Config.getDefault().versionCode.toString()
 
                 onSuccessWithMsg { res, msg ->

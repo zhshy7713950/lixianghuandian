@@ -25,7 +25,7 @@ static def getGitTag() {
         return stdout.toString().trim()
     }
     catch (ignored) {
-        return "1.0.0"
+        return "1.0.2"
     }
 }
 
@@ -40,8 +40,8 @@ android {
 
     defaultConfig {
         applicationId "com.xianglilai.lixianghuandian"
-        versionCode 1
-        versionName "1.0.${getGitCommitNumber()}"
+        versionCode 2
+        versionName "1.0.2"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         ndk {

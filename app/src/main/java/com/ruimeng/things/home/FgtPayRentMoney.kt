@@ -203,6 +203,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                                 content(msg)
                                 btnText("确认")
                                 setOnBtnClickL(OnBtnClickL {
+                                    FgtHome.CURRENT_DEVICEID = ""
+                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                                     dismiss()
                                     pop()
                                 })

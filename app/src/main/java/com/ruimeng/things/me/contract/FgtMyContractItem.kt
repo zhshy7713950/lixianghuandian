@@ -16,6 +16,7 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
+import com.ruimeng.things.home.FgtHome
 import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_my_contract_item.*
 import me.yokeyword.fragmentation.SupportFragment
@@ -160,6 +161,8 @@ class FgtMyContractItem : MainTabFragment() {
                                 btnText("确认")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
+                                    FgtHome.CURRENT_DEVICEID = ""
+                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                                     srl_my_contract?.autoRefresh()
                                 })
 

@@ -109,6 +109,7 @@ class FgtMeDeposit : BaseBackFragment() {
 
                 onSuccessWithMsg { res, msg ->
                     if (null != activity) {
+                        FgtHome.CURRENT_DEVICEID = ""
                         NormalDialog(activity)
                             .apply {
                                 style(NormalDialog.STYLE_TWO)
@@ -118,6 +119,7 @@ class FgtMeDeposit : BaseBackFragment() {
                                 btnText("确认")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
+                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                                     pop()
                                 })
 

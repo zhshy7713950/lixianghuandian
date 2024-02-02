@@ -246,8 +246,8 @@ class FgtHome : MainTabFragment() {
                 val data = json.optJSONObject("data")
                 AGENT_CODE =  data.optString("code")
                 if (data.optJSONObject("device") != null){
-                    CURRENT_DEVICEID = data.optJSONObject("device").optString("device_id")
-                    event.deviceId = CURRENT_DEVICEID
+                    event.deviceId  = data.optJSONObject("device").optString("device_id")
+//                    event.deviceId = CURRENT_DEVICEID
                 }
                 if (data.optJSONObject("couponInfo") != null){
                     ShowCouponPopup(getCurrentAppAty(),data.optJSONObject("couponInfo"),object :OnClickListener{

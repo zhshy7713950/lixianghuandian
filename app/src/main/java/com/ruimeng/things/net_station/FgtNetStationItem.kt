@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.media.Image
 import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
 import com.utils.CommonUtil
 import com.utils.DensityHelper
 import com.utils.DensityUtil
+import kotlinx.android.synthetic.main.fgt_home.srl_home
 import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -59,8 +61,14 @@ class FgtNetStationItem : MainTabFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i("TAG", "onResume: ")
+    }
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_item
-
+    fun refresh(){
+        srl_station?.autoRefresh()
+    }
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         srl_station?.setEnableLoadMore(false)
         srl_station.setOnRefreshListener { getList() }
@@ -192,7 +200,17 @@ class FgtNetStationItem : MainTabFragment() {
                         tv_empty_net_station.visibility =View.GONE
                         val citys = data.map { item -> item.city }
                         currentIndex = 0
-                        stationAdapter.setNewData(data[currentIndex].list)
+                        var list = data[currentIndex].list
+                        list.forEach {
+                            it.distance =AMapUtils.calculateLineDistance(LatLng(it.lat, it.lng), LatLng(App.lat, App.lng))
+                            it.distanceStr =  if (it.distance >= 1000)
+                                "${String.format("%.2f", (it.distance / 1000))}公里"
+                            else
+                                "${String.format("%.2f", it.distance)}米"
+                        }
+                        var list2  = list.sortedBy { it->it.distance }
+
+                        stationAdapter.setNewData(list2)
                     }
 
                 }
@@ -260,22 +278,20 @@ class FgtNetStationItem : MainTabFragment() {
 
                 tvTitle.text = b.site_name
 
-                val distance =
-                    AMapUtils.calculateLineDistance(LatLng(b.lat, b.lng), LatLng(App.lat, App.lng))
-                val distanceStr =
-                    if (distance >= 1000)
-                        "${String.format("%.2f", (distance / 1000))}公里"
-                    else
-                        "${String.format("%.2f", distance)}米"
-                tvDistance.text = "距离我${distanceStr}"
+
+                tvDistance.text = "距离我${b.distanceStr}"
 
                 tvLocation.text = "地址：${b.address}"
 
                 a.getView<TextView>(R.id.tv_nav).setOnClickListener {
 //                    naviToLocation(b.lat, b.lng, b.site_name)
+                    var list = ArrayList<NetStationBean.Data.X>()
+                    for ( a in data) {
+                        list.add(a)
+                    }
                     (parentFragment as FgtNetStation).start(
                         FgtNetStationByMap.newInstance(
-                            getType,"",b.id, data as ArrayList<NetStationBean.Data.X>
+                            getType,"",b.id, list
                         )
                     )
                 }

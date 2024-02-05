@@ -104,7 +104,7 @@
                     android:layout_gravity="right"
                     android:drawableRight="@mipmap/arrow_right"
                     android:drawablePadding="10dp"
-                    android:text="进店看看"
+                    android:text="查看电柜详情"
                     android:textColor="#ff29ebb6"
                     android:textSize="12sp" />
             </FrameLayout>

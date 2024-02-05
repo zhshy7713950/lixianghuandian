@@ -141,7 +141,9 @@ class FgtMyContractItem : MainTabFragment() {
 
     }
 
-
+   fun refresh(){
+       srl_my_contract?.autoRefresh()
+   }
     private fun tryReturnDeposit(contractId: String) {
 
         fun doNetReq() {

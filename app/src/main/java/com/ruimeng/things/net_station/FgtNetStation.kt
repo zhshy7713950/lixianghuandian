@@ -16,6 +16,7 @@ import com.utils.LogHelper
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_net_station.*
+import kotlinx.android.synthetic.main.fgt_net_station_item.srl_station
 import me.yokeyword.fragmentation.SupportFragment
 import org.jetbrains.anko.sp
 import wongxd.base.MainTabFragment
@@ -65,7 +66,23 @@ class FgtNetStation : MainTabFragment() {
     //    private var fragmentList = arrayOf(FgtNetStationItem.newInstance("2"))
     private var titleList = ArrayList<String>()
     private var fragmentList = ArrayList<FgtNetStationItem>()
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden){
+            if (fragmentList.size == 2){
+                fragmentList[0].refresh()
+                fragmentList[1].refresh()
+            }
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (fragmentList.size == 2){
+            fragmentList[0].refresh()
+            fragmentList[1].refresh()
+        }
+    }
     private fun requestNetWorkShow() {
         http {
             url = "apiv4/networkshow"
@@ -177,6 +194,7 @@ class FgtNetStation : MainTabFragment() {
                 showHideFragment(
                     fragmentList[index]
                 )
+                fragmentList[index].refresh()
             }
             selectTab(0)
             notifyDataChanged()

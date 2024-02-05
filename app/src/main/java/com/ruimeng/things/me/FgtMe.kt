@@ -15,6 +15,7 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
+import kotlinx.android.synthetic.main.fgt_home.srl_home
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
 import wongxd.base.MainTabFragment
@@ -214,7 +215,6 @@ class FgtMe : MainTabFragment() {
 
         }
     }
-
 
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)

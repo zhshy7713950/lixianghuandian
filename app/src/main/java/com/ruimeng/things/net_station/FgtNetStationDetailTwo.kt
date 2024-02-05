@@ -170,7 +170,23 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
                     .setText(R.id.tvCode,"${b.device_id}")
                     .setText(R.id.tvStatus,statusTxt[index])
 
-
+                if (index < 2){
+                    if (b.electricity.toDouble() <= 20){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_20)
+                    }else if (b.electricity.toDouble() > 20 && b.electricity.toDouble() <= 40){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_40)
+                    }else if (b.electricity.toDouble() > 40 && b.electricity.toDouble() <= 60){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_60)
+                    }else if (b.electricity.toDouble() > 60 && b.electricity.toDouble() <= 80){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_80)
+                    }else if (b.electricity.toDouble() > 80 && b.electricity.toDouble() <= 90){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_90)
+                    }else if ( b.electricity.toDouble() <= 100){
+                        a.setImageResource(R.id.imageView,R.mipmap.battery_image_1)
+                    }
+                }else{
+                    a.setImageResource(R.id.imageView,resources[index])
+                }
             }
         }
     }

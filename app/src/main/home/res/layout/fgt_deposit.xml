@@ -191,7 +191,8 @@
 				</androidx.constraintlayout.widget.ConstraintLayout>
 				<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
-					android:layout_height="35dp">
+					android:layout_height="35dp"
+					android:visibility="gone">
 
 					<TextView
 						android:id="@+id/et_agnet_name_deposit"
@@ -215,7 +216,8 @@
 				</androidx.constraintlayout.widget.ConstraintLayout>
 				<androidx.constraintlayout.widget.ConstraintLayout
 					android:layout_width="match_parent"
-					android:layout_height="48dp">
+					android:layout_height="48dp"
+					android:visibility="gone">
 					<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"

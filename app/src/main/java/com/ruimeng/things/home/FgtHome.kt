@@ -205,6 +205,12 @@ class FgtHome : MainTabFragment() {
 
 
     }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden){
+            srl_home.autoRefresh()
+        }
+    }
     /**
      * 处理扫码后的信息
      */

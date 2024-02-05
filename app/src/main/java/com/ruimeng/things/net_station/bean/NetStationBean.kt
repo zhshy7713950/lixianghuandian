@@ -28,7 +28,9 @@ data class NetStationBean(
             var markerId: String = "" ,
             var tel: String = "" ,// 028-85214458
         var isOnline : Int = 0,
-            var isGreen :Int = 0
+            var isGreen :Int = 0,
+            var distance :Float = 0.0f,
+            var distanceStr :String = ""
         ): Parcelable
     }
 }

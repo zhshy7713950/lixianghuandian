@@ -2,6 +2,7 @@ package com.ruimeng.things
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import com.ruimeng.things.home.FgtHome
@@ -136,5 +137,6 @@ class FgtMain : FgtBase() {
         instance = null
         super.onDestroyView()
     }
+
 
 }

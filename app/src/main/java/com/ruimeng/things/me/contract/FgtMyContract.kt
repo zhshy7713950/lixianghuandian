@@ -15,6 +15,7 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.R
+import com.ruimeng.things.net_station.FgtNetStationItem
 import kotlinx.android.synthetic.main.fgt_my_contract.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -39,6 +40,7 @@ class FgtMyContract : MainTabFragment() {
     private var currentTabIndex = 0
 
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
+    var  currentPage : FgtMyContractItem? = null
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         val tabv = arrayOf(R.id.v1,R.id.v2,R.id.v3,R.id.v4)
@@ -51,7 +53,7 @@ class FgtMyContract : MainTabFragment() {
                 VpBean(FgtMyContractItem.newInstance(2), "未完合约"),
                 VpBean(FgtMyContractItem.newInstance(3), "历史合约")
             )
-
+            currentPage = vpList[0].fgt
             offscreenPageLimit = vpList.size
             adapter = VpAdapter(vpList)
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -77,6 +79,8 @@ class FgtMyContract : MainTabFragment() {
                             tabBg.setBackgroundColor(resources.getColor(R.color.transparent))
                         }
                     }
+                    vpList[position].fgt.refresh()
+                    currentPage = vpList[position].fgt
                 }
             })
         }
@@ -129,6 +133,13 @@ class FgtMyContract : MainTabFragment() {
 
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden){
+            currentPage?.refresh()
+        }
+    }
+
     private fun setTab() {
         tab_my_contract.apply {
             reset()
@@ -157,7 +168,7 @@ class FgtMyContract : MainTabFragment() {
     private var suffixExp = 0
     private var suffixNotComplete = 0
 
-    inner class VpBean(val fgt: SupportFragment, val title: String)
+    inner class VpBean(val fgt: FgtMyContractItem, val title: String)
 
     inner class VpAdapter(val list: List<VpBean>) :
         FragmentStatePagerAdapter(childFragmentManager) {

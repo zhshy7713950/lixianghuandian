@@ -22,6 +22,7 @@ import com.qmuiteam.qmui.widget.QMUIFloatLayout
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
@@ -30,6 +31,8 @@ import com.utils.DensityHelper
 import com.utils.DensityUtil
 import kotlinx.android.synthetic.main.fgt_home.srl_home
 import kotlinx.android.synthetic.main.fgt_net_station_item.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.base.MainTabFragment
@@ -69,9 +72,15 @@ class FgtNetStationItem : MainTabFragment() {
     fun refresh(){
         srl_station?.autoRefresh()
     }
+    class RefreshStationList
+    @Subscribe
+    public fun refreshStation(event: RefreshStationList) {
+        srl_station?.autoRefresh()
+    }
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         srl_station?.setEnableLoadMore(false)
         srl_station.setOnRefreshListener { getList() }
+        EventBus.getDefault().register(this)
 
 //        rv_city.layoutManager = LinearLayoutManager(activity)
 //        rv_city.adapter = cityAdapter

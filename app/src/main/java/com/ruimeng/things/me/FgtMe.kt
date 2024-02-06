@@ -15,9 +15,13 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
+import com.ruimeng.things.net_station.FgtNetStationItem
 import kotlinx.android.synthetic.main.fgt_home.srl_home
 import kotlinx.android.synthetic.main.fgt_me.*
+import kotlinx.android.synthetic.main.fgt_net_station_item.srl_station
 import me.yokeyword.fragmentation.SupportFragment
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import wongxd.base.MainTabFragment
 import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
@@ -33,7 +37,7 @@ import wongxd.utils.SystemUtils
 class FgtMe : MainTabFragment() {
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
 //        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
-
+        EventBus.getDefault().register(this)
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
             if (!TextUtils.isEmpty(userinfo.logo)){
@@ -221,5 +225,9 @@ class FgtMe : MainTabFragment() {
     }
 
     override fun getLayoutRes(): Int = R.layout.fgt_me
-
+    class RefreshMe
+    @Subscribe
+    public fun refreshStation(event: RefreshMe) {
+        srl_station?.autoRefresh()
+    }
 }

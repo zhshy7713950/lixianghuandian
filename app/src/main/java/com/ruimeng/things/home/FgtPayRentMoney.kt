@@ -590,6 +590,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun paySuccessed() {
         EventBus.getDefault().post(BatteryInfoChangeEvent(deviceId))
         EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
+        EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
         pop()
     }
 

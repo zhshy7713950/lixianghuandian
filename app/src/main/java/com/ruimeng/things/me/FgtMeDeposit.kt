@@ -120,6 +120,7 @@ class FgtMeDeposit : BaseBackFragment() {
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
                                     EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
+                                    EventBus.getDefault().post(FgtMe.RefreshMe())
                                     pop()
                                 })
 

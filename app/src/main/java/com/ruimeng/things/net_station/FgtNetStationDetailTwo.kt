@@ -16,6 +16,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
 import com.utils.CommonUtil
 import kotlinx.android.synthetic.main.fgt_net_station_detail_two.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.sp
@@ -53,6 +54,10 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
         }
     }
 
+    override fun pop() {
+        super.pop()
+        EventBus.getDefault().post(FgtNetStationItem.RefreshStationList())
+    }
     private val title by lazy { arguments?.getString("title") ?: "" }
     private val stationId by lazy { arguments?.getString("stationId") ?: "" }
 
@@ -171,7 +176,9 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
                     .setText(R.id.tvStatus,statusTxt[index])
 
                 if (index < 2){
-                    if (b.electricity.toDouble() <= 20){
+                    if (b.electricity.isEmpty()){
+
+                    } else if (b.electricity.toDouble() <= 20){
                         a.setImageResource(R.id.imageView,R.mipmap.battery_image_20)
                     }else if (b.electricity.toDouble() > 20 && b.electricity.toDouble() <= 40){
                         a.setImageResource(R.id.imageView,R.mipmap.battery_image_40)

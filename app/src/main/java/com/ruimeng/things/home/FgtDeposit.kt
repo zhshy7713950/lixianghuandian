@@ -346,6 +346,7 @@ class FgtDeposit : BaseBackFragment() {
                 dlgPaySuccessed = getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") {
                     //押金支付成功  跳转租金支付界面
                     startWithPop(FgtPayRentMoney.newInstance(deviceId))
+                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                 }
                 dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")
 

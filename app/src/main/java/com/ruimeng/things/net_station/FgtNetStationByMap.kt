@@ -31,6 +31,7 @@ import com.utils.DensityUtil
 import com.utils.TextUtil
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import kotlinx.android.synthetic.main.layout_station_infowindow.layout_bottom_info
+import org.greenrobot.eventbus.EventBus
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
@@ -85,6 +86,11 @@ class FgtNetStationByMap : BaseBackFragment() {
             }
         )
         layout_bottom_info.visibility = View.GONE
+    }
+
+    override fun pop() {
+        EventBus.getDefault().post(FgtNetStationItem.RefreshStationList())
+        super.pop()
     }
     private val stationAdapter by lazy { StationRvAdapter() }
 

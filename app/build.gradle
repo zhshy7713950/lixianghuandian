@@ -40,8 +40,8 @@ android {
 
     defaultConfig {
         applicationId "com.xianglilai.lixianghuandian"
-        versionCode 3
-        versionName "1.0.3"
+        versionCode 4
+        versionName "1.0.4"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         ndk {

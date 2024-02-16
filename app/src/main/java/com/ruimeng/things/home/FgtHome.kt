@@ -593,7 +593,6 @@ class FgtHome : MainTabFragment() {
                 rent_day = deviceDetailBean!!.device_contract.rent_day
                 rent_time = deviceDetailBean!!.device_contract.rent_time
                 CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
-                getPaymentInfo()
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
@@ -624,8 +623,30 @@ class FgtHome : MainTabFragment() {
                 payType = paymentDetailBean!!.pay_type
                 contractId = paymentDetailBean!!.contract_id
                 activeStatus = paymentDetailBean!!.active_status
+                if (deviceCode == 201){
+                    http {
+                        url = "/apiv4/getonedevice"
+                        params["device_id"] = NO_PAY_DEVICEID
+                        IS_SHOW_MSG = false
+                        onSuccess { res ->
+                            deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
+                            deviceCode = 200
+                            rent_day = deviceDetailBean!!.device_contract.rent_day
+                            rent_time = deviceDetailBean!!.device_contract.rent_time
+                            CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
+                            showHomePageInfo()
+                        }
+                        onFail { i, s ->
+                            Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
+                            deviceCode = i
+                            showHomePageInfo()
+                        }
+                    }
+                }else{
+                    showHomePageInfo()
+                }
 
-                showHomePageInfo()
+
             }
             onFail { i, s ->
                 paymentCode = i

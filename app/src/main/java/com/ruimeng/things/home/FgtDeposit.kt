@@ -154,10 +154,10 @@ class FgtDeposit : BaseBackFragment() {
                 EasyToast.DEFAULT.show("请选择支付方式")
                 return@setOnClickListener
             }
-            if (tv_account_deposit.text.toString() == "请选择"){
-                EasyToast.DEFAULT.show("请选择是否整租车架")
-                return@setOnClickListener
-            }
+//            if (tv_account_deposit.text.toString() == "请选择"){
+//                EasyToast.DEFAULT.show("请选择是否整租车架")
+//                return@setOnClickListener
+//            }
 
             showProgressDialog("请求支付信息中")
 

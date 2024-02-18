@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,6 +19,9 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.*
 import com.amap.api.maps.model.animation.ScaleAnimation
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.flyco.dialog.listener.OnBtnClickL
@@ -28,7 +32,9 @@ import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.BitmapUtil
 import com.utils.CommonUtil
 import com.utils.DensityUtil
+import com.utils.GlideHelper
 import com.utils.TextUtil
+import com.zhihu.matisse.engine.impl.GlideEngine
 import kotlinx.android.synthetic.main.fgt_net_station_by_map.*
 import kotlinx.android.synthetic.main.layout_station_infowindow.layout_bottom_info
 import org.greenrobot.eventbus.EventBus
@@ -366,45 +372,74 @@ class FgtNetStationByMap : BaseBackFragment() {
     }
 
     var selectMarker:Marker? = null
-
+    var bitMaps :  MutableList<Bitmap> = mutableListOf()
     /**
      * 在地图上添加marker
      */
-    private fun addMarker(agent: NetStationBean.Data.X) {
-        markerOption = MarkerOptions()
-            .zIndex(10f)
-            .position(LatLng(agent.lat, agent.lng))
-            .draggable(false)
-        var markerBitmap:Bitmap
+    private fun addMarker(agent:  NetStationBean.Data.X) {
+
+
+//        var markerBitmap: Bitmap = null
         if(getType == "3") {
+            var imageUrl = "https://downxll.oss-cn-beijing.aliyuncs.com/lxhd/%s"
             if (agent.isOnline == 1){
-                markerBitmap =
-                    context?.let { BitmapUtil().overlayTextOnImage(it,
-                        if(agent.isGreen == 1 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
-                        agent.available_battery,
-                        if(agent.isGreen == 1 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
+                imageUrl =  String.format(imageUrl,String.format("mapballoon-change-%s-%s-%s@3x.png","small", if(agent.isGreen == 1 ) "green" else "yellow",agent.available_battery))
+//                imageUrl =  String.format(imageUrl,"mapballoon-change-large-offline@3x.png")
+
+//                markerBitmap =
+//                    context?.let { BitmapUtil().overlayTextOnImage(it,
+//                        if(agent.isGreen == 1 ) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1 ,
+//                        agent.available_battery,
+//                        if(agent.isGreen == 1 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
 
             }else{
-                markerBitmap = context?.let {
-                    BitmapFactory.decodeResource(
-                        context!!.resources,
-                        R.mipmap.ic_map_marker_off_line
-                    )
-                }!!
+                imageUrl =  String.format(imageUrl,"mapballoon-change-large-offline@3x.png")
+//                markerBitmap = context?.let {
+//                    BitmapFactory.decodeResource(
+//                        context!!.resources,
+//                        R.mipmap.ic_map_marker_off_line
+//                    )
+//                }!!
+            }
+            Log.i("TAG", "addMarker: "+imageUrl)
+            context?.let {
+                GlideHelper.loadImageAsBitmap(it,imageUrl){
+                    bitmap ->
+                    if (bitmap != null){
+                        addMarkerInfo(agent, bitmap)
+                    }
+                }
+//                Glide.with(it)
+//                    .asBitmap()
+//                    .load(imageUrl)
+//                    .into(object :SimpleTarget<Bitmap>(){
+//                        override fun onResourceReady(
+//                            resource: Bitmap,
+//                            transition: Transition<in Bitmap>?
+//                        ) {
+//                            addMarkerInfo(agent, resource)
+//                        }
+//                    })
             }
 
+
         }else {
-            markerBitmap =
-                context?.let {
+           var markerBitmap = context?.let {
                     BitmapFactory.decodeResource(
                         context!!.resources,
                         R.mipmap.service_station_small
                     )
                 }!!
+            addMarkerInfo(agent, markerBitmap)
         }
+
+    }
+    private fun addMarkerInfo(agent: NetStationBean.Data.X,markerBitmap:Bitmap){
+       var markerOption = MarkerOptions()
+            .zIndex(10f)
+            .position(LatLng(agent.lat, agent.lng))
+            .draggable(false)
         markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
-
-
         var marker = aMap?.addMarker(markerOption)
         if (marker != null){
             var animation = ScaleAnimation(1.0f,1.6f,1.0f,1.6f)
@@ -419,7 +454,6 @@ class FgtNetStationByMap : BaseBackFragment() {
                 selectMarker = marker
             }
         }
-
     }
 
     inner class StationRvAdapter :

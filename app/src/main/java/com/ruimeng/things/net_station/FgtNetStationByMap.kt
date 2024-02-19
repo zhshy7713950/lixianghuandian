@@ -393,7 +393,7 @@ class FgtNetStationByMap : BaseBackFragment() {
 //                        if(agent.isGreen == 1 )  Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")) }!!
 
             }else{
-                imageUrl =  String.format(imageUrl,"mapballoon-change-large-offline@3x.png")
+                imageUrl =  String.format(imageUrl,"mapballoon-change-small-offline@3x.png")
 //                markerBitmap = context?.let {
 //                    BitmapFactory.decodeResource(
 //                        context!!.resources,

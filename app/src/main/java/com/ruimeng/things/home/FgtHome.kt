@@ -593,14 +593,16 @@ class FgtHome : MainTabFragment() {
                 rent_day = deviceDetailBean!!.device_contract.rent_day
                 rent_time = deviceDetailBean!!.device_contract.rent_time
                 CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
+                getPaymentInfo()
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
 //                CURRENT_DEVICEID = ""
                 deviceCode = i
+                getPaymentInfo()
             }
             onFinish {
-                getPaymentInfo()
+
             }
         }
 

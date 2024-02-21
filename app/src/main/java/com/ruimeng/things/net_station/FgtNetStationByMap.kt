@@ -540,6 +540,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                     )
                 )
                 tv_count.text = agent.available_battery
+                tv_count_title.text = "可换电池数"
             } else {
                 tv_count.setTextColor(Color.parseColor("#D5D5D5"))
                 tv_count.text = "0"

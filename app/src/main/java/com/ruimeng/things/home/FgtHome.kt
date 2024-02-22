@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
@@ -29,6 +30,7 @@ import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.credit.FgtCreditReckoning
 import com.ruimeng.things.net_station.AMapLocUtils
+import com.tbruyelle.rxpermissions2.Permission
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -47,8 +49,10 @@ import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
+import wongxd.common.permission.goSetting
 import wongxd.http
 import wongxd.utils.utilcode.util.ScreenUtils
+import java.util.Arrays
 
 
 /**
@@ -194,7 +198,22 @@ class FgtHome : MainTabFragment() {
                             getNewUserCoupon(it.longitude , it.latitude)
                         }
                     } else {
-                        ToastHelper.shortToast(context,"请开启定位权限")
+                        val dlg: SweetAlertDialog = SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                            .also {
+                                it.titleText = "有如下权限被禁止"
+                                val sb = StringBuilder()
+                                sb.append("获取大致位置\n")
+                                sb.append("获取精确位置\n")
+                                sb.append("(将会导致应用不能正常运行)")
+                                it.contentText = sb.toString()
+                                it.confirmText = "前往设置给予权限"
+                                it.setConfirmClickListener { _ ->
+                                    activity?.let { goSetting(it) }
+                                    it.dismiss()
+                                }
+                            }
+                        dlg.setCancelable(true)
+                        dlg.show()
                     }
                 }
 

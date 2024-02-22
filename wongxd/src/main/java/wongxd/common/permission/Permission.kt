@@ -165,7 +165,7 @@ fun getPermissions(perlist: List<PermissionType>, allGranted: () -> Unit) {
     )
 }
 
-private fun goSetting(ctx: Context) {
+ fun goSetting(ctx: Context) {
     val intent = Intent("android.settings.APPLICATION_DETAILS_SETTINGS")
     intent.data = Uri.parse("package:${ctx.applicationContext.packageName}")
     ctx.startActivity(intent)

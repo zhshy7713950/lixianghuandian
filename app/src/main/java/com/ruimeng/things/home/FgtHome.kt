@@ -179,7 +179,7 @@ class FgtHome : MainTabFragment() {
     }
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
-
+    var showSweetAlertDialog = false
     fun getLocation(){
         val rxPermissions = RxPermissions(activity as Activity)
         rxPermissions.request(
@@ -197,7 +197,7 @@ class FgtHome : MainTabFragment() {
                             App.city = it.city
                             getNewUserCoupon(it.longitude , it.latitude)
                         }
-                    } else {
+                    } else if(!showSweetAlertDialog){
                         val dlg: SweetAlertDialog = SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                             .also {
                                 it.titleText = "有如下权限被禁止"
@@ -211,9 +211,11 @@ class FgtHome : MainTabFragment() {
                                     activity?.let { goSetting(it) }
                                     it.dismiss()
                                 }
+                                it.setCanceledOnTouchOutside(true)
                             }
                         dlg.setCancelable(true)
                         dlg.show()
+                        showSweetAlertDialog = true
                     }
                 }
 

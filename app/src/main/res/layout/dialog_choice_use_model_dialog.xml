@@ -26,7 +26,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="120dp"
 				android:textSize="15sp"
-				android:text="租电模式"
+				android:text="自充电模式"
 				android:gravity="center"
 				android:textStyle="bold"
 				android:layout_marginTop="10dp"

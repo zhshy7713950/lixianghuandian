@@ -65,7 +65,7 @@ class AtyMain : BaseBackActivity() {
         }
 
 
-        dealNotification()
+//        dealNotification()
 
         val pushService = PushServiceFactory.getCloudPushService()
         bindPush(pushService.deviceId, pushService.deviceId)

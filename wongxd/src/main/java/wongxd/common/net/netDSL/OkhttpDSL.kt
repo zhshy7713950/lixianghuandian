@@ -4,6 +4,8 @@ package wongxd.common.net.netDSL
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
+import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.internal.Util
 import okio.BufferedSink
@@ -180,13 +182,13 @@ object BaseOkhttpHelper {
             sb.append(key + "--" + wrap.params[key])
             sb.append("\r\n")
         }
-
-
-       try{
-           LogUtils.iTag("requsest ${wrap.url}", headers.toString(), sb.toString())
-       }catch (e:Exception){
-           e.printStackTrace()
-       }
+        Log.i("TAG", "Req:${wrap.url}")
+        Log.i("TAG", Gson().toJson(wrap.params))
+//       try{
+//           LogUtils.iTag("requsest ${wrap.url}", headers.toString(), sb.toString())
+//       }catch (e:Exception){
+//           e.printStackTrace()
+//       }
 
 
         val builder: RequestBody =
@@ -311,7 +313,8 @@ object BaseOkhttpHelper {
                     MainLooper.runOnUiThread { wrap._finish.invoke() }
                     response?.let {
                         val res = response.body()?.string() ?: ""
-
+                        Log.i("TAG", "Resp: ${wrap.url} ")
+                        Log.i("TAG", "${res}")
                         LogUtils.iTag("requsest", " ${wrap.url} \n", res)
 
                         if (res.isNotBlank()) {

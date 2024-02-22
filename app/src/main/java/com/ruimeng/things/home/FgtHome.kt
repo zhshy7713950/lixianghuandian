@@ -1,12 +1,13 @@
 package com.ruimeng.things.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -15,17 +16,24 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
+import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.credit.FgtCreditReckoning
+import com.ruimeng.things.net_station.AMapLocUtils
+import com.tbruyelle.rxpermissions2.RxPermissions
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fgt_home.*
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
@@ -168,13 +176,63 @@ class FgtHome : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
+    fun getLocation(){
+        val rxPermissions = RxPermissions(activity as Activity)
+        rxPermissions.request(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+            .subscribe(object : Observer<Boolean> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(aBoolean: Boolean) {
+                    if (aBoolean) {
+                        AMapLocUtils().getLonLat(activity?.applicationContext) {
+                            App.lat = it.latitude
+                            App.lng = it.longitude
+                            App.province = it.province
+                            App.city = it.city
+                            getNewUserCoupon(it.longitude , it.latitude)
+                        }
+                    } else {
+                        ToastHelper.shortToast(context,"请开启定位权限")
+                    }
+                }
+
+                override fun onError(e: Throwable) {}
+                override fun onComplete() {}
+            })
+
+
+
+    }
+    fun getNewUserCoupon( lng:Double ,lat:Double){
+        http {
+            url = "apiv6/xlluser/getNewUserCoupon"
+            params["lng"] = "${lng}"
+            params["lat"] = "${lat}"
+            onSuccess {
+                val json = JSONObject(it)
+                val data = json.optJSONObject("data")
+                ShowCouponPopup(getCurrentAppAty(),data,object :
+                    View.OnClickListener {
+                    override fun onClick(p0: View?) {
+
+                    } }).show(rootView)
+
+            }
+        }
+    }
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)
     }
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden){
+            getLocation()
+        }
+    }
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
-
+        getLocation()
         topbar = rootView.findViewById(R.id.topbar)
         initTopbar(topbar, "设备状态", false)
 

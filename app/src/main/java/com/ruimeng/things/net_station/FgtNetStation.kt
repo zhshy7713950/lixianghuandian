@@ -44,7 +44,7 @@ class FgtNetStation : MainTabFragment() {
                         "售后服务网点" == titleList[currentIndex] -> {
                             "1"
                         }
-                        "租电服务站点" == titleList[currentIndex] -> {
+                        "自充电服务站点" == titleList[currentIndex] -> {
                             "2"
                         }
                         else -> {//换电站点
@@ -82,7 +82,7 @@ class FgtNetStation : MainTabFragment() {
                         FgtNetStationItem.newInstance("1")
                     )
                     titleList.add("换电站点")
-                    titleList.add("租电服务站点")
+                    titleList.add("自充电服务站点")
                     titleList.add("售后服务网点")
                     setView(fragmentList)
                 } else if ((data.cg_service_show != 0) && (data.cg_rent_show == 0) && (data.cg_show == 0)) { //100
@@ -108,7 +108,7 @@ class FgtNetStation : MainTabFragment() {
                         FgtNetStationItem.newInstance("1")
                     )
 
-                    titleList.add("租电服务站点")
+                    titleList.add("自充电服务站点")
                     titleList.add("售后服务网点")
                     setView(fragmentList)
                 } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show != 0)
@@ -119,7 +119,7 @@ class FgtNetStation : MainTabFragment() {
                     )
 
                     titleList.add("换电站点")
-                    titleList.add("租电服务站点")
+                    titleList.add("自充电服务站点")
                     setView(fragmentList)
                 } else if ((data.cg_service_show == 0) && (data.cg_rent_show != 0) && (data.cg_show == 0)
                 ) {
@@ -127,7 +127,7 @@ class FgtNetStation : MainTabFragment() {
                     val fragmentList = arrayOf<SupportFragment>(
                         FgtNetStationItem.newInstance("2")
                     )
-                    titleList.add("租电服务站点")
+                    titleList.add("自充电服务站点")
                     setView(fragmentList)
                 } else if ((data.cg_service_show == 0) && (data.cg_rent_show == 0) && (data.cg_show != 0)
                 ) { //001

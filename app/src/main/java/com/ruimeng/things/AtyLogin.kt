@@ -19,6 +19,7 @@ import wongxd.Http
 import wongxd.base.AtyBase
 import wongxd.common.*
 import wongxd.http
+import wongxd.utils.utilcode.util.SPUtils
 import java.lang.ref.WeakReference
 
 
@@ -123,13 +124,13 @@ class AtyLogin : AtyBase() {
         })
         checkStatus(true)
         tv_phone1.setOnClickListener {
-            doLoginHttp(tv_phone1.text.toString(),"220525")
+            doLoginHttp(tv_phone1.text.toString(),"666888")
         }
         tv_phone2.setOnClickListener {
-            doLoginHttp(tv_phone2.text.toString(),"220525")
+            doLoginHttp(tv_phone2.text.toString(),"666888")
         }
         tv_phone3.setOnClickListener {
-            doLoginHttp(tv_phone3.text.toString(),"220525")
+            doLoginHttp(tv_phone3.text.toString(),"666888")
         }
         if (BuildConfig.BUILD_TYPE.equals("debug")){
             layout_test.visibility = View.VISIBLE
@@ -144,7 +145,13 @@ class AtyLogin : AtyBase() {
             ll_phone.visibility =View.VISIBLE
             ll_other.visibility = View.VISIBLE
             tv_title1.text =  if (pageType == 0) "手机验证码登录" else "绑定手机号码"
+            tv_no_binding.visibility = if (pageType == 0) View.GONE else View.VISIBLE
             tv_title2.text="未注册的手机号验证后将创建新账号"
+            tv_no_binding.setOnClickListener {
+                SPUtils.getInstance().put("MOBILE_BIND_SKIP",true)
+                startAty<AtyMain>()
+                finish()
+            }
         }else{
             ll_code.visibility = View.VISIBLE
             ll_phone.visibility =View.GONE

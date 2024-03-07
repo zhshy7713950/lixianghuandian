@@ -50,6 +50,7 @@ import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http
+import wongxd.utils.utilcode.util.SPUtils
 
 
 /**
@@ -178,7 +179,7 @@ class FgtHome : MainTabFragment() {
 
         val userInfo = InfoViewModel.getDefault().userInfo.value
         userInfo?.let {
-            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1") {
+            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1" && !SPUtils.getInstance().getBoolean("MOBILE_BIND_SKIP")) {
                 val intent = Intent(activity,AtyLogin::class.java)
                 intent.putExtra("pageType",1)
                 activity?.startActivity(intent)

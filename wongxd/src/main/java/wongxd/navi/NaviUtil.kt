@@ -86,7 +86,7 @@ object NaviUtil {
         try {
 
             val intent =
-                Intent.getIntent("androidamap://route?sourceApplication=$softname&slat=$latitude_a&slon=$longtitude_a&sname=$sname&dlat=$latitude_b&dlon=$longtitude_b&dname=$dname&dev=0&m=0&t=1")
+                Intent.getIntent("androidamap://route?sourceApplication=$softname&slat=$latitude_a&slon=$longtitude_a&sname=$sname&dlat=$latitude_b&dlon=$longtitude_b&dname=$dname&dev=0&t=3&rideType=elebike")
 
             if (isInstallByread("com.autonavi.minimap")) {
 
@@ -207,7 +207,7 @@ object NaviUtil {
         try {
 
             val intent =
-                Intent.getIntent("intent://map/direction?origin=latlng:$latitude_qidian,$longtitude_qidian|name:$startName&destination=latlng:$latitude_zhongdian,$longtitude_zhongdian|name:$endName&mode=driving&src=$yourCompanyName|$yourAppName#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end")
+                Intent.getIntent("intent://map/direction?origin=latlng:$latitude_qidian,$longtitude_qidian|name:$startName&destination=latlng:$latitude_zhongdian,$longtitude_zhongdian|name:$endName&mode=riding&riding_type=2&src=$yourCompanyName|$yourAppName#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end")
 
             if (isInstallByread("com.baidu.BaiduMap")) {
 

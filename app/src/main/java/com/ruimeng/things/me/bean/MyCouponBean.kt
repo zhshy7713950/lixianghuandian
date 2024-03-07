@@ -15,7 +15,8 @@ data class MyCouponBean(
         var exp_time: String = "", // 1542167707
         var is_use: String = "" ,// 1542167707
         var limit_day: String = "" ,// 1542167707
-    var id : Int = 0
+    var id : Int = 0,
+        var expond :Boolean = false
     ) : IPickerViewData {
         override fun getPickerViewText(): String {
             return coupon_label

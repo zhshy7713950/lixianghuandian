@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseQuickAdapter.OnItemChildClickListener
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.chad.library.adapter.base.BaseViewHolder
 import com.qmuiteam.qmui.widget.QMUITabSegment
@@ -16,6 +17,7 @@ import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPayRentMoney
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.showTipDialog
+import com.utils.TextUtil
 import kotlinx.android.synthetic.main.activity_my_team.recyclerView
 import kotlinx.android.synthetic.main.fgt_ticket.*
 import org.json.JSONObject
@@ -65,25 +67,34 @@ class FgtTicket : BaseBackFragment() {
         rv_ticket.layoutManager = LinearLayoutManager(activity)
         rv_ticket.adapter = adapter
         adapter!!.setEmptyView(R.layout.layout_empty,rv_ticket)
-        adapter.setOnItemClickListener(object :OnItemClickListener{
-            override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
-                if (isUsed == 0 ){
-                    http {
-                        url = "apiv4/rentstep1"
-                        params["device_id"] = FgtHome.CURRENT_DEVICEID
-                        params["cg_mode"] = "1"
-                        onSuccess {
-                            val json = JSONObject(it)
-                            val data = json.optJSONObject("data")
-                            val status = data.optInt("status")
-                            when (status) {
-                                1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,if(FgtHome.hasChangePackege) FgtPayRentMoney.PAGE_TYPE_UPDATE else FgtPayRentMoney.PAGE_TYPE_CREATE))
+        adapter.setOnItemChildClickListener(object :OnItemChildClickListener{
+            override fun onItemChildClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+                if (p1 != null) {
+                    if (p1.id == R.id.tv_use){
+                        if (isUsed == 0 ){
+                            http {
+                                url = "apiv4/rentstep1"
+                                params["device_id"] = FgtHome.CURRENT_DEVICEID
+                                params["cg_mode"] = "1"
+                                onSuccess {
+                                    val json = JSONObject(it)
+                                    val data = json.optJSONObject("data")
+                                    val status = data.optInt("status")
+                                    when (status) {
+                                        1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,if(FgtHome.hasChangePackege) FgtPayRentMoney.PAGE_TYPE_UPDATE else FgtPayRentMoney.PAGE_TYPE_CREATE))
+                                    }
+                                }
                             }
                         }
+                    }else{
+                        adapter.data.get(p2).expond = !adapter.data.get(p2).expond
+                        adapter.notifyDataSetChanged()
                     }
                 }
             }
+
         })
+
 
         srl_ticket?.setOnRefreshListener { page = 1;getInfo() }
         srl_ticket?.setOnLoadMoreListener { getInfo() }
@@ -130,9 +141,10 @@ class FgtTicket : BaseBackFragment() {
         var isUsed = 0
         override fun convert(helper: BaseViewHolder, item: MyCouponBean.Data?) {
             bothNotNull(helper, item) { a, b ->
-                a.setText(R.id.tv_money,"¥"+ b.coupon_price)
+                a.setText(R.id.tv_money,TextUtil.getMoneyText(b.coupon_price))
                     .setText(R.id.tv_limit,b.limit_day)
                     .setText(R.id.tv_use,b.is_use)
+                    .setText(R.id.tv_time,"有效期至：${b.exp_time}")
                 if (item != null) {
                     if (isUsed== 0){
                         a.setTextColor(R.id.tv_money,Color.parseColor("#F9BB6C"))
@@ -153,7 +165,14 @@ class FgtTicket : BaseBackFragment() {
                             .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
                             .setText(R.id.tv_use,"已过期")
                     }
+
+                    a.setGone(R.id.cl_time,b.expond)
+                    a.setBackgroundRes(R.id.ll_content,if (b.expond) R.mipmap.bg_ticket_me_big else R.mipmap.bg_ticket_me)
+
+
                 }
+                a.addOnClickListener(R.id.tv_use)
+                a.addOnClickListener(R.id.cl_coupon_info)
             }
         }
     }

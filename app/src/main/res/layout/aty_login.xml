@@ -74,6 +74,14 @@
 			android:layout_margin="42dp"
 			android:textStyle="bold"
 			/>
+		<TextView
+			android:id="@+id/tv_no_binding"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="暂不绑定"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="30dp"
+			android:textColor="#ff29ebb6"/>
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/ll_code"

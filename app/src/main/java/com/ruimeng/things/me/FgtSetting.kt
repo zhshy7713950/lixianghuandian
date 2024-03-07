@@ -18,6 +18,7 @@ import wongxd.common.EasyToast
 import wongxd.http
 import wongxd.utils.SystemUtils
 import wongxd.utils.utilcode.util.CacheUtils
+import wongxd.utils.utilcode.util.SPUtils
 
 /**
  * Created by wongxd on 2018/11/14.
@@ -59,6 +60,7 @@ class FgtSetting : BaseBackFragment() {
                 }, OnBtnClickL {
                     Config.getDefault().token = ""
                     Config.getDefault().stringCacheUtils.remove(UserInfoLiveData.STORE_KEY)
+                    SPUtils.getInstance().put("MOBILE_BIND_SKIP",false)
                     SystemUtils.cleanTask2Activity(activity, AtyLogin::class.java)
                     dismiss()
                 })

@@ -81,7 +81,7 @@ class FgtHome : MainTabFragment() {
         var totalvoltage = ""
         var rsoc = ""
         var payType =""
-
+        var MOBILE_BIND_SKIP = false
         fun selectDeviceType() {
 
         }
@@ -179,7 +179,7 @@ class FgtHome : MainTabFragment() {
 
         val userInfo = InfoViewModel.getDefault().userInfo.value
         userInfo?.let {
-            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1" && !SPUtils.getInstance().getBoolean("MOBILE_BIND_SKIP")) {
+            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1" ) {
                 val intent = Intent(activity,AtyLogin::class.java)
                 intent.putExtra("pageType",1)
                 activity?.startActivity(intent)
@@ -1043,12 +1043,28 @@ class FgtHome : MainTabFragment() {
                     val result = it.toPOJO<MyDevicesBean>().data
                     if (result.size >=2 ){
                         ToastHelper.shortToast(context,"可租用电池数已达上限(2)")
-                    }else{
+                    }else if (result.size == 1){
+                        NormalDialog(activity)
+                            .apply {
+                                style(NormalDialog.STYLE_TWO)
+                                btnNum(2)
+                                title("提示")
+                                content("您已有在租电池，请确认是否需要再租一颗电池？？")
+                                btnText("确认", "取消")
+                                setOnBtnClickL(OnBtnClickL {
+                                    dismiss()
+                                    ToastHelper.shortToast(context,"请扫描电柜二维码")
+                                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                                        tryToScan()
+                                    })
+                                }, OnBtnClickL {
+                                    dismiss()
+                                })
+
+                            }.show()
+                    } else{
                         ToastHelper.shortToast(context,"请扫描电柜二维码")
                         getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-//                            val intent = Intent(activity, ScanQrCodeActivity::class.java)
-//                            intent.putExtra("type", "租电")
-//                            startActivityForResult(intent, 1)
                             tryToScan()
                         })
                     }

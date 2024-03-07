@@ -80,7 +80,7 @@
 			android:layout_height="wrap_content"
 			android:text="暂不绑定"
 			android:layout_gravity="center_horizontal"
-			android:layout_marginTop="30dp"
+			android:layout_marginTop="10dp"
 			android:textColor="#ff29ebb6"/>
 	</LinearLayout>
 	<LinearLayout

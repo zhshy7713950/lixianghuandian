@@ -228,6 +228,6 @@ class FgtMe : MainTabFragment() {
     class RefreshMe
     @Subscribe
     public fun refreshStation(event: RefreshMe) {
-        srl_station?.autoRefresh()
+        srl_me?.autoRefresh()
     }
 }

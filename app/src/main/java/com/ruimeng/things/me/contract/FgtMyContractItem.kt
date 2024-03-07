@@ -165,7 +165,7 @@ class FgtMyContractItem : MainTabFragment() {
                                     dismiss()
                                     FgtHome.CURRENT_DEVICEID = ""
                                     EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
-                                    srl_my_contract?.autoRefresh()
+                                    refresh()
                                 })
 
                             }.show()

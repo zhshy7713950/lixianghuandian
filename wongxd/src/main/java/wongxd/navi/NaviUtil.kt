@@ -1,6 +1,7 @@
 package wongxd.navi
 
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import wongxd.Wongxd
 import wongxd.base.AppManager
@@ -84,10 +85,19 @@ object NaviUtil {
     ) {
 
         try {
+            // 调用高德地图电车骑行导航
+            //电车elebike 1小时32
+            //自行车bike 2小时2分
+//            val it = Intent()
+//            it.data =
+//                Uri.parse("amapuri://openFeature?featureName=OnRideNavi&rideType=elebike&sourceApplication=appname&lat=39.918058&lon=116.397026&dev=0")
+//            it.action = "android.intent.action.VIEW"
+//            AppManager.getAppManager().currentActivity().startActivity(it)
 
-            val intent =
-                Intent.getIntent("androidamap://route?sourceApplication=$softname&slat=$latitude_a&slon=$longtitude_a&sname=$sname&dlat=$latitude_b&dlon=$longtitude_b&dname=$dname&dev=0&t=3&rideType=elebike")
+//            val intent =               Intent.getIntent("androidamap://route?t=3&rideType=elebike&sourceApplication=$softname&slat=$latitude_a&slon=$longtitude_a&sname=$sname&dlat=$latitude_b&dlon=$longtitude_b&dname=$dname&dev=0")
 
+            val intent = Intent()
+            intent.data =  Uri.parse("amapuri://route/plan/?sid=&sourceApplication=$softname&slat=$latitude_a&slon=$longtitude_a&sname=$sname&did=&dlat=$latitude_b&dlon=$longtitude_b&dname=$dname&dev=0&t=3&rideType=elebike")
             if (isInstallByread("com.autonavi.minimap")) {
 
                 AppManager.getAppManager().currentActivity().startActivity(intent)

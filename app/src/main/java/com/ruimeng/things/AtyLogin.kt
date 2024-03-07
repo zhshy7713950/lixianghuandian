@@ -143,12 +143,12 @@ class AtyLogin : AtyBase() {
         if (p){
             ll_code.visibility = View.GONE
             ll_phone.visibility =View.VISIBLE
-            ll_other.visibility = View.VISIBLE
+            ll_other.visibility =if (pageType == 0)  View.VISIBLE else View.GONE
             tv_title1.text =  if (pageType == 0) "手机验证码登录" else "绑定手机号码"
             tv_no_binding.visibility = if (pageType == 0) View.GONE else View.VISIBLE
             tv_title2.text="未注册的手机号验证后将创建新账号"
             tv_no_binding.setOnClickListener {
-                SPUtils.getInstance().put("MOBILE_BIND_SKIP",true)
+                FgtHome.MOBILE_BIND_SKIP = true
                 startAty<AtyMain>()
                 finish()
             }

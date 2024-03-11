@@ -106,7 +106,7 @@
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="上传手持身份证照片"
+				android:text="上传自拍照片"
 				android:textColor="#ffffffff"
 				android:textSize="14sp"
 				android:layout_gravity="center_horizontal"

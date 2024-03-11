@@ -154,6 +154,7 @@
 			android:src="@mipmap/ic_login_wx"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
+			android:visibility="gone"
 			app:layout_constraintBottom_toTopOf="@id/tv_login_protocol"
 			android:layout_marginBottom="40dp"/>
 		<TextView
@@ -161,6 +162,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="使用其他方式登录"
+			android:visibility="gone"
 			android:textColor="#ffbcc5cc"
 			android:textSize="14sp"
 			app:layout_constraintLeft_toLeftOf="parent"

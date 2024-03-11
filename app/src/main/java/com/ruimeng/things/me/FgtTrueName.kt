@@ -81,7 +81,7 @@ class FgtTrueName : BaseBackFragment() {
 
 
             if (handCardUrl.isBlank()) {
-                EasyToast.DEFAULT.show("请上传手持身份证照片")
+                EasyToast.DEFAULT.show("请上传自拍照片")
                 return@setOnClickListener
             }
 

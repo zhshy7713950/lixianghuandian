@@ -34,8 +34,8 @@ class AtyLogin : AtyBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_login)
         pageType = intent.getIntExtra("pageType",0)
-        iv_wechat_login.visibility = if (pageType == 0) View.VISIBLE else View.GONE
-        tv_3.visibility = if (pageType == 0) View.VISIBLE else View.GONE
+//        iv_wechat_login.visibility = if (pageType == 0) View.VISIBLE else View.GONE
+//        tv_3.visibility = if (pageType == 0) View.VISIBLE else View.GONE
 
         tv_get_code.setOnClickListener { getLoginCode() }
         tv_reget_code.setOnClickListener{getLoginCode()}
@@ -162,7 +162,7 @@ class AtyLogin : AtyBase() {
     }
 
     private fun doLogin() {
-        if (!isAgree) {
+        if (!isAgree && pageType == 0) {
             EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
@@ -224,7 +224,7 @@ class AtyLogin : AtyBase() {
 
     }
     private fun getLoginCode() {
-        if (!isAgree) {
+        if (!isAgree && pageType == 0) {
             EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }

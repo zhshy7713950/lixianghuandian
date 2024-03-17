@@ -53,15 +53,15 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("lxhd.jks")
+            storeFile file("xlhd.jks")
             storePassword "123456"
-            keyAlias "lxhd"
+            keyAlias "xlhd"
             keyPassword "123456"
         }
         release {
-            storeFile file("lxhd.jks")
+            storeFile file("xlhd.jks")
             storePassword "123456"
-            keyAlias "lxhd"
+            keyAlias "xlhd"
             keyPassword "123456"
         }
     }

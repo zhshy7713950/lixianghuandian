@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
+import com.ruimeng.things.home.FgtHome
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_change_electric_open_door.*
 import wongxd.base.AtyBase
@@ -92,6 +93,7 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
         http {
             url = "apiv4/cgopendoor"
             params["code"] = code
+            params["deviceId"] = FgtHome.CURRENT_DEVICEID
 
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(mActivity, msg)

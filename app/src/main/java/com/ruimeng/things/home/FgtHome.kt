@@ -98,11 +98,17 @@ class FgtHome : MainTabFragment() {
                         anyLayer.contentView.findViewById<QMUIRoundButton>(R.id.btn_submit)
 
 
+
                     fun resetCheckState() {
                         ivWholeBike.setImageResource(if (IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
                         ivBattery.setImageResource(if (!IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
                     }
-
+                    IsWholeBikeRent = true
+                    if (Config.getDefault().spUtils.getString("cg_mode", "0").equals("0")){
+                        flWholeBike.visibility = View.GONE
+                        IsWholeBikeRent = false
+                    }
+                    resetCheckState()
                     flWholeBike.setOnClickListener {
                         IsWholeBikeRent = true
                         getIsHost = "1"
@@ -903,6 +909,7 @@ class FgtHome : MainTabFragment() {
         http {
             url = "apiv4/cgopendoor"
             params["code"] = code
+            params["deviceId"] = CURRENT_DEVICEID
 
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, msg)

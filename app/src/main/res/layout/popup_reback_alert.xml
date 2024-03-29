@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#333333"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_gravity="center_vertical">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/rectangle_white_bg">
+
+            <TextView
+                android:id="@+id/tv_alert_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginRight="20dp"
+                android:text="现在正在进行退网操作！接下来需要将电池扫码放入柜内，成功放回电池后合约将失效，剩余天数将清零，且无法退款！押金将原路退回！请确认操作！"
+                android:textColor="@color/app_red"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.flyco.roundview.RoundTextView
+                android:id="@+id/tv_switch_battery"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_alert_info"
+                android:text="确认（10s）"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                app:rv_backgroundColor="@color/app_red"
+                android:layout_marginTop="40dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:rv_cornerRadius="10dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+             />
+            <com.flyco.roundview.RoundTextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_alert_info"
+                android:text="取消"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                app:rv_backgroundColor="#f4f4f4"
+                android:layout_marginTop="40dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:rv_cornerRadius="10dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/ic_alert"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

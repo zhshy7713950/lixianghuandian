@@ -302,6 +302,7 @@
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_back"
 				android:text="退租"
+				android:visibility="gone"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"

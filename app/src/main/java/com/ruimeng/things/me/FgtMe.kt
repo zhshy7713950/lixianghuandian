@@ -15,10 +15,7 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
-import com.ruimeng.things.net_station.FgtNetStationItem
-import kotlinx.android.synthetic.main.fgt_home.srl_home
 import kotlinx.android.synthetic.main.fgt_me.*
-import kotlinx.android.synthetic.main.fgt_net_station_item.srl_station
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -122,6 +119,7 @@ class FgtMe : MainTabFragment() {
 
         ll_ticket_me.setOnClickListener {
             startFgt(FgtTicket())
+
         }
 
         ll_safe_center.setOnClickListener { startFgt(FgtSafeCenter()) }

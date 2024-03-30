@@ -86,8 +86,20 @@
         android:text="点击退还电池"
         android:textSize="15sp"
         android:textColor="#272934"
+        android:visibility="gone"
         android:gravity="center"
         android:background="@drawable/bg_btn_common1"/>
+            <TextView
+                android:id="@+id/btnReturnInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginTop="60dp"
+                android:gravity="center_horizontal"
+                android:text="如需退租，请进入「我的-账号押金」中操作退网。若持有电池，请及时归还"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -61,7 +61,6 @@ import wongxd.utils.utilcode.util.SizeUtils
 import java.io.File
 import java.lang.ref.WeakReference
 import java.util.Arrays
-import java.util.EnumSet.allOf
 
 /**
  * Created by wongxd on 2018/11/23.

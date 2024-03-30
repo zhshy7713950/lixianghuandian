@@ -3,16 +3,11 @@ package com.ruimeng.things.home
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Matrix
 import android.hardware.camera2.CameraManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -21,32 +16,13 @@ import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
 import com.ruimeng.things.home.FgtHome.Companion.REQUEST_ZXING_CODE
 import com.ruimeng.things.home.helper.ScanResultCheck
-import com.utils.*
+import com.utils.FlashUtil
+import com.utils.ToastHelper
 import com.uuzuche.lib_zxing.activity.CaptureFragment
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import com.uuzuche.lib_zxing.activity.ZXingLibrary
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import kotlinx.android.synthetic.main.activity_scan_qr_code.*
 import kotlinx.android.synthetic.main.aty_scan_qrcode.*
-import kotlinx.android.synthetic.main.aty_scan_qrcode.topbar
-import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_input_code
-import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_light
-import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_select_image
 import wongxd.base.AtyBase
 import wongxd.base.custom.anylayer.AnyLayer
-import wongxd.common.getCurrentAty
-import wongxd.common.permission.PermissionType
-import wongxd.common.permission.getPermissions
-import wongxd.base.custom.anylayer.AnyLayer.target
-
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
-import com.ruimeng.things.home.checkImgs.PostGlideEngine
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 
 
 /**
@@ -162,49 +138,12 @@ class AtyScanQrcode : AtyBase() {
            CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
             tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }
-        tv_select_image.setOnClickListener {
-            getPermissions(getCurrentAty(), PermissionType.WRITE_EXTERNAL_STORAGE, allGranted = {
-                Matisse.from(this)
-                    .choose(MimeType.allOf())//图片类型
-                    .countable(true)//是否显示选择图片的数字
-                    .maxSelectable(1)//最大图片选择数
-                    //gridExpectedSize(120)getResources().getDimensionPixelSize(R.dimen.grid_expected_size)   显示图片大小
-                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)//图像选择和预览活动所需的方向
-                    .thumbnailScale(0.85f)//清晰度
-                    .theme(R.style.Matisse_Zhihu)
-                    .imageEngine(PostGlideEngine())
-                    .forResult(1002);//请求码
-
-            })
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == 1001 && data != null){
             checkScanResult(data.getStringExtra("code"))
-        }else if (requestCode == 1002  && resultCode == RESULT_OK){
-            val list = Matisse.obtainResult(data)
-            Glide.with(this).asBitmap().load(list[0]).into(object: SimpleTarget<Bitmap>(){
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-//                    val baos = ByteArrayOutputStream()
-//// 质量压缩方法,这里100表示不压缩,把压缩后的数据存放到baos中
-//                    resource.compress(Bitmap.CompressFormat.JPEG, 20, baos)
-//                    val bais = ByteArrayInputStream(baos.toByteArray())
-//                    val bmScaled = BitmapFactory.decodeStream(bais, null, null)
-                    var bitmap2 = ImageUtils.compressBitmap(resource,300)
-                    Log.i("TAG", "***************sd")
-                    ImageUtils.saveImage(this@AtyScanQrcode,bitmap2)
-                    var code = QrCodeUtil.deCodeQR(bitmap2)
-                    if (code == null){
-                        ToastHelper.shortToast(this@AtyScanQrcode,"无法识别二维码")
-                    }else{
-                        checkScanResult(code)
-                    }
-                    Log.i("TAG", "onResourceReady: "+code)
-                }
-
-            })
         }
     }
     private fun checkScanResult(result:String){

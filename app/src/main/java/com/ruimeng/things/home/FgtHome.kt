@@ -175,6 +175,9 @@ class FgtHome : MainTabFragment() {
         tv_right.setOnClickListener {
             srl_home?.autoRefresh()
         }
+        tv_left.setOnClickListener {
+            startFgt(FgtSwitchBattery())
+        }
 
 
         val userInfo = InfoViewModel.getDefault().userInfo.value
@@ -373,20 +376,19 @@ class FgtHome : MainTabFragment() {
             tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
             tv_add_device.text  = "点击购买套餐"
             iv_add_device.visibility = View.GONE
-           btnReturn.visibility = View.GONE
+           btnReturnInfo.visibility = View.GONE
         }else if (deviceStatus == 3){
-
+           tv_log_info.text ="您的租电套餐已过期，请及时续费"
            tv_add_device.text  = "点击购买套餐"
            iv_add_device.visibility = View.GONE
            root_has_item.visibility = View.GONE
            root_no_item.visibility = View.VISIBLE
-           btnReturn.visibility = View.VISIBLE
+           btnReturnInfo.visibility = View.VISIBLE
        } else{
             tv_add_device.text  = "点击添加"
-           tv_log_info.text ="您还没有添加电池设备"
+            tv_log_info.text ="您还没有添加电池设备"
             iv_add_device.visibility = View.VISIBLE
-           btnReturn.visibility = View.GONE
-
+           btnReturnInfo.visibility = View.GONE
         }
 
         val llNoItem = root_no_item
@@ -1082,12 +1084,7 @@ class FgtHome : MainTabFragment() {
 //                    startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))
                     ToastHelper.shortToast(context,"没有需要退还的电池")
                 }else{
-                    ToastHelper.shortToast(context,"请扫描电柜二维码")
-                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                        intent.putExtra("type", "退还")
-                        startActivityForResult(intent, 1)
-                    })
+                    EventBus.getDefault().post(BatteryRebackEvent())
                 }
             }
 
@@ -1167,6 +1164,17 @@ class FgtHome : MainTabFragment() {
             }
 
         }
+    }
+
+    class BatteryRebackEvent;
+    @Subscribe
+    fun rebackClick(event:BatteryRebackEvent){
+        ToastHelper.shortToast(context,"请扫描电柜二维码")
+        getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+            val intent = Intent(activity, ScanQrCodeActivity::class.java)
+            intent.putExtra("type", "退还")
+            startActivityForResult(intent, 1)
+        })
     }
     private fun frozen( code:String){
         http {

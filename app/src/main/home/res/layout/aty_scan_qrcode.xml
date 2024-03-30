@@ -36,19 +36,7 @@
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="60dp"
         />
-    <TextView
-        android:id="@+id/tv_select_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="从相册选择"
-        android:textColor="#ffffffff"
-        android:textSize="14sp"
-        android:drawableTop="@mipmap/ic_select_image"
-        android:layout_gravity="center|bottom"
-        android:drawablePadding="14dp"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="100dp"
-        />
+
     <TextView
         android:id="@+id/tv_light"
         android:layout_width="wrap_content"

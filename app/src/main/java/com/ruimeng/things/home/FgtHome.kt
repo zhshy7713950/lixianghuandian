@@ -175,6 +175,9 @@ class FgtHome : MainTabFragment() {
         tv_right.setOnClickListener {
             srl_home?.autoRefresh()
         }
+        tv_left.setOnClickListener {
+            startFgt(FgtSwitchBattery())
+        }
 
 
         val userInfo = InfoViewModel.getDefault().userInfo.value

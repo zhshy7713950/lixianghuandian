@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +21,7 @@ import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.bean.ChangeRentBatteryBean
 import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
+import com.ruimeng.things.me.view.RebackAlertPopup
 import com.ruimeng.things.showConfirmDialog
 import com.utils.TextUtil
 import com.utils.ToastHelper
@@ -155,24 +157,14 @@ class FgtMeDeposit : BaseBackFragment() {
 
                         val result = bundle.getString(CodeUtils.RESULT_STRING)
                         val getType = bundle.getString("type")
-                        val getContractId = bundle.getString("contract_id")
                         if ("退还" == getType){
                             if (result != null) {
-                                NormalDialog(activity)
-                                    .apply {
-                                        style(NormalDialog.STYLE_TWO)
-                                        btnNum(2)
-                                        title("提示")
-                                        content("请将电池放入电柜，退还结束后，剩余套餐将清零，请确认操作！")
-                                        btnText("确认", "取消")
-                                        setOnBtnClickL(OnBtnClickL {
-                                            dismiss()
-                                            returnBattery(result)
-                                        }, OnBtnClickL {
-                                            dismiss()
-                                        })
+                                RebackAlertPopup(getCurrentAty(),object :View.OnClickListener{
+                                    override fun onClick(p0: View?) {
+                                        returnBattery(result)
+                                    }
 
-                                    }.show()
+                                }).show(rootView)
 
                             }
                         }
@@ -192,7 +184,7 @@ class FgtMeDeposit : BaseBackFragment() {
             params["device_id"] = FgtHome.CURRENT_DEVICEID
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
-
+                EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
             }
 
             onFail { i, msg ->
@@ -220,8 +212,9 @@ class FgtMeDeposit : BaseBackFragment() {
                                 btnText("确认")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
-                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
-                                    EventBus.getDefault().post(FgtMe.RefreshMe())
+//                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
+//                                    EventBus.getDefault().post(FgtMe.RefreshMe())
+                                    EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
                                     pop()
                                 })
 

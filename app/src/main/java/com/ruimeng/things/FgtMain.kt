@@ -2,7 +2,6 @@ package com.ruimeng.things
 
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import com.ruimeng.things.home.FgtHome
@@ -31,7 +30,7 @@ class FgtMain : FgtBase() {
     }
 
     override fun getLayoutRes(): Int = R.layout.fgt_main
-
+    lateinit var fgts: Array<MainTabFragment>
 
 //    var navigationController: NavigationController? = null
 
@@ -40,7 +39,7 @@ class FgtMain : FgtBase() {
 
         EventBus.getDefault().register(this)
         instance = this
-        val fgts = arrayOf(
+        fgts = arrayOf(
             FgtHome(),
             FgtNetStation(),
             FgtMyContract(),
@@ -80,6 +79,14 @@ class FgtMain : FgtBase() {
 //        }
 
         NoReadLiveData.refresh { }
+    }
+
+    class SwitchPageEvent(i: Int) {
+        var page :Int = 0
+    }
+    @Subscribe
+    public fun switchPage(switchPageEvent: SwitchPageEvent) {
+        initTab(switchPageEvent.page,fgts)
     }
 
     private fun initTab(index:Int,fgts:Array< MainTabFragment>){

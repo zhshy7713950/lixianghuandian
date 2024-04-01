@@ -843,6 +843,7 @@ class FgtHome : MainTabFragment() {
         tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
             context?.getDrawable(R.mipmap.ic_stop_contract),null,null)
         tvBatteryName.text = info.device_id
+        tv_package_status.visibility = GONE
         if (info.device_id.startsWith("8") && info.device_id.length == 8 ){
             tv_remark_num.text = "虚拟编号"
             tvProgress.textColor = Color.parseColor("#29EBB6")
@@ -854,6 +855,7 @@ class FgtHome : MainTabFragment() {
            if (paymentDetailBean?.active_status  == "1"){
                tvProgress.text = "待取电"
                tv_please_change.text = "(请进行\"扫码换电\")"
+               tv_package_status.visibility = View.VISIBLE
                tv_package_status.text = "生效中"
                tv_package_status.background = context?.getDrawable( R.drawable.shape_green)
            }else if (paymentDetailBean?.active_status  == "3"){
@@ -862,6 +864,7 @@ class FgtHome : MainTabFragment() {
                tv_ice.text = "解冻"
                tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
                    context?.getDrawable(R.mipmap.ic_scan_box),null,null)
+               tv_package_status.visibility = View.VISIBLE
                tv_package_status.text = "已冻结"
                tv_package_status.background = context?.getDrawable( R.drawable.shape_yello)
            }
@@ -876,7 +879,8 @@ class FgtHome : MainTabFragment() {
             tv_left_battery.visibility = View.VISIBLE
             tv_voltage.visibility = View.VISIBLE
             pvBattery.visibility = View.VISIBLE
-
+            tv_package_status.visibility = View.VISIBLE
+            tv_package_status.text = "生效中"
         }
     }
 
@@ -892,7 +896,7 @@ class FgtHome : MainTabFragment() {
     }
     private fun showPackageInfo(){
         tv_ice.text = if (activeStatus == "3") "解冻" else "冻结"
-
+        tv_exp_remind.visibility =  View.GONE
         hasChangePackege = false
         if (paymentDetailBean != null){
 
@@ -911,8 +915,6 @@ class FgtHome : MainTabFragment() {
                 if (paymentDetailBean!!.exp_remind == 1){
                     tv_exp_remind.visibility =  View.VISIBLE
                     tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
-                }else{
-                    tv_exp_remind.visibility =  View.GONE
                 }
 
                 tv_change_package_type.text = "次数无限制"

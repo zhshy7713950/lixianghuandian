@@ -18,7 +18,9 @@ data class NetStationBean(
             var site_name: String = "", // 服务中心4
             var tag: String = "",
             var count: String = "",
-            var tel: String = "" // 028-85214458
+            var tel: String = "", // 028-85214458
+        var distance:Float = 0.0f,
+            var distanceStr :String =""
         )
     }
 }

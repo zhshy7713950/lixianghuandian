@@ -158,12 +158,33 @@ class FgtNetStationItem : MainTabFragment() {
 
             onSuccess { res ->
                 srl_station?.let {
+//                    data = res.toPOJO<NetStationBean>().data
+//                    val citys = data.map { item -> item.city }
+//                    currentIndex = -1
+//                    cityAdapter.setNewData(citys)
+//                    tv_empty_net_station.visibility =
+//                        if (data.isEmpty()) View.VISIBLE else View.GONE
+
                     data = res.toPOJO<NetStationBean>().data
-                    val citys = data.map { item -> item.city }
-                    currentIndex = -1
-                    cityAdapter.setNewData(citys)
-                    tv_empty_net_station.visibility =
-                        if (data.isEmpty()) View.VISIBLE else View.GONE
+                    if (data.isEmpty()){
+                        tv_empty_net_station.visibility =View.VISIBLE
+                        stationAdapter.setNewData(null)
+                    }else{
+                        tv_empty_net_station.visibility =View.GONE
+                        val citys = data.map { item -> item.city }
+                        currentIndex = 0
+                        var list = data[currentIndex].list
+                        list.forEach {
+                            it.distance =AMapUtils.calculateLineDistance(LatLng(it.lat, it.lng), LatLng(App.lat, App.lng))
+                            it.distanceStr =  if (it.distance >= 1000)
+                                "${String.format("%.2f", (it.distance / 1000))}公里"
+                            else
+                                "${String.format("%.2f", it.distance)}米"
+                        }
+                        var list2  = list.sortedBy { it->it.distance }
+
+                        stationAdapter.setNewData(list2)
+                    }
                 }
             }
         }

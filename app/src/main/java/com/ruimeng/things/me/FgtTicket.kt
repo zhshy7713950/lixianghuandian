@@ -96,6 +96,7 @@ class FgtTicket : BaseBackFragment() {
         override fun convert(helper: BaseViewHolder, item: MyCouponBean.Data?) {
             bothNotNull(helper, item) { a, b ->
                 a.setText(R.id.tv_money, b.coupon_price)
+                    .setText(R.id.tv_time,"有效期至：${b.exp_time}")
             }
         }
     }

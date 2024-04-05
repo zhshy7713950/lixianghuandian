@@ -881,6 +881,7 @@ class FgtHome : MainTabFragment() {
             pvBattery.visibility = View.VISIBLE
             tv_package_status.visibility = View.VISIBLE
             tv_package_status.text = "生效中"
+            tv_package_status.background = context?.getDrawable( R.drawable.shape_green)
         }
     }
 

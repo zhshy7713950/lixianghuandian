@@ -37,7 +37,7 @@ class RebackAlertPopup (private val activity: Activity,
         object : CountDownTimer((10 * 1000).toLong(), 1000.toLong()) {
             override fun onTick(millisUntilFinished: Long) {
                 MainLooper.runOnUiThread {
-                    tv_switch_battery.text = "确认（${millisUntilFinished / 1000}）"
+                    tv_switch_battery.text = "确认（${millisUntilFinished / 1000}s）"
                     tv_switch_battery?.setOnClickListener {}
                 }
             }

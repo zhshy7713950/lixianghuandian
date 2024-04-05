@@ -76,7 +76,7 @@ class FgtDeposit : BaseBackFragment() {
         Log.i("data===", "===getIsHost===$getIsHost")
 
         getDeposit()
-        getAgentList()
+//        getAgentList()
 
         EventBus.getDefault().register(this)
     }
@@ -100,6 +100,7 @@ class FgtDeposit : BaseBackFragment() {
         FgtDeposit.deviceModel = data.device.device_model
 
         tv_battery_num_account_deposit.text = "" + data.device.device_id
+        et_agnet_name_deposit_code.setText(FgtHome.AGENT_CODE)
 
         tv_battery_model_account_deposit.text = "" + data.device.device_model
 

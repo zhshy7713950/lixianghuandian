@@ -386,23 +386,15 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_ticket_pay_rent_money.setOnClickListener {
             if (!couponList.isEmpty()) {
                 activity?.let { it1 ->
-                    SelectCouponPopup(
-                        it1,
-                        couponList,
-                        couponId,
-                        object : BaseQuickAdapter.OnItemClickListener {
-                            override fun onItemClick(
-                                p0: BaseQuickAdapter<*, *>?,
-                                p1: View?,
-                                p2: Int
-                            ) {
-                                val item = couponList[p2]
-                                if (couponId == item.id) {
+                    SelectCouponPopup(it1, couponList, couponId,
+                        object : SelectCouponPopup.OnCouponSelect {
+
+                            override fun selectId(id: Int,label:String) {
+                                couponId = id;
+                                if (couponId == 0){
                                     tv_ticket_pay_rent_money.text = "不使用优惠券"
-                                    couponId = 0
-                                } else {
-                                    tv_ticket_pay_rent_money.text = item.coupon_label
-                                    couponId = item.id
+                                }else{
+                                    tv_ticket_pay_rent_money.text = label
                                 }
                                 computeAmount()
                             }
@@ -616,12 +608,16 @@ class FgtPayRentMoney : BaseBackFragment() {
             onSuccess {
                 IS_TICKET_DATA_INIT = true
                 val result = it.toPOJO<MyCouponBean>().data
-                if (result.isEmpty()) {
+                if (result.isEmpty() ) {
                     tv_ticket_pay_rent_money.text = "暂无可用优惠券"
                 } else {
-                    tv_ticket_pay_rent_money.text = "请选择"
+                    couponList.addAll(result)
+                    couponId = couponList.get(0).id
+                    tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+//                    computeAmount(false)
                 }
-                couponList.addAll(result)
+
+
             }
 
 

@@ -185,6 +185,7 @@ class FgtMeDeposit : BaseBackFragment() {
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
                 EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
+                pop()
             }
 
             onFail { i, msg ->

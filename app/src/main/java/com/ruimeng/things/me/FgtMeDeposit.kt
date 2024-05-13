@@ -71,11 +71,13 @@ class FgtMeDeposit : BaseBackFragment() {
     }
 
     var virtaul = false
+    var deviceId = ""
     private fun getInfo() {
-        if (FgtHome.CURRENT_DEVICEID.startsWith("8") && FgtHome.CURRENT_DEVICEID.length == 8 ){
+        deviceId = if(FgtHome.CURRENT_DEVICEID == "0") FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
+        if (deviceId.startsWith("8") && deviceId.length == 8 ){
             virtaul = true
         }
-        tv_battery_num.text = "电池编号："+FgtHome.CURRENT_DEVICEID
+        tv_battery_num.text = "电池编号："+deviceId
         var textColors = arrayOf("#929FAB","#FFFFFF")
         var type = when (FgtHome.payType){
             "1"->"微信支付"
@@ -117,7 +119,7 @@ class FgtMeDeposit : BaseBackFragment() {
                             http {
                                 url = "/apiv6/payment/getuserpaymentinfo"
                                 params["user_id"] = FgtHome.userId
-                                params["device_id"] = FgtHome.CURRENT_DEVICEID
+                                params["device_id"] = deviceId
                                 IS_SHOW_MSG = false
                                 onSuccess { res ->
                                     var  paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
@@ -181,7 +183,7 @@ class FgtMeDeposit : BaseBackFragment() {
             url = "apiv6/cabinet/retrunBattery"
             params["user_id"] = FgtHome.userId
             params["code"] = code
-            params["device_id"] = FgtHome.CURRENT_DEVICEID
+            params["device_id"] = deviceId
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
                 EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
@@ -203,7 +205,7 @@ class FgtMeDeposit : BaseBackFragment() {
 
                 onSuccessWithMsg { res, msg ->
                     if (null != activity) {
-                        FgtHome.CURRENT_DEVICEID = ""
+                        deviceId = ""
                         NormalDialog(activity)
                             .apply {
                                 style(NormalDialog.STYLE_TWO)

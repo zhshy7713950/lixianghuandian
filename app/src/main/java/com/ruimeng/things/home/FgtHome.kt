@@ -188,8 +188,8 @@ class FgtHome : MainTabFragment() {
                 activity?.startActivity(intent)
             }
             userId = userInfo.id
-            tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else View.GONE
-            tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else View.GONE
+            tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else GONE
+            tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else GONE
             tv_title.text = userInfo.nickname
         }
 
@@ -229,14 +229,8 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
 
-                OptionPickerUtil.showJsonOptionPicker(activity, "请选择租用的电池型号",data, object :
-                    OptionPickerUtil.OnSelectKey {
-                    override fun selectKey(
-                        key: String
-                    ) {
-                        newRent(event,key)
-                    }
-                })
+                OptionPickerUtil.showJsonOptionPicker(activity, "请选择租用的电池型号",data
+                ) { key -> newRent(event, key) }
             }
             onFail { i, s ->
                 ToastHelper.shortToast(context,s)
@@ -245,7 +239,7 @@ class FgtHome : MainTabFragment() {
 
     }
 
-    fun newRent( event: ScanResultEvent,modelId:String){
+    private fun newRent(event: ScanResultEvent, modelId:String){
         http {
             url = "apiv6/cabinet/newRent"
             params["code"] = event.deviceId
@@ -271,7 +265,7 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
-    fun rentStep1( deviceId: String?,type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
+    private fun rentStep1(deviceId: String?, type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
         deviceId ?: return
         http {
             url = "apiv4/rentstep1"
@@ -307,8 +301,7 @@ class FgtHome : MainTabFragment() {
 
     fun doScanNext(json : JSONObject, event: ScanResultEvent){
         val data = json.optJSONObject("data")
-        val status = data.optInt("status")
-        when (status) {
+        when (data.optInt("status")) {
             0 -> FgtMain.instance?.start(FgtDeposit.newInstance(event.deviceId, getIsHost))
             1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(event.deviceId,event.type))
             2 -> {
@@ -331,8 +324,8 @@ class FgtHome : MainTabFragment() {
      * 首页布局 有 已添加设备 和未加设备两种状态
      */
     private fun dealTwoStatus(isHasItem: Boolean) {
-        root_has_item.visibility = View.GONE
-        root_no_item.visibility = View.GONE
+        root_has_item.visibility = GONE
+        root_no_item.visibility = GONE
 
         if (isHasItem) {
             root_has_item.visibility = View.VISIBLE
@@ -372,23 +365,27 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun initNoItemView() {
-       if (deviceStatus == 2){
-            tv_log_info.text ="您还没有为电池（编号"+ NO_PAY_DEVICEID+"）购买套餐"
-            tv_add_device.text  = "点击购买套餐"
-            iv_add_device.visibility = View.GONE
-           btnReturnInfo.visibility = View.GONE
-        }else if (deviceStatus == 3){
-           tv_log_info.text ="您的租电套餐已过期，请及时续费"
-           tv_add_device.text  = "点击购买套餐"
-           iv_add_device.visibility = View.GONE
-           root_has_item.visibility = View.GONE
-           root_no_item.visibility = View.VISIBLE
-           btnReturnInfo.visibility = View.VISIBLE
-       } else{
-            tv_add_device.text  = "点击添加"
-            tv_log_info.text ="您还没有添加电池设备"
-            iv_add_device.visibility = View.VISIBLE
-           btnReturnInfo.visibility = View.GONE
+        when (deviceStatus) {
+            2 -> {
+                tv_log_info.text = "您还没有为电池（编号$NO_PAY_DEVICEID）购买套餐"
+                tv_add_device.text  = "点击购买套餐"
+                iv_add_device.visibility = GONE
+                btnReturnInfo.visibility = GONE
+            }
+            3 -> {
+                tv_log_info.text ="您的租电套餐已过期，请及时续费"
+                tv_add_device.text  = "点击购买套餐"
+                iv_add_device.visibility = GONE
+                root_has_item.visibility = GONE
+                root_no_item.visibility = View.VISIBLE
+                btnReturnInfo.visibility = View.VISIBLE
+            }
+            else -> {
+                tv_add_device.text  = "点击添加"
+                tv_log_info.text ="您还没有添加电池设备"
+                iv_add_device.visibility = View.VISIBLE
+                btnReturnInfo.visibility = GONE
+            }
         }
 
         val llNoItem = root_no_item
@@ -820,7 +817,7 @@ class FgtHome : MainTabFragment() {
         initInfoEvent(item)
         tabBattery.selectTab(0)
         layoutPackage.visibility =View.VISIBLE
-        layoutBattery.visibility =View.GONE
+        layoutBattery.visibility = GONE
     }
 
     private fun showDeviceInfo(info:DeviceDetailBean.Data.DeviceBase){
@@ -834,10 +831,10 @@ class FgtHome : MainTabFragment() {
             tv_error_info.text = info.protect_desc
         }else{
             // 通电或者关电状态
-            ivWrongBt.visibility  = View.GONE
+            ivWrongBt.visibility  = GONE
             openOrCloseBatter(BatteryOpenEvent(info.device_status == "1"))
-            tv_error_title.visibility = View.GONE
-            tv_error_info.visibility = View.GONE
+            tv_error_title.visibility = GONE
+            tv_error_info.visibility = GONE
         }
         tv_ice.text = "冻结"
         tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
@@ -848,9 +845,9 @@ class FgtHome : MainTabFragment() {
             tv_remark_num.text = "虚拟编号"
             tvProgress.textColor = Color.parseColor("#29EBB6")
             tv_please_change.visibility = View.VISIBLE
-            tv_left_battery.visibility = View.GONE
-            tv_voltage.visibility = View.GONE
-            pvBattery.visibility = View.GONE
+            tv_left_battery.visibility = GONE
+            tv_voltage.visibility = GONE
+            pvBattery.visibility = GONE
             virtaul = true
            if (paymentDetailBean?.active_status  == "1"){
                tvProgress.text = "待取电"
@@ -875,7 +872,7 @@ class FgtHome : MainTabFragment() {
             pvBattery.setCurrentCount(info.rsoc.toFloat())
             tvProgress.text = "${info.rsoc}%"
             tv_voltage.text = "电压 ${info.totalvoltage}V"
-            tv_please_change.visibility = View.GONE
+            tv_please_change.visibility = GONE
             tv_left_battery.visibility = View.VISIBLE
             tv_voltage.visibility = View.VISIBLE
             pvBattery.visibility = View.VISIBLE
@@ -897,7 +894,7 @@ class FgtHome : MainTabFragment() {
     }
     private fun showPackageInfo(){
         tv_ice.text = if (activeStatus == "3") "解冻" else "冻结"
-        tv_exp_remind.visibility =  View.GONE
+        tv_exp_remind.visibility =  GONE
         hasChangePackege = false
         if (paymentDetailBean != null){
 
@@ -921,9 +918,9 @@ class FgtHome : MainTabFragment() {
                 tv_change_package_type.text = "次数无限制"
                 tv_change_package_left_times.visibility = GONE
                 tv_change_package_time.text =  tv_package_time.text
-                tv_no_package.visibility = View.GONE
-                tv_btn_change_package.visibility = View.GONE
-                tv_more.visibility = View.GONE
+                tv_no_package.visibility = GONE
+                tv_btn_change_package.visibility = GONE
+                tv_more.visibility = GONE
                 tv_btn_change_package_update.visibility = GONE
 
 //                val options = ArrayList<PaymentOption>()
@@ -1247,8 +1244,8 @@ class FgtHome : MainTabFragment() {
             selectTab(0)
             notifyDataChanged()
             setOnTabClickListener {  index ->
-                layoutPackage.visibility = if (index == 0) View.VISIBLE else View.GONE
-                layoutBattery.visibility = if (index == 1) View.VISIBLE else View.GONE
+                layoutPackage.visibility = if (index == 0) View.VISIBLE else GONE
+                layoutBattery.visibility = if (index == 1) View.VISIBLE else GONE
             }
         }
 

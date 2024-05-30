@@ -2,7 +2,7 @@
 /.idea/
 /app/build/
 /build/
-
+/local.properties
 /wongxd/.idea/
 /wongxd/build/
 /wongxd/wongxd-wongxd.iml

@@ -11,11 +11,16 @@ import java.io.File
  */
 class RequestWrapper {
 
+    companion object {
+        const val METHOD_GET = "GET"
+        const val METHOD_POST= "POST"
+    }
+
     var headers: MutableMap<String, String> = mutableMapOf()
 
     var url: String = ""
 
-    var method: String = "POST"
+    var method: String = METHOD_POST
 
     var jsonParam: MutableMap<String, Any> = mutableMapOf()
 

@@ -9,10 +9,6 @@ apply from: '../wongxd/config.gradle'
 
 android {
 
-    defaultConfig {
-        versionCode 2
-        versionName "1.0.2"
-    }
 
     buildTypes {
         release {

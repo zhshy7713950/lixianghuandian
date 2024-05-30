@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
@@ -154,6 +155,8 @@ class FgtHome : MainTabFragment() {
 
     }
 
+    private val vm: HomeViewModel by viewModels()
+
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
     fun startFgt(toFgt: SupportFragment) {
@@ -267,6 +270,7 @@ class FgtHome : MainTabFragment() {
     }
     private fun rentStep1(deviceId: String?, type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
         deviceId ?: return
+
         http {
             url = "apiv4/rentstep1"
             params["device_id"] = deviceId

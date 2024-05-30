@@ -1,6 +1,7 @@
 package com.net
 
 import com.net.exception.ApiException
+import com.net.exception.NetException
 
 /**
  * 接口的返回类型包装类
@@ -20,7 +21,7 @@ sealed class NetworkResponse<out T : Any> {
     /**
      * 其他错误
      */
-    data class UnknownError(val throwable: Throwable) : NetworkResponse<Nothing>()
+    data class UnknownError(val errorCode: Int = -1, val errorMessage: String = "") : NetworkResponse<Nothing>()
 }
 
 inline val NetworkResponse<*>.isSuccess: Boolean
@@ -40,18 +41,18 @@ fun <T : Any> NetworkResponse<T>.getOrNull(): T? =
         is NetworkResponse.UnknownError -> null
     }
 
-fun <T : Any> NetworkResponse<T>.exceptionOrNull(): Throwable? =
+fun <T : Any> NetworkResponse<T>.exceptionOrNull() =
     when (this) {
         is NetworkResponse.Success -> null
         is NetworkResponse.BizError -> ApiException(errorCode, errorMessage)
-        is NetworkResponse.UnknownError -> throwable
+        is NetworkResponse.UnknownError -> NetException(errorCode,errorMessage)
     }
 
 fun <T : Any> NetworkResponse<T>.getOrThrow(): T =
     when (this) {
         is NetworkResponse.Success -> data
         is NetworkResponse.BizError -> throw ApiException(errorCode, errorMessage)
-        is NetworkResponse.UnknownError -> throw throwable
+        is NetworkResponse.UnknownError -> throw NetException(errorCode,errorMessage)
     }
 
 inline fun <T : Any> NetworkResponse<T>.getOrElse(default: (NetworkResponse<T>) -> T): T =

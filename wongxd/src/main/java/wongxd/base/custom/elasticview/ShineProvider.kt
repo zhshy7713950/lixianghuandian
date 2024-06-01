@@ -3,7 +3,7 @@ package wongxd.base.custom.elasticview
 import android.graphics.*
 import androidx.core.content.ContextCompat
 import android.view.View
-import wongxd.R
+import com.wongxd.R
 
 internal class ShineProvider(parentView: View) : CentrePointProvider(parentView) {
 

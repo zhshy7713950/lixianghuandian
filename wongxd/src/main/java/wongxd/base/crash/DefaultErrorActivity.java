@@ -33,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import okhttp3.*;
-import wongxd.R;
+import com.wongxd.R;
 import wongxd.utils.ToastUtils;
 
 import java.io.IOException;

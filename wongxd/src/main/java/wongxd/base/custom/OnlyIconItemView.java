@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 
-import wongxd.R;
+import com.wongxd.R;
 
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem;
 

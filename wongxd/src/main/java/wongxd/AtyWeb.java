@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.*;
 import android.webkit.*;
 import android.widget.*;
+
+import com.wongxd.R;
+
 import wongxd.base.AppManager;
 import wongxd.base.BaseBackActivity;
 

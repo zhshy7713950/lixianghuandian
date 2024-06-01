@@ -11,8 +11,7 @@ import android.view.View;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import me.yokeyword.fragmentation.*;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
-import wongxd.R;
-import wongxd.utils.utilcode.util.ScreenUtils;
+import com.wongxd.R;
 
 
 

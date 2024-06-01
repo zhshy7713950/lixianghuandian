@@ -1,20 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		package="wongxd">
+		package="com.wongxd">
 
 	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 	<application>
 		<activity
-				android:name=".AtyWeb"
+				android:name="wongxd.AtyWeb"
 				android:configChanges="orientation|screenSize" />
 
 		<activity
-				android:name=".alipay.AlipayH5Activity"
+				android:name="wongxd.alipay.AlipayH5Activity"
 				android:configChanges="orientation|keyboardHidden|navigation"
 				android:exported="false"
 				android:screenOrientation="behind" />
 
 		<service
-				android:name=".common.autoInstall.AutoInstallService"
+				android:name="wongxd.common.autoInstall.AutoInstallService"
 				android:label="@string/aby_label"
 				android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
 				android:process=":install">
@@ -42,10 +42,10 @@
 			<!--}-->
 		</provider>
 
-		<activity android:name=".base.crash.DefaultErrorActivity" />
+		<activity android:name="wongxd.base.crash.DefaultErrorActivity" />
 
 		<activity
-				android:name=".base.custom.idcardCamera.camera.CameraActivity"
+				android:name="wongxd.base.custom.idcardCamera.camera.CameraActivity"
 				android:screenOrientation="landscape"
 				android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" />
 

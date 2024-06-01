@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
-import wongxd.R;
+import com.wongxd.R;
 
 public class BlinkLayout extends LinearLayout {
 

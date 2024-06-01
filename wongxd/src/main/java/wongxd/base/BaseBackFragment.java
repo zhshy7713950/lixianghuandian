@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.core.ISwipeBackFragment;
 import me.yokeyword.fragmentation_swipeback.core.SwipeBackFragmentDelegate;
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * Created by Wongxd on 2018/04/23.

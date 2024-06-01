@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
-import wongxd.R
+import com.wongxd.R
 
 
 /**

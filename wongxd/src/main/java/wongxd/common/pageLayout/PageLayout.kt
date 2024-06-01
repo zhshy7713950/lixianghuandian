@@ -21,7 +21,7 @@ import android.widget.FrameLayout
 
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import wongxd.R
+import com.wongxd.R
 
 /**
  * Created by wongxd on 2018/11/12.

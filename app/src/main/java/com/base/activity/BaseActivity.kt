@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.jaeger.library.StatusBarUtil
 import com.qmuiteam.qmui.widget.QMUITopBar
-import wongxd.R
+import com.wongxd.R
 
 abstract class BaseActivity : AppCompatActivity() {
 

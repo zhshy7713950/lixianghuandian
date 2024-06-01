@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * 辅助服务自动安装APP，该服务在单独进程中运行

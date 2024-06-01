@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import wongxd.R;
+import com.wongxd.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,7 +11,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * 辅助功能/无障碍相关工具

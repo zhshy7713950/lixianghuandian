@@ -81,7 +81,7 @@ public class AtyWeb2 extends BaseBackActivity {
             return;
         }
         Log.d(TAG, "url = " + web_url);
-        webView = (WebView) findViewById(wongxd.R.id.brand_layout);
+        webView = (WebView) findViewById(com.wongxd.R.id.brand_layout);
 
         WebSettings webSettings = webView.getSettings();
 
@@ -155,14 +155,14 @@ public class AtyWeb2 extends BaseBackActivity {
      */
     protected void setMidTitle(String string) {
         if (middleTitle == null) {
-            middleTitle = (TextView) findViewById(wongxd.R.id.base_title);
+            middleTitle = (TextView) findViewById(com.wongxd.R.id.base_title);
         }
         middleTitle.setText(string);
     }
 
     protected void setMidTitle(String string, float size) {
         if (middleTitle == null) {
-            middleTitle = (TextView) findViewById(wongxd.R.id.base_title);
+            middleTitle = (TextView) findViewById(com.wongxd.R.id.base_title);
             middleTitle.setTextSize(size);
         }
         middleTitle.setText(string);
@@ -173,7 +173,7 @@ public class AtyWeb2 extends BaseBackActivity {
      * 返回上一层
      */
     protected TextView addBackListener() {
-        TextView view = setLeftButton(wongxd.R.drawable.arrow_right_white, null, new View.OnClickListener() {
+        TextView view = setLeftButton(com.wongxd.R.drawable.arrow_right_white, null, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -194,7 +194,7 @@ public class AtyWeb2 extends BaseBackActivity {
     }
 
     private TextView setLeftButton(int bgRes, String string, View.OnClickListener listener) {
-        Button leftButton = (Button) findViewById(wongxd.R.id.left_button);
+        Button leftButton = (Button) findViewById(com.wongxd.R.id.left_button);
         if (!TextUtils.isEmpty(string)) {
             leftButton.setText(string);
             leftButton.setTextSize(20);
@@ -217,7 +217,7 @@ public class AtyWeb2 extends BaseBackActivity {
 
 
     protected void setLeftCloseButton(String string, View.OnClickListener listener) {
-        Button leftButton = (Button) findViewById(wongxd.R.id.left_close_button);
+        Button leftButton = (Button) findViewById(com.wongxd.R.id.left_close_button);
         if (!TextUtils.isEmpty(string)) {
             leftButton.setText(string);
             leftButton.setTextSize(15);
@@ -238,7 +238,7 @@ public class AtyWeb2 extends BaseBackActivity {
     }
 
     private void setRightButton(int bgRes, String string, View.OnClickListener listener) {
-        Button rightButton = (Button) findViewById(wongxd.R.id.right_title);
+        Button rightButton = (Button) findViewById(com.wongxd.R.id.right_title);
         if (!TextUtils.isEmpty(string)) {
             rightButton.setText(string);
         }
@@ -321,25 +321,25 @@ public class AtyWeb2 extends BaseBackActivity {
 
     private void showMenu(final View showAtLocation) {
         final Context context = showAtLocation.getContext();
-        View layout = LayoutInflater.from(context).inflate(wongxd.R.layout.layout_menu_webview, null);
+        View layout = LayoutInflater.from(context).inflate(com.wongxd.R.layout.layout_menu_webview, null);
         final PopupWindow menuWindow = new PopupWindow(layout, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         menuWindow.setFocusable(true);
         menuWindow.update();
-        menuWindow.setBackgroundDrawable(context.getResources().getDrawable(wongxd.R.color.transparent));
+        menuWindow.setBackgroundDrawable(context.getResources().getDrawable(com.wongxd.R.color.transparent));
         menuWindow.showAtLocation(showAtLocation, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        layout.findViewById(wongxd.R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(com.wongxd.R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menuWindow.dismiss();
             }
         });
-        layout.findViewById(wongxd.R.id.toBrowser).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(com.wongxd.R.id.toBrowser).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startBrowser(context, web_url);
             }
         });
-        layout.findViewById(wongxd.R.id.refresh).setOnClickListener(new View.OnClickListener() {
+        layout.findViewById(com.wongxd.R.id.refresh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 webView.loadUrl(web_url);
@@ -379,10 +379,10 @@ public class AtyWeb2 extends BaseBackActivity {
             // 设置webView隐藏
             webView.setVisibility(View.GONE);
             // 声明video，把之后的视频放到这里面去
-            video = (FrameLayout) findViewById(wongxd.R.id.video);
+            video = (FrameLayout) findViewById(com.wongxd.R.id.video);
             // 将video放到当前视图中
             video.addView(view);
-            title_bar = findViewById(wongxd.R.id.title_bar);
+            title_bar = findViewById(com.wongxd.R.id.title_bar);
             title_bar.setVisibility(View.GONE);
             // 横屏显示
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -476,18 +476,18 @@ public class AtyWeb2 extends BaseBackActivity {
         public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
             //自定义一个带输入的对话框由TextView和Edittext构成
             final LayoutInflater factory = LayoutInflater.from(context);
-            final View dialogView = factory.inflate(wongxd.R.layout.webview_prom_dialog, null);
+            final View dialogView = factory.inflate(com.wongxd.R.layout.webview_prom_dialog, null);
             //设置TextView对应网页中的提示信息
-            ((TextView) dialogView.findViewById(wongxd.R.id.TextView_PROM)).setText(defaultValue);
+            ((TextView) dialogView.findViewById(com.wongxd.R.id.TextView_PROM)).setText(defaultValue);
             //设置EditText对应网页中的输入框
-            ((EditText) dialogView.findViewById(wongxd.R.id.EditText_PROM)).setText(defaultValue);
+            ((EditText) dialogView.findViewById(com.wongxd.R.id.EditText_PROM)).setText(defaultValue);
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //            builder.setTitle("请输入内容");
             builder.setView(dialogView);
             builder.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     // 点击确定之后，取得输入的值，传给网页处理
-                    String value = ((EditText) dialogView.findViewById(wongxd.R.id.EditText_PROM)).getText().toString();
+                    String value = ((EditText) dialogView.findViewById(com.wongxd.R.id.EditText_PROM)).getText().toString();
                     result.confirm(value);
                 }
             });

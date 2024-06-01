@@ -12,7 +12,7 @@ import com.qmuiteam.qmui.widget.QMUITopBar;
 
 import me.yokeyword.fragmentation.ISupportFragment;
 import me.yokeyword.fragmentation.SupportFragment;
-import wongxd.R;
+import com.wongxd.R;
 
 
 /**

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.DecelerateInterpolator;
 
-import wongxd.R;
+import com.wongxd.R;
 
 
 public abstract class MainTabFragment extends FgtBase {

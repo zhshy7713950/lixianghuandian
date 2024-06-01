@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
-import wongxd.R;
+import com.wongxd.R;
 
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem;
 

@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * 安装相关工具

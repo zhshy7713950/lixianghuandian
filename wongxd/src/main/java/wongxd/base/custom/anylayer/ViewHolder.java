@@ -6,7 +6,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * @author Cuizhen

@@ -21,7 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import wongxd.R;
+import com.wongxd.R;
 
 /**
  * @author Cuizhen

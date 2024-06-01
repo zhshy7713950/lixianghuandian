@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
-import wongxd.R
+import com.wongxd.R
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.simpleForResult.SimpleOnActivityResult

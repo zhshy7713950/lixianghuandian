@@ -9,6 +9,7 @@ import com.scwang.smartrefresh.header.WaterDropHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.uuzuche.lib_zxing.activity.ZXingLibrary
+import com.wongxd.R
 import wongxd.base.AppManager
 import wongxd.utils.utilcode.util.Utils
 

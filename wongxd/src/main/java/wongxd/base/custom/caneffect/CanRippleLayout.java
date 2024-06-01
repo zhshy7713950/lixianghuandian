@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import wongxd.R;
+import com.wongxd.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 

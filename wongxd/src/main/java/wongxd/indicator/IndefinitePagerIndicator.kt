@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
-import wongxd.R
+import com.wongxd.R
 import kotlin.math.abs
 
 class IndefinitePagerIndicator @JvmOverloads constructor(

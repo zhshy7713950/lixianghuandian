@@ -1,28 +1,29 @@
 package com.net
 
+import android.util.Log
 import com.entity.remote.ResCommon
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.suspendCancellableCoroutine
 import wongxd.common.net.netDSL.RequestWrapper
 import wongxd.http
 import java.lang.reflect.Type
+import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
 object Server {
 
-    private val gson: Gson by lazy {
-        GsonBuilder().enableComplexMapKeySerialization().create()
+    const val TAG = "lxhdServer"
+
+    val gson: Gson by lazy {
+        Gson()
     }
 
-    suspend fun <R, T : Any> call(
+    suspend inline fun <R, reified T> call(
         path: String,
         requestParams: R,
-//        params: MutableMap<String, String>,
         method: String = RequestWrapper.METHOD_POST
-    ) = suspendCancellableCoroutine<NetworkResponse<T>> { con ->
+    ) = suspendCoroutine<NetworkResponse<ResCommon<T>>> { con ->
         http {
             this.url = path
             this.method = method
@@ -34,24 +35,24 @@ object Server {
             )
 
             onSuccess {
-                val type: Type = object : TypeToken<ResCommon<T>>() {}.type
+                Log.d(TAG,"=========net response start=========\n$it\n==========net response end============")
+                val type: Type =
+                    TypeToken.getParameterized(ResCommon::class.java, T::class.java).type
                 val resData: ResCommon<T> = gson.fromJson(it, type)
                 if (200 == resData.errcode) {
-                    con.resumeWith(Result.success(NetworkResponse.Success(resData.data)))
+                    con.resume(NetworkResponse.Success(resData))
                 } else {
-                    con.resumeWith(
-                        Result.success(
-                            NetworkResponse.BizError(
-                                resData.errcode,
-                                resData.errmsg
-                            )
+                    con.resume(
+                        NetworkResponse.BizError(
+                            resData.errcode,
+                            resData.errmsg
                         )
                     )
                 }
             }
 
             onFail { code, msg ->
-                con.resumeWith(Result.success(NetworkResponse.UnknownError(code, msg)))
+                con.resume(NetworkResponse.UnknownError(code, msg))
             }
         }
 

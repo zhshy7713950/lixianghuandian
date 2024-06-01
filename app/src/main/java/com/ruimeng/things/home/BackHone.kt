@@ -3,7 +3,6 @@ package com.ruimeng.things.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,19 +10,15 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
-import com.ruimeng.things.me.credit.FgtCreditReckoning
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.fgt_home.*
@@ -40,7 +35,6 @@ import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http
-import wongxd.utils.utilcode.util.ScreenUtils
 
 
 /**

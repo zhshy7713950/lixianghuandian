@@ -35,6 +35,8 @@ class AtyScanQrcode : AtyBase() {
 
         val TYPE_CHANGE = "change"
 
+        const val TYPE_PAY_RENT = "type_pay_rent"
+
         val RESULT_PREFIX = "resultPrefix"
 
         val RESULT_OLD_CONTRACT_ID = "resultOldContractId"

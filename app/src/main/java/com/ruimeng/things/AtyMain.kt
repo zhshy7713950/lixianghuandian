@@ -319,7 +319,8 @@ class AtyMain : BaseBackActivity() {
                         } else {
                             start(FgtChangeRentBattery.newInstance(oldContractId, result))
                         }
-
+                    } else if(prefix == AtyScanQrcode.TYPE_PAY_RENT){
+                        FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.NO_PAY_DEVICEID, FgtPayRentMoney.PAGE_TYPE_CREATE,result))
                     } else {
                         EventBus.getDefault().post(ScanResultEvent(result, FgtPayRentMoney.PAGE_TYPE_CREATE))
 //                        FgtHome.dealScanResult(result)

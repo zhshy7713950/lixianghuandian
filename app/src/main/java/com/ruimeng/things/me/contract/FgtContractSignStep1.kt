@@ -3,23 +3,19 @@ package com.ruimeng.things.me.contract
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtViewBigImg
-import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
 import com.ruimeng.things.home.ContractCheckEvent
-import com.ruimeng.things.home.FgtDeposit
 import com.ruimeng.things.me.FgtUploadAuthInfo
 import com.ruimeng.things.me.contract.bean.ContractSignStepOneBean
 import com.utils.DensityHelper
@@ -31,9 +27,7 @@ import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_device_num_my_co
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_rent_long_my_contract_detail
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.tv_rent_money_my_contract_detail
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import wongxd.base.BaseBackFragment
-import wongxd.base.custom.bannerByRv.BannerRecyclerView.OnPageChangeListener
 import wongxd.common.*
 import wongxd.http
 

@@ -14,9 +14,8 @@ import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener
+import androidx.lifecycle.Observer
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
@@ -24,8 +23,8 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.view.BuyChangePackagePopup
-import com.ruimeng.things.home.view.ChangePackageListPopup
 import com.ruimeng.things.home.view.ShowCouponPopup
+import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtMeDeposit
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
@@ -34,8 +33,6 @@ import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_home.*
-import kotlinx.android.synthetic.main.fgt_me.tv_ya_money_me
-import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_base_package_time
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
 import me.yokeyword.fragmentation.SupportFragment
@@ -51,7 +48,6 @@ import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http
-import wongxd.utils.utilcode.util.SPUtils
 
 
 /**
@@ -81,22 +77,23 @@ class FgtHome : MainTabFragment() {
         var rent_time = ""
         var totalvoltage = ""
         var rsoc = ""
-        var payType =""
+        var payType = ""
         var MOBILE_BIND_SKIP = false
         fun selectDeviceType() {
 
         }
+
         /**
          * 尝试扫描二维码
          */
         fun tryToScan(prefix: String = "", oldContractId: String = "", isHost: String = "") {
             val userInfo = InfoViewModel.getDefault().userInfo.value
             userInfo?.let {
-                if (it.realname_auth == 1){
+                if (it.realname_auth == 1) {
                     getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                         AtyScanQrcode.start(getCurrentAty(), prefix, oldContractId, isHost)
                     })
-                }else{
+                } else {
                     showTipDialog(
                         getCurrentAppAty(),
                         msg = "您还没有实名认证",
@@ -167,12 +164,12 @@ class FgtHome : MainTabFragment() {
         EventBus.getDefault().register(this)
 
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
-            ledTextView?.text =  Config.getDefault().spUtils.getString("ledString", "")
+            ledTextView?.text = Config.getDefault().spUtils.getString("ledString", "")
             ledTextView?.init(activity?.windowManager)
             ledTextView?.startScroll()
         }
 
-        right?.setOnClickListener {   tryToScan() }
+        right?.setOnClickListener { tryToScan() }
 
         tv_follow_wechat.setOnClickListener { start(FgtFollowWechatAccount()) }
         tv_right.setOnClickListener {
@@ -185,9 +182,9 @@ class FgtHome : MainTabFragment() {
 
         val userInfo = InfoViewModel.getDefault().userInfo.value
         userInfo?.let {
-            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1" ) {
-                val intent = Intent(activity,AtyLogin::class.java)
-                intent.putExtra("pageType",1)
+            if (userInfo.mobile.isBlank() && userInfo.mobile_bind != "1") {
+                val intent = Intent(activity, AtyLogin::class.java)
+                intent.putExtra("pageType", 1)
                 activity?.startActivity(intent)
             }
             userId = userInfo.id
@@ -214,15 +211,16 @@ class FgtHome : MainTabFragment() {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if (!hidden){
+        if (!hidden) {
             srl_home.autoRefresh()
         }
     }
+
     /**
      * 处理扫码后的信息
      */
     @Subscribe
-    public fun dealScanResult( event: ScanResultEvent) {
+    public fun dealScanResult(event: ScanResultEvent) {
         var deviceId = event.deviceId
 
         http {
@@ -232,17 +230,18 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
 
-                OptionPickerUtil.showJsonOptionPicker(activity, "请选择租用的电池型号",data
+                OptionPickerUtil.showJsonOptionPicker(
+                    activity, "请选择租用的电池型号", data
                 ) { key -> newRent(event, key) }
             }
             onFail { i, s ->
-                ToastHelper.shortToast(context,s)
+                ToastHelper.shortToast(context, s)
             }
         }
 
     }
 
-    private fun newRent(event: ScanResultEvent, modelId:String){
+    private fun newRent(event: ScanResultEvent, modelId: String) {
         http {
             url = "apiv6/cabinet/newRent"
             params["code"] = event.deviceId
@@ -251,73 +250,104 @@ class FgtHome : MainTabFragment() {
             onSuccess {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
-                AGENT_CODE =  data.optString("code")
-                if (data.optJSONObject("device") != null){
-                    event.deviceId  = data.optJSONObject("device").optString("device_id")
+                AGENT_CODE = data.optString("code")
+                if (data.optJSONObject("device") != null) {
+                    event.deviceId = data.optJSONObject("device").optString("device_id")
 //                    event.deviceId = CURRENT_DEVICEID
                 }
-                if (data.optJSONObject("couponInfo") != null){
-                    ShowCouponPopup(getCurrentAppAty(),data.optJSONObject("couponInfo"),object :OnClickListener{
-                        override fun onClick(p0: View?) {
-                            doScanNext(json,event);
-                        }
-                    }).show(rootView)
-                }else{
-                    doScanNext(json,event);
+                if (data.optJSONObject("couponInfo") != null) {
+                    ShowCouponPopup(
+                        getCurrentAppAty(),
+                        data.optJSONObject("couponInfo"),
+                        OnClickListener { doScanNext(json, event); }).show(rootView)
+                } else {
+                    doScanNext(json, event);
                 }
             }
         }
     }
-    private fun rentStep1(deviceId: String?, type:Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
+
+    private fun rentStep1(deviceId: String?, type: Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
         deviceId ?: return
 
-        http {
-            url = "apiv4/rentstep1"
-            params["device_id"] = deviceId
-            params["cg_mode"] = "1"
-            onSuccess {
-                //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"status":0}}
-                //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
-                val json = JSONObject(it)
-                val data = json.optJSONObject("data")
-                val status = data.optInt("status")
-
-                when (status) {
-                    0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
-                    1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId,type))
-                    2 -> {
-                        EasyToast.DEFAULT.show(json.optString("errmsg"))
-                        showTipDialog(
-                            getCurrentAppAty(),
-                            msg = json.optString("errmsg"),
-                            click = {
-                                FgtMain.instance?.start(FgtTrueName())
-                            })
-                    }
-
-                    else -> {
+        vm.rentStep1(deviceId, "1")
+        vm.rentStep1LiveData.observe(this, Observer { rent ->
+            //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
+            when (rent.data.status) {
+                0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
+                1 -> {
+                    if (deviceStatus == 2) {
+                        tryToScan(prefix = AtyScanQrcode.TYPE_PAY_RENT)
+                    } else {
+                        FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId, type))
                     }
                 }
+
+                2 -> {
+                    EasyToast.DEFAULT.show(rent.errmsg)
+                    showTipDialog(
+                        getCurrentAppAty(),
+                        msg = rent.errmsg,
+                        click = {
+                            FgtMain.instance?.start(FgtTrueName())
+                        })
+                }
+
+                else -> {
+                }
             }
-        }
+        })
+
+
+//        http {
+//            url = "apiv4/rentstep1"
+//            params["device_id"] = deviceId
+//            params["cg_mode"] = "1"
+//            onSuccess {
+//                //{"errcode":200,"errmsg":"\u64cd\u4f5c\u6210\u529f","data":{"status":0}}
+//                //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
+//                val json = JSONObject(it)
+//                val data = json.optJSONObject("data")
+//                val status = data.optInt("status")
+//
+//                when (status) {
+//                    0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))
+//                    1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(deviceId, type))
+//                    2 -> {
+//                        EasyToast.DEFAULT.show(json.optString("errmsg"))
+//                        showTipDialog(
+//                            getCurrentAppAty(),
+//                            msg = json.optString("errmsg"),
+//                            click = {
+//                                FgtMain.instance?.start(FgtTrueName())
+//                            })
+//                    }
+//
+//                    else -> {
+//                    }
+//                }
+//            }
+//        }
     }
 
 
-    fun doScanNext(json : JSONObject, event: ScanResultEvent){
+    private fun doScanNext(json: JSONObject, event: ScanResultEvent) {
         val data = json.optJSONObject("data")
         when (data.optInt("status")) {
             0 -> FgtMain.instance?.start(FgtDeposit.newInstance(event.deviceId, getIsHost))
-            1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(event.deviceId,event.type))
+            1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(event.deviceId, event.type))
             2 -> {
                 EasyToast.DEFAULT.show(json.optString("errmsg"))
-                showTipDialog(getCurrentAppAty(),msg = json.optString("errmsg"),click = {
+                showTipDialog(getCurrentAppAty(), msg = json.optString("errmsg"), click = {
                     FgtMain.instance?.start(FgtTrueName())
                 })
             }
+
             else -> {
             }
         }
     }
+
     override fun onDestroyView() {
         EventBus.getDefault().unregister(this)
         super.onDestroyView()
@@ -340,30 +370,28 @@ class FgtHome : MainTabFragment() {
         }
     }
 
-    private fun showHomePageInfo(){
+    private fun showHomePageInfo() {
         //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金 3 已过期
-        if (deviceCode == 201 && paymentCode == 208){
+        if (deviceCode == 201 && paymentCode == 208) {
             deviceStatus = 1
-        }else if (deviceCode == 201 && paymentCode == 200 ){
-            if(paymentDetailBean!!.deposit_status == "0"){
+        } else if (deviceCode == 201 && paymentCode == 200) {
+            if (paymentDetailBean!!.deposit_status == "0") {
                 deviceStatus = 1
-            }else{
+            } else {
                 deviceStatus = 2
             }
-        }
-        else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status == "2"){
+        } else if (deviceCode == 200 && paymentCode == 200 && paymentDetailBean!!.active_status == "2") {
             deviceStatus = 3
-        }
-        else{
+        } else {
             deviceStatus = 0
         }
-        if (deviceStatus == 0){
+        if (deviceStatus == 0) {
             dealTwoStatus(true)
             deviceDetailBean?.let { item ->
                 showNewDeviceData(item)
                 showPackageInfo()
             }
-        }else{
+        } else {
             dealTwoStatus(false)
         }
     }
@@ -372,21 +400,23 @@ class FgtHome : MainTabFragment() {
         when (deviceStatus) {
             2 -> {
                 tv_log_info.text = "您还没有为电池（编号$NO_PAY_DEVICEID）购买套餐"
-                tv_add_device.text  = "点击购买套餐"
+                tv_add_device.text = "点击购买套餐"
                 iv_add_device.visibility = GONE
                 btnReturnInfo.visibility = GONE
             }
+
             3 -> {
-                tv_log_info.text ="您的租电套餐已过期，请及时续费"
-                tv_add_device.text  = "点击购买套餐"
+                tv_log_info.text = "您的租电套餐已过期，请及时续费"
+                tv_add_device.text = "点击购买套餐"
                 iv_add_device.visibility = GONE
                 root_has_item.visibility = GONE
                 root_no_item.visibility = View.VISIBLE
                 btnReturnInfo.visibility = View.VISIBLE
             }
+
             else -> {
-                tv_add_device.text  = "点击添加"
-                tv_log_info.text ="您还没有添加电池设备"
+                tv_add_device.text = "点击添加"
+                tv_log_info.text = "您还没有添加电池设备"
                 iv_add_device.visibility = View.VISIBLE
                 btnReturnInfo.visibility = GONE
             }
@@ -394,14 +424,20 @@ class FgtHome : MainTabFragment() {
 
         val llNoItem = root_no_item
         val addDeviceBtn = llNoItem.findViewById<FrameLayout>(R.id.addDeviceBtn)
-        var event  = ScanResultEvent(NO_PAY_DEVICEID,FgtPayRentMoney.PAGE_TYPE_CREATE)
+        var event = ScanResultEvent(NO_PAY_DEVICEID, FgtPayRentMoney.PAGE_TYPE_CREATE)
         addDeviceBtn.setOnClickListener {
             when (deviceStatus) {
-                0-> {tryToScan()}
-                1 -> {            ToastHelper.shortToast(context,"请扫描电柜二维码”")
-                    tryToScan()}
+                0 -> {
+                    tryToScan()
+                }
+
+                1 -> {
+                    ToastHelper.shortToast(context, "请扫描电柜二维码”")
+                    tryToScan()
+                }
+
                 2 -> rentStep1(NO_PAY_DEVICEID)
-                3-> rentStep1(NO_PAY_DEVICEID)
+                3 -> rentStep1(NO_PAY_DEVICEID) //已过期
             }
         }
         btnReturn.setOnClickListener {
@@ -419,7 +455,8 @@ class FgtHome : MainTabFragment() {
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvOpenClose.setOnClickListener {
             if (checkStatus()) {
-                var title = if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
+                var title =
+                    if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
                 AnyLayer.with(getCurrentAppAty())
                     .contentView(R.layout.alert_dialog_new)
                     .bindData { anyLayer ->
@@ -441,11 +478,10 @@ class FgtHome : MainTabFragment() {
 
         }
         btn_continue_rant.setOnClickListener {
-            if (checkStatus()){
+            if (checkStatus()) {
                 doContinueRant()
             }
         }
-
 
 
     }
@@ -488,7 +524,12 @@ class FgtHome : MainTabFragment() {
      * 续租
      */
     private fun doContinueRant() {
-        FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+        FgtMain.instance?.start(
+            FgtPayRentMoney.newInstance(
+                CURRENT_DEVICEID,
+                FgtPayRentMoney.PAGE_TYPE_UPDATE
+            )
+        )
 //        rentStep1(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
     }
 
@@ -505,14 +546,32 @@ class FgtHome : MainTabFragment() {
         if (IS_OPEN) {
             tvOpenClose.text = "关闭电源"
             tvOpenClose.textColor = Color.WHITE
-            tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(activity?.getDrawable(R.mipmap.ic_switch_battery),null,null,null)
-            pvBattery.colors = intArrayOf(Color.parseColor("#1CFFE6"),Color.parseColor("#2FE19C"),Color.parseColor("#1CFFE6"))
+            tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
+                activity?.getDrawable(R.mipmap.ic_switch_battery),
+                null,
+                null,
+                null
+            )
+            pvBattery.colors = intArrayOf(
+                Color.parseColor("#1CFFE6"),
+                Color.parseColor("#2FE19C"),
+                Color.parseColor("#1CFFE6")
+            )
             tvProgress.setTextColor(Color.parseColor("#29EBB6"))
         } else {
             tvOpenClose.text = "开启电源"
             tvOpenClose.textColor = Color.parseColor("#29EBB6")
-            tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(activity?.getDrawable(R.mipmap.ic_switch_battery_close),null,null,null)
-            pvBattery.colors = intArrayOf(Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"),Color.parseColor("#DEF0E9"))
+            tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
+                activity?.getDrawable(R.mipmap.ic_switch_battery_close),
+                null,
+                null,
+                null
+            )
+            pvBattery.colors = intArrayOf(
+                Color.parseColor("#DEF0E9"),
+                Color.parseColor("#DEF0E9"),
+                Color.parseColor("#DEF0E9")
+            )
             tvProgress.setTextColor(Color.parseColor("#DEF0E9"))
         }
         pvBattery.refreshView()
@@ -532,11 +591,11 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
                 val device_status = data.optInt("device_status")
-                ToastHelper.shortToast(context,"操作成功")
+                ToastHelper.shortToast(context, "操作成功")
                 srl_home.postDelayed(Runnable {
                     getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
                     IS_OPEN = !IS_OPEN
-                },6000)
+                }, 6000)
 
 //                if (device_status == 1) {
 //                    openOrCloseBatter(BatteryOpenEvent(true))
@@ -578,7 +637,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private var deviceDetailBean: DeviceDetailBean.Data? = null
-    private var paymentDetailBean :PaymentDetailBean.Data ?= null
+    private var paymentDetailBean: PaymentDetailBean.Data? = null
     private var paymentCode = 200
     private var deviceCode = 200
 
@@ -611,14 +670,15 @@ class FgtHome : MainTabFragment() {
         }
 
     }
+
     var activeStatus = "1" //1-生效中，2-已过期，3-已冻结
-    private fun getPaymentInfo(){
+    private fun getPaymentInfo() {
         http {
             url = "/apiv6/payment/getuserpaymentinfo"
             params["user_id"] = userId
             params["device_id"] = CURRENT_DEVICEID
             IS_SHOW_MSG = false
-            onSuccess {res->
+            onSuccess { res ->
                 paymentCode = 200
                 paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                 NO_PAY_DEVICEID = paymentDetailBean!!.device_id
@@ -629,7 +689,7 @@ class FgtHome : MainTabFragment() {
                 payType = paymentDetailBean!!.pay_type
                 contractId = paymentDetailBean!!.contract_id
                 activeStatus = paymentDetailBean!!.active_status
-                if (deviceCode == 201){
+                if (deviceCode == 201) {
                     http {
                         url = "/apiv4/getonedevice"
                         params["device_id"] = NO_PAY_DEVICEID
@@ -648,7 +708,7 @@ class FgtHome : MainTabFragment() {
                             showHomePageInfo()
                         }
                     }
-                }else{
+                } else {
                     showHomePageInfo()
                 }
 
@@ -663,8 +723,6 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
-
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -686,20 +744,24 @@ class FgtHome : MainTabFragment() {
                             if ("换电开门" == getType) {
                                 //扫码开门
 //                                requestCgOpenDoor(result!!)
-                                startFgt(FgtScanOpen.newInstance(CURRENT_DEVICEID,result!!))
+                                startFgt(FgtScanOpen.newInstance(CURRENT_DEVICEID, result!!))
                             } else if ("换电" == getType) {
                                 //手动换电
-                                val intent = Intent(activity, ChangeElectricOpenDoorActivity::class.java)
+                                val intent =
+                                    Intent(activity, ChangeElectricOpenDoorActivity::class.java)
                                 intent.putExtra("type", "换电")
                                 intent.putExtra("contract_id", getContractId)
                                 intent.putExtra("new_deviceid", result)
-                                intent.putExtra("name", if (paymentDetailBean != null && paymentDetailBean!!.paymentInfo != null) paymentDetailBean!!.paymentInfo.pname else "")
+                                intent.putExtra(
+                                    "name",
+                                    if (paymentDetailBean != null && paymentDetailBean!!.paymentInfo != null) paymentDetailBean!!.paymentInfo.pname else ""
+                                )
                                 startActivity(intent)
-                            }else if ("租电" == getType){
+                            } else if ("租电" == getType) {
                                 if (result != null) {
                                     scanBox(result)
                                 }
-                            }else if ("退还" == getType){
+                            } else if ("退还" == getType) {
                                 if (result != null) {
                                     NormalDialog(activity)
                                         .apply {
@@ -718,7 +780,7 @@ class FgtHome : MainTabFragment() {
                                         }.show()
 
                                 }
-                            }else if ("冻结" == getType){
+                            } else if ("冻结" == getType) {
                                 if (result != null) {
                                     NormalDialog(activity)
                                         .apply {
@@ -729,7 +791,7 @@ class FgtHome : MainTabFragment() {
                                             btnText("确认", "取消")
                                             setOnBtnClickL(OnBtnClickL {
                                                 dismiss()
-                                               frozen(result)
+                                                frozen(result)
                                             }, OnBtnClickL {
                                                 dismiss()
                                             })
@@ -765,9 +827,11 @@ class FgtHome : MainTabFragment() {
             }
         }
     }
-    private fun autoRefresh(){
-        srl_home.postDelayed( { srl_home.autoRefresh() },2000)
+
+    private fun autoRefresh() {
+        srl_home.postDelayed({ srl_home.autoRefresh() }, 2000)
     }
+
     /**
      * 柜内租用电池
      */
@@ -805,14 +869,14 @@ class FgtHome : MainTabFragment() {
     }
 
     var virtaul = false
-    private fun showNewDeviceData(item:DeviceDetailBean.Data){
+    private fun showNewDeviceData(item: DeviceDetailBean.Data) {
         CURRENT_DEVICEID = item.device_id.toString()
         CURRENT_CONTRACT_ID = item.device_contract.contract_id
         Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, CURRENT_DEVICEID)
         showPopMsg(item.popmsg)
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
-        if (!virtaul){
+        if (!virtaul) {
             tv_remark_num.text = item.device_contract.remark
         }
 //        if ("0" == item.device_contract.is_sign) {
@@ -820,32 +884,38 @@ class FgtHome : MainTabFragment() {
 //        }
         initInfoEvent(item)
         tabBattery.selectTab(0)
-        layoutPackage.visibility =View.VISIBLE
+        layoutPackage.visibility = View.VISIBLE
         layoutBattery.visibility = GONE
     }
 
-    private fun showDeviceInfo(info:DeviceDetailBean.Data.DeviceBase){
+    private fun showDeviceInfo(info: DeviceDetailBean.Data.DeviceBase) {
         if (info.protect != "0" && info.protect != "4096") {
             //故障状态
-            ivWrongBt.visibility  = View.VISIBLE
+            ivWrongBt.visibility = View.VISIBLE
             tvProgress.setTextColor(Color.parseColor("#FFE177"))
-            pvBattery.colors = intArrayOf(Color.parseColor("#FFE177"),Color.parseColor("#FF7A5A"),Color.parseColor("#FFE177"))
+            pvBattery.colors = intArrayOf(
+                Color.parseColor("#FFE177"),
+                Color.parseColor("#FF7A5A"),
+                Color.parseColor("#FFE177")
+            )
             tv_error_title.visibility = View.VISIBLE
             tv_error_info.visibility = View.VISIBLE
             tv_error_info.text = info.protect_desc
-        }else{
+        } else {
             // 通电或者关电状态
-            ivWrongBt.visibility  = GONE
+            ivWrongBt.visibility = GONE
             openOrCloseBatter(BatteryOpenEvent(info.device_status == "1"))
             tv_error_title.visibility = GONE
             tv_error_info.visibility = GONE
         }
         tv_ice.text = "冻结"
-        tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
-            context?.getDrawable(R.mipmap.ic_stop_contract),null,null)
+        tv_ice.setCompoundDrawablesWithIntrinsicBounds(
+            null,
+            context?.getDrawable(R.mipmap.ic_stop_contract), null, null
+        )
         tvBatteryName.text = info.device_id
         tv_package_status.visibility = GONE
-        if (info.device_id.startsWith("8") && info.device_id.length == 8 ){
+        if (info.device_id.startsWith("8") && info.device_id.length == 8) {
             tv_remark_num.text = "虚拟编号"
             tvProgress.textColor = Color.parseColor("#29EBB6")
             tv_please_change.visibility = View.VISIBLE
@@ -853,24 +923,26 @@ class FgtHome : MainTabFragment() {
             tv_voltage.visibility = GONE
             pvBattery.visibility = GONE
             virtaul = true
-           if (paymentDetailBean?.active_status  == "1"){
-               tvProgress.text = "待取电"
-               tv_please_change.text = "(请进行\"扫码换电\")"
-               tv_package_status.visibility = View.VISIBLE
-               tv_package_status.text = "生效中"
-               tv_package_status.background = context?.getDrawable( R.drawable.shape_green)
-           }else if (paymentDetailBean?.active_status  == "3"){
-               tvProgress.text = "已冻结"
-               tv_please_change.text = "(请进行\"解冻\"操作)"
-               tv_ice.text = "解冻"
-               tv_ice.setCompoundDrawablesWithIntrinsicBounds(null,
-                   context?.getDrawable(R.mipmap.ic_scan_box),null,null)
-               tv_package_status.visibility = View.VISIBLE
-               tv_package_status.text = "已冻结"
-               tv_package_status.background = context?.getDrawable( R.drawable.shape_yello)
-           }
+            if (paymentDetailBean?.active_status == "1") {
+                tvProgress.text = "待取电"
+                tv_please_change.text = "(请进行\"扫码换电\")"
+                tv_package_status.visibility = View.VISIBLE
+                tv_package_status.text = "生效中"
+                tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
+            } else if (paymentDetailBean?.active_status == "3") {
+                tvProgress.text = "已冻结"
+                tv_please_change.text = "(请进行\"解冻\"操作)"
+                tv_ice.text = "解冻"
+                tv_ice.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    context?.getDrawable(R.mipmap.ic_scan_box), null, null
+                )
+                tv_package_status.visibility = View.VISIBLE
+                tv_package_status.text = "已冻结"
+                tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)
+            }
 
-        }else{
+        } else {
             virtaul = false
             pvBattery.maxCount = 100f
             pvBattery.setCurrentCount(info.rsoc.toFloat())
@@ -882,11 +954,11 @@ class FgtHome : MainTabFragment() {
             pvBattery.visibility = View.VISIBLE
             tv_package_status.visibility = View.VISIBLE
             tv_package_status.text = "生效中"
-            tv_package_status.background = context?.getDrawable( R.drawable.shape_green)
+            tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
         }
     }
 
-    private fun showBatteryInfo(info:DeviceDetailBean.Data.DeviceBase){
+    private fun showBatteryInfo(info: DeviceDetailBean.Data.DeviceBase) {
         //详细信息
         tv_detail_standard_ah.text = info.standardcapacity + "A"
         tv_detail_total_u.text = info.totalvoltage + "V"
@@ -896,32 +968,36 @@ class FgtHome : MainTabFragment() {
         tv_detail_fet.text = info.fet
         tv_detail_software_ver.text = info.softversion
     }
-    private fun showPackageInfo(){
+
+    private fun showPackageInfo() {
         tv_ice.text = if (activeStatus == "3") "解冻" else "冻结"
-        tv_exp_remind.visibility =  GONE
+        tv_exp_remind.visibility = GONE
         hasChangePackege = false
-        if (paymentDetailBean != null){
+        if (paymentDetailBean != null) {
 
 
-            tv_ya_monety.text =  "${paymentDetailBean!!.deposit}元"
+            tv_ya_monety.text = "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
             tv_ya_monety.setOnClickListener {
-                if ( tv_ya_monety.text != "0.00"){
+                if (tv_ya_monety.text != "0.00") {
                     startFgt(FgtMeDeposit())
                 }
             }
-            if (paymentDetailBean!!.paymentInfo != null){
+            if (paymentDetailBean!!.paymentInfo != null) {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
-                tv_package_time.text = TextUtil.formatTime(paymentDetailBean!!.begin_time,paymentDetailBean!!.exp_time)
-                if (paymentDetailBean!!.exp_remind == 1){
-                    tv_exp_remind.visibility =  View.VISIBLE
+                tv_package_time.text = TextUtil.formatTime(
+                    paymentDetailBean!!.begin_time,
+                    paymentDetailBean!!.exp_time
+                )
+                if (paymentDetailBean!!.exp_remind == 1) {
+                    tv_exp_remind.visibility = View.VISIBLE
                     tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
                 }
 
                 tv_change_package_type.text = "次数无限制"
                 tv_change_package_left_times.visibility = GONE
-                tv_change_package_time.text =  tv_package_time.text
+                tv_change_package_time.text = tv_package_time.text
                 tv_no_package.visibility = GONE
                 tv_btn_change_package.visibility = GONE
                 tv_more.visibility = GONE
@@ -992,47 +1068,51 @@ class FgtHome : MainTabFragment() {
         }
     }
 
-    private fun activeOption(id:String){
+    private fun activeOption(id: String) {
         http {
             url = "/apiv6/payment/activeoption"
             params["user_option_id"] = "${id}"
             onSuccess {
-                ToastHelper.shortToast(context,"启用成功")
+                ToastHelper.shortToast(context, "启用成功")
                 getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
             }
             onFail { i, s ->
-                ToastHelper.shortToast(context,s)
+                ToastHelper.shortToast(context, s)
             }
         }
     }
 
-    private  fun   checkStatus(): Boolean {
-        if (activeStatus == "3"){
-            ToastHelper.shortToast(context,"请先完成解冻操作")
+    private fun checkStatus(): Boolean {
+        if (activeStatus == "3") {
+            ToastHelper.shortToast(context, "请先完成解冻操作")
             return false
-        }else if (virtaul){
-            ToastHelper.shortToast(context,"请先完成取电操作")
+        } else if (virtaul) {
+            ToastHelper.shortToast(context, "请先完成取电操作")
             return false
         }
         return true
     }
-    private fun initInfoEvent(item:DeviceDetailBean.Data){
+
+    private fun initInfoEvent(item: DeviceDetailBean.Data) {
         contractId = item.device_contract.contract_id
         tvFindLocation.setOnClickListener {
-            if (checkStatus()){
-                 getPermissions(activity,
-                PermissionType.COARSE_LOCATION,
-                PermissionType.FINE_LOCATION,
-                PermissionType.ACCESS_WIFI_STATE,
-                PermissionType.ACCESS_NETWORK_STATE,
-                allGranted = {
-                    startFgt(FgtFindBattery())
-                })
+            if (checkStatus()) {
+                getPermissions(activity,
+                    PermissionType.COARSE_LOCATION,
+                    PermissionType.FINE_LOCATION,
+                    PermissionType.ACCESS_WIFI_STATE,
+                    PermissionType.ACCESS_NETWORK_STATE,
+                    allGranted = {
+                        startFgt(FgtFindBattery())
+                    })
             }
 
         }
         tvWay.setOnClickListener {
-            if (checkStatus()){startFgt(FgtTrajectory())} }
+            if (checkStatus()) {
+                startFgt(FgtTrajectory())
+            }
+        }
         tvSwitch.setOnClickListener {
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -1047,9 +1127,9 @@ class FgtHome : MainTabFragment() {
                 url = Path.GET_MY_DEVICE
                 onSuccess {
                     val result = it.toPOJO<MyDevicesBean>().data
-                    if (result.size >=2 ){
-                        ToastHelper.shortToast(context,"可租用电池数已达上限(2)")
-                    }else if (result.size == 1){
+                    if (result.size >= 2) {
+                        ToastHelper.shortToast(context, "可租用电池数已达上限(2)")
+                    } else if (result.size == 1) {
                         NormalDialog(activity)
                             .apply {
                                 style(NormalDialog.STYLE_TWO)
@@ -1059,17 +1139,20 @@ class FgtHome : MainTabFragment() {
                                 btnText("确认", "取消")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
-                                    ToastHelper.shortToast(context,"请扫描电柜二维码")
-                                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                                        tryToScan()
-                                    })
+                                    ToastHelper.shortToast(context, "请扫描电柜二维码")
+                                    getPermissions(
+                                        getCurrentAty(),
+                                        PermissionType.CAMERA,
+                                        allGranted = {
+                                            tryToScan()
+                                        })
                                 }, OnBtnClickL {
                                     dismiss()
                                 })
 
                             }.show()
-                    } else{
-                        ToastHelper.shortToast(context,"请扫描电柜二维码")
+                    } else {
+                        ToastHelper.shortToast(context, "请扫描电柜二维码")
                         getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                             tryToScan()
                         })
@@ -1081,13 +1164,13 @@ class FgtHome : MainTabFragment() {
         tvReback.setOnClickListener {
             //3.【退还】按钮点击后，如果判断是虚拟电池：“8开头 + 8位”，就走老流程，跳转到“退还”页面（需要上传图片、填写原因那个）
             //否则，进入扫码页，获取到电柜码，调用新接口returnBattery】
-            if (activeStatus == "3"){
-                ToastHelper.shortToast(context,"没有需要退还的电池")
-            }else{
-                if (CURRENT_DEVICEID.startsWith("8") && CURRENT_DEVICEID.length == 8){
+            if (activeStatus == "3") {
+                ToastHelper.shortToast(context, "没有需要退还的电池")
+            } else {
+                if (CURRENT_DEVICEID.startsWith("8") && CURRENT_DEVICEID.length == 8) {
 //                    startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))
-                    ToastHelper.shortToast(context,"没有需要退还的电池")
-                }else{
+                    ToastHelper.shortToast(context, "没有需要退还的电池")
+                } else {
                     EventBus.getDefault().post(BatteryRebackEvent())
                 }
             }
@@ -1095,16 +1178,16 @@ class FgtHome : MainTabFragment() {
 
         }
         changeOpenDoor?.setOnClickListener {
-            if (activeStatus == "3"){
-                ToastHelper.shortToast(context,"请先完成解冻操作")
-            }else{
-                ToastHelper.shortToast(context,"请扫描电柜二维码")
+            if (activeStatus == "3") {
+                ToastHelper.shortToast(context, "请先完成解冻操作")
+            } else {
+                ToastHelper.shortToast(context, "请扫描电柜二维码")
 //                if (hasChangePackege){
-                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                        intent.putExtra("type", if(virtaul) "租电"  else "换电开门")
-                        startActivityForResult(intent, 1)
-                    })
+                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                    intent.putExtra("type", if (virtaul) "租电" else "换电开门")
+                    startActivityForResult(intent, 1)
+                })
 //                }else{
 //                    buyChangePackage()
 //                }
@@ -1124,8 +1207,8 @@ class FgtHome : MainTabFragment() {
             }
         }
         tv_ice.setOnClickListener {
-            if (tv_ice.text.equals("冻结")){
-                if (virtaul){
+            if (tv_ice.text.equals("冻结")) {
+                if (virtaul) {
                     NormalDialog(activity)
                         .apply {
                             style(NormalDialog.STYLE_TWO)
@@ -1141,15 +1224,15 @@ class FgtHome : MainTabFragment() {
                             })
 
                         }.show()
-                }else{
-                    ToastHelper.shortToast(context,"请扫描电柜二维码")
+                } else {
+                    ToastHelper.shortToast(context, "请扫描电柜二维码")
                     getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                         val intent = Intent(activity, ScanQrCodeActivity::class.java)
                         intent.putExtra("type", "冻结")
                         startActivityForResult(intent, 1)
                     })
                 }
-            }else{
+            } else {
                 NormalDialog(activity)
                     .apply {
                         style(NormalDialog.STYLE_TWO)
@@ -1172,58 +1255,71 @@ class FgtHome : MainTabFragment() {
 
     class BatteryRebackEvent;
     @Subscribe
-    fun rebackClick(event:BatteryRebackEvent){
-        ToastHelper.shortToast(context,"请扫描电柜二维码")
+    fun rebackClick(event: BatteryRebackEvent) {
+        ToastHelper.shortToast(context, "请扫描电柜二维码")
         getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
             val intent = Intent(activity, ScanQrCodeActivity::class.java)
             intent.putExtra("type", "退还")
             startActivityForResult(intent, 1)
         })
     }
-    private fun frozen( code:String){
+
+    private fun frozen(code: String) {
         http {
             url = "/apiv6/cabinet/frozen"
             params["device_id"] = CURRENT_DEVICEID
             params["user_id"] = userId
-            if (code != ""){
+            if (code != "") {
                 params["code"] = code
             }
             onSuccess {
-                if (code != ""){
-                    ToastHelper.shortToast(context,"请将电池放入电柜，然后刷新页面")
-                }else{
-                    ToastHelper.shortToast(context,"操作成功")
+                if (code != "") {
+                    ToastHelper.shortToast(context, "请将电池放入电柜，然后刷新页面")
+                } else {
+                    ToastHelper.shortToast(context, "操作成功")
                 }
                 autoRefresh()
             }
-            onFail { i, s ->  }
+            onFail { i, s -> }
         }
     }
-    private fun resumeBattery( ){
+
+    private fun resumeBattery() {
         http {
             url = "/apiv6/cabinet/resume"
             params["device_id"] = CURRENT_DEVICEID
             params["user_id"] = userId
 
             onSuccess {
-                ToastHelper.shortToast(context,"操作成功")
+                ToastHelper.shortToast(context, "操作成功")
 
                 autoRefresh()
             }
-            onFail { i, s ->  }
+            onFail { i, s -> }
         }
     }
+
     /**
      * 购买换电套餐
      */
     private fun buyChangePackage() {
-        ToastHelper.shortToast(context,"当前没有换电套餐，请先购买换电套餐")
+        ToastHelper.shortToast(context, "当前没有换电套餐，请先购买换电套餐")
         activity.let {
             if (it != null) {
                 var listener = View.OnClickListener {
                     when (it.id) {
-                        R.id.option1 -> FgtMain.instance?.start(FgtSinglePay.newInstance(CURRENT_DEVICEID))
-                        R.id.option2 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+                        R.id.option1 -> FgtMain.instance?.start(
+                            FgtSinglePay.newInstance(
+                                CURRENT_DEVICEID
+                            )
+                        )
+
+                        R.id.option2 -> FgtMain.instance?.start(
+                            FgtPayRentMoney.newInstance(
+                                CURRENT_DEVICEID,
+                                FgtPayRentMoney.PAGE_TYPE_UPDATE
+                            )
+                        )
                     }
                 }
                 BuyChangePackagePopup(it, listener)
@@ -1231,7 +1327,6 @@ class FgtHome : MainTabFragment() {
 
         }
     }
-
 
 
     private fun initTabLayout() {
@@ -1247,14 +1342,15 @@ class FgtHome : MainTabFragment() {
             setDefaultSelectedColor(resources.getColor(R.color.white))
             selectTab(0)
             notifyDataChanged()
-            setOnTabClickListener {  index ->
+            setOnTabClickListener { index ->
                 layoutPackage.visibility = if (index == 0) View.VISIBLE else GONE
                 layoutBattery.visibility = if (index == 1) View.VISIBLE else GONE
             }
         }
 
     }
-    private fun showPopMsg(popmsg:DeviceDetailBean.Data.PopMsgBean){
+
+    private fun showPopMsg(popmsg: DeviceDetailBean.Data.PopMsgBean) {
         if (1 == popmsg.show_msg) {
             CommonPromptDialogHelper.promptCommonDialog(
                 activity!!,

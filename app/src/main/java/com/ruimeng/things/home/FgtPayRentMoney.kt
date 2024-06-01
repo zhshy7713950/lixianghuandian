@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
+import com.net.Server
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
@@ -27,6 +30,7 @@ import com.ruimeng.things.home.bean.PaymentOption
 import com.ruimeng.things.home.bean.UpdateGetRentBean
 import com.ruimeng.things.home.view.CompanyDescPopup
 import com.ruimeng.things.home.view.SelectCouponPopup
+import com.ruimeng.things.home.vm.PayRentMoneyViewModel
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.contract.FgtMyContractDetail
@@ -61,19 +65,24 @@ class FgtPayRentMoney : BaseBackFragment() {
     data class EventInstallmentPaymentSuccess(val isNeedPop: Boolean = false)
 
     companion object {
+        const val TAG = "FgtPayRentMoneyTag"
         public val PAGE_TYPE_CREATE = 0
         public val PAGE_TYPE_UPDATE = 1
-        fun newInstance(deviceId: String, type: Int = PAGE_TYPE_CREATE): FgtPayRentMoney {
+        fun newInstance(deviceId: String, type: Int = PAGE_TYPE_CREATE,cabinetCode: String? = null): FgtPayRentMoney {
             val fgt = FgtPayRentMoney()
             val b = Bundle()
             b.putString("deviceId", deviceId)
             b.putInt("pageType", type)
+            b.putString("cabinetCode", cabinetCode)
+            Log.d(TAG,"cabinetCode = $cabinetCode")
             fgt.arguments = b
             return fgt
         }
     }
 
+    private val vm: PayRentMoneyViewModel by viewModels()
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
+    private val cabinetCode: String? by lazy { arguments?.getString("cabinetCode") }//柜子编码
     val pageType: Int by lazy {
         arguments?.getInt("pageType") ?: PAGE_TYPE_CREATE
     } //页面类型 0 创建租金，1 续费升级
@@ -270,11 +279,24 @@ class FgtPayRentMoney : BaseBackFragment() {
         computeAmount()
     }
 
+    private fun initAgentCodeView(){
+        if(cabinetCode.isNullOrEmpty()){//柜码为空，直接赋值
+            tv_agnet_name_pay_rent_money.text = baseInfo!!.agentCode
+        }else{
+            vm.agentInfo.observe(this, Observer {
+                it?.code?.let {code->
+                    tv_agnet_name_pay_rent_money.text = code
+                }
+            })
+            vm.getAgentByCode(cabinetCode!!)
+        }
+    }
+
     private fun initViewAfterData(list: List<PaymentInfo>) {
         baseInfo.let {
+            initAgentCodeView()
             tv_battery_num_pay_rent_money.text = it!!.device_id
             tv_battery_model_pay_rent_money.text = it!!.model_name
-            tv_agnet_name_pay_rent_money.text = it!!.agentCode
             et_agnet_name_deposit.text = it!!.agentName
             btn_return_deposit_pay_rent_money.visibility =
                 if (it!!.btn_return == 1) View.GONE else View.GONE
@@ -295,33 +317,30 @@ class FgtPayRentMoney : BaseBackFragment() {
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         rv_rant_long_pay_rent_money.adapter = basePackageAdapter
 
-        basePackageAdapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
-            override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+        basePackageAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
                 newGetRentBean = list.get(p2)
                 basePackageAdapter.selectPos = p2
                 basePackageAdapter.notifyDataSetChanged()
                 resetSelectOptionList()
             }
-        })
         rv_change_package.layoutManager = GridLayoutManager(activity, 2)
         rv_change_package.adapter = changePackageAdapter
-        changePackageAdapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
-            override fun onItemClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+        changePackageAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
                 selectOption = changePackageAdapter.data.get(p2)
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
-//                selectOption.let {
-//                    if (it != null) {
-//                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
-//                            it.show_start_time,
-//                            it.show_end_time
-//                        )
-//                    }
-//                }
-
+                //                selectOption.let {
+                //                    if (it != null) {
+                //                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
+                //                            it.show_start_time,
+                //                            it.show_end_time
+                //                        )
+                //                    }
+                //                }
             }
-        })
         setSelectOption()
         computeAmount()
 
@@ -642,8 +661,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                 onSuccessWithMsg { res, msg ->
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<NewGetRentBean>().data
-                        if (!result.isEmpty()) {
-                            baseInfo = result.get(0)
+                        if (result.isNotEmpty()) {
+                            baseInfo = result[0]
                             initViewAfterData(result)
                         }
                     }
@@ -871,6 +890,9 @@ class FgtPayRentMoney : BaseBackFragment() {
         params["deviceId"] = deviceId
         params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
         params["appType"] = "lxhd"
+        cabinetCode?.let {
+            params["code"] = it
+        }
         if (couponId != 0) {
             params["couponId"] = "${couponId}"
         }

@@ -30,7 +30,6 @@ import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.NotificationHelper.mContext
 import wongxd.common.getCurrentAty
-import wongxd.common.loadImg
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.http

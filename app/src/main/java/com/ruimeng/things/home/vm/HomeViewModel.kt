@@ -9,19 +9,19 @@ import com.entity.remote.RentStep1Remote
 import com.entity.remote.ResCommon
 import com.net.call.BizService
 import com.net.getOrElse
+import com.net.whenError
 import com.net.whenSuccess
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
 
-    private val _rentStep1LiveData = MutableLiveData<ResCommon<RentStep1Remote>>()
-    val rentStep1LiveData: LiveData<ResCommon<RentStep1Remote>> = _rentStep1LiveData
-
-    fun rentStep1(deviceId: String, cgModel: String) {
+    fun rentStep1(deviceId: String, cgModel: String): LiveData<ResCommon<RentStep1Remote>>{
+        val rentStep1LiveData = MutableLiveData<ResCommon<RentStep1Remote>>()
         viewModelScope.launch {
             BizService.rentStep1(RentStep1Local(deviceId, cgModel)).whenSuccess {
-                _rentStep1LiveData.value = it
+                rentStep1LiveData.value = it
             }
         }
+        return rentStep1LiveData
     }
 }

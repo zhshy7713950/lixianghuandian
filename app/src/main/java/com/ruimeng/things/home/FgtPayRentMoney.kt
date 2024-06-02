@@ -68,13 +68,17 @@ class FgtPayRentMoney : BaseBackFragment() {
         const val TAG = "FgtPayRentMoneyTag"
         public val PAGE_TYPE_CREATE = 0
         public val PAGE_TYPE_UPDATE = 1
-        fun newInstance(deviceId: String, type: Int = PAGE_TYPE_CREATE,cabinetCode: String? = null): FgtPayRentMoney {
+        fun newInstance(
+            deviceId: String,
+            type: Int = PAGE_TYPE_CREATE,
+            cabinetCode: String? = null
+        ): FgtPayRentMoney {
             val fgt = FgtPayRentMoney()
             val b = Bundle()
             b.putString("deviceId", deviceId)
             b.putInt("pageType", type)
             b.putString("cabinetCode", cabinetCode)
-            Log.d(TAG,"cabinetCode = $cabinetCode")
+            Log.d(TAG, "cabinetCode = $cabinetCode")
             fgt.arguments = b
             return fgt
         }
@@ -99,10 +103,19 @@ class FgtPayRentMoney : BaseBackFragment() {
         super.onLazyInitView(savedInstanceState)
         EventBus.getDefault().register(this)
         initTopbar(topbar, if (pageType == PAGE_TYPE_CREATE) "购买套餐" else "续期升级")
+        initEvent()
         getRent()
         dealPayWay()
         initView()
         initTicket()
+    }
+
+    private fun initEvent() {
+        vm.agentInfo.observe(this, Observer {
+            it?.code?.let { code ->
+                tv_agnet_name_pay_rent_money.text = code
+            }
+        })
     }
 
     private fun initView() {
@@ -133,23 +146,23 @@ class FgtPayRentMoney : BaseBackFragment() {
                     "2.请在【租电套餐】选择完成后，再继续选择对应的换电服务\n" +
                     "3.本套餐起租后，不支持退租金\n" +
                     "注：【换电套餐】的有效期限取决于【租电套餐】。若【租电套餐】失效，那么【换电套餐】也会无法继续使用"
-            activity?.let { it1 -> CompanyDescPopup(it1,"换电套餐说明",text) }
+            activity?.let { it1 -> CompanyDescPopup(it1, "换电套餐说明", text) }
         }
         tv_option_desc.setOnClickListener {
             var text = "1.【租电套餐】选择完毕后，”带充电器“选项将会显示出对应的押金金额\n" +
                     "2.同时，”租赁车架“选项，将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
-            if (pageType == PAGE_TYPE_UPDATE){
+            if (pageType == PAGE_TYPE_UPDATE) {
                 text = "1.若在【已购套餐】中，已经支付过”充电器“的押金，则后续无需再次支付\n" +
                         "2.若在【已购套餐】中，已经选择过”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择如下：\n" +
                         "1）选择其他【租电套餐】，”租赁车架“选项将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
             }
-            activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
+            activity?.let { it1 -> CompanyDescPopup(it1, "附加选项说明", text) }
         }
         tv_rent_desc.setOnClickListener {
             var text = "1.租用电池的基础套餐费用\n" +
                     "换电操作不会引起租电套餐费用变更\n" +
                     "2.本套餐起租后，不支持退租金"
-            activity?.let { it1 -> CompanyDescPopup(it1,"附加选项说明",text) }
+            activity?.let { it1 -> CompanyDescPopup(it1, "附加选项说明", text) }
         }
         tv_option_time.text = showExpireTitle() + "无"
         tv_rant_long_pay_time.text = showExpireTitle() + "无"
@@ -279,15 +292,10 @@ class FgtPayRentMoney : BaseBackFragment() {
         computeAmount()
     }
 
-    private fun initAgentCodeView(){
-        if(cabinetCode.isNullOrEmpty()){//柜码为空，直接赋值
+    private fun initAgentCodeView() {
+        if (cabinetCode.isNullOrEmpty()) {//柜码为空，直接赋值
             tv_agnet_name_pay_rent_money.text = baseInfo!!.agentCode
-        }else{
-            vm.agentInfo.observe(this, Observer {
-                it?.code?.let {code->
-                    tv_agnet_name_pay_rent_money.text = code
-                }
-            })
+        } else {
             vm.getAgentByCode(cabinetCode!!)
         }
     }
@@ -358,20 +366,27 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         iv_check_pay_rent_money.setOnClickListener {
-            if (pageType == PAGE_TYPE_CREATE){
-                if (sighStatus){
+            if (pageType == PAGE_TYPE_CREATE) {
+                if (sighStatus) {
                     IS_CHECKED_PROTOCOL = true
                     iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
-                }else{
+                } else {
                     baseInfo.let {
                         if (it != null) {
                             start(
-                                FgtContractSignStep1.newInstance(baseInfo!!.contract_id, "", 0, if (pageType == PAGE_TYPE_CREATE) 2 else 1,deviceId,baseInfo!!.model_name)
+                                FgtContractSignStep1.newInstance(
+                                    baseInfo!!.contract_id,
+                                    "",
+                                    0,
+                                    if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                                    deviceId,
+                                    baseInfo!!.model_name
+                                )
                             )
                         }
                     }
                 }
-            }else{
+            } else {
                 if (IS_CHECKED_PROTOCOL) {
                     iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_unselect)
                 } else {
@@ -387,15 +402,22 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
 //            val dlg = DialogFragmentRentProtocol()
 //            dlg.show(childFragmentManager, "protocol")
-            if (sighStatus){
+            if (sighStatus) {
                 baseInfo.let {
                     if (it != null) {
-                        start(FgtMyContractDetail.newInstance(it.contract_id,it.device_id))
+                        start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
                     }
                 }
-            }else{
+            } else {
                 start(
-                    FgtContractSignStep1.newInstance(baseInfo!!.contract_id, "", 0, if (pageType == PAGE_TYPE_CREATE) 2 else 1,deviceId,baseInfo!!.model_name)
+                    FgtContractSignStep1.newInstance(
+                        baseInfo!!.contract_id,
+                        "",
+                        0,
+                        if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                        deviceId,
+                        baseInfo!!.model_name
+                    )
                 )
             }
 
@@ -408,11 +430,11 @@ class FgtPayRentMoney : BaseBackFragment() {
                     SelectCouponPopup(it1, couponList, couponId,
                         object : SelectCouponPopup.OnCouponSelect {
 
-                            override fun selectId(id: Int,label:String) {
+                            override fun selectId(id: Int, label: String) {
                                 couponId = id;
-                                if (couponId == 0){
+                                if (couponId == 0) {
                                     tv_ticket_pay_rent_money.text = "不使用优惠券"
-                                }else{
+                                } else {
                                     tv_ticket_pay_rent_money.text = label
                                 }
                                 computeAmount()
@@ -428,7 +450,13 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
 
 
-    private fun showOptionSelector(paymentInfo: PaymentInfo,type:String,textView: TextView,clickView: View,titleText:TextView){
+    private fun showOptionSelector(
+        paymentInfo: PaymentInfo,
+        type: String,
+        textView: TextView,
+        clickView: View,
+        titleText: TextView
+    ) {
         when (type) {
             "5" -> titleText.text = "是否带充电器"
             "4" -> titleText.text = "是否租赁车架"
@@ -436,75 +464,107 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         textView.textColor = Color.parseColor("#929FAB")
         clickView.setOnClickListener {}
-        if (paymentInfo.pname == "暂不续期"){
+        if (paymentInfo.pname == "暂不续期") {
             textView.text = "无需选择"
-        }else{
+        } else {
             val filterOptions = paymentInfo.options.filter { it.option_type == type }
-            if (filterOptions != null && filterOptions.size > 0){
-                when (type){
-                    "5"->titleText.text = TextUtil.getDoubleSizeText("是否带充电器","(押金${filterOptions[0].price}元)",0.9f)
-                    "4"->titleText.text =TextUtil.getDoubleSizeText("是否租赁车架","(${filterOptions[0].price}元/月)",0.9f)
-                    "3"->titleText.text = "是否购买保险"
+            if (filterOptions != null && filterOptions.size > 0) {
+                when (type) {
+                    "5" -> titleText.text = TextUtil.getDoubleSizeText(
+                        "是否带充电器",
+                        "(押金${filterOptions[0].price}元)",
+                        0.9f
+                    )
+
+                    "4" -> titleText.text = TextUtil.getDoubleSizeText(
+                        "是否租赁车架",
+                        "(${filterOptions[0].price}元/月)",
+                        0.9f
+                    )
+
+                    "3" -> titleText.text = "是否购买保险"
                 }
 
                 var alreadyBuy = false
-                if (pageType == PAGE_TYPE_UPDATE){
-                    if (type == "5" && tv_other_option1.text.toString() !="否"){
+                if (pageType == PAGE_TYPE_UPDATE) {
+                    if (type == "5" && tv_other_option1.text.toString() != "否") {
                         alreadyBuy = true
-                    }else if (type == "4" && tv_other_option2.text.toString() !="否"){
+                    } else if (type == "4" && tv_other_option2.text.toString() != "否") {
                         alreadyBuy = true
                     }
                 }
-                if (alreadyBuy){
-                    val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
-                    textView.text = "是(${ price.toDouble() }元)"
+                if (alreadyBuy) {
+                    val price =
+                        BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
+                    textView.text = "是(${price.toDouble()}元)"
                     textView.textColor = Color.parseColor("#929FAB")
-                }else{
+                } else {
                     textView.textColor = Color.WHITE
                     textView.text = "请选择"
                 }
                 clickView.setOnClickListener {
-                    if (alreadyBuy){
-                        if (type == "5"){
-                            ToastHelper.shortToast(context,"”已购套餐“中已支付过充电器押金，无需再次支付")
-                        }else{
-                            ToastHelper.shortToast(context,"”已购套餐“中已经选择过租赁车架“，无法进行更改")
+                    if (alreadyBuy) {
+                        if (type == "5") {
+                            ToastHelper.shortToast(
+                                context,
+                                "”已购套餐“中已支付过充电器押金，无需再次支付"
+                            )
+                        } else {
+                            ToastHelper.shortToast(
+                                context,
+                                "”已购套餐“中已经选择过租赁车架“，无法进行更改"
+                            )
                         }
-                    }else{
+                    } else {
                         var filters: ArrayList<String> = ArrayList()
                         filters.add("否")
-                        if (type == "3"){
+                        if (type == "3") {
                             filterOptions.forEach {
-                                filters.add("${it.name }(${it.price}元)")
+                                filters.add("${it.name}(${it.price}元)")
                             }
-                        }else if (type == "5"){
-                            filters.add("是(${ filterOptions.get(0).price }元)")
-                        } else{
-                            val price = BigDecimal(filterOptions.get(0).price).multiply(BigDecimal(paymentInfo.time_num))
-                            filters.add("是(${ price.toDouble() }元)")
+                        } else if (type == "5") {
+                            filters.add("是(${filterOptions.get(0).price}元)")
+                        } else {
+                            val price = BigDecimal(filterOptions.get(0).price).multiply(
+                                BigDecimal(paymentInfo.time_num)
+                            )
+                            filters.add("是(${price.toDouble()}元)")
                         }
-                        OptionPickerUtil.showSingleOptionPicker(activity,filters){
+                        OptionPickerUtil.showSingleOptionPicker(activity, filters) {
                             textView.text = it
                             computeAmount()
                         }
                     }
 
                 }
-            }else {
+            } else {
                 textView.text = "否"
             }
         }
-        if (type == "5" && tv_other_option1.text.toString() !="否" && pageType == PAGE_TYPE_UPDATE){
+        if (type == "5" && tv_other_option1.text.toString() != "否" && pageType == PAGE_TYPE_UPDATE) {
             textView.text = "押金已付"
             textView.textColor = Color.parseColor("#929FAB")
         }
     }
-    private fun setSelectOption(){
+
+    private fun setSelectOption() {
         newGetRentBean.let {
             if (it != null) {
 //                showOptionSelector(it,"5",tv_select_charge,cl_select_charge,tv_select_charge_title)
-                showOptionSelector(it,"4",tv_select_platform,cl_select_platform,tv_select_platform_title)
-                showOptionSelector(it,"3",tv_select_insurance,cl_select_insurance,tv_select_insurance_title)
+                showOptionSelector(
+                    it,
+                    "4",
+                    tv_select_platform,
+                    cl_select_platform,
+                    tv_select_platform_title
+                )
+                showOptionSelector(
+                    it,
+                    "3",
+                    tv_select_insurance,
+                    cl_select_insurance,
+                    tv_select_insurance_title
+                )
             }
         }
     }
@@ -523,7 +583,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
             baseInfo.let {
                 if (it != null) {
-                    start(FgtMyContractDetail.newInstance(it.contract_id,it.device_id))
+                    start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
                 }
             }
 
@@ -627,7 +687,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             onSuccess {
                 IS_TICKET_DATA_INIT = true
                 val result = it.toPOJO<MyCouponBean>().data
-                if (result.isEmpty() ) {
+                if (result.isEmpty()) {
                     tv_ticket_pay_rent_money.text = "暂无可用优惠券"
                 } else {
                     couponList.addAll(result)
@@ -721,12 +781,12 @@ class FgtPayRentMoney : BaseBackFragment() {
                     userOptions.filter { it.option_type == "4" }.first().price
                 }元)" else "否"
             }"
-            if (userOptions.count { it.option_type == "3" } > 0){
+            if (userOptions.count { it.option_type == "3" } > 0) {
                 val option = userOptions.filter { it.option_type == "3" }.first()
-                val price = BigDecimal(option.active_time) .multiply(BigDecimal(option.price))
-                tv_other_option3.text ="保险${option.active_time}个月(${price.toDouble()}元)"
-            }else{
-                tv_other_option3.text ="否"
+                val price = BigDecimal(option.active_time).multiply(BigDecimal(option.price))
+                tv_other_option3.text = "保险${option.active_time}个月(${price.toDouble()}元)"
+            } else {
+                tv_other_option3.text = "否"
             }
 //            val changeOptions = userOptions.filter { it.option_type == "2" }
             ll_change_package_no_active.visibility = View.GONE
@@ -772,8 +832,9 @@ class FgtPayRentMoney : BaseBackFragment() {
             jsonParam = getSubmitParam()
             onSuccessWithMsg { res, msg ->
                 val result = res.toPOJO<CountAmountBean>().data
-                tv_total_price.text = TextUtil.getMoneyText("${DecimalFormat("#.##").format(result.totalPrice)}")
-                tv_coupon_price.text = "已优惠¥${ DecimalFormat("#.##").format(result.couponAmount)}"
+                tv_total_price.text =
+                    TextUtil.getMoneyText("${DecimalFormat("#.##").format(result.totalPrice)}")
+                tv_coupon_price.text = "已优惠¥${DecimalFormat("#.##").format(result.couponAmount)}"
                 if (submit) {
                     countPay()
                 }
@@ -925,7 +986,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         return params
     }
 
-    private fun getSignStatus(contractId: String){
+    private fun getSignStatus(contractId: String) {
         http {
             url = PathV3.SIGN_CONTRACT
             params["contract_id"] = contractId
@@ -936,7 +997,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
             }
             onFail { i, s ->
-                if ( i == 202){
+                if (i == 202) {
                     sighStatus = true
 
                 }

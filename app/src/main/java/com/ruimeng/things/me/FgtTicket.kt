@@ -82,34 +82,7 @@ class FgtTicket : BaseBackFragment() {
                                 ToastHelper.shortToast(context, "请先完成押金支付")
                                 return
                             }
-                            vm.userPaymentInfo.observe(this@FgtTicket, Observer {info ->
-                                if(info.deposit_status != "1" && info.rent_status != "1"){//无押金、无租金
-                                    ToastHelper.shortToast(context, "请先完成押金支付")
-                                }else if(info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "0"){//有押金、无租金、未租
-                                    //扫码后跳转
-                                    FgtHome.tryToScan(AtyScanQrcode.TYPE_PAY_RENT)
-                                }else if(info.active_status == "1" && info.deposit_status == "1" && info.rent_status == "1"){//有押金、有租金、待取电/已取电，跳续期升级
-                                    FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
-                                }else if(info.active_status == "3" && info.deposit_status == "1" && info.rent_status == "1"){//有押金 + 有租金（已冻结）
-                                    ToastHelper.shortToast(context, "请先完成解冻操作")
-                                }else if(info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "1"){//有押金 + 有租金（已过期）
-                                    FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_CREATE))
-                                }
-                            })
                             vm.getUserPaymentInfo(FgtHome.userId,FgtHome.CURRENT_DEVICEID)
-//                            http {
-//                                url = "apiv4/rentstep1"
-//                                params["device_id"] = FgtHome.CURRENT_DEVICEID
-//                                params["cg_mode"] = "1"
-//                                onSuccess {
-//                                    val json = JSONObject(it)
-//                                    val data = json.optJSONObject("data")
-//                                    val status = data.optInt("status")
-//                                    when (status) {
-//                                        1 -> FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,if(FgtHome.hasChangePackege) FgtPayRentMoney.PAGE_TYPE_UPDATE else FgtPayRentMoney.PAGE_TYPE_CREATE))
-//                                    }
-//                                }
-//                            }
                         }
                     }else{
                         adapter.data.get(p2).expond = !adapter.data.get(p2).expond
@@ -123,7 +96,24 @@ class FgtTicket : BaseBackFragment() {
 
         srl_ticket?.setOnRefreshListener { page = 1;getInfo() }
         srl_ticket?.setOnLoadMoreListener { getInfo() }
+        initEvent()
+    }
 
+    private fun initEvent() {
+        vm.userPaymentInfo.observe(this@FgtTicket, Observer {info ->
+            if(info.deposit_status != "1" && info.rent_status != "1"){//无押金、无租金
+                ToastHelper.shortToast(context, "请先完成押金支付")
+            }else if(info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "0"){//有押金、无租金、未租
+                //扫码后跳转
+                FgtHome.tryToScan(AtyScanQrcode.TYPE_PAY_RENT)
+            }else if(info.active_status == "1" && info.deposit_status == "1" && info.rent_status == "1"){//有押金、有租金、待取电/已取电，跳续期升级
+                FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
+            }else if(info.active_status == "3" && info.deposit_status == "1" && info.rent_status == "1"){//有押金 + 有租金（已冻结）
+                ToastHelper.shortToast(context, "请先完成解冻操作")
+            }else if(info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "1"){//有押金 + 有租金（已过期）
+                FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_CREATE))
+            }
+        })
     }
 
     private var isUsed = 0

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.View.GONE
@@ -270,8 +271,9 @@ class FgtHome : MainTabFragment() {
     private fun rentStep1(deviceId: String?, type: Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
         deviceId ?: return
 
-        vm.rentStep1(deviceId, "1")
-        vm.rentStep1LiveData.observe(this, Observer { rent ->
+        Log.d("scanTag","rentStep1被调用")
+
+        vm.rentStep1(deviceId, "1").observe(this, Observer { rent ->
             //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
             when (rent.data.status) {
                 0 -> FgtMain.instance?.start(FgtDeposit.newInstance(deviceId, getIsHost))

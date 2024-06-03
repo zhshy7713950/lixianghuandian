@@ -346,7 +346,9 @@ class FgtDeposit : BaseBackFragment() {
                 dlgPayProgress = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
                 dlgPaySuccessed = getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") {
                     //押金支付成功  跳转租金支付界面
-                    startWithPop(FgtPayRentMoney.newInstance(deviceId))
+//                    startWithPop(FgtPayRentMoney.newInstance(deviceId))
+                    pop()
+                    FgtHome.tryToScan(prefix = AtyScanQrcode.TYPE_PAY_RENT)
                     EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                 }
                 dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")

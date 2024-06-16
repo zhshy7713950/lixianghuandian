@@ -17,6 +17,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.FgtViewBigImg
 import com.ruimeng.things.PathV3
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.contract.bean.MyContractDetailBean
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManager
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManagerListener
@@ -157,17 +158,23 @@ class FgtMyContractDetail : BaseBackFragment() {
                     tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
-                    tv_deposit_my_contract_detail.text = "${bean.deposit}元"
+                    tv_deposit_my_contract_detail.text =
+                        if (FgtHome.payType == "101") "已免押" else "${bean.deposit}元"
                     tv_rent_money_my_contract_detail.text = "${bean.rent}元"
-                    if (bean.paymentName == ""){
-                        tv_base_package.text = TextUtil.getSpannableString(arrayOf("租电套餐：","暂无"))
+                    if (bean.paymentName == "") {
+                        tv_base_package.text =
+                            TextUtil.getSpannableString(arrayOf("租电套餐：", "暂无"))
                         tv_base_package_time.visibility = View.GONE
-                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","暂无"))
+                        tv_change_package.text =
+                            TextUtil.getSpannableString(arrayOf("换电套餐：", "暂无"))
                         tv_change_package_time.visibility = View.GONE
-                    }else{
-                        tv_base_package.text = TextUtil.getSpannableString(arrayOf("租电套餐：",bean.paymentName))
-                        tv_base_package_time.text = TextUtil.formatTime(bean.begin_time,bean.exp_time)
-                        tv_change_package.text = TextUtil.getSpannableString(arrayOf("换电套餐：","次数无限制"))
+                    } else {
+                        tv_base_package.text =
+                            TextUtil.getSpannableString(arrayOf("租电套餐：", bean.paymentName))
+                        tv_base_package_time.text =
+                            TextUtil.formatTime(bean.begin_time, bean.exp_time)
+                        tv_change_package.text =
+                            TextUtil.getSpannableString(arrayOf("换电套餐：", "次数无限制"))
                         tv_change_package_time.text = tv_base_package_time.text
                     }
 

@@ -15,6 +15,7 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
+import com.utils.isZero
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -112,7 +113,7 @@ class FgtMe : MainTabFragment() {
 
             tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = "" + userinfo.devicedeposit
+            tv_ya_money_me.text = if(userinfo.devicedeposit == null) "" else if (userinfo.devicedeposit.isZero()) "已免押" else userinfo.devicedeposit
 
         }
 

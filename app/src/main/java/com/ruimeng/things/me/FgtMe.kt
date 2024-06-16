@@ -16,6 +16,7 @@ import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
 import com.utils.isZero
+import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -38,7 +39,7 @@ class FgtMe : MainTabFragment() {
         EventBus.getDefault().register(this)
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
-            if (!TextUtils.isEmpty(userinfo.logo)){
+            if (!TextUtils.isEmpty(userinfo.logo)) {
                 iv_header_me.loadImg(userinfo.logo)
             }
 
@@ -64,8 +65,6 @@ class FgtMe : MainTabFragment() {
 
 //                val del = delegate as RoundViewDelegate
 //                del.strokeColor = if (userinfo.realname_auth == 1) Color.GREEN else Color.WHITE
-
-
 
 
                 setOnClickListener {
@@ -113,7 +112,7 @@ class FgtMe : MainTabFragment() {
 
             tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = if(userinfo.devicedeposit == null) "" else if (userinfo.devicedeposit.isZero()) "已免押" else userinfo.devicedeposit
+            tv_ya_money_me.text = showDeposit(userinfo.devicenumber,userinfo.devicedeposit)
 
         }
 
@@ -126,14 +125,16 @@ class FgtMe : MainTabFragment() {
         ll_safe_center.setOnClickListener { startFgt(FgtSafeCenter()) }
 
 
-        ll_about_us.setOnClickListener {   http {
-            method = "get"
-            url = Path.ABOUT_ME
+        ll_about_us.setOnClickListener {
+            http {
+                method = "get"
+                url = Path.ABOUT_ME
 
-            onResponse {
-                AtyWeb2.start("关于我们", it)
+                onResponse {
+                    AtyWeb2.start("关于我们", it)
+                }
             }
-        } }
+        }
 
         ll_setting_me.setOnClickListener { startFgt(FgtSetting()) }
 
@@ -145,11 +146,11 @@ class FgtMe : MainTabFragment() {
                 .contentView(R.layout.alert_phone_call_dialog)
                 .bindData { anyLayer ->
                     anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(tel)
-                    anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
+                    anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener {
                         SystemUtils.call(activity, tel)
                         anyLayer.dismiss()
                     }
-                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
+                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
                         anyLayer.dismiss()
                     }
                 }.backgroundColorInt(Color.parseColor("#85000000"))
@@ -212,11 +213,18 @@ class FgtMe : MainTabFragment() {
             startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
         tv_ya_money_me.setOnClickListener {
-            if ( tv_ya_money_me.text != "0.00"){
+            if (tv_ya_money_me.text != "0.00") {
                 startFgt(FgtMeDeposit())
             }
 
         }
+    }
+
+    private fun showDeposit(deviceNumber: String?, deviceDeposit: String?): String {
+        if (deviceNumber.safeToInt() > 0) {
+            return if (deviceDeposit == null) "0.00" else if (deviceDeposit.isZero()) "已免押" else deviceDeposit
+        }
+        return deviceDeposit ?: "0.00"
     }
 
     fun startFgt(toFgt: SupportFragment) {
@@ -225,6 +233,7 @@ class FgtMe : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_me
     class RefreshMe
+
     @Subscribe
     public fun refreshStation(event: RefreshMe) {
         srl_me?.autoRefresh()

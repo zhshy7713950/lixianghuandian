@@ -16,6 +16,7 @@ import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
 import com.utils.isZero
+import com.utils.safeToFloat
 import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_me.*
 import me.yokeyword.fragmentation.SupportFragment
@@ -112,7 +113,7 @@ class FgtMe : MainTabFragment() {
 
             tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = showDeposit(userinfo.freeMark,userinfo.devicedeposit)
+            tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
         }
 
@@ -213,16 +214,19 @@ class FgtMe : MainTabFragment() {
             startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
         tv_ya_money_me.setOnClickListener {
-            if (!tv_ya_money_me.text.toString().isZero()) {
-                startFgt(FgtMeDeposit())
-            }
+            startFgt(FgtMeDeposit())
         }
     }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {
-        return if (freeMark == "1") {//存在免押
+        return if (deviceDeposit.safeToFloat() > 0) {
+            tv_ya_money_me.isEnabled = true
+            return deviceDeposit ?: "0.00"
+        } else if (freeMark == "1") {//存在免押
+            tv_ya_money_me.isEnabled = true
             "已免押"
-        }else {
+        } else {
+            tv_ya_money_me.isEnabled = false
             deviceDeposit ?: "0.00"
         }
     }

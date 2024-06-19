@@ -9,11 +9,19 @@ val pass = {}
 
 inline fun String?.isZero() = "0" == this || "0.00" == this
 fun String?.safeToInt(): Int {
-    try {
-        return this?.toInt() ?: 0
+    return try {
+        this?.toInt() ?: 0
     } catch (e: Exception) {
         e.printStackTrace()
-    } finally {
-        return 0
+        0
+    }
+}
+
+fun String?.safeToFloat(): Float {
+    return try {
+        this?.toFloat() ?: 0f
+    } catch (e: Exception) {
+        e.printStackTrace()
+        0f
     }
 }

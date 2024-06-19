@@ -112,7 +112,7 @@ class FgtMe : MainTabFragment() {
 
             tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = showDeposit(userinfo.devicenumber,userinfo.devicedeposit)
+            tv_ya_money_me.text = showDeposit(userinfo.freeMark,userinfo.devicedeposit)
 
         }
 
@@ -213,18 +213,18 @@ class FgtMe : MainTabFragment() {
             startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
         tv_ya_money_me.setOnClickListener {
-            if (tv_ya_money_me.text != "0.00") {
+            if (!tv_ya_money_me.text.toString().isZero()) {
                 startFgt(FgtMeDeposit())
             }
-
         }
     }
 
-    private fun showDeposit(deviceNumber: String?, deviceDeposit: String?): String {
-        if (deviceNumber.safeToInt() > 0) {
-            return if (deviceDeposit == null) "0.00" else if (deviceDeposit.isZero()) "已免押" else deviceDeposit
+    private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {
+        return if (freeMark == "1") {//存在免押
+            "已免押"
+        }else {
+            deviceDeposit ?: "0.00"
         }
-        return deviceDeposit ?: "0.00"
     }
 
     fun startFgt(toFgt: SupportFragment) {

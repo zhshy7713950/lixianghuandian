@@ -202,7 +202,7 @@ class FgtHome : MainTabFragment() {
         WaitViewController.from(root_has_item) { renderChilds() }
 
         srl_home?.setEnableLoadMore(false)
-        srl_home.setOnRefreshListener { getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID) }
+        srl_home.setOnRefreshListener { getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }) }
 
         srl_home.autoRefresh()
 
@@ -1181,6 +1181,11 @@ class FgtHome : MainTabFragment() {
 
         }
         changeOpenDoor?.setOnClickListener {
+            if (CURRENT_DEVICEID.isNullOrEmpty()){
+                ToastHelper.shortToast(context,"操作失败，请刷新后重试")
+                getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
+                return@setOnClickListener
+            }
             if (activeStatus == "3") {
                 ToastHelper.shortToast(context, "请先完成解冻操作")
             } else {

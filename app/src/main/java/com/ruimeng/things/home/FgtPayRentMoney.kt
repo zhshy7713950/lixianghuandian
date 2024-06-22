@@ -113,7 +113,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun initEvent() {
         vm.agentInfo.observe(this, Observer {
             it?.code?.let { code ->
-                tv_agnet_name_pay_rent_money.text = code
+                tv_agnet_name_pay_rent_money.text = "${it.agentName}(${code})"
             }
         })
     }
@@ -294,7 +294,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
     private fun initAgentCodeView() {
         if (cabinetCode.isNullOrEmpty()) {//柜码为空，直接赋值
-            tv_agnet_name_pay_rent_money.text = baseInfo!!.agentCode
+            tv_agnet_name_pay_rent_money.text = "${baseInfo!!.agentName}(${baseInfo!!.agentCode})"
         } else {
             vm.getAgentByCode(cabinetCode!!)
         }

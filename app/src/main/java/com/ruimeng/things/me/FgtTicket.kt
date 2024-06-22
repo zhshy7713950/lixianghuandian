@@ -165,7 +165,7 @@ class FgtTicket : BaseBackFragment() {
                         a.setTextColor(R.id.tv_money,Color.parseColor("#F9BB6C"))
                             .setTextColor(R.id.tv_coupon_name,Color.parseColor("#F9BB6C"))
                             .setTextColor(R.id.tv_limit,Color.parseColor("#FFFFFF"))
-                            .setText(R.id.tv_use,"未使用")
+                            .setText(R.id.tv_use,"去使用")
 
                     }else if (isUsed == 1){
                         a.setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))

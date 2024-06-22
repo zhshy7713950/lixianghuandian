@@ -115,7 +115,7 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
 
         //设置希望展示的地图缩放级别
-        aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
+        aMap?.moveCamera(CameraUpdateFactory.zoomTo(13f))
 
         aMap?.setOnMarkerClickListener {
             selectMarker(it)

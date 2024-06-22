@@ -417,7 +417,7 @@ class FgtHome : MainTabFragment() {
             }
 
             else -> {
-                tv_add_device.text = "点击添加"
+                tv_add_device.text = "扫码租电"
                 tv_log_info.text = "您还没有添加电池设备"
                 iv_add_device.visibility = View.VISIBLE
                 btnReturnInfo.visibility = GONE
@@ -1088,10 +1088,11 @@ class FgtHome : MainTabFragment() {
         if (activeStatus == "3") {
             ToastHelper.shortToast(context, "请先完成解冻操作")
             return false
-        } else if (virtaul) {
-            ToastHelper.shortToast(context, "请先完成取电操作")
-            return false
         }
+//        else if (virtaul) {
+//            ToastHelper.shortToast(context, "请先完成取电操作")
+//            return false
+//        }
         return true
     }
 

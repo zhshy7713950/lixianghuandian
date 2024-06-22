@@ -29,7 +29,8 @@ data class NetStationDetailBeanTwo(
                 var device_id: String = "",
                 var electricity: String = "",
                 var status: String = "",
-                var pos: String = ""
+                var pos: String = "",
+                var device_type: String? = ""
             )
         }
     }

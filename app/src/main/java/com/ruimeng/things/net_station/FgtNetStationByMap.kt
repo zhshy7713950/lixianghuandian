@@ -281,7 +281,7 @@ class FgtNetStationByMap : BaseBackFragment() {
         }
         setSuitZoom(locations)
         stationAdapter.setNewData(locations)
-        zoomToSpan()
+//        zoomToSpan()
         selectMarker?.let {
             selectMarker(it)
         }
@@ -335,17 +335,23 @@ class FgtNetStationByMap : BaseBackFragment() {
      */
     private fun setSuitZoom(list: List<NetStationBean.Data.X>) {
 
-//        var nearestDistance = 0f
-//        list.forEach {
-//            val distance = AMapUtils.calculateLineDistance(
-//                LatLng(mCurrentLat, mCurrentLon),
-//                LatLng(it.lat, it.lng)
-//            )
+//        if(list.isNotEmpty()){
+//            var nearestDistance = 0f
+//            var nearestPoint = LatLng(list[0].lat, list[0].lng)
+//                list.forEach {
+//                    val distance = AMapUtils.calculateLineDistance(
+//                        LatLng(mCurrentLat, mCurrentLon),
+//                        LatLng(it.lat, it.lng)
+//                    )
 //
-//            if (nearestDistance > distance || nearestDistance == 0f) {
-//                nearestDistance = distance
-//            }
-//
+//                    if (nearestDistance > distance || nearestDistance == 0f) {
+//                        nearestPoint = LatLng(it.lat, it.lng)
+//                        nearestDistance = distance
+//                    }
+//                }
+//            aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPoint, 13f))
+//        }else{
+            aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(mCurrentLat, mCurrentLon), 13f))
 //        }
 //
 //        val zoomSize =
@@ -363,11 +369,11 @@ class FgtNetStationByMap : BaseBackFragment() {
 //                in 100000..1000000 -> 5f
 //                else -> 17f
 //            }
-        var latLng = LatLng(mCurrentLat, mCurrentLon)
-        if (!list.isEmpty()){
-            latLng = LatLng(list[0].lat, list[0].lng)
-        }
-        aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
+//        var latLng = LatLng(mCurrentLat, mCurrentLon)
+//        if (!list.isEmpty()){
+//            latLng = LatLng(list[0].lat, list[0].lng)
+//        }
+//        aMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
 
     }
 

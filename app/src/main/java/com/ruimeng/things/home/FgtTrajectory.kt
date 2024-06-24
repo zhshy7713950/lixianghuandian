@@ -15,7 +15,6 @@ import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.TrajectoryPointsBean
 import com.utils.TextUtil
-import kotlinx.android.synthetic.main.fgt_return.tv_model_return
 import kotlinx.android.synthetic.main.fgt_trajectory.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -38,9 +37,10 @@ class FgtTrajectory : BaseBackFragment() {
         initTopbar(topbar, "轨迹")
         tv_select.setOnClickListener {
             showTimePicker {
-                selectedDate = it.time.getTime(false)
-                selectedDate = selectedDate.replaceFirst("-","年").replaceFirst("-","月") + "日"
-                tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+                selectedData = it.time.getTime(false)
+                selectedDateShow = it.time.getTime(false)
+                selectedDateShow = selectedDateShow.replaceFirst("-","年").replaceFirst("-","月") + "日"
+                tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDateShow),arrayOf("#929FAB","#FFFFFF"))
 
                 getPoints()
             }
@@ -56,14 +56,16 @@ class FgtTrajectory : BaseBackFragment() {
         val month = calendar.get(Calendar.MONTH) + 1
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        selectedDate = "${year}年${month}月${day}日"
+        selectedDateShow = "${year}年${month}月${day}日"
+        selectedData = "${year}-${month}-${day}"
 
-        tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDate),arrayOf("#929FAB","#FFFFFF"))
+        tv_selected_date_trajectory.text =   TextUtil.getSpannableString(arrayOf("当前日期：",selectedDateShow),arrayOf("#929FAB","#FFFFFF"))
 
         getPoints()
     }
 
-    private var selectedDate = ""
+    private var selectedDateShow = ""
+    private var selectedData = ""
 
     private fun showTimePicker(callback: (Date) -> Unit) {
         val selectedDate = Calendar.getInstance()
@@ -113,7 +115,7 @@ class FgtTrajectory : BaseBackFragment() {
      */
     private fun getPoints() {
 
-        if (selectedDate.isBlank()) {
+        if (selectedDateShow.isBlank()) {
             EasyToast.DEFAULT.show("请选择日期")
             return
         }
@@ -121,8 +123,7 @@ class FgtTrajectory : BaseBackFragment() {
         http {
             url = Path.LBSHISTORICAL
             params["device_id"] = FgtHome.CURRENT_DEVICEID
-            params["day"] = selectedDate
-
+            params["day"] = selectedData
 
             onSuccess {
 

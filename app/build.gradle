@@ -10,7 +10,7 @@ apply from: '../wongxd/config.gradle'
 //读取Git commit number
 static def getGitCommitNumber() {
 //    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
-    return 601
+    return 602
 }
 
 

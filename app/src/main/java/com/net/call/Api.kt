@@ -7,4 +7,6 @@ object Api {
     const val Get_Agent_By_Code = "apiv6/cabinet/getagentbycode"
 
     const val Get_User_Payment_Info = "apiv6/payment/getuserpaymentinfo"
+
+    const val Get_Map_Key = "apiv6/xlluser/getamapkey"
 }

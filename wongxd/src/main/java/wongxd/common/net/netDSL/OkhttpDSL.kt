@@ -6,8 +6,10 @@ import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
+import com.wongxd.BuildConfig
 import okhttp3.*
 import okhttp3.internal.Util
+import okhttp3.logging.HttpLoggingInterceptor
 import okio.BufferedSink
 import okio.Okio
 import okio.Source
@@ -16,14 +18,12 @@ import wongxd.common.EasyToast
 import wongxd.common.MainLooper
 import wongxd.common.bothNotNull
 import wongxd.utils.MD5
-import wongxd.utils.utilcode.util.LogUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.logging.Logger
 
 
 /**
@@ -294,6 +294,7 @@ object BaseOkhttpHelper {
             .connectTimeout(wrap.timeout, TimeUnit.MILLISECONDS)
             .writeTimeout(wrap.writeTimeout, TimeUnit.MILLISECONDS)
             .readTimeout(wrap.readTimeout, TimeUnit.MILLISECONDS)
+            .addInterceptor(getHttpLoggingInterceptor())
             .build()
         http.newCall(req!!).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
@@ -359,6 +360,20 @@ object BaseOkhttpHelper {
         })
     }
 
+    private fun getHttpLoggingInterceptor(): HttpLoggingInterceptor? {
+        val httpLoggingInterceptor = HttpLoggingInterceptor { message: String? ->
+            Log.d(
+                "LXHDNet",
+                message
+            )
+        }
+        if (BuildConfig.DEBUG) {
+            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        } else {
+            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
+        }
+        return httpLoggingInterceptor
+    }
 
     private fun dealDownloadFile(call: Call, response: Response, wrap: RequestWrapper) {
 

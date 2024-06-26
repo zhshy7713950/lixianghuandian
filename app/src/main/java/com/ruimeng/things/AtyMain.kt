@@ -12,6 +12,7 @@ import android.provider.Settings
 import androidx.core.app.NotificationManagerCompat
 import android.text.TextUtils
 import android.util.Log
+import androidx.activity.viewModels
 //import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
@@ -40,6 +41,8 @@ import wongxd.updateApp.updateApp
 
 class AtyMain : BaseBackActivity() {
 
+    private val vm: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,6 +63,7 @@ class AtyMain : BaseBackActivity() {
             allGranted = { configUpgrade() })
 
         getAppConfig()
+
 
 
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userInfo ->
@@ -178,6 +182,7 @@ class AtyMain : BaseBackActivity() {
     }
 
     private fun getAppConfig() {
+        vm.getMapKey()
         http {
             url = Path.GET_CONFIG
 
@@ -190,8 +195,6 @@ class AtyMain : BaseBackActivity() {
                     )
                 }
             }
-
-
         }
     }
 

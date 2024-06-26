@@ -1,6 +1,7 @@
 package com.net.call
 
 import com.entity.local.AgentByCodeLocal
+import com.entity.local.GetMapKey
 import com.entity.local.RentStep1Local
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.AgentInfoRemote
@@ -23,6 +24,11 @@ object BizService {
     suspend fun getUserPaymentInfo(userPaymentInfoLocal: UserPaymentInfoLocal) = Server.call<UserPaymentInfoLocal,UserPaymentInfoRemote>(
         Api.Get_User_Payment_Info,
         userPaymentInfoLocal
+    )
+
+    suspend fun getAMapKey(getMapKey: GetMapKey) = Server.call<GetMapKey,String>(
+        Api.Get_Map_Key,
+        getMapKey
     )
 
 }

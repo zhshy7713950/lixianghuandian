@@ -329,4 +329,9 @@ object Path {
      */
     val COMPOSE_BIND = "/api/composebind"
 
+    /**
+     * 获取地图key
+     * */
+    val GET_MAP_KEY = "apiv6/xlluser/getamapkey"
+
 }

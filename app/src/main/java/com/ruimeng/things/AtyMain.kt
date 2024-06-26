@@ -16,11 +16,13 @@ import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.bean.ConfigBean
+import com.ruimeng.things.bean.MapKeyBean
 import com.ruimeng.things.home.AtyScanQrcode
 import com.ruimeng.things.home.FgtChangeRentBattery
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPackageBind
 import com.ruimeng.things.shop.tkLogin
+import com.utils.MapUtils
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import com.vector.update_app.UpdateAppBean
 import org.greenrobot.eventbus.EventBus
@@ -35,6 +37,7 @@ import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.updateApp.check
 import wongxd.updateApp.updateApp
+import wongxd.utils.utilcode.util.SPUtils
 
 class AtyMain : BaseBackActivity() {
 
@@ -57,6 +60,7 @@ class AtyMain : BaseBackActivity() {
             PermissionType.READ_EXTERNAL_STORAGE,
             allGranted = { configUpgrade() })
 
+        getMapKey()
         getAppConfig()
 
 
@@ -172,6 +176,25 @@ class AtyMain : BaseBackActivity() {
 
     }
 
+
+    private fun getMapKey(){
+        val localMapKey = SPUtils.getInstance().getString("map_key")
+        MapUtils.initializer(localMapKey)
+        http{
+            url = Path.GET_MAP_KEY
+            params["os"] = "android"
+            params["package"] = Config.getDefault().packageName
+
+            onSuccess{
+                val result = it.toPOJO<MapKeyBean>()
+                if(!result.data.isNullOrEmpty()){
+                    SPUtils.getInstance().put("map_key", result.data)
+                    MapUtils.initializer(result.data)
+                }
+            }
+        }
+    }
+
     private fun getAppConfig() {
         http {
             url = Path.GET_CONFIG
@@ -185,8 +208,6 @@ class AtyMain : BaseBackActivity() {
                     )
                 }
             }
-
-
         }
     }
 

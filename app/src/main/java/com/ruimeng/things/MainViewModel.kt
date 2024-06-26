@@ -17,8 +17,10 @@ class MainViewModel : BaseViewModel() {
         viewModelScope.launch {
             BizService.getAMapKey(GetMapKey()).whenSuccess {
                 it.data?.let {apiKey ->
-                    SPUtils.getInstance().put("map_key", apiKey)
-                    MapUtils.initializer(apiKey)
+                    if(apiKey.isNotEmpty()){
+                        SPUtils.getInstance().put("map_key", apiKey)
+                        MapUtils.initializer(apiKey)
+                    }
                 }
             }
         }

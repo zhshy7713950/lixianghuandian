@@ -145,7 +145,7 @@ class AtyScanQrcode : AtyBase() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == 1001 && data != null){
-            checkScanResult(data.getStringExtra("code"))
+            checkScanResult(data.getStringExtra("code")?:"")
         }
     }
     private fun checkScanResult(result:String){

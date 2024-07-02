@@ -32,8 +32,10 @@ class FgtCreditAuthentication : BaseBackFragment() {
         iv_upload_idcard_oneside.setOnClickListener {
             CameraActivity.navToCamera(this, CameraActivity.TYPE_ID_CARD_FRONT) { imgPath ->
                 isFront = true
-                zipImg(App.getMainAty(), imgPath) {
-                    upLoadIDCARD(it)
+                imgPath?.let {
+                    zipImg(App.getMainAty(), imgPath) {
+                        upLoadIDCARD(it)
+                    }
                 }
             }
         }
@@ -42,8 +44,10 @@ class FgtCreditAuthentication : BaseBackFragment() {
         iv_upload_idcard_otherside.setOnClickListener {
             CameraActivity.navToCamera(this, CameraActivity.TYPE_ID_CARD_BACK) { imgPath ->
                 isFront = false
-                zipImg(App.getMainAty(), imgPath) {
-                    upLoadIDCARD(it)
+                imgPath?.let {
+                    zipImg(App.getMainAty(), imgPath) {
+                        upLoadIDCARD(it)
+                    }
                 }
             }
         }

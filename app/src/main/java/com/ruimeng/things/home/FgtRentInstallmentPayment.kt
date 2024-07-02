@@ -160,7 +160,7 @@ class FgtRentInstallmentPayment : BaseBackFragment() {
                     webViewClient = object : WebViewClient() {
                         override fun shouldOverrideUrlLoading(
                             view: WebView?,
-                            url: String?
+                            url: String
                         ): Boolean {
 
                             view?.loadUrl(url)
@@ -171,9 +171,9 @@ class FgtRentInstallmentPayment : BaseBackFragment() {
                         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
                         override fun shouldOverrideUrlLoading(
                             view: WebView?,
-                            request: WebResourceRequest?
+                            request: WebResourceRequest
                         ): Boolean {
-                            return shouldOverrideUrlLoading(view, request?.url?.toString())
+                            return shouldOverrideUrlLoading(view, request.url.toString())
                         }
                     }
 

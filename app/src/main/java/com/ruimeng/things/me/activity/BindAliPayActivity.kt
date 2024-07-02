@@ -47,11 +47,11 @@ class BindAliPayActivity : AtyBase() {
     private fun initData() {
         initTopbar(topbar, "绑定支付宝")
         if (!TextUtils.isEmpty(intent.getStringExtra("accountName"))) {
-            getAccountName = intent.getStringExtra("accountName")
+            getAccountName = intent.getStringExtra("accountName")?:""
             inputAccountText?.setText(getAccountName)
         }
         if (!TextUtils.isEmpty(intent.getStringExtra("realName"))) {
-            getRealName = intent.getStringExtra("realName")
+            getRealName = intent.getStringExtra("realName")?:""
             inputNameText?.setText(getRealName)
         }
 

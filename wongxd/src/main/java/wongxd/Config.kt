@@ -31,7 +31,7 @@ class Config private constructor() {
     }
 
     private val packageInfo by
-    lazy { appInstance!!.getPackageManager().getPackageInfo(appInstance?.getPackageName(), 0) }
+    lazy { appInstance!!.packageManager.getPackageInfo(appInstance!!.packageName, 0) }
 
     val versionCode: Int by lazy { packageInfo.versionCode }
 
@@ -41,8 +41,8 @@ class Config private constructor() {
 
     val applicationInfo: ApplicationInfo by
     lazy {
-        appInstance!!.getPackageManager()
-            .getApplicationInfo(appInstance?.getPackageName(), PackageManager.GET_META_DATA)
+        appInstance!!.packageManager
+            .getApplicationInfo(appInstance!!.packageName, PackageManager.GET_META_DATA)
     }
 
     //###############配置字符串################

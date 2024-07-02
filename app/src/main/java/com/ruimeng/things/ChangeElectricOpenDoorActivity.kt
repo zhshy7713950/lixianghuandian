@@ -25,7 +25,7 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
 
     private var getType = ""
     private var getContractId = ""
-    private var getNewDeviceId=""
+    private var getNewDeviceId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +33,21 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
         mActivity = this
         initTopbar(topbar, "换电扫码")
         if (!TextUtils.isEmpty(intent.getStringExtra("type"))) {
-            getType = intent.getStringExtra("type")
+            getType = intent.getStringExtra("type") ?: ""
         }
         if (!TextUtils.isEmpty(intent.getStringExtra("contract_id"))) {
-            getContractId = intent.getStringExtra("contract_id")
+            getContractId = intent.getStringExtra("contract_id") ?: ""
         }
         if (!TextUtils.isEmpty(intent.getStringExtra("new_deviceid"))) {
-            getNewDeviceId = intent.getStringExtra("new_deviceid")
+            getNewDeviceId = intent.getStringExtra("new_deviceid") ?: ""
         }
         requestCgScan(getContractId, getNewDeviceId)
 
     }
 
     var needActiveNew = false
-    var optionAct: PaymentOption ? = null
+    var optionAct: PaymentOption? = null
+
     @SuppressLint("SetTextI18n")
     private fun requestCgScan(contractId: String, newDeviceId: String) {
         http {
@@ -68,27 +69,58 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                 tipsText?.text = data.exchange_tips
 
 
-                var textColors = arrayOf("#929FAB","#FFFFFF")
-                tv_base_package_name.text = TextUtil.getSpannableString(arrayOf("租电套餐    ",intent.getStringExtra("name")),textColors)
+                var textColors = arrayOf("#929FAB", "#FFFFFF")
+                tv_base_package_name.text = TextUtil.getSpannableString(
+                    arrayOf(
+                        "租电套餐    ",
+                        intent.getStringExtra("name") ?: ""
+                    ), textColors
+                )
                 val option = data.userOptions.filter { it.active_status == "1" }.first()
-                if (option != null){
-                    tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ",option.name),textColors)
-                    tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ",option.change_times),textColors)
-                    tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(option.start_time,option.end_time)),textColors)
-                    if (option.change_times == "1"){
+                if (option != null) {
+                    tv_change_package_type.text = TextUtil.getSpannableString(
+                        arrayOf("换电类型    ", option.name),
+                        textColors
+                    )
+                    tv_package_left_times.text = TextUtil.getSpannableString(
+                        arrayOf("剩余次数    ", option.change_times),
+                        textColors
+                    )
+                    tv_change_package_time.text = TextUtil.getSpannableString(
+                        arrayOf(
+                            "有效期     ",
+                            TextUtil.formatTime(option.start_time, option.end_time)
+                        ), textColors
+                    )
+                    if (option.change_times == "1") {
                         needActiveNew = true
                     }
-                }else{
-                    if (data.singleChangeInfo != null){
-                        tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ","单次换电"),textColors)
-                        tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ","1"),textColors)
-                        tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(data.singleChangeInfo.start_time,data.singleChangeInfo.end_time)),textColors)
+                } else {
+                    if (data.singleChangeInfo != null) {
+                        tv_change_package_type.text = TextUtil.getSpannableString(
+                            arrayOf("换电类型    ", "单次换电"),
+                            textColors
+                        )
+                        tv_package_left_times.text =
+                            TextUtil.getSpannableString(arrayOf("剩余次数    ", "1"), textColors)
+                        tv_change_package_time.text = TextUtil.getSpannableString(
+                            arrayOf(
+                                "有效期     ",
+                                TextUtil.formatTime(
+                                    data.singleChangeInfo.start_time,
+                                    data.singleChangeInfo.end_time
+                                )
+                            ), textColors
+                        )
                         needActiveNew = true
-                    }else{
-                        ToastHelper.shortToast(this@ChangeElectricOpenDoorActivity,"没有找到生效的套餐，请购买")
+                    } else {
+                        ToastHelper.shortToast(
+                            this@ChangeElectricOpenDoorActivity,
+                            "没有找到生效的套餐，请购买"
+                        )
                     }
                 }
-                if (needActiveNew == true){
+                if (needActiveNew == true) {
                     needActiveNew = data.userOptions.count { it.active_status == "2" } > 0
                     optionAct = data.userOptions.filter { it.active_status == "2" }.first()
                 }
@@ -96,23 +128,46 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                     requestConfirmCgDevice(getContractId, data.new_info.device_id)
                 }
 
-                if (data.singleChangeInfo != null){
-                    tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ","单次换电"),textColors)
-                    tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ","1"),textColors)
-                    tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(data.singleChangeInfo.start_time,data.singleChangeInfo.end_time)),textColors)
-                }else{
+                if (data.singleChangeInfo != null) {
+                    tv_change_package_type.text =
+                        TextUtil.getSpannableString(arrayOf("换电类型    ", "单次换电"), textColors)
+                    tv_package_left_times.text =
+                        TextUtil.getSpannableString(arrayOf("剩余次数    ", "1"), textColors)
+                    tv_change_package_time.text = TextUtil.getSpannableString(
+                        arrayOf(
+                            "有效期     ",
+                            TextUtil.formatTime(
+                                data.singleChangeInfo.start_time,
+                                data.singleChangeInfo.end_time
+                            )
+                        ), textColors
+                    )
+                } else {
 
-                    if (option != null){
-                        tv_change_package_type.text = TextUtil.getSpannableString(arrayOf("换电类型    ",option.name),textColors)
-                        tv_package_left_times.text = TextUtil.getSpannableString(arrayOf("剩余次数    ",option.change_times),textColors)
-                        tv_change_package_time.text = TextUtil.getSpannableString(arrayOf("有效期     ",TextUtil.formatTime(option.start_time,option.end_time)),textColors)
-                    }else if (data.userOptions.count { it.active_status == "2" } > 0){
+                    if (option != null) {
+                        tv_change_package_type.text = TextUtil.getSpannableString(
+                            arrayOf("换电类型    ", option.name),
+                            textColors
+                        )
+                        tv_package_left_times.text = TextUtil.getSpannableString(
+                            arrayOf(
+                                "剩余次数    ",
+                                option.change_times
+                            ), textColors
+                        )
+                        tv_change_package_time.text = TextUtil.getSpannableString(
+                            arrayOf(
+                                "有效期     ",
+                                TextUtil.formatTime(option.start_time, option.end_time)
+                            ), textColors
+                        )
+                    } else if (data.userOptions.count { it.active_status == "2" } > 0) {
 
 
-                    }else{
+                    } else {
 
                     }
-                  }
+                }
             }
 
             onFail { i, msg ->
@@ -121,7 +176,8 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
             }
         }
     }
-    private fun activeOption(option: PaymentOption){
+
+    private fun activeOption(option: PaymentOption) {
         NormalDialog(this).apply {
             style(NormalDialog.STYLE_TWO)
             title("当前您的换电套餐剩余次数已为0，是否立即启动待生效套餐：${option.name}")
@@ -133,12 +189,12 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
                     url = "/apiv6/payment/activeoption"
                     params["user_option_id"] = "${option.id}"
                     onSuccess {
-                        ToastHelper.shortToast(context,"启用成功")
+                        ToastHelper.shortToast(context, "启用成功")
                         dismiss()
                         pop()
                     }
                     onFail { i, s ->
-                        ToastHelper.shortToast(context,s)
+                        ToastHelper.shortToast(context, s)
                         dismiss()
                     }
                 }
@@ -156,9 +212,9 @@ class ChangeElectricOpenDoorActivity : AtyBase() {
             params["contract_id"] = contractId
             params["new_deviceid"] = newDeviceId
             onSuccessWithMsg { res, msg ->
-                if (needActiveNew && optionAct != null){
+                if (needActiveNew && optionAct != null) {
                     activeOption(optionAct!!)
-                }else{
+                } else {
                     ToastHelper.shortToast(mActivity, msg)
                     finish()
                 }

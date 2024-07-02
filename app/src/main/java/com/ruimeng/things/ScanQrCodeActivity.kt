@@ -29,13 +29,13 @@ class ScanQrCodeActivity : AtyBase() {
         mActivity = this
 
         if (!TextUtils.isEmpty(intent.getStringExtra("type"))) {
-            getType = intent.getStringExtra("type")
+            getType = intent.getStringExtra("type") ?: ""
         }
         if (!TextUtils.isEmpty(intent.getStringExtra("type"))) {
-            getType = intent.getStringExtra("type")
+            getType = intent.getStringExtra("type") ?: ""
         }
         if (!TextUtils.isEmpty(intent.getStringExtra("contract_id"))) {
-            getContractId = intent.getStringExtra("contract_id")
+            getContractId = intent.getStringExtra("contract_id") ?: ""
         }
         initTopbar(topbar, "扫一扫")
         /**
@@ -51,7 +51,7 @@ class ScanQrCodeActivity : AtyBase() {
             }
 
             override fun onAnalyzeFailed() {
-               ToastHelper.shortToast(this@ScanQrCodeActivity,"无法识别二维码")
+                ToastHelper.shortToast(this@ScanQrCodeActivity, "无法识别二维码")
             }
         }
         /**
@@ -63,53 +63,55 @@ class ScanQrCodeActivity : AtyBase() {
 
         tv_input_code.setOnClickListener {
             val intent = Intent(this, AtyInputCode::class.java)
-            intent.putExtra("type",getTypeCode())
+            intent.putExtra("type", getTypeCode())
             startActivityForResult(intent, 1)
         }
         tv_light.setOnClickListener {
             CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
-            tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
+            tv_light.text = if (tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }
     }
-    fun getTypeCode(): Int {
-     return   when(getType){
-            "换电开门"->1
-            "换电"->2
-            "租电"->4
-            "退还"->5
-         "冻结"->6
 
-         else -> 0
-     }
+    fun getTypeCode(): Int {
+        return when (getType) {
+            "换电开门" -> 1
+            "换电" -> 2
+            "租电" -> 4
+            "退还" -> 5
+            "冻结" -> 6
+
+            else -> 0
+        }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == 1001 && data != null){
-            checkScanResult(data.getStringExtra("code"))
+        if (requestCode == 1 && resultCode == 1001 && data != null) {
+            checkScanResult(data.getStringExtra("code") ?: "")
         }
     }
 
-    private fun checkScanResult(result:String){
-        ScanResultCheck().checkResult(getTypeCode(),result,object :ScanResultCheck.CheckResultListener{
-            override fun checkStatus(pass: Boolean) {
-                if (pass){
-                    val resultIntent = Intent()
-                    val bundle = Bundle()
-                    bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
-                    bundle.putString(CodeUtils.RESULT_STRING, result)
-                    bundle.putString("type", getType)
-                    bundle.putString("contract_id", getContractId)
-                    resultIntent.putExtras(bundle)
-                    setResult(Activity.RESULT_OK, resultIntent)
-                    finish()
+    private fun checkScanResult(result: String) {
+        ScanResultCheck().checkResult(
+            getTypeCode(),
+            result,
+            object : ScanResultCheck.CheckResultListener {
+                override fun checkStatus(pass: Boolean) {
+                    if (pass) {
+                        val resultIntent = Intent()
+                        val bundle = Bundle()
+                        bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS)
+                        bundle.putString(CodeUtils.RESULT_STRING, result)
+                        bundle.putString("type", getType)
+                        bundle.putString("contract_id", getContractId)
+                        resultIntent.putExtras(bundle)
+                        setResult(Activity.RESULT_OK, resultIntent)
+                        finish()
+                    }
                 }
-            }
-        })
+            })
 
     }
-
-
-
 
 
 }

@@ -62,7 +62,11 @@ public class AndroidDownloadManager {
 
         //设置下载的路径
 //        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), name);
-        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File parnetFIle = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"lxhd");
+        if(!parnetFIle.exists()){
+            parnetFIle.mkdirs();
+        }
+        File file = new File(parnetFIle,name);
         request.setDestinationUri(Uri.fromFile(file));
         path = file.getAbsolutePath();
 

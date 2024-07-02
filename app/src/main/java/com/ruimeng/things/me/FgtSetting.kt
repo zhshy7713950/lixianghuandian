@@ -40,7 +40,10 @@ class FgtSetting : BaseBackFragment() {
 
 
         ll_help_center_setting.setOnClickListener {
-            AtyWeb2.start("帮助中心", "有任何问题、意见或者建议请联系：</br> 客服电话：4000283969 </br> 客服邮箱:scxllkjyxgs@163.com")
+            AtyWeb2.start(
+                "帮助中心",
+                "有任何问题、意见或者建议请联系：</br> 客服电话：4000283969 </br> 客服邮箱:scxllkjyxgs@163.com"
+            )
 
         }
 
@@ -60,7 +63,7 @@ class FgtSetting : BaseBackFragment() {
                 }, OnBtnClickL {
                     Config.getDefault().token = ""
                     Config.getDefault().stringCacheUtils.remove(UserInfoLiveData.STORE_KEY)
-                    SPUtils.getInstance().put("MOBILE_BIND_SKIP",false)
+                    SPUtils.getInstance().put("MOBILE_BIND_SKIP", false)
                     SystemUtils.cleanTask2Activity(activity, AtyLogin::class.java)
                     dismiss()
                 })
@@ -74,7 +77,7 @@ class FgtSetting : BaseBackFragment() {
         //2,通过上下文获取包名
         val packageName = activity?.packageName
         //3,获取包的信息
-        val packageInfo = packageManager?.getPackageInfo(packageName, 0)
+        val packageInfo = packageManager?.getPackageInfo(packageName ?: "", 0)
         //4,获取版本号
         val versionCode = packageInfo?.versionCode
         //5,获取版本名

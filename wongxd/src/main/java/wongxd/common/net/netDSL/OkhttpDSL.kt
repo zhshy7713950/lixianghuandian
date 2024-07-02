@@ -361,7 +361,7 @@ object BaseOkhttpHelper {
     }
 
     private fun getHttpLoggingInterceptor(): HttpLoggingInterceptor? {
-        val httpLoggingInterceptor = HttpLoggingInterceptor { message: String? ->
+        val httpLoggingInterceptor = HttpLoggingInterceptor { message: String ->
             Log.d(
                 "LXHDNet",
                 message

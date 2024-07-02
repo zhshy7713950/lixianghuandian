@@ -151,7 +151,7 @@ class CameraActivity : Activity(), View.OnClickListener {
         /**
          * 跳转到拍照页面
          */
-        fun navToCamera(fgt: Fragment, type: Int, callback: (String) -> Unit) {
+        fun navToCamera(fgt: Fragment, type: Int, callback: (String?) -> Unit) {
 
             getPermissions(
                 listOf(
@@ -166,7 +166,7 @@ class CameraActivity : Activity(), View.OnClickListener {
                 intent.putExtra("type", type)
 
                 SimpleOnActivityResult.SimpleForResult(fgt).startForResult(intent) { reqCoed, resultCode, data ->
-                    if (data != null && resultCode == Activity.RESULT_OK) {
+                    if (data != null && resultCode == RESULT_OK) {
                         callback(data.getStringExtra("result"))
                     }
                 }

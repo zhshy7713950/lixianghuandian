@@ -29,6 +29,8 @@ import org.jetbrains.anko.uiThread
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.loadImg
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http

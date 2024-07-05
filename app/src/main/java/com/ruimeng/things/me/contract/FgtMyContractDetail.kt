@@ -12,6 +12,7 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.FileProvider
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
@@ -108,7 +109,7 @@ class FgtMyContractDetail : BaseBackFragment() {
                             setOnBtnClickL(OnBtnClickL {
                                 OpenFileThing.openAssignFolder(
                                     activity,
-                                    Uri.fromFile(File(path)),
+                                    FileProvider.getUriForFile(activity!!,activity!!.applicationContext.packageName+".fileprovider",File(path)),
                                     OpenFileThing.FileType.pdf
                                 )
                                 dismiss()

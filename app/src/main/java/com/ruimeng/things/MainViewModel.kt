@@ -1,9 +1,8 @@
 package com.ruimeng.things
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.base.viewmodel.BaseViewModel
-import com.entity.local.GetMapKey
+import com.entity.local.GetMapKeyLocal
 import com.net.call.BizService
 import com.net.whenSuccess
 import com.utils.MapUtils
@@ -15,7 +14,7 @@ class MainViewModel : BaseViewModel() {
         val localMapKey = SPUtils.getInstance().getString("map_key")
         MapUtils.initializer(localMapKey)
         viewModelScope.launch {
-            BizService.getAMapKey(GetMapKey()).whenSuccess {
+            BizService.getAMapKey(GetMapKeyLocal()).whenSuccess {
                 it.data?.let {apiKey ->
                     if(apiKey.isNotEmpty()){
                         SPUtils.getInstance().put("map_key", apiKey)

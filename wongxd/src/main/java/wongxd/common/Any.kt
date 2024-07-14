@@ -2,25 +2,26 @@ package wongxd.common
 
 import android.app.Activity
 import android.app.ProgressDialog
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import wongxd.base.AppManager
+import wongxd.utils.utilcode.util.Utils
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 
 /**
@@ -33,6 +34,17 @@ import java.util.*
 private fun doDp2Px(dpValue: Float): Float {
     return (0.5f + dpValue * Resources.getSystem().displayMetrics.density)
 }
+
+private fun doPx2Dp(dpValue: Float): Float {
+    return (0.5f + dpValue / Resources.getSystem().displayMetrics.density)
+}
+
+private fun doSp2Px(spValue: Float): Float {
+    return (0.5f + spValue * Resources.getSystem().displayMetrics.scaledDensity)
+}
+
+fun Int.px2Dp(): Float = doPx2Dp(this.toFloat())
+fun Int.sp2px(): Float = doSp2Px(this.toFloat())
 
 fun Float.dp2px(): Float = doDp2Px(this)
 

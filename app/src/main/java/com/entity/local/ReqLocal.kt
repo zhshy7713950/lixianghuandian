@@ -16,7 +16,12 @@ data class UserPaymentInfoLocal(
     val device_id: String
 )
 
-data class GetMapKey(
+data class GetMapKeyLocal(
     val os: String = "android",
     val `package`: String = Config.getDefault().packageName
+)
+
+data class OneKeyLoginLocal(
+    val wangyiToken: String,
+    val accessToken: String
 )

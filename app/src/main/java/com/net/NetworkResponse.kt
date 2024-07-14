@@ -63,8 +63,9 @@ inline fun <T : Any> NetworkResponse<T>.getOrElse(default: (NetworkResponse<T>) 
 
 inline fun <T : Any> NetworkResponse<T>.whenBizError(
     block: (String) -> Unit
-) {
+): NetworkResponse<T> {
     (this as? NetworkResponse.BizError)?.errorMessage?.also(block)
+    return this
 }
 
 inline fun <T : Any> NetworkResponse<T>.whenSuccess(
@@ -75,11 +76,10 @@ inline fun <T : Any> NetworkResponse<T>.whenSuccess(
 }
 
 inline fun <T : Any> NetworkResponse<T>.whenError(
-    block: () -> Unit
+    block: (String) -> Unit
 ): NetworkResponse<T> {
-    if(this.isFail){
-        block()
-    }
+    (this as? NetworkResponse.BizError)?.errorMessage?.also(block)
+    (this as? NetworkResponse.UnknownError)?.errorMessage?.also(block)
     return this
 }
 

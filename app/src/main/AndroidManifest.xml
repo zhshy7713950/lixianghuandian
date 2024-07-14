@@ -217,6 +217,11 @@
 			android:theme="@style/Theme.ActivityTransparentStyle"
 			tools:replace="theme" />
 
+		<activity
+			android:name="com.netease.nis.quicklogin.ui.ProtocolDetailActivity"
+			android:theme="@style/Theme.ActivityDialogStyle"
+			tools:replace="theme" />
+
 
 
 	</application>

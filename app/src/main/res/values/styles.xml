@@ -12,4 +12,16 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="Theme.ActivityDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/app_color</item>
+        <!-- 不透明 -->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+        <!-- 背景 -->
+        <item name="android:windowBackground">@color/app_color</item>
+        <!-- 模糊 -->
+<!--        <item name="android:backgroundDimEnabled">true</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowCloseOnTouchOutside">false</item>-->
+    </style>
+
 </resources>

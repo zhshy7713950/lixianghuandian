@@ -139,6 +139,10 @@ object QuickLoginHelper {
 
             //协议web
             setProtocolPageNavBackIcon("ic_web_back")
+            setProtocolPageNavColor(Color.parseColor("#404E59"))
+            setProtocolPageNavTitleColor(Color.WHITE)
+            setProtocolPageNavBackIconWidth(12)
+            setProtocolPageNavBackIconHeight(22)
 
             //未勾选弹窗
             setPrivacyDialogText("请阅读并同意接受协议")

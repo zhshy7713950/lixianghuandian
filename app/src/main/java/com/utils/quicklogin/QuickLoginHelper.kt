@@ -88,7 +88,7 @@ object QuickLoginHelper {
             setLoginBtnTextColor(Color.BLACK)
             setLoginBtnWidth(ScreenUtils.getScreenWidth().px2Dp().toInt() - 80)
             setLoginBtnHeight(50)
-            setLoginBtnTopYOffset(360)
+            setLoginBtnTopYOffset(346)
             setLoginBtnBackgroundDrawable(context.getDrawable(com.ruimeng.things.R.drawable.bg_btn_common1))
 
             setHideNavigation(true)
@@ -119,7 +119,7 @@ object QuickLoginHelper {
             setPrivacyProtocolColor(Color.parseColor("#13C681"))
             setPrivacyMarginLeft(30)
             setPrivacySize(12)
-            setPrivacyBottomYOffset(50)
+            setPrivacyBottomYOffset(30)
             setPrivacyState(true)
             setPrivacyTextMarginLeft(20)
             setCheckBoxGravity(Gravity.CENTER)

@@ -75,13 +75,12 @@
 			android:id="@+id/tv_get_code"
 			android:layout_width="0dp"
 			android:layout_weight="0.618"
-			android:layout_height="48dp"
+			android:layout_height="42dp"
 			android:text="获取验证码"
 			android:textColor="@color/black"
-			android:textSize="15sp"
+			android:textSize="14sp"
 			android:gravity="center"
 			android:background="@drawable/bg_btn_common1"
-			android:textStyle="bold"
 			/>
 		
 	</LinearLayout>
@@ -94,7 +93,6 @@
 		android:layout_marginLeft="40dp"
 		android:layout_marginRight="40dp"
 		android:background="@drawable/bg_btn_common1"
-		android:textStyle="bold"
 		android:textColor="@color/black"
 		android:text="验证码登录"
 		android:textSize="16sp"
@@ -137,6 +135,7 @@
 			android:textColor="#ffb8c7d7"
 			android:textSize="12sp"
 			android:maxLines="2"
+			android:gravity="center_horizontal"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"
 			app:layout_constraintBottom_toBottomOf="parent"

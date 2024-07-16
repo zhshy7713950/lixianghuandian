@@ -161,33 +161,41 @@ class AtyLogin : AtyBase() {
             layout_test.visibility = View.GONE
         }
         btnOtpLogin.setOnClickListener {
-            if(et_code.text.toString().length != 6 || et_phone.text.toString().length != 11){
-                EasyToast.DEFAULT.show("请输入正确手机号及验证码")
+            if(et_phone.text.toString().isEmpty()){
+                EasyToast.DEFAULT.show("请输入手机号码")
+                return@setOnClickListener
+            }
+            if(et_code.text.toString().isEmpty()){
+                EasyToast.DEFAULT.show("请输入验证码")
                 return@setOnClickListener
             }
             doLogin()
         }
         btnOneKey.setOnClickListener {
             if (prefetchResult != null && prefetchResult!!.isSuccess) {
-                QuickLoginHelper.onePassLogin(object : QuickLoginTokenListener {
-                    override fun onGetTokenSuccess(YDToken: String?, accessCode: String?) {
-                        doOneKeyLogin(YDToken, accessCode)
-                        Log.d(TAG, "YDToken = $YDToken accessCode = $accessCode")
-                    }
-
-                    override fun onGetTokenError(YDToken: String?, code: Int, msg: String?) {
-                        ToastHelper.longToast(
-                            getCurrentAty(),
-                            "登录失败，请稍后重试，或使用验证码登录"
-                        )
-                    }
-                })
+                doOnePassLogin()
             } else {
                 ToastHelper.longToast(getCurrentAty(), "网络检测中，请稍候重试，或使用验证码登录")
             }
         }
 
         requestPermission()
+    }
+
+    private fun doOnePassLogin(){
+        QuickLoginHelper.onePassLogin(object : QuickLoginTokenListener {
+            override fun onGetTokenSuccess(YDToken: String?, accessCode: String?) {
+                doOneKeyLogin(YDToken, accessCode)
+                Log.d(TAG, "YDToken = $YDToken accessCode = $accessCode")
+            }
+
+            override fun onGetTokenError(YDToken: String?, code: Int, msg: String?) {
+                ToastHelper.longToast(
+                    getCurrentAty(),
+                    "登录失败，请稍后重试，或使用验证码登录"
+                )
+            }
+        })
     }
 
     private fun requestPermission() {
@@ -204,6 +212,11 @@ class AtyLogin : AtyBase() {
     private fun initQuickLogin() {
         lifecycleScope.launchWhenCreated {
             this@AtyLogin.prefetchResult = QuickLoginHelper.prefetchMobileNumber()
+            prefetchResult?.let {
+                if (it.isSuccess) {
+                    doOnePassLogin()
+                }
+            }
         }
     }
 

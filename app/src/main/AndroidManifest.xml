@@ -56,6 +56,11 @@
 			android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.${applicationId}"
 			android:protectionLevel="signature" />
 
+	<queries>
+		<package android:name="com.autonavi.minimap" />
+		<package android:name="com.baidu.BaiduMap"/>
+	</queries>
+
 	<!--//################推送####################################-->
 
 

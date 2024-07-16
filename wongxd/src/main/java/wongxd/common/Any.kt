@@ -366,14 +366,14 @@ fun openInSysBrowser(ctx: Context, url: String) {
 
 fun checkPackage(context: Context, packageName: String?): Boolean {
     if (packageName == null || "" == packageName) return false
-    try {
-        context.packageManager.getApplicationInfo(
+    return try {
+        context.packageManager.getPackageInfo(
             packageName,
-            PackageManager.GET_UNINSTALLED_PACKAGES
+            PackageManager.GET_ACTIVITIES
         )
-        return true
+        true
     } catch (e: PackageManager.NameNotFoundException) {
-        return false
+        false
     }
 
 }

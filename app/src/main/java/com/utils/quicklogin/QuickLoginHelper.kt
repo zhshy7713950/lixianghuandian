@@ -100,7 +100,7 @@ object QuickLoginHelper {
             //验证码登录按钮
             val button = Button(context).also {
                 it.setBackgroundResource(com.ruimeng.things.R.drawable.bg_login_switch)
-                it.text = "验证码登录"
+                it.text = "返回「其他号码/验证码登录」"
                 it.textColor = Color.parseColor("#CCCCCC")
                 it.textSize = 16f
                 it.layoutParams = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,50.dp2px().toInt()).also {mpls ->

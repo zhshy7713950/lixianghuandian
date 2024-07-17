@@ -106,7 +106,7 @@
 		android:layout_marginRight="40dp"
 		android:layout_marginTop="30dp"
 		android:background="@drawable/bg_login_switch"
-		android:text="本机号码一键登录"
+		android:text="使用「本机号码一键登录」"
 		android:textColor="@color/white"
 		android:textSize="16sp"
 		/>

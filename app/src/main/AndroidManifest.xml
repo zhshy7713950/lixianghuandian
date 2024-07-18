@@ -59,6 +59,8 @@
 	<queries>
 		<package android:name="com.autonavi.minimap" />
 		<package android:name="com.baidu.BaiduMap"/>
+		<package android:name="com.tencent.mm"/>
+		<package android:name="com.eg.android.AlipayGphone"/>
 	</queries>
 
 	<!--//################推送####################################-->

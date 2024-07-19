@@ -129,7 +129,8 @@ dependencies {
     //几行代码快速集成二维码扫描功能
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
 
-    implementation 'com.zhihu.android:matisse:0.4.3'
+    implementation 'com.github.REBOOTERS:Matisse:0.5.7'
+    implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
 
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
 
@@ -162,7 +163,7 @@ dependencies {
     api 'com.jaeger.statusbarutil:library:1.4.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.core:core-ktx:1.5.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

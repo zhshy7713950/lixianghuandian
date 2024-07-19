@@ -138,7 +138,7 @@ class FgtUploadAuthInfo : BaseBackFragment() {
 
     private fun getPic() {
         Matisse.from(this)
-            .choose(MimeType.allOf())
+            .choose(MimeType.ofAll())
             .capture(true)
             .captureStrategy(
                 CaptureStrategy(

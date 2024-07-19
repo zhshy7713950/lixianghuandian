@@ -143,7 +143,7 @@ class FgtContractSignStep2 : BaseBackFragment() {
     private fun getPic() {
         getPermissions(getCurrentAty(), PermissionType.CAMERA,PermissionType.WRITE_EXTERNAL_STORAGE, allGranted = {
             Matisse.from(this)
-                .choose(MimeType.allOf())
+                .choose(MimeType.ofAll())
                 .capture(true)
                 .captureStrategy(
                     CaptureStrategy(

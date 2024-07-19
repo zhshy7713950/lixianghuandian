@@ -143,7 +143,7 @@ class FgtTrueName : BaseBackFragment() {
             )
         ){
             Matisse.from(this)
-                .choose(MimeType.allOf())
+                .choose(MimeType.ofAll())
                 .capture(true)
                 .captureStrategy(
                     CaptureStrategy(

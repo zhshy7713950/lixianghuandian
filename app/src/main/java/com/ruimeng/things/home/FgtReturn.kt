@@ -423,7 +423,7 @@ class FgtReturn : BaseBackFragment() {
                 if (originImages.get(vh.adapterPosition).contains(getString(R.string.glide_plus_icon_string))) {//打开相册
 
                     Matisse.from(this@FgtReturn)
-                        .choose(MimeType.allOf())
+                        .choose(MimeType.ofAll())
                         .capture(true)
                         .captureStrategy(
                             CaptureStrategy(

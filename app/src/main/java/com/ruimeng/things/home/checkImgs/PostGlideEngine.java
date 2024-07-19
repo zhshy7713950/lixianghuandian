@@ -31,9 +31,7 @@ public class PostGlideEngine implements ImageEngine {
     }
 
     @Override
-    public void loadAnimatedGifThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView,
-                                         Uri uri) {
-
+    public void loadGifThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView, Uri uri) {
         RequestOptions options = new RequestOptions()
                 .placeholder(placeholder)
                 .override(resize, resize)
@@ -44,6 +42,7 @@ public class PostGlideEngine implements ImageEngine {
                 .apply(options)
                 .into(imageView);
     }
+
 
     @Override
     public void loadImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
@@ -58,7 +57,7 @@ public class PostGlideEngine implements ImageEngine {
     }
 
     @Override
-    public void loadAnimatedGifImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
+    public void loadGifImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
         RequestOptions options = new RequestOptions()
                 .override(resizeX, resizeY)
                 .priority(Priority.HIGH);

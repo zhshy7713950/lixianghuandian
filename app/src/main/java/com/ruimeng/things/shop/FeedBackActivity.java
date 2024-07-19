@@ -233,7 +233,7 @@ public class FeedBackActivity extends BaseBackActivity implements View.OnClickLi
                             try {
 
                                 Matisse.from(context)
-                                        .choose(MimeType.allOf())
+                                        .choose(MimeType.ofAll())
                                         .capture(true)
                                         .captureStrategy(
                                                 new CaptureStrategy(true,

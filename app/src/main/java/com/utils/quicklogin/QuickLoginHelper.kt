@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup.LayoutParams
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView

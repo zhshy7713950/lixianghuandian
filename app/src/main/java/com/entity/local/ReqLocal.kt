@@ -25,3 +25,20 @@ data class OneKeyLoginLocal(
     val wangyiToken: String,
     val accessToken: String
 )
+
+data class GetAdInfoLocal(
+    val userId: String,
+    val lat: String,
+    val lng: String
+)
+
+data class AdPayLocal(
+    val userId: String,
+    val packageId: String,
+    val payType: String,
+    val price: String
+)
+
+data class ServerPayResultLocal(
+    val orderid: String
+)

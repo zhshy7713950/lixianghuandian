@@ -11,4 +11,8 @@ object Api {
     const val Get_Map_Key = "apiv6/xlluser/getamapkey"
 
     const val One_Key_Login = "wangyilogin/gettoken"
+
+    const val Get_Advertisement_Info = "apiv6/advertisementinfo/getadvertisement"
+
+    const val Ad_Pay = "apiv6/advertisementinfo/packagepay"
 }

@@ -1,5 +1,6 @@
 package com.ruimeng.things.home.vm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.base.viewmodel.BaseViewModel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 class PayRentMoneyViewModel: BaseViewModel() {
 
     private val _agentInf: MutableLiveData<AgentInfoRemote> = MutableLiveData()
-    val agentInfo = _agentInf
+    val agentInfo: LiveData<AgentInfoRemote> = _agentInf
 
     fun getAgentByCode(deviceId: String){
         viewModelScope.launch {

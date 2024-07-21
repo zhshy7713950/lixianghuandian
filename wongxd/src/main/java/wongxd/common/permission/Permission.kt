@@ -119,6 +119,39 @@ enum class PermissionType(val permission: String, val permissionName: String) {
     ACCESS_NETWORK_STATE(Manifest.permission.ACCESS_NETWORK_STATE, "获取网络状态");
 }
 
+fun getPermissionsWithTips(aty: FragmentActivity?,
+                           vararg per: PermissionType,
+                           contentText: String,
+                           result: (Boolean, List<PermissionActivityResult.Permission>) -> Unit = { isAllGranted, perList -> },
+                           allGranted: () -> Unit = {},
+                           isGoSetting: Boolean = false){
+    var isAllGranted = false
+    per.forEach {
+        isAllGranted = aty?.checkSelfPermission(it.permission) == PackageManager.PERMISSION_GRANTED
+    }
+    if(isAllGranted){
+        allGranted.invoke()
+        return
+    }
+    val dlg: SweetAlertDialog = SweetAlertDialog(aty, SweetAlertDialog.NORMAL_TYPE)
+        .also {
+            it.titleText = "温馨提示"
+            it.contentText = contentText
+            it.confirmText = "允许权限"
+            it.cancelText = "暂不授权"
+        }
+    with(dlg){
+        setConfirmClickListener {
+            getPermissions(aty, *per, result = result,allGranted = allGranted,isGoSetting = isGoSetting)
+            it.dismiss()
+        }
+        setCancelClickListener {
+            it.dismiss()
+        }
+        setCancelable(true)
+        show()
+    }
+}
 
 /**
  * 获取权限

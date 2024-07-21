@@ -15,14 +15,17 @@ import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.*
+import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
 import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.home.vm.HomeViewModel
@@ -36,6 +39,7 @@ import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_home.*
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
+import kotlinx.coroutines.launch
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -48,6 +52,7 @@ import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
+import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 
 
@@ -154,6 +159,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private val vm: HomeViewModel by viewModels()
+    private val vmMain: MainViewModel by activityViewModels()
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
@@ -163,7 +169,7 @@ class FgtHome : MainTabFragment() {
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
-
+        initEvent()
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
             ledTextView?.text = Config.getDefault().spUtils.getString("ledString", "")
             ledTextView?.init(activity?.windowManager)
@@ -192,6 +198,7 @@ class FgtHome : MainTabFragment() {
             tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else GONE
             tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else GONE
             tv_title.text = userInfo.nickname
+            getAdInfo()
         }
 
 
@@ -207,8 +214,27 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
         initTabLayout()
+    }
 
+    private fun initEvent() {
+        lifecycleScope.launchWhenCreated {
+            launch {
+                vmMain.adInfoLiveData.observe(this@FgtHome, Observer {
+                    AdPopHelper.showAdPop(activity!!,it,rootView)
+                })
+            }
+        }
+    }
 
+    private fun getAdInfo(){
+        getPermissionsWithTips(activity,
+            PermissionType.COARSE_LOCATION,
+            PermissionType.FINE_LOCATION,
+            contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
+            allGranted = {
+                vmMain.getAdInfo(activity!!, userId)
+            }
+        )
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

@@ -34,6 +34,7 @@ import wongxd.base.BaseBackActivity
 import wongxd.common.EasyToast
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
+import wongxd.common.permission.getPermissionsWithTips
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.updateApp.check
@@ -65,11 +66,9 @@ class AtyMain : BaseBackActivity() {
         getAppConfig()
 
 
-
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userInfo ->
             tkLogin(userInfo.username, userInfo.unionid)
         }
-
 
 //        dealNotification()
 
@@ -322,10 +321,17 @@ class AtyMain : BaseBackActivity() {
                         } else {
                             start(FgtChangeRentBattery.newInstance(oldContractId, result))
                         }
-                    } else if(prefix == AtyScanQrcode.TYPE_PAY_RENT){
-                        FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.NO_PAY_DEVICEID, FgtPayRentMoney.PAGE_TYPE_CREATE,result))
+                    } else if (prefix == AtyScanQrcode.TYPE_PAY_RENT) {
+                        FgtMain.instance?.start(
+                            FgtPayRentMoney.newInstance(
+                                FgtHome.NO_PAY_DEVICEID,
+                                FgtPayRentMoney.PAGE_TYPE_CREATE,
+                                result
+                            )
+                        )
                     } else {
-                        EventBus.getDefault().post(ScanResultEvent(result, FgtPayRentMoney.PAGE_TYPE_CREATE))
+                        EventBus.getDefault()
+                            .post(ScanResultEvent(result, FgtPayRentMoney.PAGE_TYPE_CREATE))
 //                        FgtHome.dealScanResult(result)
                     }
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {

@@ -1,15 +1,22 @@
 package com.net.call
 
+import com.entity.local.AdPayLocal
 import com.entity.local.AgentByCodeLocal
+import com.entity.local.GetAdInfoLocal
 import com.entity.local.GetMapKeyLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
+import com.entity.local.ServerPayResultLocal
 import com.entity.local.UserPaymentInfoLocal
+import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
 import com.entity.remote.LoginRemote
 import com.entity.remote.RentStep1Remote
+import com.entity.remote.ServerPayResultRemote
 import com.entity.remote.UserPaymentInfoRemote
 import com.net.Server
+import com.ruimeng.things.Path
+import com.ruimeng.things.home.bean.GetRentPayBean
 
 object BizService {
 
@@ -36,6 +43,21 @@ object BizService {
     suspend fun oneKeyLogin(oneKeyLoginLocal: OneKeyLoginLocal) = Server.call<OneKeyLoginLocal,LoginRemote>(
         Api.One_Key_Login,
         oneKeyLoginLocal
+    )
+
+    suspend fun getAdInfo(getAdInfoLocal: GetAdInfoLocal) = Server.call<GetAdInfoLocal,AdInfoRemote>(
+        Api.Get_Advertisement_Info,
+        getAdInfoLocal
+    )
+
+    suspend fun adPay(adPayLocal: AdPayLocal) = Server.call<AdPayLocal,GetRentPayBean.PayData>(
+        Api.Ad_Pay,
+        adPayLocal
+    )
+
+    suspend fun serverPayResult(serverPayResultLocal: ServerPayResultLocal) = Server.call<ServerPayResultLocal,ServerPayResultRemote>(
+        Path.ORDERSTATUS,
+        serverPayResultLocal
     )
 
 }

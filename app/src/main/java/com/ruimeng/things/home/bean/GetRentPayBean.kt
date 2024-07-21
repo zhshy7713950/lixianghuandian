@@ -1,11 +1,11 @@
 package com.ruimeng.things.home.bean
 
 data class GetRentPayBean(
-    var `data`: Data = Data(),
+    var `data`: PayData = PayData(),
     var errcode: Int = 0, // 200
     var errmsg: String = "" // 操作成功
 ) {
-    data class Data(
+    data class PayData(
         var alipay: Alipay = Alipay(),
         var orderid: String = "", // 10c2c019-b4b8-d764-48ba-cb573865b080
         var wxpay: Wxpay = Wxpay()

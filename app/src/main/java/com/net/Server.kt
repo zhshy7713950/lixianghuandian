@@ -19,6 +19,12 @@ object Server {
         Gson()
     }
 
+    fun addCommonParams(params: MutableMap<String,String>){
+        params.apply {
+            put("appType","lxhd")
+        }
+    }
+
     suspend inline fun <R, reified T> call(
         path: String,
         requestParams: R,
@@ -33,6 +39,7 @@ object Server {
                     object : TypeToken<HashMap<String, Any>>() {}.type
                 )
             )
+            addCommonParams(this.params)
 
             onSuccess {
                 Log.d(TAG,"=========net response start=========\n$it\n==========net response end============")

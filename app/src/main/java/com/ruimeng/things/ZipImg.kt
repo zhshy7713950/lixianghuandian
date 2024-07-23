@@ -91,7 +91,7 @@ private fun realZipImg(
     val bmp = decodeSampledBitmapFromFile(imgPath, tempWidth, tempHeight)
 
 
-    bmp.let {
+    bmp?.let {
 
         appCompatActivity.doAsync {
             compressBitmapToFile(bmp, File(scaleImgPath), maxSize)
@@ -129,7 +129,7 @@ private fun calculateInSampleSize(
 private fun decodeSampledBitmapFromFile(
     filePath: String,
     reqWidth: Int, reqHeight: Int
-): Bitmap {
+): Bitmap? {
 
     // First decode with inJustDecodeBounds=true to check dimensions
     val options = BitmapFactory.Options()

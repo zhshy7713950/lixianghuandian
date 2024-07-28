@@ -21,37 +21,47 @@
 
 
 
-
-
-		<TextView
-			android:id="@+id/tv_input_code"
-			android:layout_width="wrap_content"
+		<LinearLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="输入编号"
-			android:textColor="#ffffffff"
-			android:textSize="14sp"
-			android:drawableTop="@mipmap/ic_input_code"
-			android:layout_gravity="left|bottom"
-			android:drawablePadding="14dp"
-			android:gravity="center_horizontal"
-			android:layout_marginBottom="100dp"
-			android:layout_marginLeft="60dp"
-			/>
-
-		<TextView
-			android:id="@+id/tv_light"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="打开手电筒"
-			android:textColor="#ffffffff"
-			android:textSize="14sp"
-			android:drawableTop="@mipmap/ic_light"
-			android:layout_gravity="right|bottom"
-			android:drawablePadding="14dp"
-			android:gravity="center_horizontal"
+			android:orientation="horizontal"
 			android:layout_marginBottom="100dp"
 			android:layout_marginRight="60dp"
-			/>
+			android:layout_marginLeft="60dp"
+			android:layout_gravity="bottom"
+			android:gravity="center_horizontal">
+
+			<TextView
+				android:id="@+id/tv_input_code"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="输入编号"
+				android:textColor="#ffffffff"
+				android:textSize="14sp"
+				android:drawableTop="@mipmap/ic_input_code"
+				android:drawablePadding="14dp"
+				/>
+
+			<View
+				android:id="@+id/v_place_holder"
+				android:layout_width="0dp"
+				android:layout_height="1dp"
+				android:layout_weight="1"/>
+
+			<TextView
+				android:id="@+id/tv_light"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="打开手电筒"
+				android:textColor="#ffffffff"
+				android:textSize="14sp"
+				android:drawableTop="@mipmap/ic_light"
+				android:drawablePadding="14dp"
+				/>
+
+		</LinearLayout>
+
+
 
 
 </FrameLayout>

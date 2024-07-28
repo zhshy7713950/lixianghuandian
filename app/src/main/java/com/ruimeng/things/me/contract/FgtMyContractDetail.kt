@@ -109,7 +109,11 @@ class FgtMyContractDetail : BaseBackFragment() {
                             setOnBtnClickL(OnBtnClickL {
                                 OpenFileThing.openAssignFolder(
                                     activity,
-                                    FileProvider.getUriForFile(activity!!,activity!!.applicationContext.packageName+".fileprovider",File(path)),
+                                    FileProvider.getUriForFile(
+                                        activity!!,
+                                        activity!!.applicationContext.packageName + ".fileprovider",
+                                        File(path)
+                                    ),
                                     OpenFileThing.FileType.pdf
                                 )
                                 dismiss()
@@ -161,8 +165,13 @@ class FgtMyContractDetail : BaseBackFragment() {
                     tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
-                    tv_deposit_my_contract_detail.text =
-                        if (FgtHome.payType == "101") "已免押" else "${bean.deposit}元"
+                    tv_deposit_my_contract_detail.text = if ("0" == bean.deposit_status) {
+                        "0元"
+                    } else if (FgtHome.payType == "101") {
+                        "已免押"
+                    } else {
+                        "${bean.deposit}元"
+                    }
                     tv_rent_money_my_contract_detail.text = "${bean.rent}元"
                     if (bean.paymentName == "") {
                         tv_base_package.text =

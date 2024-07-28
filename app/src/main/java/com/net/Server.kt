@@ -19,27 +19,22 @@ object Server {
         Gson()
     }
 
-    fun addCommonParams(params: MutableMap<String,String>){
-        params.apply {
-            put("appType","lxhd")
-        }
-    }
-
     suspend inline fun <R, reified T> call(
         path: String,
-        requestParams: R,
+        requestParams: R?,
         method: String = RequestWrapper.METHOD_POST
     ) = suspendCoroutine<NetworkResponse<ResCommon<T>>> { con ->
         http {
             this.url = path
             this.method = method
-            this.params.putAll(
-                gson.fromJson(
-                    gson.toJson(requestParams),
-                    object : TypeToken<HashMap<String, Any>>() {}.type
+            requestParams?.let {
+                this.params.putAll(
+                    gson.fromJson(
+                        gson.toJson(it),
+                        object : TypeToken<HashMap<String, Any>>() {}.type
+                    )
                 )
-            )
-            addCommonParams(this.params)
+            }
 
             onSuccess {
                 Log.d(TAG,"=========net response start=========\n$it\n==========net response end============")

@@ -11,9 +11,12 @@ import com.net.call.BizService
 import com.net.getOrElse
 import com.net.whenError
 import com.net.whenSuccess
+import com.ruimeng.things.UserInfoLiveData
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
+
+    val userInfo: UserInfoLiveData = UserInfoLiveData.getInstance()
 
     fun rentStep1(deviceId: String, cgModel: String): LiveData<ResCommon<RentStep1Remote>>{
         val rentStep1LiveData = MutableLiveData<ResCommon<RentStep1Remote>>()

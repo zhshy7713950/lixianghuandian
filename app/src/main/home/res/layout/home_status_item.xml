@@ -103,6 +103,21 @@
 					android:textColor="@color/white"
 					tools:text="1212323" />
 				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="电池状态"
+					android:textColor="#96A2AA"
+					android:textSize="10sp"
+					android:layout_marginTop="4dp"/>
+				<TextView
+					android:id="@+id/tvBatteryStatus"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="14sp"
+					android:layout_marginTop="2dp"
+					android:textColor="@color/white"
+					tools:text="1212323" />
+				<TextView
 					android:id="@+id/fl_change_remark_home"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -209,6 +224,15 @@
 				android:drawableLeft="@mipmap/ic_open_battery"
 				android:layout_marginRight="26dp"
 				android:layout_marginBottom="16dp"/>
+			<TextView
+				android:id="@+id/tvUpdateTime"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="#D8E7F3"
+				android:textSize="10sp"
+				android:layout_gravity="bottom|center_horizontal"
+				android:layout_marginBottom="64dp"
+				tools:text="更新时间：07.26 23:09:09"/>
 		</FrameLayout>
 
 		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout

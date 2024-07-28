@@ -6,15 +6,21 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
+import com.ruimeng.things.home.vm.DepositViewModel
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
+import com.utils.ToastHelper
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_deposit.*
 import org.greenrobot.eventbus.EventBus
@@ -23,6 +29,8 @@ import org.json.JSONObject
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
 import wongxd.common.*
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.http
 
 /**api
@@ -58,6 +66,7 @@ class FgtDeposit : BaseBackFragment() {
 
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
     val getIsHost: String by lazy { arguments?.getString("isHost") ?: "" }
+    private val vm: DepositViewModel by viewModels()
 
     override fun getLayoutRes(): Int = R.layout.fgt_deposit
 
@@ -161,8 +170,43 @@ class FgtDeposit : BaseBackFragment() {
 //            }
 
             showProgressDialog("请求支付信息中")
+            vm.getMyDevice().observe(this, Observer {
+                if(it.isNotEmpty()){
+                    dissmissProgressDialog()
+                    if(it.size == 1){
+                        NormalDialog(activity)
+                            .apply {
+                                style(NormalDialog.STYLE_TWO)
+                                btnNum(2)
+                                title("提示")
+                                content("您已有1块待用电池，请问是否继续支付")
+                                btnText("继续支付", "取消")
+                                setOnBtnClickL(OnBtnClickL {
+                                    dismiss()
+                                    showProgressDialog("请求支付信息中")
+                                    getPayByDeposit()
+                                }, OnBtnClickL {
+                                    dismiss()
+                                })
+                            }.show()
+                    }else{
+                        NormalDialog(activity)
+                            .apply {
+                                style(NormalDialog.STYLE_ONE)
+                                btnNum(1)
+                                title("提示")
+                                content("您已有至少2块待用电池，可租用电池数已达上限")
+                                btnText("确认")
+                                setOnBtnClickL(OnBtnClickL {
+                                    dismiss()
+                                })
+                            }.show()
+                    }
+                }else{
+                    getPayByDeposit()
+                }
+            })
 
-            getPayByDeposit()
         }
 
         iv_check.setOnClickListener {

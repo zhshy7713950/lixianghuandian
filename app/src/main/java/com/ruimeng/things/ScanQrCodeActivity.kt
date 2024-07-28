@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
+import androidx.core.view.isVisible
 import com.ruimeng.things.home.AtyInputCode
 import com.ruimeng.things.home.helper.ScanResultCheck
 import com.utils.ToastHelper
@@ -69,6 +70,10 @@ class ScanQrCodeActivity : AtyBase() {
         tv_light.setOnClickListener {
             CodeUtils.isLightEnable(tv_light.text.equals("打开手电筒"))
             tv_light.text = if (tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
+        }
+        if(getTypeCode() == 4){
+            tv_input_code.isVisible = false
+            v_place_holder.isVisible = false
         }
     }
 

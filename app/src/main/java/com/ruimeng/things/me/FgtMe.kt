@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.ruimeng.things.*
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
+import com.ruimeng.things.bean.showName
 import com.ruimeng.things.home.FgtFollowWechatAccount
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
@@ -19,6 +20,7 @@ import com.utils.isZero
 import com.utils.safeToFloat
 import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_me.*
+import kotlinx.android.synthetic.main.fgt_setting.tv_version_setting
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -44,9 +46,7 @@ class FgtMe : MainTabFragment() {
                 iv_header_me.loadImg(userinfo.logo)
             }
 
-            tv_username_me.text =
-                if (userinfo.nickname.isBlank()) userinfo.mobile else userinfo.nickname
-
+            tv_username_me.text = userinfo.showName()
 
             rtv_truename_status.apply {
 
@@ -216,6 +216,22 @@ class FgtMe : MainTabFragment() {
         tv_ya_money_me.setOnClickListener {
             startFgt(FgtMeDeposit())
         }
+        tv_ya_money_me_title.setOnClickListener {
+            startFgt(FgtMeDeposit())
+        }
+
+        //1,获取包 管理器
+        val packageManager = activity?.packageManager
+        //2,通过上下文获取包名
+        val packageName = activity?.packageName
+        //3,获取包的信息
+        val packageInfo = packageManager?.getPackageInfo(packageName ?: "", 0)
+        //4,获取版本号
+        val versionCode = packageInfo?.versionCode
+        //5,获取版本名
+        val versionName = packageInfo?.versionName ?: "未知版本"
+
+        tv_version_setting.text = "当前版本:v$versionName($versionCode)"
     }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {

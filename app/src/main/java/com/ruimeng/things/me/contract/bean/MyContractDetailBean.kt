@@ -20,6 +20,7 @@ data class MyContractDetailBean(
         var begin_time: String = "",
         var exp_time: String = "",
         var down_sign: Int = 0,
+        var deposit_status: String = "",
         val userOptions :List<PaymentOption>? = null
     ) {
         data class SignPng(

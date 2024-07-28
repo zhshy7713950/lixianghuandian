@@ -66,12 +66,15 @@ fun getSweetDialog(
     type: Int,
     msg: String,
     cancelable: Boolean = true,
+    confirmText: String = "确定",
+    cancelText: String = "取消",
     confirmLis: () -> Unit = {}
 ): SweetAlertDialog {
     val dlg = SweetAlertDialog(appCompatActivity, type)
     val thisCancelable = if (type == SweetAlertDialog.ERROR_TYPE) false else cancelable
     dlg.titleText = msg
-    dlg.confirmText = "确定"
+    dlg.confirmText = confirmText
+    dlg.cancelText = cancelText
     dlg.setCancelable(thisCancelable)
     dlg.setCanceledOnTouchOutside(thisCancelable)
     dlg.setConfirmClickListener {
@@ -86,12 +89,15 @@ fun getSweetDialog(
     type: Int,
     msg: String,
     cancelable: Boolean = true,
+    confirmText: String = "确定",
+    cancelText: String = "取消",
     confirmLis: () -> Unit = {}
 ): SweetAlertDialog {
     val dlg = SweetAlertDialog(getCurrentAty(), type)
     val thisCancelable = if (type == SweetAlertDialog.ERROR_TYPE) false else cancelable
     dlg.titleText = msg
-    dlg.confirmText = "确定"
+    dlg.confirmText = confirmText
+    dlg.cancelText = cancelText
     dlg.setCancelable(thisCancelable)
     dlg.setCanceledOnTouchOutside(thisCancelable)
     dlg.setConfirmClickListener {

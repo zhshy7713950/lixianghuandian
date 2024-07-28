@@ -24,6 +24,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
+import com.ruimeng.things.bean.showName
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
@@ -197,7 +198,7 @@ class FgtHome : MainTabFragment() {
             userId = userInfo.id
             tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else GONE
             tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else GONE
-            tv_title.text = userInfo.nickname
+            tv_title.text = userInfo.showName()
             getAdInfo()
         }
 
@@ -220,13 +221,18 @@ class FgtHome : MainTabFragment() {
         lifecycleScope.launchWhenCreated {
             launch {
                 vmMain.adInfoLiveData.observe(this@FgtHome, Observer {
-                    AdPopHelper.showAdPop(activity!!,it,rootView)
+                    AdPopHelper.showAdPop(activity!!, it, rootView)
                 })
+            }
+            launch {
+                vm.userInfo.simpleObserver(this@FgtHome) {
+                    tv_title.text = it.showName()
+                }
             }
         }
     }
 
-    private fun getAdInfo(){
+    private fun getAdInfo() {
         getPermissionsWithTips(activity,
             PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION,
@@ -297,7 +303,7 @@ class FgtHome : MainTabFragment() {
     private fun rentStep1(deviceId: String?, type: Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {
         deviceId ?: return
 
-        Log.d("scanTag","rentStep1被调用")
+        Log.d("scanTag", "rentStep1被调用")
 
         vm.rentStep1(deviceId, "1").observe(this, Observer { rent ->
             //status int 状态， 0 等待支付押金 -》进入押金支付界面，1 押金已支付 进入租金支付界面
@@ -572,6 +578,8 @@ class FgtHome : MainTabFragment() {
     fun openOrCloseBatter(event: BatteryOpenEvent) {
         IS_OPEN = event.isOpen
         if (IS_OPEN) {
+            tvBatteryStatus.text = "已通电"
+            tvBatteryStatus.textColor = Color.parseColor("#2FE19C")
             tvOpenClose.text = "关闭电源"
             tvOpenClose.textColor = Color.WHITE
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
@@ -587,6 +595,8 @@ class FgtHome : MainTabFragment() {
             )
             tvProgress.setTextColor(Color.parseColor("#29EBB6"))
         } else {
+            tvBatteryStatus.text = "已断电"
+            tvBatteryStatus.textColor = Color.parseColor("#DEF0E9")
             tvOpenClose.text = "开启电源"
             tvOpenClose.textColor = Color.parseColor("#29EBB6")
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
@@ -685,6 +695,7 @@ class FgtHome : MainTabFragment() {
                 rent_time = deviceDetailBean!!.device_contract.rent_time
                 CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
                 getPaymentInfo()
+                updateRequestTime()
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
@@ -696,7 +707,10 @@ class FgtHome : MainTabFragment() {
 
             }
         }
+    }
 
+    private fun updateRequestTime() {
+        tvUpdateTime.text = "更新时间：${curDateByFormat()}"
     }
 
     var activeStatus = "1" //1-生效中，2-已过期，3-已冻结
@@ -814,7 +828,7 @@ class FgtHome : MainTabFragment() {
                                         .apply {
                                             style(NormalDialog.STYLE_TWO)
                                             btnNum(2)
-                                            title("冻结套餐需要将电池归还至电柜。冻结成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                                            title("冻结套餐需要将电池归还至电柜。冻结成功后套餐将暂停计费(持续冻结至少24小时)，如需恢复套餐，需要您进行解冻操作")
                                             content("请确认是否立即开始冻结？")
                                             btnText("确认", "取消")
                                             setOnBtnClickL(OnBtnClickL {
@@ -929,6 +943,8 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = View.VISIBLE
             tv_error_info.visibility = View.VISIBLE
             tv_error_info.text = info.protect_desc
+            tvBatteryStatus.text = "已故障"
+            tvBatteryStatus.textColor = Color.parseColor("#FF7A5A")
         } else {
             // 通电或者关电状态
             ivWrongBt.visibility = GONE
@@ -949,6 +965,7 @@ class FgtHome : MainTabFragment() {
             tv_please_change.visibility = View.VISIBLE
             tv_left_battery.visibility = GONE
             tv_voltage.visibility = GONE
+            tvBatteryStatus.visibility = GONE
             pvBattery.visibility = GONE
             virtaul = true
             if (paymentDetailBean?.active_status == "1") {
@@ -1004,7 +1021,8 @@ class FgtHome : MainTabFragment() {
         if (paymentDetailBean != null) {
 
 
-            tv_ya_monety.text = if(payType == "101") "已免押" else "${paymentDetailBean!!.deposit}元"
+            tv_ya_monety.text =
+                if (payType == "101") "已免押" else "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
             tv_ya_monety.setOnClickListener {
                 if (tv_ya_monety.text != "0.00") {
@@ -1114,11 +1132,10 @@ class FgtHome : MainTabFragment() {
         if (activeStatus == "3") {
             ToastHelper.shortToast(context, "请先完成解冻操作")
             return false
+        } else if (virtaul) {
+            ToastHelper.shortToast(context, "请先完成取电操作")
+            return false
         }
-//        else if (virtaul) {
-//            ToastHelper.shortToast(context, "请先完成取电操作")
-//            return false
-//        }
         return true
     }
 
@@ -1207,8 +1224,8 @@ class FgtHome : MainTabFragment() {
 
         }
         changeOpenDoor?.setOnClickListener {
-            if (CURRENT_DEVICEID.isNullOrEmpty()){
-                ToastHelper.shortToast(context,"操作失败，请刷新后重试")
+            if (CURRENT_DEVICEID.isNullOrEmpty()) {
+                ToastHelper.shortToast(context, "操作失败，请刷新后重试")
                 getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
                 return@setOnClickListener
             }
@@ -1247,7 +1264,7 @@ class FgtHome : MainTabFragment() {
                         .apply {
                             style(NormalDialog.STYLE_TWO)
                             btnNum(2)
-                            title("冻结套餐成功后套餐将暂停计费，如需恢复套餐，需要您进行解冻操作")
+                            title("冻结套餐成功后套餐将暂停计费(持续冻结至少24小时)，如需恢复套餐，需要您进行解冻操作")
                             content("请确认是否立即开始冻结？")
                             btnText("确认", "取消")
                             setOnBtnClickL(OnBtnClickL {

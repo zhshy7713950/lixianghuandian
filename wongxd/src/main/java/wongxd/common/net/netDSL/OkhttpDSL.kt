@@ -22,6 +22,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.BigDecimal
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -298,7 +301,20 @@ object BaseOkhttpHelper {
             .build()
         http.newCall(req!!).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
-                val msg = e?.message ?: "服务器内部错误"
+                val msg = when (e) {
+                    is SocketTimeoutException -> {
+                        "网络连接超时，请稍后重试"
+                    }
+
+                    is ConnectException, is UnknownHostException -> {
+                        "网络连接失败，请检查网络后重试"
+                    }
+
+                    else -> {
+                        e?.message ?: "服务器内部错误"
+                    }
+                }
+
                 MainLooper.runOnUiThread {
                     if (wrap.IS_SHOW_MSG) {
                         EasyToast.DEFAULT.show(msg)

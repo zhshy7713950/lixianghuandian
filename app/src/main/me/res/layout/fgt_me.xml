@@ -38,7 +38,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/srl_me"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <com.scwang.smartrefresh.header.MaterialHeader
             android:layout_width="match_parent"
@@ -178,6 +179,7 @@
                         android:textSize="20sp"
                         tools:text="1000.00" />
                     <TextView
+                        android:id="@+id/tv_ya_money_me_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="账号押金"
@@ -505,4 +507,13 @@
 
         </LinearLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_version_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:textColor="@color/white" />
+
 </LinearLayout>

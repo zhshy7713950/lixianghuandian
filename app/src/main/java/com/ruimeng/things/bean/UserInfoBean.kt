@@ -33,3 +33,11 @@ data class UserInfoBean(
         )
     }
 }
+
+fun UserInfoBean.Data.UserInfo.showName(): String{
+    return if(0 == realname_auth){
+        "未实名$mobile"
+    }else{
+        nickname
+    }
+}

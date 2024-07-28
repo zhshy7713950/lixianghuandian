@@ -17,6 +17,7 @@ import com.entity.remote.UserPaymentInfoRemote
 import com.net.Server
 import com.ruimeng.things.Path
 import com.ruimeng.things.home.bean.GetRentPayBean
+import com.ruimeng.things.home.bean.MyDevicesBean
 
 object BizService {
 
@@ -60,4 +61,8 @@ object BizService {
         serverPayResultLocal
     )
 
+    suspend fun getMyDevice() = Server.call<Any,List<MyDevicesBean.Data>>(
+        Path.GET_MY_DEVICE,
+        null
+    )
 }

@@ -15,4 +15,6 @@ object Api {
     const val Get_Advertisement_Info = "apiv6/advertisementinfo/getadvertisement"
 
     const val Ad_Pay = "apiv6/advertisementinfo/packagepay"
+
+    const val Change_Error = "apiv6/cabinet/changeerror"
 }

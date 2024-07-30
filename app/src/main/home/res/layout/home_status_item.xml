@@ -51,6 +51,7 @@
 					android:text="(请进行'扫码换电')"
 					android:textColor="#ff29ebb6"
 					android:textSize="15sp"
+					android:visibility="gone"
 					/>
 				<TextView
 					android:id="@+id/tv_left_battery"
@@ -61,6 +62,7 @@
 					android:drawablePadding="4dp"
 					android:textColor="#ffd8e7f3"
 					android:textSize="13sp"
+					android:visibility="gone"
 					/>
 				<TextView
 					android:id="@+id/tv_voltage"
@@ -71,6 +73,7 @@
 					android:drawablePadding="4dp"
 					android:textColor="#ffd8e7f3"
 					android:textSize="12sp"
+					android:visibility="gone"
 					/>
 			</LinearLayout>
 			<ImageView
@@ -173,6 +176,23 @@
 				android:layout_marginRight="12dp"
 				android:layout_marginTop="78dp"/>
 			<com.flyco.roundview.RoundTextView
+				android:id="@+id/tvHelp"
+				android:layout_width="75dp"
+				android:layout_height="20dp"
+				android:text="遇到问题"
+				android:textColor="#ff434e58"
+				android:textSize="10sp"
+				app:rv_backgroundColor="#FFA267"
+				app:rv_cornerRadius="10dp"
+				android:gravity="center_vertical"
+				android:drawableLeft="@mipmap/ic_help"
+				android:paddingLeft="13dp"
+				android:drawablePadding="2dp"
+				android:layout_gravity="right"
+				android:layout_marginRight="12dp"
+				android:layout_marginTop="118dp"
+				/>
+			<com.flyco.roundview.RoundTextView
 				android:id="@+id/tvUnbind"
 				android:layout_width="55dp"
 				android:layout_height="20dp"
@@ -187,7 +207,8 @@
 				android:drawablePadding="2dp"
 				android:layout_gravity="right"
 				android:layout_marginRight="12dp"
-				android:layout_marginTop="112dp"/>
+				android:layout_marginTop="158dp"
+				android:visibility="gone"/>
 			<com.flyco.roundview.RoundTextView
 				android:id="@+id/tvOpenClose"
 				android:layout_width="150dp"
@@ -480,6 +501,7 @@
 							android:layout_marginLeft="5dp"
 							android:gravity="center_vertical"
 							android:background="@drawable/shape_green"
+							android:visibility="gone"
 							/>
 					</LinearLayout>
 
@@ -522,6 +544,7 @@
 						android:paddingRight="2dp"
 						android:layout_marginLeft="5dp"
 						android:gravity="center_vertical"
+						android:visibility="gone"
 						/>
 
 					<TextView
@@ -642,7 +665,8 @@
 						android:textSize="11sp"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent"
-						app:layout_constraintRight_toRightOf="parent" />
+						app:layout_constraintRight_toRightOf="parent"
+						android:visibility="gone"/>
 
 
 					<TextView
@@ -659,7 +683,8 @@
 						android:textSize="11sp"
 						app:layout_constraintBottom_toBottomOf="parent"
 						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintRight_toRightOf="parent" />
+						app:layout_constraintRight_toRightOf="parent"
+						android:visibility="gone"/>
 					<TextView
 						android:id="@+id/tv_more"
 						android:layout_width="wrap_content"
@@ -689,7 +714,8 @@
 						app:rv_backgroundColor="#404E59"
 						app:rv_cornerRadius="9dp"
 						app:rv_strokeColor="#29EBB6"
-						app:rv_strokeWidth="0.5dp" />
+						app:rv_strokeWidth="0.5dp"
+						android:visibility="gone"/>
 				</androidx.constraintlayout.widget.ConstraintLayout>
 			</LinearLayout>
 		</LinearLayout>
@@ -700,7 +726,8 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="20dp"
 			android:layout_marginBottom="20dp"
-			android:orientation="horizontal">
+			android:orientation="horizontal"
+			android:visibility="gone">
 
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:layout_width="match_parent"

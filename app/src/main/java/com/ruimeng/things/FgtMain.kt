@@ -3,6 +3,7 @@ package com.ruimeng.things
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
@@ -31,8 +32,14 @@ class FgtMain : FgtBase() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_main
     lateinit var fgts: Array<MainTabFragment>
+    private var currentIndex: Int = 0
 
 //    var navigationController: NavigationController? = null
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        fgts[currentIndex].onHiddenChanged(hidden)
+    }
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
@@ -90,7 +97,7 @@ class FgtMain : FgtBase() {
     }
 
     private fun initTab(index:Int,fgts:Array< MainTabFragment>){
-
+        this.currentIndex = index
         val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_contract,R.mipmap.tab_me)
         val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_contract_se,R.mipmap.tab_me_se)
         val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)

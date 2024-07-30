@@ -42,3 +42,7 @@ data class AdPayLocal(
 data class ServerPayResultLocal(
     val orderid: String
 )
+data class ChangeErrorLocal(
+    val deviceId: String,
+    val code: String
+)

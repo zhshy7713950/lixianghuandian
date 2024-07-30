@@ -254,6 +254,13 @@ class FgtMe : MainTabFragment() {
     override fun getLayoutRes(): Int = R.layout.fgt_me
     class RefreshMe
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if(!hidden){
+            srl_me?.autoRefresh()
+        }
+    }
+
     @Subscribe
     public fun refreshStation(event: RefreshMe) {
         srl_me?.autoRefresh()

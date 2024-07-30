@@ -1,6 +1,7 @@
 package com.ruimeng.things.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -28,6 +29,8 @@ import com.ruimeng.things.bean.showName
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
+import com.ruimeng.things.home.view.PopupHelpEvent
+import com.ruimeng.things.home.view.PopupHelpWindow
 import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtMeDeposit
@@ -55,6 +58,7 @@ import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
+import wongxd.utils.SystemUtils
 
 
 /**
@@ -205,7 +209,7 @@ class FgtHome : MainTabFragment() {
 
         CURRENT_DEVICEID = Config.getDefault().spUtils.getString(KEY_LAST_DEVICE_ID)
 
-        dealTwoStatus(false)
+        dealTwoStatus(isHasItem = false, isFirstInit = true)
 
         WaitViewController.from(root_has_item) { renderChilds() }
 
@@ -391,9 +395,11 @@ class FgtHome : MainTabFragment() {
     /**
      * 首页布局 有 已添加设备 和未加设备两种状态
      */
-    private fun dealTwoStatus(isHasItem: Boolean) {
+    private fun dealTwoStatus(isHasItem: Boolean,isFirstInit: Boolean = false) {
         root_has_item.visibility = GONE
         root_no_item.visibility = GONE
+
+        if(isFirstInit) return
 
         if (isHasItem) {
             root_has_item.visibility = View.VISIBLE
@@ -487,6 +493,43 @@ class FgtHome : MainTabFragment() {
         fl_change_remark_home.setOnClickListener { changeRemark() }
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
+        tvHelp.setOnClickListener {
+            PopupHelpWindow(activity!!){
+                when(it){
+                    is PopupHelpEvent.SelfService -> {
+                        if("3" == activeStatus || virtaul){
+                            EasyToast.DEFAULT.show("没有需要取回的电池")
+                        }else {
+                            ToastHelper.shortToast(context, "请扫描电柜二维码")
+                            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                                intent.putExtra("type", "自助开仓")
+                                startActivityForResult(intent, 1)
+                            })
+                        }
+                    }
+                    is PopupHelpEvent.OnlineService -> {
+                        val tel = "4000283969"
+                        AnyLayer.with(getCurrentAppAty())
+                            .contentView(R.layout.alert_phone_call_dialog)
+                            .bindData { anyLayer ->
+                                anyLayer.contentView.findViewById<TextView>(R.id.tv_name).text = "联系在线客服"
+                                anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).text = tel
+                                anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener {
+                                    SystemUtils.call(activity, tel)
+                                    anyLayer.dismiss()
+                                }
+                                anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
+                                    anyLayer.dismiss()
+                                }
+                            }.backgroundColorInt(Color.parseColor("#85000000"))
+                            .backgroundBlurRadius(10f)
+                            .backgroundBlurScale(10f)
+                            .show()
+                    }
+                }
+            }.show(tvHelp)
+        }
         tvOpenClose.setOnClickListener {
             if (checkStatus()) {
                 var title =
@@ -841,6 +884,10 @@ class FgtHome : MainTabFragment() {
                                         }.show()
 
                                 }
+                            }else if("自助开仓" == getType){
+                                result?.let {
+                                    selfService(it)
+                                }
                             }
                         }
                     } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
@@ -848,6 +895,13 @@ class FgtHome : MainTabFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun selfService(code: String){
+        vm.changeError(CURRENT_DEVICEID,code).observe(this){
+            EasyToast.DEFAULT.show(it)
+            autoRefreshImmediately()
         }
     }
 
@@ -871,7 +925,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun autoRefresh() {
-        srl_home.postDelayed({ srl_home.autoRefresh() }, 2000)
+        srl_home.postDelayed({ autoRefreshImmediately() }, 2000)
     }
 
     /**
@@ -928,6 +982,10 @@ class FgtHome : MainTabFragment() {
         tabBattery.selectTab(0)
         layoutPackage.visibility = View.VISIBLE
         layoutBattery.visibility = GONE
+    }
+
+    private fun autoRefreshImmediately(){
+        srl_home.autoRefresh()
     }
 
     private fun showDeviceInfo(info: DeviceDetailBean.Data.DeviceBase) {

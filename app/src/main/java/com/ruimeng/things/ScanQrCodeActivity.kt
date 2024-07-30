@@ -77,14 +77,14 @@ class ScanQrCodeActivity : AtyBase() {
         }
     }
 
-    fun getTypeCode(): Int {
+    private fun getTypeCode(): Int {
         return when (getType) {
             "换电开门" -> 1
             "换电" -> 2
             "租电" -> 4
             "退还" -> 5
             "冻结" -> 6
-
+            "自助开仓" -> 7
             else -> 0
         }
     }

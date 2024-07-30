@@ -19,7 +19,7 @@ class LoginViewModel : BaseViewModel() {
     fun oneKeyLogin(oneKeyLoginLocal: OneKeyLoginLocal): LiveData<NetworkResponse<ResCommon<LoginRemote>>> {
         val loginLiveData = MutableLiveData<NetworkResponse<ResCommon<LoginRemote>>>()
         viewModelScope.launch {
-            val response = BizService.oneKeyLogin(oneKeyLoginLocal)
+            val response = BizService.oneKeyLogin(oneKeyLoginLocal,false)
             loginLiveData.value = response
         }
         return loginLiveData

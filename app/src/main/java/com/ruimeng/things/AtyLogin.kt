@@ -15,8 +15,7 @@ import com.entity.local.OneKeyLoginLocal
 import com.net.whenBizError
 import com.net.whenError
 import com.net.whenSuccess
-import com.netease.nis.quicklogin.QuickLogin
-import com.netease.nis.quicklogin.listener.QuickLoginPreMobileListener
+import com.net.whenUnknownError
 import com.netease.nis.quicklogin.listener.QuickLoginTokenListener
 import com.ruimeng.things.bean.LoginBean
 import com.ruimeng.things.home.FgtHome
@@ -27,6 +26,7 @@ import com.utils.quicklogin.PrefetchResult
 import com.utils.quicklogin.QuickLoginHelper
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.aty_login.*
+import kotlinx.coroutines.launch
 import wongxd.AtyWeb
 import wongxd.Config
 import wongxd.Http
@@ -161,11 +161,11 @@ class AtyLogin : AtyBase() {
             layout_test.visibility = View.GONE
         }
         btnOtpLogin.setOnClickListener {
-            if(et_phone.text.toString().isEmpty()){
+            if (et_phone.text.toString().isEmpty()) {
                 EasyToast.DEFAULT.show("请输入手机号码")
                 return@setOnClickListener
             }
-            if(et_code.text.toString().isEmpty()){
+            if (et_code.text.toString().isEmpty()) {
                 EasyToast.DEFAULT.show("请输入验证码")
                 return@setOnClickListener
             }
@@ -182,7 +182,7 @@ class AtyLogin : AtyBase() {
         requestPermission()
     }
 
-    private fun doOnePassLogin(){
+    private fun doOnePassLogin() {
         QuickLoginHelper.onePassLogin(object : QuickLoginTokenListener {
             override fun onGetTokenSuccess(YDToken: String?, accessCode: String?) {
                 doOneKeyLogin(YDToken, accessCode)
@@ -211,10 +211,12 @@ class AtyLogin : AtyBase() {
 
     private fun initQuickLogin() {
         lifecycleScope.launchWhenCreated {
-            this@AtyLogin.prefetchResult = QuickLoginHelper.prefetchMobileNumber()
-            prefetchResult?.let {
-                if (it.isSuccess) {
-                    doOnePassLogin()
+            launch {
+                this@AtyLogin.prefetchResult = QuickLoginHelper.prefetchMobileNumber(this@AtyLogin)
+                prefetchResult?.let {
+                    if (it.isSuccess) {
+                        doOnePassLogin()
+                    }
                 }
             }
         }
@@ -243,6 +245,8 @@ class AtyLogin : AtyBase() {
         doLoginHttp(phone, code)
     }
 
+    private var hasRetryYDToken = false
+
     private fun doOneKeyLogin(YDToken: String?, accessToken: String?) {
         vm.oneKeyLogin(OneKeyLoginLocal(YDToken ?: "", accessToken ?: "")).observeForever {
             it.whenSuccess { resCommon ->
@@ -250,9 +254,21 @@ class AtyLogin : AtyBase() {
                 UserInfoLiveData.setToString(resCommon.data.userinfo!!)
                 Config.getDefault().token = resCommon.data.token
                 startAty<AtyMain>()
-            }.whenError { msg ->
-                QuickLoginHelper.getQuickLoginInstance().quitActivity()
-                EasyToast.DEFAULT.show(msg)
+            }.whenError { code, msg ->
+                if (code == 450 && !hasRetryYDToken) {
+                    lifecycleScope.launch {
+                        hasRetryYDToken = true
+                        this@AtyLogin.prefetchResult = QuickLoginHelper.prefetchMobileNumber(this@AtyLogin)
+                        prefetchResult?.let { result ->
+                            if (result.isSuccess) {
+                                doOneKeyLogin(result.YDToken,accessToken)
+                            }
+                        }
+                    }
+                } else {
+                    QuickLoginHelper.getQuickLoginInstance().quitActivity()
+                    EasyToast.DEFAULT.show(msg)
+                }
             }
         }
     }
@@ -265,7 +281,7 @@ class AtyLogin : AtyBase() {
 
             onSuccessWithMsg { s, msg ->
                 if (pageType == 0) {
-                    SPUtils.getInstance().put(TAG_LAST_LOGIN_PHONE,phone)
+                    SPUtils.getInstance().put(TAG_LAST_LOGIN_PHONE, phone)
                     val loginBean = s.toPOJO<LoginBean>()
                     UserInfoLiveData.setToString(loginBean.data.userinfo)
                     Config.getDefault().token = loginBean.data.token

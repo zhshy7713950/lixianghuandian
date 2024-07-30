@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.base.viewmodel.BaseViewModel
+import com.entity.local.ChangeErrorLocal
 import com.entity.local.RentStep1Local
 import com.entity.remote.RentStep1Remote
 import com.entity.remote.ResCommon
@@ -26,5 +27,17 @@ class HomeViewModel : BaseViewModel() {
             }
         }
         return rentStep1LiveData
+    }
+
+    fun changeError(deviceId: String, code: String): LiveData<String>{
+        val changeErrorLiveData = MutableLiveData<String>()
+        viewModelScope.launch{
+            BizService.changeError(ChangeErrorLocal(deviceId, code)).whenSuccess{
+                changeErrorLiveData.value = it.errmsg
+            }.whenError { _, msg ->
+                changeErrorLiveData.value = msg
+            }
+        }
+        return changeErrorLiveData
     }
 }

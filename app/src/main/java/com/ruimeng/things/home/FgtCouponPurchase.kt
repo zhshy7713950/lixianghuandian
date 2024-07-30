@@ -93,11 +93,11 @@ class FgtCouponPurchase : BaseBackFragment() {
         lifecycleScope.launchWhenCreated {
             launch {
                 vm.serverPayResultLiveData.observeForever {
-                    Log.d("LXHDNet","支付结果===> ${it.isSuccess}")
+                    Log.d("LXHDNet", "支付结果===> ${it.isSuccess}")
                     dlgPayProgress.dismiss()
-                    if(it.isSuccess){
+                    if (it.isSuccess) {
                         dlgPaySuccess.show()
-                    }else{
+                    } else {
                         dlgPayFailed.show()
                     }
                 }
@@ -119,9 +119,9 @@ class FgtCouponPurchase : BaseBackFragment() {
                 payType,
                 operationInnerData.price ?: ""
             )
-        ).observeForever {netRes ->
-            netRes.whenSuccess { 
-                when(payType){
+        ).observeForever { netRes ->
+            netRes.whenSuccess {
+                when (payType) {
                     "1" -> {
                         val entity = WXEntryActivity.WxPayEntity()
                         it.data.wxpay.let {
@@ -147,16 +147,17 @@ class FgtCouponPurchase : BaseBackFragment() {
                                 }
                             })
                     }
+
                     "2" -> {
                         BaseAlipay.tryPay(it.data.alipay.paystr) { _, _, isLocalSuccess ->
                             getServerPayResult(it.data.orderid, isLocalSuccess)
                         }
                     }
                 }
-            }.whenError {
+            }.whenError { _, msg ->
                 dlgPayProgress.dismiss()
                 dlgPayFailed.apply {
-                    this.contentText = it
+                    this.contentText = msg
                     show()
                 }
             }
@@ -164,7 +165,7 @@ class FgtCouponPurchase : BaseBackFragment() {
     }
 
     private fun getServerPayResult(orderId: String, localSuccess: Boolean) {
-        vm.pollServerPayResult(orderId,localSuccess)
+        vm.pollServerPayResult(orderId, localSuccess)
     }
 
     private fun updatePrice(op: OperationInnerData?) {

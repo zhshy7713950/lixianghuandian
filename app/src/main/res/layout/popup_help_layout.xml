@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_popup_help"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="请选择您遇到的问题，进行自助处理，或者联系客服处理"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ly_self_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="14dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_service_operation">
+
+            <ImageView
+                android:id="@+id/iv_self_service"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_self_service"
+                android:layout_marginLeft="1dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tv_self_service"
+                />
+
+            <TextView
+                android:id="@+id/tv_self_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自助"
+                android:textSize="8sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="1dp"
+                app:layout_constraintLeft_toLeftOf="@+id/iv_self_service"
+                app:layout_constraintRight_toRightOf="@+id/iv_self_service"
+                app:layout_constraintTop_toBottomOf="@+id/iv_self_service"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tv_self_service_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/iv_self_service"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text="我的电池已被电柜锁仓"
+                android:layout_marginLeft="14dp"/>
+
+            <TextView
+                android:id="@+id/tv_self_service_operation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/iv_self_service"
+                app:layout_constraintTop_toBottomOf="@+id/tv_self_service_desc"
+                android:textColor="#FFE58B"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:text="点击进入自助流程，扫描柜码取回"
+                android:layout_marginLeft="14dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ly_online_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:padding="14dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_service_operation">
+
+            <ImageView
+                android:id="@+id/iv_online_service"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_online_service"
+                android:layout_marginLeft="1dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tv_online_service"
+                />
+
+            <TextView
+                android:id="@+id/tv_online_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="客服"
+                android:textSize="8sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="1dp"
+                app:layout_constraintLeft_toLeftOf="@+id/iv_online_service"
+                app:layout_constraintRight_toRightOf="@+id/iv_online_service"
+                app:layout_constraintTop_toBottomOf="@+id/iv_online_service"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tv_online_service_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/iv_online_service"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text="无法自行处理"
+                android:layout_marginLeft="14dp"/>
+
+            <TextView
+                android:id="@+id/tv_online_service_operation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/iv_online_service"
+                app:layout_constraintTop_toBottomOf="@+id/tv_online_service_desc"
+                android:textColor="#FFE58B"
+                android:textSize="10sp"
+                android:layout_marginTop="5dp"
+                android:text="点击联系在线客服，进行人工处理"
+                android:layout_marginLeft="14dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:text="我知道了"
+            android:textSize="15sp"
+            android:textColor="#272934"
+            android:background="@drawable/rectangle_button_bg"
+            />
+
+    </LinearLayout>
+
+
+</FrameLayout>

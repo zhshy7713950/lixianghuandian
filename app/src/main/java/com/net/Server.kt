@@ -22,9 +22,11 @@ object Server {
     suspend inline fun <R, reified T> call(
         path: String,
         requestParams: R?,
+        isShowMsg: Boolean = true,
         method: String = RequestWrapper.METHOD_POST
     ) = suspendCoroutine<NetworkResponse<ResCommon<T>>> { con ->
         http {
+            this.IS_SHOW_MSG = isShowMsg
             this.url = path
             this.method = method
             requestParams?.let {

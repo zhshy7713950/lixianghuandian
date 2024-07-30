@@ -2,6 +2,7 @@ package com.net.call
 
 import com.entity.local.AdPayLocal
 import com.entity.local.AgentByCodeLocal
+import com.entity.local.ChangeErrorLocal
 import com.entity.local.GetAdInfoLocal
 import com.entity.local.GetMapKeyLocal
 import com.entity.local.OneKeyLoginLocal
@@ -41,9 +42,10 @@ object BizService {
         getMapKeyLocal
     )
 
-    suspend fun oneKeyLogin(oneKeyLoginLocal: OneKeyLoginLocal) = Server.call<OneKeyLoginLocal,LoginRemote>(
+    suspend fun oneKeyLogin(oneKeyLoginLocal: OneKeyLoginLocal,isShowMsg: Boolean) = Server.call<OneKeyLoginLocal,LoginRemote>(
         Api.One_Key_Login,
-        oneKeyLoginLocal
+        oneKeyLoginLocal,
+        isShowMsg = isShowMsg
     )
 
     suspend fun getAdInfo(getAdInfoLocal: GetAdInfoLocal) = Server.call<GetAdInfoLocal,AdInfoRemote>(
@@ -64,5 +66,10 @@ object BizService {
     suspend fun getMyDevice() = Server.call<Any,List<MyDevicesBean.Data>>(
         Path.GET_MY_DEVICE,
         null
+    )
+
+    suspend fun changeError(changeErrorLocal: ChangeErrorLocal) = Server.call<ChangeErrorLocal,String>(
+        Api.Change_Error,
+        changeErrorLocal
     )
 }

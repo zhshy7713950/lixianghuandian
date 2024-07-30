@@ -1,5 +1,6 @@
 package com.utils.quicklogin
 
+import android.app.Activity
 import android.graphics.Color
 import android.util.Log
 import android.view.Gravity
@@ -25,9 +26,9 @@ import kotlin.coroutines.suspendCoroutine
 object QuickLoginHelper {
 
     fun getQuickLoginInstance() = QuickLogin.getInstance()
-    suspend fun prefetchMobileNumber() = suspendCoroutine<PrefetchResult> {
+    suspend fun prefetchMobileNumber(activity: Activity) = suspendCoroutine<PrefetchResult> {
         getQuickLoginInstance().apply {
-            init(getCurrentAty(), Configs.ONE_KEY_BUSINESS_ID)
+            init(activity, Configs.ONE_KEY_BUSINESS_ID)
             prefetchMobileNumber(object : QuickLoginPreMobileListener {
                 override fun onGetMobileNumberSuccess(YDToken: String?, mobileNumber: String?) {
                     it.resume(PrefetchResult(true, YDToken, mobileNumber))

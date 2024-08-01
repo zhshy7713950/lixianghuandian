@@ -36,7 +36,7 @@ fun http(init: RequestWrapper.() -> Unit) {
     wrap.params.put("token", Http.token)
     wrap.params.put("sign", getSign(wrap.params, Http.appKey))
     wrap.params.put("appType", "lxhd")
-    wrap.params.put("os", "Android")
+    wrap.params.put("os", "android")
     wrap.jsonParam.put("timeline", time)
     wrap.jsonParam.put("appid", Http.appId)
     wrap.jsonParam.put("token", Http.token)

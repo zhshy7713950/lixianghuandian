@@ -5,11 +5,14 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import com.luck.picture.lib.entity.LocalMedia
+import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.ruimeng.things.*
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPayRentMoney
 import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.shop.PostGlideEngine
+import com.utils.PictureSelectorHelper
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -142,21 +145,34 @@ class FgtTrueName : BaseBackFragment() {
                 PermissionType.READ_EXTERNAL_STORAGE
             )
         ){
-            Matisse.from(this)
-                .choose(MimeType.ofAll())
-                .capture(true)
-                .captureStrategy(
-                    CaptureStrategy(
-                        true,
-                        activity?.packageName + ".fileprovider"
-                    )
-                )
-                .countable(true)
-                .maxSelectable(1)
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                .imageEngine(PostGlideEngine())
-                .forResult(REQUEST_IMAGE)
+            PictureSelectorHelper.openGallery(requireActivity())
+                .forResult(object : OnResultCallbackListener<LocalMedia> {
+                    override fun onResult(result: ArrayList<LocalMedia>?) {
+                        if(result != null && result.size > 0){
+                            zipImg(App.getMainAty(), result[0].realPath) {
+                                uploadPng(it)
+                            }
+                        }
+                    }
+
+                    override fun onCancel() {
+                    }
+                })
+//            Matisse.from(this)
+//                .choose(MimeType.ofAll())
+//                .capture(true)
+//                .captureStrategy(
+//                    CaptureStrategy(
+//                        true,
+//                        activity?.packageName + ".fileprovider"
+//                    )
+//                )
+//                .countable(true)
+//                .maxSelectable(1)
+//                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+//                .thumbnailScale(0.85f)
+//                .imageEngine(PostGlideEngine())
+//                .forResult(REQUEST_IMAGE)
         }
 
     }

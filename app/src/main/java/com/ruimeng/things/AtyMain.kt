@@ -1,6 +1,8 @@
 package com.ruimeng.things
 
+//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
@@ -9,11 +11,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Vibrator
 import android.provider.Settings
-import androidx.core.app.NotificationManagerCompat
 import android.text.TextUtils
 import android.util.Log
 import androidx.activity.viewModels
-//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
+import androidx.core.app.NotificationManagerCompat
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.bean.ConfigBean
@@ -34,11 +35,11 @@ import wongxd.base.BaseBackActivity
 import wongxd.common.EasyToast
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
-import wongxd.common.permission.getPermissionsWithTips
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.updateApp.check
 import wongxd.updateApp.updateApp
+import java.io.File
 
 class AtyMain : BaseBackActivity() {
 
@@ -95,7 +96,7 @@ class AtyMain : BaseBackActivity() {
 
     private fun configUpgrade() {
         //下载路径
-        val path = Environment.getExternalStorageDirectory().absolutePath
+        val path = externalCacheDir?.absolutePath
         //自定义参数
         val params = HashMap<String, String>()
 

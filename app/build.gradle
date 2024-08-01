@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "com.xianglilai.lixianghuandian"
-        versionCode 18
-        versionName "1.0.18"
+        versionCode 19
+        versionName "1.0.19"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         ndk {
@@ -151,6 +151,8 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport:latest.release'
     //网易一键登录
     implementation 'io.github.yidun:quicklogin:3.4.3'
+    //图片选择器
+    implementation 'io.github.lucksiege:pictureselector:v3.11.1'
 
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'

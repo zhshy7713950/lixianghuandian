@@ -698,6 +698,7 @@
 						android:layout_marginRight="12dp"
 						android:textColor="#ff29ebb6"
 						android:textSize="11sp"
+						android:visibility="gone"
 						/>
 					<com.flyco.roundview.RoundTextView
 						android:id="@+id/tv_btn_change_package_update"

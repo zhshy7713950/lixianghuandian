@@ -68,7 +68,7 @@ object BizService {
         null
     )
 
-    suspend fun changeError(changeErrorLocal: ChangeErrorLocal) = Server.call<ChangeErrorLocal,String>(
+    suspend fun changeError(changeErrorLocal: ChangeErrorLocal) = Server.call<ChangeErrorLocal,Any>(
         Api.Change_Error,
         changeErrorLocal
     )

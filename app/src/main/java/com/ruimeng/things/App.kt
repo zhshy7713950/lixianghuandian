@@ -65,7 +65,6 @@ class App : Wongxd() {
             val aty = AppManager.getAppManager().currentActivity()
             val i = Intent(aty, AtyLogin::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             aty.startActivity(i)
         }
         CrashReport.initCrashReport(getApplicationContext(), "85737815c2", false);

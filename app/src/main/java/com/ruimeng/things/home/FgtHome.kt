@@ -225,7 +225,7 @@ class FgtHome : MainTabFragment() {
         lifecycleScope.launchWhenCreated {
             launch {
                 vmMain.adInfoLiveData.observe(this@FgtHome, Observer {
-                    AdPopHelper.showAdPop(activity!!, it, rootView)
+                    AdPopHelper.showAdPop(requireActivity(), it, rootView)
                 })
             }
             launch {
@@ -242,7 +242,7 @@ class FgtHome : MainTabFragment() {
             PermissionType.FINE_LOCATION,
             contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
             allGranted = {
-                vmMain.getAdInfo(activity!!, userId)
+                vmMain.getAdInfo(requireActivity(), userId)
             }
         )
     }
@@ -486,6 +486,7 @@ class FgtHome : MainTabFragment() {
 
     }
 
+    private fun hasBatteryInfo() = deviceCode == 200
 
     private fun initHasItemView() {
 
@@ -494,7 +495,8 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvHelp.setOnClickListener {
-            PopupHelpWindow(activity!!){
+            if(!hasBatteryInfo()) return@setOnClickListener
+            PopupHelpWindow(requireActivity()){
                 when(it){
                     is PopupHelpEvent.SelfService -> {
                         if("3" == activeStatus || virtaul){
@@ -531,6 +533,7 @@ class FgtHome : MainTabFragment() {
             }.show(tvHelp)
         }
         tvOpenClose.setOnClickListener {
+            if(!hasBatteryInfo()) return@setOnClickListener
             if (checkStatus()) {
                 var title =
                     if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
@@ -555,6 +558,7 @@ class FgtHome : MainTabFragment() {
 
         }
         btn_continue_rant.setOnClickListener {
+            if(!hasBatteryInfo()) return@setOnClickListener
             if (checkStatus()) {
                 doContinueRant()
             }
@@ -1058,6 +1062,8 @@ class FgtHome : MainTabFragment() {
             tv_package_status.visibility = View.VISIBLE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
+            tvBatteryStatus.text = "已通电"
+            tvBatteryStatus.textColor = Color.parseColor("#2FE19C")
         }
     }
 

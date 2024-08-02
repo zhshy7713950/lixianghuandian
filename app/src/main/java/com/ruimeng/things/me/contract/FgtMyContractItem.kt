@@ -171,6 +171,9 @@ class FgtMyContractItem : MainTabFragment() {
                             }.show()
                     } else {
                         EasyToast.DEFAULT.show(msg)
+                        FgtHome.CURRENT_DEVICEID = ""
+                        EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
+                        refresh()
                     }
 
                 }

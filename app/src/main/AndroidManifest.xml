@@ -156,9 +156,10 @@
 		</activity>
 		<activity
 				android:name=".AtyMain"
-				android:launchMode="singleTask"
-/>
-		<activity android:name=".AtyLogin" />
+				android:launchMode="singleTask" />
+
+		<activity android:name=".AtyLogin"
+			android:launchMode="singleTop"/>
 
 		<!--shop-->
 		<activity

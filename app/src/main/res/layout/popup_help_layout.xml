@@ -150,10 +150,8 @@
 
         <Button
             android:id="@+id/btnClose"
-            android:layout_width="match_parent"
+            android:layout_width="134dp"
             android:layout_height="34dp"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:text="我知道了"

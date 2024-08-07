@@ -1,11 +1,12 @@
 package com.ruimeng.things
 
+//import com.alibaba.sdk.android.push.CommonCallback
+//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-//import com.alibaba.sdk.android.push.CommonCallback
-//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory
+import com.netease.nis.quicklogin.ui.YDQuickLoginActivity
 import com.ruimeng.things.shop.TkHttp
 import com.ruimeng.things.shop.tkLogin
 import com.tencent.bugly.crashreport.CrashReport
@@ -32,6 +33,7 @@ class App : Wongxd() {
             return AppManager.getActivity(AtyMain::class.java) as AppCompatActivity
         }
 
+        var isLoginActivityStarted = false
         var lat = 0.0
         var lng = 0.0
         var province = ""
@@ -63,11 +65,14 @@ class App : Wongxd() {
         Http.TOKEN_LOST_FUN = { msg ->
             EasyToast.DEFAULT.show(msg)
             val aty = AppManager.getAppManager().currentActivity()
-            val i = Intent(aty, AtyLogin::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            aty.startActivity(i)
+            if(!isLoginActivityStarted){
+                isLoginActivityStarted = true
+                val i = Intent(aty, AtyLogin::class.java)
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                aty.startActivity(i)
+            }
         }
-        CrashReport.initCrashReport(getApplicationContext(), "85737815c2", false);
+        CrashReport.initCrashReport(applicationContext, "85737815c2", false)
 
     }
 

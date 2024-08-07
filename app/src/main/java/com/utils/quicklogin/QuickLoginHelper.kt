@@ -17,6 +17,7 @@ import com.utils.Configs
 import org.jetbrains.anko.textColor
 import wongxd.Http
 import wongxd.common.dp2px
+import wongxd.common.getCurrentAppAty
 import wongxd.common.getCurrentAty
 import wongxd.common.px2Dp
 import wongxd.utils.utilcode.util.ScreenUtils
@@ -51,7 +52,7 @@ object QuickLoginHelper {
     }
 
     private fun setUnifyUiConfig() {
-        val context = getCurrentAty()
+        val context = getCurrentAppAty()
         getQuickLoginInstance().setUnifyUiConfig(UnifyUiConfig.Builder().apply {
             //logo
             setLogoIconDrawable(context.getDrawable(com.ruimeng.things.R.drawable.ic_one_key_logo))

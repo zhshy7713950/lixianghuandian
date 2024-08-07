@@ -362,4 +362,9 @@ class AtyLogin : AtyBase() {
 
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        App.isLoginActivityStarted = false
+    }
 }

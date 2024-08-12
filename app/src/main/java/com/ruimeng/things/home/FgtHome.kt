@@ -625,8 +625,6 @@ class FgtHome : MainTabFragment() {
     fun openOrCloseBatter(event: BatteryOpenEvent) {
         IS_OPEN = event.isOpen
         if (IS_OPEN) {
-            tvBatteryStatus.text = "已通电"
-            tvBatteryStatus.textColor = Color.parseColor("#2FE19C")
             tvOpenClose.text = "关闭电源"
             tvOpenClose.textColor = Color.WHITE
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
@@ -642,8 +640,6 @@ class FgtHome : MainTabFragment() {
             )
             tvProgress.setTextColor(Color.parseColor("#29EBB6"))
         } else {
-            tvBatteryStatus.text = "已断电"
-            tvBatteryStatus.textColor = Color.parseColor("#DEF0E9")
             tvOpenClose.text = "开启电源"
             tvOpenClose.textColor = Color.parseColor("#29EBB6")
             tvOpenClose.setCompoundDrawablesWithIntrinsicBounds(
@@ -743,6 +739,7 @@ class FgtHome : MainTabFragment() {
                 CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
                 getPaymentInfo()
                 updateRequestTime()
+                updateBatteryStatus()
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
@@ -753,6 +750,23 @@ class FgtHome : MainTabFragment() {
             onFinish {
 
             }
+        }
+    }
+
+    private fun updateBatteryStatus() {
+        val protect = deviceDetailBean?.device_base?.protect
+        val deviceStatus = deviceDetailBean?.device_base?.device_status
+        if(protect == "0" || protect == "4096" || protect == "1" || protect == "4097"){
+            if(deviceStatus == "1"){
+                tvBatteryStatus.text = "已通电"
+                tvBatteryStatus.textColor = Color.parseColor("#2fe19c")
+            }else{
+                tvBatteryStatus.text = "已断电"
+                tvBatteryStatus.textColor = Color.parseColor("#def0e9")
+            }
+        }else{
+            tvBatteryStatus.text = "已故障"
+            tvBatteryStatus.textColor = Color.parseColor("#ff7a5a")
         }
     }
 
@@ -1005,8 +1019,6 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = View.VISIBLE
             tv_error_info.visibility = View.VISIBLE
             tv_error_info.text = info.protect_desc
-            tvBatteryStatus.text = "已故障"
-            tvBatteryStatus.textColor = Color.parseColor("#FF7A5A")
         } else {
             // 通电或者关电状态
             ivWrongBt.visibility = GONE
@@ -1062,8 +1074,6 @@ class FgtHome : MainTabFragment() {
             tv_package_status.visibility = View.VISIBLE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
-            tvBatteryStatus.text = "已通电"
-            tvBatteryStatus.textColor = Color.parseColor("#2FE19C")
         }
     }
 

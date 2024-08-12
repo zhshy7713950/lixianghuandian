@@ -180,6 +180,7 @@ class FgtMyContractItem : MainTabFragment() {
 
 
                 onFail { code, msg ->
+                    refresh()
                     EasyToast.DEFAULT.show(msg)
                 }
 

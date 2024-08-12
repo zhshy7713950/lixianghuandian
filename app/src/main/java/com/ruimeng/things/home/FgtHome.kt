@@ -13,6 +13,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
+import android.view.View.VISIBLE
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -1062,6 +1063,7 @@ class FgtHome : MainTabFragment() {
             }
 
         } else {
+            tvBatteryStatus.visibility = VISIBLE
             virtaul = false
             pvBattery.maxCount = 100f
             pvBattery.setCurrentCount(info.rsoc.toFloat())

@@ -33,7 +33,11 @@ import java.util.*
 private fun doDp2Px(dpValue: Float): Float {
     return (0.5f + dpValue * Resources.getSystem().displayMetrics.density)
 }
+private fun doPx2Dp(dpValue: Float): Float {
+    return (0.5f + dpValue / Resources.getSystem().displayMetrics.density)
+}
 
+fun Int.px2Dp(): Float = doPx2Dp(this.toFloat())
 fun Float.dp2px(): Float = doDp2Px(this)
 
 fun Int.dp2px(): Float = doDp2Px(this.toFloat())

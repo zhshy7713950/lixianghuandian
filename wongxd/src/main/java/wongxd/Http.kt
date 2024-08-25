@@ -31,10 +31,12 @@ fun http(init: RequestWrapper.() -> Unit) {
 
 
     val time = (System.currentTimeMillis() / 1000).toString() + ""
-    wrap.params.put("timeline", time)
-    wrap.params.put("appid", Http.appId)
-    wrap.params.put("token", Http.token)
-    wrap.params.put("sign", getSign(wrap.params, Http.appKey))
+    wrap.params["timeline"] = time
+    wrap.params["appid"] = Http.appId
+    wrap.params["token"] = Http.token
+    wrap.params["appType"] = "xll"
+    wrap.params["os"] = "android"
+    wrap.params["sign"] = getSign(wrap.params, Http.appKey)
 
     wrap.url = Http.host + wrap.url
     wrap._tokenLost = Http.TOKEN_LOST_FUN

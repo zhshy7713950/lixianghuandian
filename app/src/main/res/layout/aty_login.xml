@@ -7,7 +7,7 @@
               android:orientation="vertical">
 
 	<TextView
-			android:layout_marginBottom="20dp"
+			android:layout_marginBottom="10dp"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/topbar_height"
 			android:background="@color/app_color"
@@ -15,6 +15,28 @@
 			android:text="@string/app_name"
 			android:textColor="@color/white"
 			android:textSize="16sp"/>
+
+	<TextView
+		android:id="@+id/tv_title1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="手机验证码登录"
+		android:textColor="#232524"
+		android:textSize="20sp"
+		android:layout_marginLeft="10dp"
+		/>
+
+	<TextView
+		android:id="@+id/tv_title2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="未注册的手机号验证后将创建新账号"
+		android:textColor="#666666"
+		android:layout_marginLeft="10dp"
+		android:layout_marginTop="8dp"
+		android:textSize="14sp"
+		android:layout_marginBottom="30dp"
+		/>
 
 
 	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
@@ -32,6 +54,7 @@
 				android:hint="请输入手机号码"
 				android:background="@color/transparent"
 				android:id="@+id/et_phone"
+				android:textColor="#232524"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
 	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
@@ -58,6 +81,7 @@
 					android:hint="请输入验证码"
 					android:background="@color/transparent"
 					android:id="@+id/et_code"
+					android:textColor="#232524"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"/>
 
@@ -80,47 +104,70 @@
 	</LinearLayout>
 
 
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-			android:layout_marginBottom="30dp"
+	<Button
 			android:layout_width="match_parent"
 			android:layout_marginLeft="20dp"
 			android:layout_marginRight="20dp"
 			android:layout_marginTop="35dp"
 			android:textColor="@color/white"
-			android:text="登录"
+			android:text="验证码登录"
 			android:id="@+id/btn_login"
-			app:qmui_borderColor="@color/app_color"
-			app:qmui_backgroundColor="@color/app_color"
-			android:layout_height="40dp"/>
+			android:background="@drawable/bg_btn_common1"
+			android:layout_height="45dp"/>
+
+	<Button
+		android:id="@+id/btnOneKey"
+		android:layout_width="match_parent"
+		android:layout_height="45dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:layout_marginTop="30dp"
+		android:background="@drawable/bg_login_switch"
+		android:text="使用「本机号码一键登录」"
+		android:textColor="@color/app_color"
+		android:textSize="16sp"
+		/>
 
 	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="40dp">
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:layout_marginTop="30dp">
 
 		<View
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:layout_weight="1"/>
-
-		<CheckBox
-				android:padding="2dp"
-				android:button="@drawable/checkedbox_bg"
-				android:id="@+id/cb_login"
-				android:layout_gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+			android:layout_gravity="center"
+			android:layout_marginLeft="40dp"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_weight="1"
+			android:background="#EBEBEB"/>
 
 		<TextView
-				android:id="@+id/tv_login_protocol"
-				android:gravity="center_vertical"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"/>
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:text="其他登录方式"
+			android:gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"/>
 
 		<View
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:layout_weight="1"/>
+			android:layout_gravity="center"
+			android:layout_marginRight="40dp"
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_weight="1"
+			android:background="#EBEBEB"/>
+
 	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/iv_wechat_login"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="20dp"
+		android:layout_gravity="center"
+		android:src="@drawable/wechat_login"
+		android:layout_width="50dp"
+		android:layout_height="50dp"/>
 
 	<View
 			android:layout_width="0dp"
@@ -128,45 +175,36 @@
 			android:layout_weight="1"/>
 
 	<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="40dp">
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:layout_marginBottom="40dp">
 
 		<View
-				android:layout_gravity="center"
-				android:layout_marginLeft="40dp"
-				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_weight="1"
-				android:background="@color/bg_gray"/>
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_weight="1"/>
+
+		<CheckBox
+			android:button="@drawable/checkedbox_bg"
+			android:id="@+id/cb_login"
+			android:layout_gravity="center"
+			android:layout_width="14dp"
+			android:layout_height="14dp"/>
 
 		<TextView
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:text="其他登录方式"
-				android:gravity="center"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"/>
+			android:id="@+id/tv_login_protocol"
+			android:gravity="center_vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:textColor="#666666"
+			android:textSize="12sp"
+			android:layout_marginLeft="15dp"/>
 
 		<View
-				android:layout_gravity="center"
-				android:layout_marginRight="40dp"
-				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_weight="1"
-				android:background="@color/bg_gray"/>
-
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_weight="1"/>
 	</LinearLayout>
-
-
-	<ImageView
-			android:id="@+id/iv_wechat_login"
-			android:layout_marginTop="10dp"
-			android:layout_marginBottom="20dp"
-			android:layout_gravity="center"
-			android:src="@drawable/wechat_login"
-			android:layout_width="50dp"
-			android:layout_height="50dp"/>
 
 
 </LinearLayout>

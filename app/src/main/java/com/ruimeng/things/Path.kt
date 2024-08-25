@@ -334,4 +334,19 @@ object Path {
      * */
     val GET_MAP_KEY = "apiv6/xlluser/getamapkey"
 
+    /**
+     * 获取广告弹窗信息
+     * */
+    const val GET_AD_INFO = "apiv6/advertisementinfo/getadvertisement"
+
+    /**
+     * 广告支付
+     * */
+    const val AD_PAY = "apiv6/advertisementinfo/packagepay"
+    /**
+     * 一键登录
+     * */
+    const val ONE_KEY_LOGIN = "wangyilogin/gettoken"
+
+
 }

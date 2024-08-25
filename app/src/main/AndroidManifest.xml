@@ -65,7 +65,8 @@
 			android:supportsRtl="true"
 			android:networkSecurityConfig="@xml/network_security_config"
 			android:theme="@style/WTheme"
-			tools:ignore="GoogleAppIndexingWarning">
+			tools:ignore="GoogleAppIndexingWarning"
+			tools:replace="android:allowBackup">
 
 		<service
 				android:name="wongxd.common.autoInstall.AutoInstallService"
@@ -198,6 +199,16 @@
 		<activity android:name=".me.activity.MyTeamActivity"/>
 		<activity android:name=".me.activity.ShareFriendActivity"/>
 		<activity android:name=".me.activity.SharePosterActivity"/>
+
+		<activity
+			android:name="com.netease.nis.quicklogin.ui.CmccLoginActivity"
+			android:theme="@style/Theme.ActivityTransparentStyle"
+			tools:replace="theme" />
+		<activity
+			android:name="com.netease.nis.quicklogin.ui.YDQuickLoginActivity"
+			android:theme="@style/Theme.ActivityTransparentStyle"
+			tools:replace="theme" />
+
 
 
 	</application>

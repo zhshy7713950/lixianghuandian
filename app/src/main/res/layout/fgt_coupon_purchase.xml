@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/bg_gray">
+
+    <include layout="@layout/layout_topbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text="超值券包"
+                android:textColor="#232524"
+                android:textSize="15sp"
+                android:layout_marginTop="22dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCoupons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_white_bg_shape"
+                android:paddingBottom="25dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支付选项"
+                android:layout_marginLeft="12dp"
+                android:textColor="#232524"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_white_bg_shape"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="14dp"
+                    android:text="请选择支付方式"
+                    android:textColor="#999999"
+                    android:textSize="14sp" />
+
+                <RadioGroup
+                    android:id="@+id/rgPay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/rbWx"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginRight="14dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/wechat_purchase"
+                        android:drawableRight="@drawable/radio_select"
+                        android:drawablePadding="12dp"
+                        android:layoutDirection="rtl"
+                        android:text="微信支付"
+                        android:checked="true"
+                        android:textColor="#232524"
+                        android:textSize="14sp"></RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/rbAlipay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginBottom="20dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/alipay_purchase"
+                        android:drawableRight="@drawable/radio_select"
+                        android:drawablePadding="12dp"
+                        android:layoutDirection="rtl"
+                        android:text="支付宝支付"
+                        android:textColor="#232524"
+                        android:textSize="14sp"></RadioButton>
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rectangle_white_bg_shape">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:gravity="center_vertical"
+                    android:text="合计："
+                    android:textColor="#232524"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvYuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#232524"
+                        android:textSize="14sp"
+                        android:text="¥"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvTotalPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="#232524"
+                        android:textSize="20sp"
+                        tools:text="200.00"
+                        android:layout_marginLeft="3dp"/>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/tvCouponPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="#ff999999"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    tools:text="已优惠¥88" />
+
+                <TextView
+                    android:id="@+id/btnPayNow"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rectangle_pay_bg"
+                    android:gravity="center"
+                    android:text="立即支付"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintRight_toRightOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

@@ -109,6 +109,15 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
 }
 
 dependencies {
@@ -139,6 +148,9 @@ dependencies {
 //    compileOnly 'com.amap.api:location:latest.integration'
 //    //搜索功能
 //    implementation 'com.amap.api:search:latest.integration'
+
+    //网易一键登录
+    implementation 'io.github.yidun:quicklogin:3.4.3'
 
     implementation("com.aliyun.ams:alicloud-android-push:3.1.6") {
         exclude group: 'com.ta.utdid2' //by group

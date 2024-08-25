@@ -155,6 +155,7 @@ dependencies {
     implementation 'com.qw:soulpermission:1.2.1'
     implementation 'com.hjq:xxpermissions:6.2'
     api 'com.jaeger.statusbarutil:library:1.4.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
 
     implementation 'androidx.core:core-ktx:1.3.2'

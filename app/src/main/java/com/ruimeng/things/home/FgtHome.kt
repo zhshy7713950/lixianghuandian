@@ -24,7 +24,9 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
+import com.ruimeng.things.home.bean.AdInfoBean
 import com.ruimeng.things.home.bean.DeviceDetailBean
+import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
@@ -98,13 +100,12 @@ class FgtHome : MainTabFragment() {
                         anyLayer.contentView.findViewById<QMUIRoundButton>(R.id.btn_submit)
 
 
-
                     fun resetCheckState() {
                         ivWholeBike.setImageResource(if (IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
                         ivBattery.setImageResource(if (!IsWholeBikeRent) R.drawable.icon_rent_type_checked else R.drawable.icon_rent_type_uncheck)
                     }
                     IsWholeBikeRent = true
-                    if (Config.getDefault().spUtils.getString("cg_mode", "0").equals("0")){
+                    if (Config.getDefault().spUtils.getString("cg_mode", "0").equals("0")) {
                         flWholeBike.visibility = View.GONE
                         IsWholeBikeRent = false
                     }
@@ -186,7 +187,7 @@ class FgtHome : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
     var showSweetAlertDialog = false
-    fun getLocation(){
+    fun getLocation() {
         val rxPermissions = RxPermissions(activity as Activity)
         rxPermissions.request(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -201,24 +202,26 @@ class FgtHome : MainTabFragment() {
                             App.lng = it.longitude
                             App.province = it.province
                             App.city = it.city
-                            getNewUserCoupon(it.longitude , it.latitude)
+                            getNewUserCoupon(it.longitude, it.latitude)
+                            getAdInfo(it.altitude, it.longitude)
                         }
-                    } else if(!showSweetAlertDialog){
-                        val dlg: SweetAlertDialog = SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                            .also {
-                                it.titleText = "有如下权限被禁止"
-                                val sb = StringBuilder()
-                                sb.append("获取大致位置\n")
-                                sb.append("获取精确位置\n")
-                                sb.append("(将会导致应用不能正常运行)")
-                                it.contentText = sb.toString()
-                                it.confirmText = "前往设置给予权限"
-                                it.setConfirmClickListener { _ ->
-                                    activity?.let { goSetting(it) }
-                                    it.dismiss()
+                    } else if (!showSweetAlertDialog) {
+                        val dlg: SweetAlertDialog =
+                            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .also {
+                                    it.titleText = "有如下权限被禁止"
+                                    val sb = StringBuilder()
+                                    sb.append("获取大致位置\n")
+                                    sb.append("获取精确位置\n")
+                                    sb.append("(将会导致应用不能正常运行)")
+                                    it.contentText = sb.toString()
+                                    it.confirmText = "前往设置给予权限"
+                                    it.setConfirmClickListener { _ ->
+                                        activity?.let { goSetting(it) }
+                                        it.dismiss()
+                                    }
+                                    it.setCanceledOnTouchOutside(true)
                                 }
-                                it.setCanceledOnTouchOutside(true)
-                            }
                         dlg.setCancelable(true)
                         dlg.show()
                         showSweetAlertDialog = true
@@ -230,9 +233,9 @@ class FgtHome : MainTabFragment() {
             })
 
 
-
     }
-    fun getNewUserCoupon( lng:Double ,lat:Double){
+
+    fun getNewUserCoupon(lng: Double, lat: Double) {
         http {
             url = "apiv6/xlluser/getNewUserCoupon"
             params["lng"] = "${lng}"
@@ -240,23 +243,27 @@ class FgtHome : MainTabFragment() {
             onSuccess {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
-                ShowCouponPopup(getCurrentAppAty(),data,object :
+                ShowCouponPopup(getCurrentAppAty(), data, object :
                     View.OnClickListener {
                     override fun onClick(p0: View?) {
 
-                    } }).show(rootView)
+                    }
+                }).show(rootView)
 
             }
         }
     }
+
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
-        if (!hidden){
+        if (!hidden) {
             getLocation()
         }
     }
+
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
         getLocation()
@@ -265,7 +272,7 @@ class FgtHome : MainTabFragment() {
 
 
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
-            ledTextView?.text =  Config.getDefault().spUtils.getString("ledString", "")
+            ledTextView?.text = Config.getDefault().spUtils.getString("ledString", "")
             ledTextView?.init(activity?.windowManager)
             ledTextView?.startScroll()
         }
@@ -287,6 +294,7 @@ class FgtHome : MainTabFragment() {
 
             tv_unbind_battery_home.visibility =
                 if (userInfo.is_debug == 1) View.VISIBLE else View.GONE
+
         }
 
         CURRENT_DEVICEID = Config.getDefault().spUtils.getString(KEY_LAST_DEVICE_ID)
@@ -301,6 +309,29 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
 
+    }
+
+    private fun getAdInfo(lat: Double, lng: Double) {
+        InfoViewModel.getDefault().userInfo?.value?.id?.let {
+            http {
+                url = Path.GET_AD_INFO
+                params["userId"] = it
+                if (BuildConfig.DEBUG) {
+                    params["lat"] = "30.53131320529514"
+                    params["lng"] = "104.0549552408854"
+                } else {
+                    params["lat"] = lat.toString()
+                    params["lng"] = lng.toString()
+                }
+
+                onSuccess { res ->
+                    val adInfoData = res.toPOJO<AdInfoBean>().data
+                    adInfoData?.let {
+                        AdPopHelper.showAdPop(requireActivity(), adInfoData, rootView)
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -797,8 +828,10 @@ class FgtHome : MainTabFragment() {
 
                         tv_total_u.text = item.device_base.totalvoltage + "V"
                         tv_rant_time.text =
-                            item.device_contract.begin_time.toLong().getTime(isShowHour = false) + "至" +
-                                    item.device_contract.exp_time.toLong().getTime(isShowHour = false)
+                            item.device_contract.begin_time.toLong()
+                                .getTime(isShowHour = false) + "至" +
+                                    item.device_contract.exp_time.toLong()
+                                        .getTime(isShowHour = false)
 
 
                         //详细信息
@@ -843,9 +876,6 @@ class FgtHome : MainTabFragment() {
         }
 
     }
-
-
-
 
 
     private var choiceUseModelDialog: CustomDialog? = null

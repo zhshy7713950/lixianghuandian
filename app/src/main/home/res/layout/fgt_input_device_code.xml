@@ -25,7 +25,6 @@
 				android:layout_margin="10dp"
 				android:background="@color/transparent"
 				android:hint="请输入设备编码"
-				android:inputType="number"
 				android:textSize="14sp" />
 	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
 

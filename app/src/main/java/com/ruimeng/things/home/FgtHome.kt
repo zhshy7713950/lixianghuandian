@@ -203,7 +203,7 @@ class FgtHome : MainTabFragment() {
                             App.province = it.province
                             App.city = it.city
                             getNewUserCoupon(it.longitude, it.latitude)
-                            getAdInfo(it.altitude, it.longitude)
+                            getAdInfo(App.lat, App.lng)
                         }
                     } else if (!showSweetAlertDialog) {
                         val dlg: SweetAlertDialog =
@@ -312,6 +312,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun getAdInfo(lat: Double, lng: Double) {
+//        Log.d("getAdInfo","lat => $lat , lng => $lng")
         InfoViewModel.getDefault().userInfo?.value?.id?.let {
             http {
                 url = Path.GET_AD_INFO

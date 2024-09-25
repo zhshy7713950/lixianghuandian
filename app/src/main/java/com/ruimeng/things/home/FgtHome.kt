@@ -187,7 +187,7 @@ class FgtHome : MainTabFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
     var showSweetAlertDialog = false
-    fun getLocation() {
+    private fun getLocation(isInit: Boolean) {
         val rxPermissions = RxPermissions(activity as Activity)
         rxPermissions.request(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -203,7 +203,9 @@ class FgtHome : MainTabFragment() {
                             App.province = it.province
                             App.city = it.city
                             getNewUserCoupon(it.longitude, it.latitude)
-                            getAdInfo(App.lat, App.lng)
+                            if(isInit){
+                                getAdInfo(App.lat, App.lng)
+                            }
                         }
                     } else if (!showSweetAlertDialog) {
                         val dlg: SweetAlertDialog =
@@ -260,13 +262,13 @@ class FgtHome : MainTabFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
-            getLocation()
+            getLocation(false)
         }
     }
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
-        getLocation()
+        getLocation(true)
         topbar = rootView.findViewById(R.id.topbar)
         initTopbar(topbar, "设备状态", false)
 

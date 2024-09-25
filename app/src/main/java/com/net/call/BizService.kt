@@ -8,6 +8,7 @@ import com.entity.local.GetMapKeyLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
 import com.entity.local.ServerPayResultLocal
+import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
@@ -71,5 +72,10 @@ object BizService {
     suspend fun changeError(changeErrorLocal: ChangeErrorLocal) = Server.call<ChangeErrorLocal,Any>(
         Api.Change_Error,
         changeErrorLocal
+    )
+
+    suspend fun uploadVersion(uploadVersionLocal: UploadVersionLocal) = Server.call<UploadVersionLocal,Any>(
+        Api.Upload_Version,
+        uploadVersionLocal
     )
 }

@@ -17,4 +17,6 @@ object Api {
     const val Ad_Pay = "apiv6/advertisementinfo/packagepay"
 
     const val Change_Error = "apiv6/cabinet/changeerror"
+
+    const val Upload_Version = "apiv6/user/uploadversion"
 }

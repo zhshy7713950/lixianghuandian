@@ -254,6 +254,7 @@ class AtyLogin : AtyBase() {
                 UserInfoLiveData.setToString(resCommon.data.userinfo!!)
                 Config.getDefault().token = resCommon.data.token
                 startAty<AtyMain>()
+                vm.uploadVersion()
             }.whenError { code, msg ->
                 if (code == 450 && !hasRetryYDToken) {
                     lifecycleScope.launch {
@@ -286,6 +287,9 @@ class AtyLogin : AtyBase() {
                     UserInfoLiveData.setToString(loginBean.data.userinfo)
                     Config.getDefault().token = loginBean.data.token
                     startAty<AtyMain>()
+                    if(code != "666888"){
+                        vm.uploadVersion()
+                    }
                 } else {
                     val origin = InfoViewModel.getDefault().userInfo.value
                     origin?.mobile_bind = "1"

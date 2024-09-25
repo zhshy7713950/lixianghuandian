@@ -46,3 +46,12 @@ data class ChangeErrorLocal(
     val deviceId: String,
     val code: String
 )
+
+data class UploadVersionLocal(
+    val userId: String,
+    val manufacturer: String,
+    val model: String,
+    val system_type: String,
+    val system_version: String,
+    val app_version: String
+)

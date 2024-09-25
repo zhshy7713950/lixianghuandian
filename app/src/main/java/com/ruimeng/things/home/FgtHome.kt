@@ -560,9 +560,11 @@ class FgtHome : MainTabFragment() {
         }
         btn_continue_rant.setOnClickListener {
             if(!hasBatteryInfo()) return@setOnClickListener
-            if (checkStatus()) {
-                doContinueRant()
+            if (activeStatus == "3") {
+                ToastHelper.shortToast(context, "请先完成解冻操作")
+                return@setOnClickListener
             }
+            doContinueRant()
         }
 
 

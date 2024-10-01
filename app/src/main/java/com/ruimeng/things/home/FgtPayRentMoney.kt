@@ -23,6 +23,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.adapter.BasePackageAdapter
 import com.ruimeng.things.home.adapter.ChangePackageAdapter
 import com.ruimeng.things.home.bean.CountAmountBean
+import com.ruimeng.things.home.bean.CouponsInfoBean
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.NewGetRentBean
 import com.ruimeng.things.home.bean.PaymentInfo
@@ -107,7 +108,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         getRent()
         dealPayWay()
         initView()
-        initTicket()
+//        initTicket()
     }
 
     private fun initEvent() {
@@ -598,7 +599,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
     private var retryTime = 0
-    val couponList = mutableListOf<MyCouponBean.Data>()
+    val couponList = mutableListOf<CouponsInfoBean>()
 
     /**
      * 获取服务器上的支付结果
@@ -678,34 +679,34 @@ class FgtPayRentMoney : BaseBackFragment() {
 
     private var pvOptions: OptionsPickerView<MyCouponBean.Data>? = null
 
-    private fun initTicket() {
-
-        http {
-            url = Path.GET_MY_COUPON
-            params["device_id"] = deviceId
-
-            onSuccess {
-                IS_TICKET_DATA_INIT = true
-                val result = it.toPOJO<MyCouponBean>().data
-                if (result.isEmpty()) {
-                    tv_ticket_pay_rent_money.text = "暂无可用优惠券"
-                } else {
-                    couponList.addAll(result)
-                    couponId = couponList.get(0).id
-                    tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-//                    computeAmount(false)
-                }
-
-
-            }
-
-
-            onFail { i, s ->
-                IS_TICKET_DATA_INIT = false
-            }
-
-        }
-    }
+//    private fun initTicket() {
+//
+//        http {
+//            url = Path.GET_MY_COUPON
+//            params["device_id"] = deviceId
+//
+//            onSuccess {
+//                IS_TICKET_DATA_INIT = true
+//                val result = it.toPOJO<MyCouponBean>().data
+//                if (result.isEmpty()) {
+//                    tv_ticket_pay_rent_money.text = "暂无可用优惠券"
+//                } else {
+//                    couponList.addAll(result)
+//                    couponId = couponList.get(0).id
+//                    tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+////                    computeAmount(false)
+//                }
+//
+//
+//            }
+//
+//
+//            onFail { i, s ->
+//                IS_TICKET_DATA_INIT = false
+//            }
+//
+//        }
+//    }
 
     private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
 
@@ -721,9 +722,16 @@ class FgtPayRentMoney : BaseBackFragment() {
                 onSuccessWithMsg { res, msg ->
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<NewGetRentBean>().data
-                        if (result.isNotEmpty()) {
-                            baseInfo = result[0]
-                            initViewAfterData(result)
+                        if (result.paymentInfo.isNotEmpty()) {
+                            baseInfo = result.paymentInfo[0]
+                            initViewAfterData(result.paymentInfo)
+                        }
+                        if (result.coupons.isEmpty()) {
+                            tv_ticket_pay_rent_money.text = "暂无可用优惠券"
+                        } else {
+                            couponList.addAll(result.coupons)
+                            couponId = couponList.get(0).id
+                            tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
                         }
                     }
                 }
@@ -749,6 +757,13 @@ class FgtPayRentMoney : BaseBackFragment() {
                         showBaseInfo(result)
                         initViewAfterData(payments)
 
+                        if (result.coupons.isEmpty()) {
+                            tv_ticket_pay_rent_money.text = "暂无可用优惠券"
+                        } else {
+                            couponList.addAll(result.coupons)
+                            couponId = couponList.get(0).id
+                            tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+                        }
                     }
                 }
             }

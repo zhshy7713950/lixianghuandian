@@ -34,6 +34,7 @@ import wongxd.base.AtyBase
 import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
+import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.utilcode.util.SPUtils
 import java.lang.ref.WeakReference
@@ -47,6 +48,7 @@ class AtyLogin : AtyBase() {
     companion object {
         const val TAG = "AtyLogin"
         const val TAG_LAST_LOGIN_PHONE = "last_login_phone"
+        const val FIRST_LAUNCH_APP = "first_launch_app"
     }
 
     private var phone: String = ""
@@ -66,6 +68,8 @@ class AtyLogin : AtyBase() {
 //        btn_login.setOnClickListener { doLogin() }
 
         et_phone.setText(SPUtils.getInstance().getString(TAG_LAST_LOGIN_PHONE))
+        isAgree = !SPUtils.getInstance().getBoolean(FIRST_LAUNCH_APP,true)
+        SPUtils.getInstance().put(FIRST_LAUNCH_APP,false)
         cb_login.isChecked = isAgree
         cb_login.setOnCheckedChangeListener { compoundButton, b ->
             isAgree = b
@@ -195,17 +199,19 @@ class AtyLogin : AtyBase() {
                     "登录失败，请稍后重试，或使用验证码登录"
                 )
             }
-        })
+        },isAgree)
     }
 
     private fun requestPermission() {
-        getPermissions(getCurrentAty(), PermissionType.READ_PHONE_STATE,
+        getPermissionsWithTips(getCurrentAty(), PermissionType.READ_PHONE_STATE,
+            contentText = "为了您能够使用\"一键登录\"功能，以及\"联系商家\"功能，请授权读取手机状态权限",
             result = { _, _ ->
                 initQuickLogin()
             },
             allGranted = {
                 initQuickLogin()
-            }
+            },
+            isGoSetting = false
         )
     }
 
@@ -347,7 +353,7 @@ class AtyLogin : AtyBase() {
         }
     }
 
-    private var isAgree = true
+    private var isAgree = false
 
     private fun postWechatCode(code: String) {
         http {

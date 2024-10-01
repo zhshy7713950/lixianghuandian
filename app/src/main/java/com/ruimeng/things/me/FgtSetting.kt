@@ -47,8 +47,19 @@ class FgtSetting : BaseBackFragment() {
 
         }
 
+        ll_private_protocol.setOnClickListener {
+            AtyWeb2.start(
+                "隐私政策",
+                "http://xianglilai.scxll.cn/appH5/privateProtocol.html"
+            )
+        }
 
-
+        ll_third_sdk_protocol.setOnClickListener {
+            AtyWeb2.start(
+                "第三方SDK清单",
+                "http://xianglilai.scxll.cn/appH5/thirdSDKProtocol.html"
+            )
+        }
 
 
         btn_logout_setting.setOnClickListener {

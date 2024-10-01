@@ -123,7 +123,7 @@ object PathV3 {
     /**
      * V3-获取设备租金界面-4
      */
-    val GET_RENT  = "/apiv6/payment/getbydeviceid"
+    val GET_RENT  = "/apiv6/payment/getpaymentandcoupon"
 
 
 }

@@ -14,11 +14,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemChildClickListener
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ruimeng.things.R
+import com.ruimeng.things.home.bean.CouponsInfoBean
 import com.ruimeng.things.me.bean.MyCouponBean
 import wongxd.common.bothNotNull
 
 class SelectCouponPopup (private val activity: Activity,
-                         private val coupons:MutableList<MyCouponBean.Data>,
+                         private val coupons:MutableList<CouponsInfoBean>,
                          private var selectId : Int,
                          private val listener:OnCouponSelect
 
@@ -73,8 +74,8 @@ class SelectCouponPopup (private val activity: Activity,
             showAtLocation(view, Gravity.BOTTOM, 0, 0)
         }
     }
-    inner class CouponSelectAdapter : BaseQuickAdapter<MyCouponBean.Data, BaseViewHolder>(R.layout.item_coupon_select) {
-        override fun convert(p0: BaseViewHolder, p1: MyCouponBean.Data?) {
+    inner class CouponSelectAdapter : BaseQuickAdapter<CouponsInfoBean, BaseViewHolder>(R.layout.item_coupon_select) {
+        override fun convert(p0: BaseViewHolder, p1: CouponsInfoBean?) {
             bothNotNull(p0, p1) { a, b ->
                 a.setText(R.id.tv_money,"¥"+ b.coupon_price)
                     .setText(R.id.tv_limit,b.limit_day)

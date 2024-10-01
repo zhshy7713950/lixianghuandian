@@ -44,14 +44,14 @@ object QuickLoginHelper {
         }
     }
 
-    fun onePassLogin(quickLoginTokenListener: QuickLoginTokenListener) {
+    fun onePassLogin(quickLoginTokenListener: QuickLoginTokenListener,privateAgree: Boolean) {
         getQuickLoginInstance().apply {
-            setUnifyUiConfig()
+            setUnifyUiConfig(privateAgree)
             onePass(quickLoginTokenListener)
         }
     }
 
-    private fun setUnifyUiConfig() {
+    private fun setUnifyUiConfig(privateAgree: Boolean) {
         val context = getCurrentAppAty()
         getQuickLoginInstance().setUnifyUiConfig(UnifyUiConfig.Builder().apply {
             //logo
@@ -121,7 +121,7 @@ object QuickLoginHelper {
             setPrivacyMarginLeft(30)
             setPrivacySize(12)
             setPrivacyBottomYOffset(30)
-            setPrivacyState(true)
+            setPrivacyState(privateAgree)
             setPrivacyTextMarginLeft(20)
             setCheckBoxGravity(Gravity.CENTER)
             setPrivacyCheckBoxWidth(14)

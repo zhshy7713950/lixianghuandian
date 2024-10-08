@@ -95,6 +95,8 @@ class FgtHome : MainTabFragment() {
 
         }
 
+        fun getBatteryV() = if (modelName.length > 2) modelName.substring(0, 2) else ""
+
         /**
          * 尝试扫描二维码
          */
@@ -1330,6 +1332,7 @@ class FgtHome : MainTabFragment() {
                 params["contract_id"] = item.device_contract.contract_id
                 params["device_id"] = item.device_id.toString()
                 onSuccessWithMsg { res, msg ->
+                    modelName = ""
                     EasyToast.DEFAULT.show(msg)
                     getBatteryDetailInfo()
                 }

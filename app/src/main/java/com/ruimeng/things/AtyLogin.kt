@@ -59,6 +59,7 @@ class AtyLogin : AtyBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_login)
+        FgtHome.modelName = ""
         pageType = intent.getIntExtra("pageType", 0)
 //        iv_wechat_login.visibility = if (pageType == 0) View.VISIBLE else View.GONE
 //        tv_3.visibility = if (pageType == 0) View.VISIBLE else View.GONE

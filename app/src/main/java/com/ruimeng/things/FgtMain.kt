@@ -9,6 +9,7 @@ import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
 import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.net_station.FgtNetStation
+import com.ruimeng.things.net_station.FgtNetStationMap
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -48,7 +49,8 @@ class FgtMain : FgtBase() {
         instance = this
         fgts = arrayOf(
             FgtHome(),
-            FgtNetStation(),
+//            FgtNetStation(),
+            FgtNetStationMap(),
             FgtMyContract(),
             FgtMe()
         )

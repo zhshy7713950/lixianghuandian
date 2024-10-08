@@ -25,12 +25,35 @@ data class NetStationBean(
             var tag: String = "",
             var count: String = "",
             var available_battery : String = "",
+            var available_arr: Model = Model(),
             var markerId: String = "" ,
             var tel: String = "" ,// 028-85214458
-        var isOnline : Int = 0,
+            var isOnline : Int = 0,
             var isGreen :Int = 0,
             var distance :Float = 0.0f,
-            var distanceStr :String = ""
+            var distanceStr :String = "",
+            var telData:List<TelData> = listOf(),
+            var workTime: String = "",
+        ): Parcelable
+
+        @Parcelize
+        data class TelData(
+            var duration: String = "",
+            var phone: String = ""
+        ): Parcelable
+
+        @Parcelize
+        data class Model(
+            var model_72: Int = 0,
+            var model_60: Int = 0,
+            var model_48: Int = 0,
         ): Parcelable
     }
+}
+
+fun NetStationBean.Data.Model.getAvaModelNum(curV: String) = when (curV) {
+    "72" -> model_72
+    "60" -> model_60
+    "48" -> model_48
+    else -> model_72 + model_60 + model_48
 }

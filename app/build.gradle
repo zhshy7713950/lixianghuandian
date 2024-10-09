@@ -153,6 +153,8 @@ dependencies {
     implementation 'io.github.yidun:quicklogin:3.4.3'
     //图片选择器
     implementation 'io.github.lucksiege:pictureselector:v3.11.1'
+    //轮播图
+    implementation 'io.github.youth5201314:banner:2.2.3'
 
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'

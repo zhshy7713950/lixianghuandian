@@ -17,7 +17,14 @@ data class NetStationDetailBeanTwo(
         var tel: String = "",
         var site_name: String = "",
         var lng: Double = 0.0,
-        var lat: Double = 0.0
+        var lat: Double = 0.0,
+        var isOnline: Int = 0,
+        var cellNum: String = "",
+        var site_image: List<String> = listOf(),
+        var telData:List<NetStationBean.Data.TelData> = listOf(),
+        var available_arr: NetStationBean.Data.Model = NetStationBean.Data.Model(),
+        var workTime: String = "",
+        var swCabSocControl: String = "",
     ) {
         data class ExchangeBean(
             var name: String = "",
@@ -28,9 +35,10 @@ data class NetStationDetailBeanTwo(
                 var id: String = "",
                 var device_id: String = "",
                 var electricity: String = "",
-                var status: String = "",
+                var status: Int = -1,
                 var pos: String = "",
-                var device_type: String? = ""
+                var device_type: String = "",
+                var lockStatus: Int = -1,
             )
         }
     }

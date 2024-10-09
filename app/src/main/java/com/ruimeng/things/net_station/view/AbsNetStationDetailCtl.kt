@@ -3,34 +3,16 @@ package com.ruimeng.things.net_station.view
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
-import com.ruimeng.things.App
-import com.ruimeng.things.FgtMain
-import com.ruimeng.things.R
-import com.ruimeng.things.net_station.FgtNetStation
-import com.ruimeng.things.net_station.FgtNetStationDetailNew
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
 import com.utils.CommonUtil
-import wongxd.common.checkPackage
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
-import wongxd.navi.CoodinateCovertor
-import wongxd.navi.LngLat
-import wongxd.navi.NaviUtil
 import wongxd.utils.SystemUtils
 
-class DefaultNetStationCtl : INetStationController {
+abstract class AbsNetStationDetailCtl : INetStationDetailController {
 
-    companion object {
-        fun create(): INetStationController {
-            return DefaultNetStationCtl()
-        }
-    }
-
-    override fun onItemClick(data: NetStationBean.Data.X, context: Context) {
-        FgtMain.instance?.start(FgtNetStationDetailNew.newInstance(data.id))
-    }
-
-    override fun onTelClick(data: NetStationBean.Data.X, context: Context) {
+    override fun onTelClick(data: NetStationDetailBeanTwo.Data, context: Context) {
         val telData = if (data.telData.isNullOrEmpty()) {
             arrayListOf(NetStationBean.Data.TelData("00:00-23:59", "4000283969"))
         } else if (data.telData.size == 1) {
@@ -57,11 +39,11 @@ class DefaultNetStationCtl : INetStationController {
         bs.build().show()
     }
 
-    override fun onNavigationClick(data: NetStationBean.Data.X, context: Context) {
+    override fun onNavigationClick(data: NetStationDetailBeanTwo.Data, context: Context) {
         CommonUtil.naviToLocation(context as FragmentActivity,data.lat,data.lng,"站点位置",
             "导航前往${data.site_name}")
     }
 
-    override fun bindView(view: INetStationView) {
+    override fun bindView(view: INetStationDetailView) {
     }
 }

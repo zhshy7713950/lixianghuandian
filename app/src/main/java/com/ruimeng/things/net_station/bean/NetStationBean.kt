@@ -38,6 +38,7 @@ data class NetStationBean(
             var telData:List<TelData> = listOf(),
             var workTime: String = "",
             var cellNum: String = "",
+            var siteImages: List<String> = listOf(),
         ): Parcelable
 
         @Parcelize

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_container"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_net_station_item"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_net_station_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="广东省广州市天河区天河路100号"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_cabinet_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9sp"
+                android:textColor="#313944"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:background="@drawable/bg_cabinet_num"
+                android:layout_marginRight="5dp"
+                tools:text="10仓柜"
+                />
+
+            <TextView
+                android:id="@+id/tv_offline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9sp"
+                android:textColor="#333333"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:background="@drawable/bg_cabinet_offline"
+                android:layout_marginRight="5dp"
+                android:text="已离线"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_cabinet_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_net_station_cabinet_number"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            tools:text="00:00-23:59"
+            android:drawablePadding="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_business_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_net_station_business_hours"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            tools:text="00:00-23:59"
+            android:drawablePadding="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="top">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_net_station_address"
+                android:layout_marginTop="4.5dp"/>
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                tools:text="广州市天河区天河路100号"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_update_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新时间：10.01 13:03.11"
+                android:textColor="#D5D5D5"
+                android:textSize="10sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_update"
+                android:layout_marginLeft="5dp"
+                android:layout_width="40dp"
+                android:layout_height="18dp"
+                android:textSize="11sp"
+                android:textColor="#2FE29F"
+                android:text="刷新"
+                android:gravity="center"
+                android:background="@drawable/bg_net_station_detail_update"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_telephone"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_net_station_item_action"
+                android:textColor="#29EBB6"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:text="  联系电话"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_net_station_telephone"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:layout_marginRight="5dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_net_station_item_action"
+                android:textColor="#29EBB6"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:text="  线路导航"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_net_station_navigation"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:layout_marginRight="5dp"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_net_station_right"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
+
+        <LinearLayout
+            android:id="@+id/ll_model_container_1"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_model_72"
+            android:gravity="bottom"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/tv_model_title_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="10sp"
+                tools:text="可换数"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_model_num_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:text="3"
+                android:textColor="#29EBB6"
+                android:gravity="right"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_model_container_2"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_model_72"
+            android:gravity="bottom"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/tv_model_title_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="10sp"
+                tools:text="可换数"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_model_num_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:text="3"
+                android:textColor="#29EBB6"
+                android:gravity="right"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_model_container_3"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_model_72"
+            android:gravity="bottom"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_model_title_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="10sp"
+                tools:text="可换数"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/tv_model_num_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:text="3"
+                android:textColor="#29EBB6"
+                android:gravity="right"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

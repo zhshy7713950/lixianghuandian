@@ -12,14 +12,17 @@ import wongxd.common.checkPackage
 
 class MapSelectPopup(
     private val activity: Activity,
-    private val listener:View.OnClickListener
+    private val listener:View.OnClickListener,
+    title: String = "选择应用进行导航"
 ) : PopupWindow(activity) {
     init {
         contentView = View.inflate(activity, R.layout.popup_map_select, null)
         var hasAmap = checkPackage(activity!!, "com.autonavi.minimap")
         var hasBaidu = checkPackage(activity!!, "com.baidu.BaiduMap")
         if (!hasAmap && !hasBaidu){
-            contentView.findViewById<TextView>(R.id.tv01).setText("请先下载“高德地图” 或 “百度地图”")
+            contentView.findViewById<TextView>(R.id.tv01).text = "请先下载“高德地图” 或 “百度地图”"
+        }else{
+            contentView.findViewById<TextView>(R.id.tv01).text = title
         }
         contentView.findViewById<TextView>(R.id.tvAmap).visibility = if (hasAmap) View.VISIBLE else View.GONE
         contentView.findViewById<TextView>(R.id.tvBaidu).visibility = if (hasBaidu) View.VISIBLE else View.GONE

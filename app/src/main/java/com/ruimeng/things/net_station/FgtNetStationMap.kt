@@ -18,6 +18,7 @@ import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.App
+import com.ruimeng.things.FgtMain
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
@@ -57,7 +58,7 @@ class FgtNetStationMap : MainTabFragment() {
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         tv_right.setOnClickListener {
-
+            FgtMain.instance?.start(FgtNetStation())
         }
         tv_search?.setOnClickListener {
             hideNetStationView()

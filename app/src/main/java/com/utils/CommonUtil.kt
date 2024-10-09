@@ -12,7 +12,8 @@ import wongxd.navi.LngLat
 import wongxd.navi.NaviUtil
 
 object CommonUtil {
-    fun naviToLocation(activity: FragmentActivity, targetLat: Double, targetLng: Double, targetName: String) {
+    fun naviToLocation(activity: FragmentActivity, targetLat: Double, targetLng: Double, targetName: String,
+                       title: String = "选择应用进行导航") {
 
         val appName = activity.getString(R.string.app_name)
         val latA = App.lat
@@ -53,7 +54,7 @@ object CommonUtil {
              }
             }
         }
-        MapSelectPopup(activity,listener)
+        MapSelectPopup(activity,listener,title)
 
     }
 }

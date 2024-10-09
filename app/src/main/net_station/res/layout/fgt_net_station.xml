@@ -7,12 +7,6 @@
 
 	<include layout="@layout/layout_topbar"/>
 
-	<com.qmuiteam.qmui.widget.QMUITabSegment
-			android:id="@+id/tab_net_station"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-		android:background="#404E58"/>
-
 	<FrameLayout
 			android:id="@+id/fl_net_station"
 			android:layout_width="match_parent"

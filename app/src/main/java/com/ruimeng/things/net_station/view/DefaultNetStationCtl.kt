@@ -6,6 +6,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.utils.CommonUtil
 import wongxd.common.checkPackage
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
@@ -54,60 +55,8 @@ class DefaultNetStationCtl : INetStationController {
     }
 
     override fun onNavigationClick(data: NetStationBean.Data.X, context: Context) {
-        val appName = context.resources.getString(R.string.app_name)
-        val latA = App.lat
-        val lngA = App.lng
-        val sName = "我的位置"
-
-        val latB = data.lat
-        val lngB = data.lng
-        val dName = "站点位置"
-
-        val bs = QMUIBottomSheet.BottomListSheetBuilder(context)
-            .setTitle("导航前往${data.site_name}")
-        if (checkPackage(context, "com.autonavi.minimap")) {
-            bs.addItem("高德地图", "gd")
-        }
-        if (checkPackage(context, "com.baidu.BaiduMap")) {
-            bs.addItem("百度地图", "bd")
-        }
-
-        if (!checkPackage(context, "com.autonavi.minimap")
-            &&
-            !checkPackage(context, "com.baidu.BaiduMap")
-        ) {
-            bs.addItem("请先下载“高德地图” 或 “百度地图”", "no")
-        }
-        bs.setOnSheetItemClickListener { dialog, itemView, position, tag ->
-            if (tag == "gd") {
-                NaviUtil.setUpGaodeAppByLoca(
-                    appName,
-                    latA.toString(), lngA.toString(), sName,
-                    latB.toString(), lngB.toString(), dName
-                )
-            } else if (tag == "bd") {
-
-                val posA = LngLat()
-                posA.latitude = latA
-                posA.longitude = lngA
-
-                val posB = LngLat()
-                posB.latitude = latB
-                posB.longitude = lngB
-
-                val bdA = CoodinateCovertor.bd_encrypt(posA)
-                val bdB = CoodinateCovertor.bd_encrypt(posB)
-
-                NaviUtil.setUpBaiduAPPByLoca(
-                    bdA.latitude.toString(), bdA.longitude.toString(), sName,
-                    bdB.latitude.toString(), bdB.longitude.toString(), dName,
-                    appName, appName
-                )
-            }
-            dialog.dismiss()
-
-        }
-        bs.build().show()
+        CommonUtil.naviToLocation(context as FragmentActivity,data.lat,data.lng,"站点位置",
+            "导航前往${data.site_name}")
     }
 
     override fun bindView(view: INetStationView) {

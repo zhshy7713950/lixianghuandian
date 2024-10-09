@@ -1,35 +1,25 @@
 package com.ruimeng.things.net_station
 
 import android.graphics.Color
-import android.media.Image
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
-import com.qmuiteam.qmui.widget.QMUIFloatLayout
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.App
 import com.ruimeng.things.R
-import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
-import com.utils.CommonUtil
-import com.utils.DensityHelper
-import com.utils.DensityUtil
-import kotlinx.android.synthetic.main.fgt_home.srl_home
+import com.ruimeng.things.net_station.view.DefaultNetStationCtl
+import com.ruimeng.things.net_station.view.NetStationView
+import com.utils.unsafeLazy
 import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -38,16 +28,12 @@ import org.jetbrains.anko.uiThread
 import wongxd.base.MainTabFragment
 import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.bothNotNull
-import wongxd.common.checkPackage
 import wongxd.common.getCurrentAppAty
 import wongxd.common.getSweetDialog
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
-import wongxd.navi.CoodinateCovertor
-import wongxd.navi.LngLat
-import wongxd.navi.NaviUtil
 import wongxd.utils.SystemUtils
 
 
@@ -55,22 +41,14 @@ import wongxd.utils.SystemUtils
 class FgtNetStationItem : MainTabFragment() {
 
     companion object {
-        fun newInstance(type: String = ""): FgtNetStationItem {
-            val fgt = FgtNetStationItem()
-            val b = Bundle()
-            b.putString("type", type)
-            fgt.arguments = b
-            return fgt
+        fun newInstance(): FgtNetStationItem {
+            return FgtNetStationItem()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("TAG", "onResume: ")
     }
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_item
     fun refresh(){
-        srl_station?.autoRefresh()
+        et_search_station?.text?.clear()
+        dealSelectCurrentCity()
     }
     class RefreshStationList
     @Subscribe
@@ -82,22 +60,11 @@ class FgtNetStationItem : MainTabFragment() {
         srl_station.setOnRefreshListener { getList() }
         EventBus.getDefault().register(this)
 
-//        rv_city.layoutManager = LinearLayoutManager(activity)
-//        rv_city.adapter = cityAdapter
-
         rv_station.layoutManager = LinearLayoutManager(activity)
         rv_station.adapter = stationAdapter
 
         CityDataWorker.initJsonData()
 
-
-//        tv_province.setOnClickListener {
-//            CityDataWorker.showOptionPicker(activity, "") { p, c ->
-//                provice = p
-//                city = c
-//                refreshCityPickerState()
-//            }
-//        }
         tv_city.setOnClickListener {
                         CityDataWorker.showOptionPicker(activity, "") { p, c ->
                 provice = p
@@ -157,8 +124,6 @@ class FgtNetStationItem : MainTabFragment() {
     private var oldCity: NetCityJsonBean.Data.Child? = null
 
     private fun refreshCityPickerState() {
-//        tv_city_picker_pre.text = if (null == city) "请选择" else "已选择"
-//        tv_province.text = provice?.name?.replace("省", "") ?: ""
         tv_city.text = city?.name
         if (oldCity != city) {
             oldCity = city
@@ -167,7 +132,6 @@ class FgtNetStationItem : MainTabFragment() {
     }
 
 
-    private val getType by lazy { arguments?.getString("type", "") ?: "" }
     private var currentIndex = -1
     private val stationAdapter by lazy { StationRvAdapter() }
 
@@ -182,17 +146,7 @@ class FgtNetStationItem : MainTabFragment() {
     private fun getList() {
 
         http {
-            url = when (getType) {
-                "1" -> {
-                    "apiv3/servicenetwork"
-                }
-                "2" -> {
-                    "apiv3/returnnetwork"
-                }
-                else -> {
-                    "apiv3/cgstationnetwork"
-                }
-            }
+            url = "apiv3/cgstationnetwork"
             params["city_id"] = city?.id ?: ""
             params["name"] = et_search_station.text.toString()
             params["appType"] = "lxhd"
@@ -207,7 +161,6 @@ class FgtNetStationItem : MainTabFragment() {
                         stationAdapter.setNewData(null)
                     }else{
                         tv_empty_net_station.visibility =View.GONE
-                        val citys = data.map { item -> item.city }
                         currentIndex = 0
                         var list = data[currentIndex].list
                         list.forEach {
@@ -217,7 +170,7 @@ class FgtNetStationItem : MainTabFragment() {
                             else
                                 "${String.format("%.2f", it.distance)}米"
                         }
-                        var list2  = list.sortedBy { it->it.distance }
+                        var list2  = list.sortedBy { it.distance }
 
                         stationAdapter.setNewData(list2)
                     }
@@ -227,112 +180,17 @@ class FgtNetStationItem : MainTabFragment() {
         }
     }
 
-    private fun naviToLocation(targetLat: Double, targetLng: Double, targetName: String) {
-        CommonUtil.naviToLocation(activity!!,targetLat,targetLng,targetName)
+    private val netStationCtl by unsafeLazy {
+        DefaultNetStationCtl.create()
     }
-
-
 
     inner class StationRvAdapter :
         BaseQuickAdapter<NetStationBean.Data.X, BaseViewHolder>(R.layout.item_rv_station) {
         override fun convert(helper: BaseViewHolder, item: NetStationBean.Data.X?) {
             bothNotNull(helper, item) { a, b ->
-                val tvCall = a.getView<TextView>(R.id.tv_call)
-                val tvTitle = a.getView<TextView>(R.id.tv_title)
-                val tvLocation = a.getView<TextView>(R.id.tv_location)
-                val tvDistance = a.getView<TextView>(R.id.tv_distance)
-
-
-                a.itemView.setOnClickListener {
-                    if ("3"==getType){
-                        (parentFragment as FgtNetStation).start(
-                            FgtNetStationDetailTwo.newInstance(
-                                b.site_name,
-                                b.id
-                            )
-                        )
-                    }
-//                    else{
-//                        (parentFragment as FgtNetStation).start(
-//                            FgtNetStationDetail.newInstance(
-//                                b.site_name,
-//                                b.id
-//                            )
-//                        )
-//                    }
-
-                }
-
-                tvCall.setOnClickListener {
-                    AnyLayer.with(getCurrentAppAty())
-                        .contentView(R.layout.alert_phone_call_dialog)
-                        .bindData { anyLayer ->
-                            anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(b.tel)
-                            anyLayer.contentView.findViewById<TextView>(R.id.tv_name).setText(b.site_name)
-                            anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener{
-                                getPermissions(activity, PermissionType.CALL_PHONE, allGranted = {
-                                    SystemUtils.call(context, b.tel)
-                                })
-                                anyLayer.dismiss()
-                            }
-                            anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener{
-                                anyLayer.dismiss()
-                            }
-                        }.backgroundColorInt(Color.parseColor("#85000000"))
-                        .backgroundBlurRadius(10f)
-                        .backgroundBlurScale(10f)
-                        .show()
-
-                }
-
-                tvTitle.text = b.site_name
-
-
-                tvDistance.text = "距离我${b.distanceStr}"
-
-                tvLocation.text = "地址：${b.address}"
-
-                a.getView<TextView>(R.id.tv_nav).setOnClickListener {
-//                    naviToLocation(b.lat, b.lng, b.site_name)
-                    var list = ArrayList<NetStationBean.Data.X>()
-                    for ( a in data) {
-                        list.add(a)
-                    }
-                    (parentFragment as FgtNetStation).start(
-                        FgtNetStationByMap.newInstance(
-                            getType,"",b.id, list
-                        )
-                    )
-                }
-                val isReturnStation = "1" != getType
-
-                val tvCode = a.getView<TextView>(R.id.tv_code)
-                val tvNumber = a.getView<TextView>(R.id.tv_number)
-                val imageView = a.getView<ImageView>(R.id.iv01)
-                helper.setGone(R.id.tv_change_number,isReturnStation)
-                    .setGone(R.id.tv_change_title,isReturnStation)
-                    .setGone(R.id.tv_number,!isReturnStation)
-                    .setGone(R.id.tv_code,!isReturnStation)
-                if (!isReturnStation) {
-                    tvCode.text =  "${b.tag}"
-                    imageView.setImageResource(R.mipmap.ic_shouhou)
-                    tvCall.setText("立即联系")
-                    tvNumber.text = "可租电池数：${b.count}"
-                }else{
-                    imageView.setImageResource(R.mipmap.ic_statation)
-                    tvCall.setText("联系经销商")
-                    tvNumber.text = "可换电池数：${b.available_battery}"
-                    helper.setText(R.id.tv_change_number,"${b.available_battery}")
-                    if (b.isOnline == 1){
-                        helper.setTextColor(R.id.tv_change_number,Color.parseColor(if (b.isGreen == 1) "#29EBB6" else "#FEB41E"))
-                            .setText(R.id.tv_change_title,"可换电池数")
-                    }else{
-                        helper.setTextColor(R.id.tv_change_number,Color.parseColor("#D5D5D5"))
-                            .setText(R.id.tv_change_number,"0").
-                                setText(R.id.tv_change_title,"设备已离线")
-                    }
-
-                }
+                val netStationView = a.getView<NetStationView>(R.id.net_station_view)
+                netStationView.setNewData(b)
+                netStationView.bindCtl(netStationCtl)
             }
         }
 

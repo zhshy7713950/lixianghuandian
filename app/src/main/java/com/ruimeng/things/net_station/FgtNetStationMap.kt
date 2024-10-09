@@ -47,7 +47,6 @@ class FgtNetStationMap : MainTabFragment() {
     private var aMap: AMap? = null
     private var mMapView: MapView? = null
     private var location: Location? = null
-    private var selectMarker: Marker? = null
     private val markInfoMap: MutableMap<String, NetStationBean.Data.X> = mutableMapOf()
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var mCurrentMemMarker: Marker? = null
@@ -61,6 +60,7 @@ class FgtNetStationMap : MainTabFragment() {
 
         }
         tv_search?.setOnClickListener {
+            hideNetStationView()
             getNetStationList(et_search.text.toString())
         }
         cv_location.setOnClickListener {
@@ -79,8 +79,6 @@ class FgtNetStationMap : MainTabFragment() {
             activity,
             PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION,
-            PermissionType.ACCESS_WIFI_STATE,
-            PermissionType.ACCESS_NETWORK_STATE,
             allGranted = {
                 afterGetPermission(savedInstanceState)
             }

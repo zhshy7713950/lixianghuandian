@@ -2,6 +2,9 @@ package com.ruimeng.things.net_station.bean
 
 import android.os.Parcelable
 import com.amap.api.maps.model.Marker
+import com.utils.MODEL_48
+import com.utils.MODEL_60
+import com.utils.MODEL_72
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
@@ -34,6 +37,7 @@ data class NetStationBean(
             var distanceStr :String = "",
             var telData:List<TelData> = listOf(),
             var workTime: String = "",
+            var cellNum: String = "",
         ): Parcelable
 
         @Parcelize
@@ -52,8 +56,8 @@ data class NetStationBean(
 }
 
 fun NetStationBean.Data.Model.getAvaModelNum(curV: String) = when (curV) {
-    "72" -> model_72
-    "60" -> model_60
-    "48" -> model_48
+    MODEL_72 -> model_72
+    MODEL_60 -> model_60
+    MODEL_48 -> model_48
     else -> model_72 + model_60 + model_48
 }

@@ -135,7 +135,7 @@ class NetStationDetailView @JvmOverloads constructor(
         //柜名
         tv_cabinet_id.text = data.code
         //几仓柜
-        tv_cabinet_num.text = "${if(data.exchange.isNullOrEmpty()) data.exchange[0].device.size else ""}仓柜"
+        tv_cabinet_num.text = "${if(!data.exchange.isNullOrEmpty()) data.exchange[0].device.size else ""}仓柜"
         //已离线
         tv_offline.isVisible = data.isOnline == 0
         //营业时间

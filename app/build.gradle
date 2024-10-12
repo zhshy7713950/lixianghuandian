@@ -155,6 +155,9 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v3.11.1'
     //轮播图
     implementation 'io.github.youth5201314:banner:2.2.3'
+    //大图预览
+    implementation 'com.github.OneZeroYang:PreviewPictureView:1.1.0'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'

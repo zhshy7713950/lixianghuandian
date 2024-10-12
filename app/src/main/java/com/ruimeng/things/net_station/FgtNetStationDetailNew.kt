@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
+import com.batchat.preview.PreviewTools
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -84,12 +85,16 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                     station_banner.isVisible = false
                 } else {
                     station_banner.isVisible = true
+                    val dataList = bean.site_image.filter { it.isNullOrEmpty().not() }
                     (station_banner as Banner<String, BannerImageAdapterImpl>)
-                        .setAdapter(BannerImageAdapterImpl(bean.site_image.filter {
-                            it.isNullOrEmpty().not()
-                        }), true)
+                        .setAdapter(BannerImageAdapterImpl(dataList).apply {
+                            this.setOnBannerListener { _, position ->
+                                PreviewTools.startImagePreview(this@FgtNetStationDetailNew.requireActivity(), ArrayList(dataList), station_banner, position)
+                            }
+                        }, true)
                         .addBannerLifecycleObserver(this@FgtNetStationDetailNew)
                         .indicator = CircleIndicator(activity)
+
                 }
             }
 
@@ -100,7 +105,7 @@ class FgtNetStationDetailNew : BaseBackFragment() {
         }
     }
 
-    inner class BannerImageAdapterImpl(data: List<String>) : BannerImageAdapter<String>(data) {
+    inner class BannerImageAdapterImpl(private val dataList: List<String>) : BannerImageAdapter<String>(dataList) {
         override fun onBindView(
             holder: BannerImageHolder,
             data: String,

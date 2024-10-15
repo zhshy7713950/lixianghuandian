@@ -131,7 +131,7 @@
         <ImageView
             android:id="@+id/iv_close_net_station_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginTop="-30dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/ic_net_station_close"

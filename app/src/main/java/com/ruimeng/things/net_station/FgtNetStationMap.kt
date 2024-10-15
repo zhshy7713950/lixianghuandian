@@ -251,7 +251,7 @@ class FgtNetStationMap : MainTabFragment() {
 
     private fun addMarkerInfo(agent: NetStationBean.Data.X,markerBitmap: Bitmap){
         var markerOption = MarkerOptions()
-            .zIndex(10f)
+//            .zIndex(10f)
             .position(LatLng(agent.lat, agent.lng))
             .draggable(false)
         markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))

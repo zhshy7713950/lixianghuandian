@@ -58,8 +58,8 @@ class DefaultNetStationCtl : INetStationController {
     }
 
     override fun onNavigationClick(data: NetStationBean.Data.X, context: Context) {
-        CommonUtil.naviToLocation(context as FragmentActivity,data.lat,data.lng,"站点位置",
-            "导航前往${data.site_name}")
+        CommonUtil.naviToLocation(context as FragmentActivity,data.lat,data.lng,data.site_name,
+            "导航前往\"${data.site_name}\"")
     }
 
     override fun bindView(view: INetStationView) {

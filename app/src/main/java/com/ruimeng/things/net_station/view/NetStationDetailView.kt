@@ -22,6 +22,7 @@ import com.utils.MODEL_48
 import com.utils.MODEL_60
 import com.utils.MODEL_72
 import com.utils.MapUtils
+import com.utils.curDateByFormat
 import kotlinx.android.synthetic.main.view_net_station_detail.view.tv_cabinet_id
 import kotlinx.android.synthetic.main.view_net_station_detail.view.tv_cabinet_num
 import kotlinx.android.synthetic.main.view_net_station_detail.view.ll_container
@@ -149,7 +150,7 @@ class NetStationDetailView @JvmOverloads constructor(
         span.setSpan(AbsoluteSizeSpan(sp2px(12f)),0,distance.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
         tv_address.text = span
         //更新时间
-        tv_update_time.text = data.recommend_str
+        tv_update_time.text = "更新时间：${curDateByFormat()}"
         tv_telephone.setOnClickListener {
             ctl?.onTelClick(data,context)
         }

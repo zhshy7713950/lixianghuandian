@@ -14,7 +14,7 @@ val pass = {}
 
 val dateFormat: DateFormat = SimpleDateFormat("MM.dd HH:mm:ss")
 
-fun Any.curDateByFormat() = dateFormat.format(Date())
+fun Any.curDateByFormat(): String = dateFormat.format(Date())
 
 inline fun String?.isZero() = "0" == this || "0.00" == this
 fun String?.safeToInt(): Int {

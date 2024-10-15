@@ -23,6 +23,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="广东省广州市天河区天河路100号"
+            android:ellipsize="end"
             android:layout_marginBottom="10dp"/>
 
         <LinearLayout
@@ -81,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_net_station_address"
-                android:layout_marginTop="4.5dp"/>
+                android:layout_marginTop="3.5dp"/>
 
             <TextView
                 android:layout_marginLeft="5dp"
@@ -172,16 +173,15 @@
             android:background="@drawable/bg_model_72"
             android:gravity="bottom"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/tv_model_title_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:textSize="10sp"
                 tools:text="可换数"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="3dp"
                 android:textColor="@color/white"
                 />
 
@@ -192,7 +192,7 @@
                 android:layout_weight="1"
                 tools:text="3"
                 android:textColor="#29EBB6"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 />
@@ -207,7 +207,7 @@
             android:background="@drawable/bg_model_72"
             android:gravity="bottom"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/tv_model_title_2"
@@ -216,7 +216,7 @@
                 android:gravity="center_horizontal"
                 android:textSize="10sp"
                 tools:text="可换数"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="3dp"
                 android:textColor="@color/white"
                 />
 
@@ -227,7 +227,7 @@
                 android:layout_weight="1"
                 tools:text="3"
                 android:textColor="#29EBB6"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 />
@@ -243,7 +243,7 @@
             android:background="@drawable/bg_model_72"
             android:gravity="bottom"
             android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingRight="10dp"
             >
 
             <TextView
@@ -253,7 +253,7 @@
                 android:gravity="center_horizontal"
                 android:textSize="10sp"
                 tools:text="可换数"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="3dp"
                 android:textColor="@color/white"
                 />
 
@@ -264,7 +264,7 @@
                 android:layout_weight="1"
                 tools:text="3"
                 android:textColor="#29EBB6"
-                android:gravity="right"
+                android:gravity="right|center_vertical"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 />

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/gray_F5">
+    android:layout_height="match_parent"
+    android:background="@color/gray_F5"
+    android:orientation="vertical">
 
-    <include layout="@layout/layout_topbar"/>
+    <include layout="@layout/layout_topbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -21,26 +21,27 @@
                 android:id="@+id/station_banner"
                 android:layout_width="match_parent"
                 android:layout_height="168dp"
-                android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
                 app:banner_loop_time="5000"
-                app:banner_radius="10dp"/>
+                app:banner_radius="10dp" />
 
             <com.ruimeng.things.net_station.view.NetStationDetailView
                 android:id="@+id/net_station_detail_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"/>
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_battery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
-                android:paddingBottom="34dp"/>
+                android:paddingBottom="34dp" />
 
         </LinearLayout>
 

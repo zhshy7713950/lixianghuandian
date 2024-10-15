@@ -75,13 +75,16 @@ class FgtNetStationDetailNew : BaseBackFragment() {
 
             onSuccess { res ->
                 val bean = res.toPOJO<NetStationDetailBeanTwo>().data
-                net_station_detail_view.setNewData(bean)
-                net_station_detail_view.bindCtl(netStationDetailCtl)
+                with(net_station_detail_view){
+                    isVisible = true
+                    setNewData(bean)
+                    bindCtl(netStationDetailCtl)
+                }
                 rvAdapter.swCabSocControl = bean.swCabSocControl.toIntOrNull() ?: 80
                 if (bean.exchange.isNotEmpty() && bean.exchange[0].device.isNotEmpty()) {
                     rvAdapter.setNewData(bean.exchange[0].device)
                 }
-                if (bean.site_image.isNullOrEmpty()) {
+                if (bean.site_image.isNullOrEmpty() || bean.site_image.all { it.isNullOrEmpty() }) {
                     station_banner.isVisible = false
                 } else {
                     station_banner.isVisible = true

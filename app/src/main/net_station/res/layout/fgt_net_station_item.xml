@@ -106,7 +106,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:text="没有相关内容" />
+                android:text="" />
         </FrameLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

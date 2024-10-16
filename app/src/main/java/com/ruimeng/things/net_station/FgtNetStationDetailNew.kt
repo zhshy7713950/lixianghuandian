@@ -139,7 +139,7 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                 h.setTextColor(R.id.tv_battery_status, Color.parseColor("#B2C1CE"))
                 h.setAlpha(R.id.cl_container, 0.5f)
                 with(b) {
-                    h.setText(R.id.tv_id, id)
+                    h.setText(R.id.tv_id, if (id.length == 1) "0$id" else id)
                     if (status == 0 || status == 1) {
                         when (device_type) {
                             "72伏" -> {
@@ -202,8 +202,8 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                             else// <=20
                             -> h.setImageResource(R.id.iv_battery, R.drawable.ic_battery_20)
                         }
-                        if (FgtHome.getBatteryV()
-                                .isNullOrEmpty() || !device_type.startsWith(FgtHome.getBatteryV())
+                        if (!FgtHome.getBatteryV()
+                                .isNullOrEmpty() && !device_type.startsWith(FgtHome.getBatteryV())
                         ) {
                             h.setText(R.id.tv_battery_status, "电池型号不匹配")
                         } else {

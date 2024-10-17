@@ -290,7 +290,6 @@ class FgtPayRentMoney : BaseBackFragment() {
 //        tv_option_time.text = showExpireTitle() + "无"
         selectOption = null
         setSelectOption()
-        computeAmount()
     }
 
     private fun initAgentCodeView() {
@@ -332,6 +331,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 basePackageAdapter.selectPos = p2
                 basePackageAdapter.notifyDataSetChanged()
                 resetSelectOptionList()
+                computeAmount()
             }
         rv_change_package.layoutManager = GridLayoutManager(activity, 2)
         rv_change_package.adapter = changePackageAdapter
@@ -351,7 +351,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 //                }
             }
         setSelectOption()
-        computeAmount()
+//        computeAmount()
 
         btn_pay_now_pay_rent_money.setOnClickListener { view ->
             if (!IS_CHECKED_PROTOCOL) {
@@ -732,6 +732,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                             couponList.addAll(result.coupons)
                             couponId = couponList.get(0).id
                             tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+                            computeAmount()
                         }
                     }
                 }
@@ -763,6 +764,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                             couponList.addAll(result.coupons)
                             couponId = couponList.get(0).id
                             tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+                            computeAmount()
                         }
                     }
                 }

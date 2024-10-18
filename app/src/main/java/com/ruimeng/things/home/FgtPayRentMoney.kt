@@ -732,8 +732,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                             couponList.addAll(result.coupons)
                             couponId = couponList.get(0).id
                             tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-                            computeAmount()
                         }
+                        computeAmount()
                     }
                 }
                 onFail { i, s ->
@@ -764,8 +764,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                             couponList.addAll(result.coupons)
                             couponId = couponList.get(0).id
                             tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-                            computeAmount()
                         }
+                        computeAmount()
                     }
                 }
             }

@@ -1102,13 +1102,13 @@ class FgtHome : MainTabFragment() {
 
 
             tv_ya_monety.text =
-                if (payType == "101") "已免押" else "${paymentDetailBean!!.deposit}元"
+                if (payType == "101" || payType == "99" || payType == "102") "已免押" else "${paymentDetailBean!!.deposit}元"
             tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
-            tv_ya_monety.setOnClickListener {
-                if (tv_ya_monety.text != "0.00") {
-                    startFgt(FgtMeDeposit())
-                }
-            }
+//            tv_ya_monety.setOnClickListener {
+//                if (tv_ya_monety.text != "0.00") {
+//                    startFgt(FgtMeDeposit())
+//                }
+//            }
             if (paymentDetailBean!!.paymentInfo != null) {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname

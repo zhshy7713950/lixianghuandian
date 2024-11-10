@@ -73,39 +73,45 @@ class FgtMeDeposit : BaseBackFragment() {
     var virtaul = false
     var deviceId = ""
     private fun getInfo() {
-        deviceId = if(FgtHome.CURRENT_DEVICEID == "0") FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
-        if (deviceId.startsWith("8") && deviceId.length == 8 ){
+        deviceId =
+            if (FgtHome.CURRENT_DEVICEID == "0") FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
+        if (deviceId.startsWith("8") && deviceId.length == 8) {
             virtaul = true
         }
-        tv_battery_num.text = "电池编号："+deviceId
-        var textColors = arrayOf("#929FAB","#FFFFFF")
-        var type = when (FgtHome.payType){
-            "1"->"微信支付"
-            "2"->"支付宝支付"
-            "101"->"芝麻信用(免押)"
+        tv_battery_num.text = "电池编号：" + deviceId
+        var textColors = arrayOf("#929FAB", "#FFFFFF")
+        var type = when (FgtHome.payType) {
+            "1" -> "微信支付"
+            "2" -> "支付宝支付"
+            "101" -> "芝麻信用(免押)"
+            "99" -> "线下免押"
+            "102" -> "集团支付"
             else -> ""
         }
-        var deposit = when (FgtHome.payType){
-            "1"->FgtHome.deposit.toString()
-            "2"->FgtHome.deposit.toString()
-            "101"->"已免押"
+        var deposit = when (FgtHome.payType) {
+            "1" -> FgtHome.deposit.toString()
+            "2" -> FgtHome.deposit.toString()
+            "101", "99", "102" -> "已免押"
             else -> ""
         }
 
 
-        tv_battery_status.text = TextUtil.getSpannableString(arrayOf("支付渠道：",type),textColors)
-        tv_battery_hole.text = TextUtil.getSpannableString(arrayOf("电池押金：",deposit),textColors)
-        if (virtaul){
-            if (FgtHome.payType == "101"){
+        tv_battery_status.text = TextUtil.getSpannableString(arrayOf("支付渠道：", type), textColors)
+        tv_battery_hole.text =
+            TextUtil.getSpannableString(arrayOf("电池押金：", deposit), textColors)
+        if (virtaul) {
+            if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") {
                 tv_remark.text = "解绑免押申请通过后，将自动解除免押绑定"
-                tv_deposit_return.text ="申请解绑免押"
-            }else{
+                tv_deposit_return.text = "申请解绑免押"
+            } else {
                 tv_remark.text = "退还押金申请通过后，1-2个工作日到账"
-                tv_deposit_return.text ="申请退还押金"
+                tv_deposit_return.text = "申请退还押金"
             }
-            var dialogTitle = if (FgtHome.payType == "101") "免押解绑结束后，剩余套餐将清零，请确认操作！"
-            else "押金退还结束后，剩余套餐将清零，请确认操作！"
-            var dialogDesc = if (FgtHome.payType == "101") "请确认是否解绑免押" else "请确认是否退还押金"
+            var dialogTitle =
+                if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "免押解绑结束后，剩余套餐将清零，请确认操作！"
+                else "押金退还结束后，剩余套餐将清零，请确认操作！"
+            var dialogDesc =
+                if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "请确认是否解绑免押" else "请确认是否退还押金"
             tv_deposit_return.setOnClickListener {
                 NormalDialog(activity)
                     .apply {
@@ -122,7 +128,7 @@ class FgtMeDeposit : BaseBackFragment() {
                                 params["device_id"] = deviceId
                                 IS_SHOW_MSG = false
                                 onSuccess { res ->
-                                    var  paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                                    var paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
                                     tryReturnDeposit(paymentDetailBean.contract_id)
                                 }
                             }
@@ -134,10 +140,10 @@ class FgtMeDeposit : BaseBackFragment() {
 
 
             }
-        }else{
-            tv_deposit_return.text ="立即退租"
+        } else {
+            tv_deposit_return.text = "立即退租"
             tv_deposit_return.setOnClickListener {
-                ToastHelper.shortToast(context,"请扫描电柜二维码")
+                ToastHelper.shortToast(context, "请扫描电柜二维码")
                 getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                     val intent = Intent(activity, ScanQrCodeActivity::class.java)
                     intent.putExtra("type", "退还")
@@ -147,8 +153,8 @@ class FgtMeDeposit : BaseBackFragment() {
         }
 
 
-
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == AppCompatActivity.RESULT_OK) {
@@ -159,9 +165,9 @@ class FgtMeDeposit : BaseBackFragment() {
 
                         val result = bundle.getString(CodeUtils.RESULT_STRING)
                         val getType = bundle.getString("type")
-                        if ("退还" == getType){
+                        if ("退还" == getType) {
                             if (result != null) {
-                                RebackAlertPopup(getCurrentAty(),object :View.OnClickListener{
+                                RebackAlertPopup(getCurrentAty(), object : View.OnClickListener {
                                     override fun onClick(p0: View?) {
                                         returnBattery(result)
                                     }
@@ -175,6 +181,7 @@ class FgtMeDeposit : BaseBackFragment() {
             }
         }
     }
+
     /**
      * 柜内租用电池
      */
@@ -195,6 +202,7 @@ class FgtMeDeposit : BaseBackFragment() {
             }
         }
     }
+
     private fun tryReturnDeposit(contractId: String) {
 
         fun doNetReq() {

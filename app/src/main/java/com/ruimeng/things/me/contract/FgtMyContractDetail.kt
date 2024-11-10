@@ -167,7 +167,7 @@ class FgtMyContractDetail : BaseBackFragment() {
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
                     tv_deposit_my_contract_detail.text = if ("0" == bean.deposit_status) {
                         "0元"
-                    } else if (FgtHome.payType == "101") {
+                    } else if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") {
                         "已免押"
                     } else {
                         "${bean.deposit}元"

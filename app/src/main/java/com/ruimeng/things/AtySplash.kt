@@ -1,6 +1,16 @@
 package com.ruimeng.things
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.View
+import android.widget.TextView
+import androidx.core.view.isVisible
+import com.ruimeng.things.me.activity.AtyWeb2
 import kotlinx.android.synthetic.main.aty_splash.*
 import wongxd.Config
 import wongxd.Http
@@ -14,17 +24,68 @@ import wongxd.utils.utilcode.util.ScreenUtils
  */
 class AtySplash : BaseBackActivity() {
 
+    companion object{
+        const val HAS_AGREE_AGREEMENT = "has_agree_agreement"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ScreenUtils.setFullScreen(this)
+        window.statusBarColor = Color.WHITE
+
         setContentView(R.layout.aty_splash)
         setSwipeBackEnable(false)
-        iv_splash.loadBigImg(R.drawable.splash)
 
+        val hasAgree = Config.getDefault().spUtils.getBoolean(HAS_AGREE_AGREEMENT,false)
+        if(!hasAgree){
+            llAgreement.isVisible = true
+            val str = "隐私政策，以了解我们的服务内容和我们在收集和使用您相关个人信息时的处理规则。我们将严格按照《用户协议》和《隐私政策》为您提供服务，保护您的个人信息。"
+            val ssb = SpannableStringBuilder()
+            ssb.append(str)
+            val start = str.indexOf("《")
+            ssb.setSpan(object : ClickableSpan() {
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    //设置文件颜色
+                    ds.color = Color.parseColor("#13C681")
+                    // 去掉下划线
+                    ds.isUnderlineText = false
+                }
 
+                override fun onClick(p0: View) {
+                    AtyWeb2.start("用户协议", "${Http.host}/appH5/userProtocol.html")
+                }
+            }, start, start + 6, 0)
+            val end = str.lastIndexOf("《")
+            ssb.setSpan(object : ClickableSpan() {
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    //设置文件颜色
+                    ds.color = Color.parseColor("#13C681")
+                    ds.bgColor = Color.TRANSPARENT
+                    // 去掉下划线
+                    ds.isUnderlineText = false
+                }
 
-        iv_splash.postDelayed({ doJump() }, 1500)
+                override fun onClick(p0: View) {
+                    AtyWeb2.start("隐私政策", "${Http.host}/appH5/privateProtocol.html")
+                }
+            }, end, end + 6, 0)
+            tvAgreement.movementMethod = LinkMovementMethod.getInstance()
+            tvAgreement.setText(ssb, TextView.BufferType.SPANNABLE)
+            tvAgreement.highlightColor = Color.TRANSPARENT
+            btnAgree.setOnClickListener {
+                Config.getDefault().spUtils.put(HAS_AGREE_AGREEMENT,true)
+                doJump()
+            }
+            tvDisagree.setOnClickListener {
+                finish()
+            }
+        }else{
+            llAgreement.isVisible = false
+            iv_splash.loadBigImg(R.drawable.splash)
+            iv_splash.postDelayed({ doJump() }, 1500)
+        }
     }
 
 

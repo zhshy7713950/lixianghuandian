@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+	          android:background="@color/white">
 
 	<ImageView
 			android:id="@+id/iv_splash"
 			android:scaleType="fitXY"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"/>
-</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/llAgreement"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:gravity="center_horizontal"
+		android:visibility="gone">
+
+		<ImageView
+			android:layout_width="120dp"
+			android:layout_height="120dp"
+			android:src="@drawable/ic_splash_logo"
+			android:layout_marginTop="100dp"/>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1"/>
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textColor="@color/black"
+			android:text="用户协议和隐私政策提示"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:textSize="18sp"/>
+
+		<TextView
+			android:id="@+id/tvAgreement"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="16sp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:layout_marginTop="5dp"
+			android:textColor="@color/text_color"
+			android:text="隐私政策，以了解我们的服务内容和我们在收集和使用您相关个人信息时的处理规则。我们将严格按照《用户协议》和《隐私政策》为您提供服务，保护您的个人信息。"
+			/>
+
+		<Button
+			android:id="@+id/btnAgree"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:layout_marginTop="80dp"
+			android:background="@drawable/bg_btn_common1"
+			android:textSize="16sp"
+			android:text="同意"
+			android:textColor="@color/white"/>
+
+		<TextView
+			android:id="@+id/tvDisagree"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="30dp"
+			android:text="不同意"
+			android:gravity="center_horizontal"
+			android:textSize="16sp"
+			android:textColor="@color/gray_67"/>
+
+	</LinearLayout>
+
+
+</FrameLayout>

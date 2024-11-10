@@ -929,8 +929,8 @@
                         android:layout_marginLeft="14dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginRight="14dp"
+                        android:layout_marginBottom="20dp"
                         android:button="@null"
-
                         android:drawableLeft="@mipmap/ic_withdrawal_alipay"
                         android:drawableRight="@drawable/radio_select"
                         android:drawablePadding="12dp"
@@ -943,6 +943,7 @@
 
                     <RadioButton
                         android:id="@+id/rbOffline"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="14dp"

@@ -49,6 +49,7 @@ class AtyLogin : AtyBase() {
         const val TAG = "AtyLogin"
         const val TAG_LAST_LOGIN_PHONE = "last_login_phone"
         const val FIRST_LAUNCH_APP = "first_launch_app"
+        const val SUPER_CODE = "564321"
     }
 
     private var phone: String = ""
@@ -108,7 +109,7 @@ class AtyLogin : AtyBase() {
                 AtyWeb2.start("隐私政策", "${Http.host}/appH5/privateProtocol.html")
             }
         }, end, end + 6, 0)
-        tv_login_protocol.setMovementMethod(LinkMovementMethod.getInstance())
+        tv_login_protocol.movementMethod = LinkMovementMethod.getInstance()
         tv_login_protocol.setText(ssb, TextView.BufferType.SPANNABLE)
         tv_login_protocol.highlightColor = Color.TRANSPARENT
 
@@ -149,16 +150,16 @@ class AtyLogin : AtyBase() {
 
         })
         tv_phone1.setOnClickListener {
-            doLoginHttp(tv_phone1.text.toString(), "666888")
+            doLoginHttp(tv_phone1.text.toString(), SUPER_CODE)
         }
         tv_phone2.setOnClickListener {
-            doLoginHttp(tv_phone2.text.toString(), "666888")
+            doLoginHttp(tv_phone2.text.toString(), SUPER_CODE)
         }
         tv_phone3.setOnClickListener {
-            doLoginHttp(tv_phone3.text.toString(), "666888")
+            doLoginHttp(tv_phone3.text.toString(), SUPER_CODE)
         }
         tv_phone4.setOnClickListener {
-            doLoginHttp(tv_phone4.text.toString(), "666888")
+            doLoginHttp(tv_phone4.text.toString(), SUPER_CODE)
         }
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             layout_test.visibility = View.VISIBLE
@@ -294,7 +295,7 @@ class AtyLogin : AtyBase() {
                     UserInfoLiveData.setToString(loginBean.data.userinfo)
                     Config.getDefault().token = loginBean.data.token
                     startAty<AtyMain>()
-                    if(code != "666888"){
+                    if(code != SUPER_CODE){
                         vm.uploadVersion()
                     }
                 } else {

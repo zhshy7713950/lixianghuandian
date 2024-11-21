@@ -43,7 +43,7 @@
 			android:id="@+id/tvAgreement"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="16sp"
+			android:textSize="15sp"
 			android:layout_marginLeft="20dp"
 			android:layout_marginRight="20dp"
 			android:layout_marginTop="5dp"
@@ -61,7 +61,7 @@
 			android:background="@drawable/bg_btn_common1"
 			android:textSize="16sp"
 			android:text="同意"
-			android:textColor="@color/white"/>
+			android:textColor="@color/gray_67"/>
 
 		<TextView
 			android:id="@+id/tvDisagree"

@@ -39,7 +39,7 @@ class AtySplash : BaseBackActivity() {
         val hasAgree = Config.getDefault().spUtils.getBoolean(HAS_AGREE_AGREEMENT,false)
         if(!hasAgree){
             llAgreement.isVisible = true
-            val str = "隐私政策，以了解我们的服务内容和我们在收集和使用您相关个人信息时的处理规则。我们将严格按照《用户协议》和《隐私政策》为您提供服务，保护您的个人信息。"
+            val str = "欢迎使用「锂享换电」！在您使用前，请您认真阅读并了解用户协议和隐私政策，以了解我们的服务内容和我们在收集和使用您相关个人信息时的处理规则。我们将严格按照《用户协议》和《隐私政策》为您提供服务，保护您的个人信息"
             val ssb = SpannableStringBuilder()
             ssb.append(str)
             val start = str.indexOf("《")

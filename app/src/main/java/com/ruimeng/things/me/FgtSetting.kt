@@ -2,20 +2,16 @@ package com.ruimeng.things.me
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.AtyLogin
-import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.UserInfoLiveData
 import com.ruimeng.things.me.activity.AtyWeb2
 import kotlinx.android.synthetic.main.fgt_setting.*
-import wongxd.AtyWeb
 import wongxd.Config
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
-import wongxd.http
 import wongxd.utils.SystemUtils
 import wongxd.utils.utilcode.util.CacheUtils
 import wongxd.utils.utilcode.util.SPUtils
@@ -36,6 +32,10 @@ class FgtSetting : BaseBackFragment() {
             it.postDelayed({
                 EasyToast.DEFAULT.show("缓存清除成功")
             }, 800)
+        }
+
+        ll_cancel_account_setting.setOnClickListener {
+            start(FgtCancelAccount())
         }
 
 

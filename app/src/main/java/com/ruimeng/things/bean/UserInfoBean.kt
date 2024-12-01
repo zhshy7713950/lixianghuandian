@@ -29,7 +29,8 @@ data class UserInfoBean(
             var devicedeposit: String = "",
             var realname_auth: Int = 0,
             var is_debug: Int = 0,  //1是调试账号 0正常账号
-            var freeMark: String? = null //1 存在免押，0不存在免押金
+            var freeMark: String? = null, //1 存在免押，0不存在免押金
+            var phone: String = ""
         )
     }
 }

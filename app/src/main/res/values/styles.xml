@@ -24,4 +24,11 @@
 <!--        <item name="android:windowCloseOnTouchOutside">false</item>-->
     </style>
 
+    <style name="CodeEditTextStyle">
+        <!--文本的颜色，textColor和textSize不要放到style中-->
+        <item name="colorControlNormal">#9A9A9A</item>
+        <item name="colorControlActivated">#9A9A9A</item>
+    </style>
+
+
 </resources>

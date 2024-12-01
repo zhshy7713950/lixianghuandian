@@ -19,4 +19,6 @@ object Api {
     const val Change_Error = "apiv6/cabinet/changeerror"
 
     const val Upload_Version = "apiv6/user/uploadversion"
+
+    const val Get_Code = "/api/getcode"
 }

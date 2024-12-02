@@ -4,10 +4,12 @@ import com.entity.local.AdPayLocal
 import com.entity.local.AgentByCodeLocal
 import com.entity.local.ChangeErrorLocal
 import com.entity.local.GetAdInfoLocal
+import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
 import com.entity.local.ServerPayResultLocal
+import com.entity.local.UnregisterLocal
 import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.AdInfoRemote
@@ -77,5 +79,15 @@ object BizService {
     suspend fun uploadVersion(uploadVersionLocal: UploadVersionLocal) = Server.call<UploadVersionLocal,Any>(
         Api.Upload_Version,
         uploadVersionLocal
+    )
+
+    suspend fun getCode(getCodeLocal: GetCodeLocal) = Server.call<GetCodeLocal,Any>(
+        Api.Get_Code,
+        getCodeLocal
+    )
+
+    suspend fun unregister(unregisterLocal: UnregisterLocal) = Server.call<UnregisterLocal,Any>(
+        Api.Unregister,
+        unregisterLocal
     )
 }

@@ -55,3 +55,14 @@ data class UploadVersionLocal(
     val system_version: String,
     val app_version: String
 )
+
+data class GetCodeLocal(
+    val mobile: String,
+    val tag: String = "unregister"
+)
+
+data class UnregisterLocal(
+    val userId: String,
+    val mobile: String,
+    val code: String
+)

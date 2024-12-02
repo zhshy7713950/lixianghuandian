@@ -20,5 +20,7 @@ object Api {
 
     const val Upload_Version = "apiv6/user/uploadversion"
 
-    const val Get_Code = "/api/getcode"
+    const val Get_Code = "api/getcode"
+
+    const val Unregister = "apiv6/user/unregister"
 }

@@ -119,16 +119,21 @@ enum class PermissionType(val permission: String, val permissionName: String) {
     ACCESS_NETWORK_STATE(Manifest.permission.ACCESS_NETWORK_STATE, "获取网络状态");
 }
 
+fun isAllGrantedPermissions(aty: FragmentActivity?, vararg per: PermissionType): Boolean {
+    var isAllGranted = false
+    per.forEach {
+        isAllGranted = aty?.checkSelfPermission(it.permission) == PackageManager.PERMISSION_GRANTED
+    }
+    return isAllGranted
+}
+
 fun getPermissionsWithTips(aty: FragmentActivity?,
                            vararg per: PermissionType,
                            contentText: String,
                            result: (Boolean, List<PermissionActivityResult.Permission>) -> Unit = { isAllGranted, perList -> },
                            allGranted: () -> Unit = {},
                            isGoSetting: Boolean = false){
-    var isAllGranted = false
-    per.forEach {
-        isAllGranted = aty?.checkSelfPermission(it.permission) == PackageManager.PERMISSION_GRANTED
-    }
+    var isAllGranted = isAllGrantedPermissions(aty, *per)
     if(isAllGranted){
         allGranted.invoke()
         return

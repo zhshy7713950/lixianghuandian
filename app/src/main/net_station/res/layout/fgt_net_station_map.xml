@@ -78,7 +78,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -148,5 +147,15 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_permission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_location_permission"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

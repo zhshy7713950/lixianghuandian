@@ -26,19 +26,14 @@ import com.ruimeng.things.net_station.bean.getAvaModelNum
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
 import com.utils.GlideHelper
 import com.utils.unsafeLazy
-import kotlinx.android.synthetic.main.fgt_net_station_map.cv_location
-import kotlinx.android.synthetic.main.fgt_net_station_map.cv_refresh
-import kotlinx.android.synthetic.main.fgt_net_station_map.et_search
-import kotlinx.android.synthetic.main.fgt_net_station_map.iv_close_net_station_view
-import kotlinx.android.synthetic.main.fgt_net_station_map.net_station_view
-import kotlinx.android.synthetic.main.fgt_net_station_map.tv_right
-import kotlinx.android.synthetic.main.fgt_net_station_map.tv_search
+import kotlinx.android.synthetic.main.fgt_net_station_map.*
 import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
 import wongxd.common.getCurrentAty
 import wongxd.common.getSweetDialog
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
+import wongxd.common.permission.isAllGrantedPermissions
 import wongxd.common.toPOJO
 import wongxd.http
 
@@ -80,10 +75,25 @@ class FgtNetStationMap : MainTabFragment() {
             activity,
             PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION,
+            granterResult = {
+                showHidePermission()
+                afterGetPermission(savedInstanceState)
+            },
             allGranted = {
                 afterGetPermission(savedInstanceState)
             }
         )
+    }
+
+    private fun showHidePermission(){
+        val isAllGranted = isAllGrantedPermissions(activity,PermissionType.COARSE_LOCATION,
+            PermissionType.FINE_LOCATION,)
+        iv_permission?.visibility = if (isAllGranted) View.GONE else View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showHidePermission()
     }
 
     private fun afterGetPermission(savedInstanceState: Bundle?) {

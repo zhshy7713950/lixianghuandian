@@ -1031,7 +1031,7 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = GONE
             tv_error_info.visibility = GONE
         }
-        tv_ice.text = "冻结"
+        tv_ice.text = "冻结套餐"
         tv_ice.setCompoundDrawablesWithIntrinsicBounds(
             null,
             context?.getDrawable(R.mipmap.ic_stop_contract), null, null
@@ -1056,7 +1056,7 @@ class FgtHome : MainTabFragment() {
             } else if (paymentDetailBean?.active_status == "3") {
                 tvProgress.text = "已冻结"
                 tv_please_change.text = "(请进行\"解冻\"操作)"
-                tv_ice.text = "解冻"
+                tv_ice.text = "解冻套餐"
                 tv_ice.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     context?.getDrawable(R.mipmap.ic_scan_box), null, null
@@ -1095,7 +1095,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun showPackageInfo() {
-        tv_ice.text = if (activeStatus == "3") "解冻" else "冻结"
+        tv_ice.text = if (activeStatus == "3") "解冻套餐" else "冻结套餐"
         tv_exp_remind.visibility = GONE
         hasChangePackege = false
         if (paymentDetailBean != null) {
@@ -1339,7 +1339,7 @@ class FgtHome : MainTabFragment() {
             }
         }
         tv_ice.setOnClickListener {
-            if (tv_ice.text.equals("冻结")) {
+            if (tv_ice.text.equals("冻结套餐")) {
                 if (virtaul) {
                     NormalDialog(activity)
                         .apply {

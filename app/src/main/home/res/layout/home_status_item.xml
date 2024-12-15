@@ -275,7 +275,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_location"
-				android:text="定位"
+				android:text="电池定位"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
@@ -290,7 +290,8 @@
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
+				android:textSize="13sp"
+				android:visibility="gone"/>
 			<TextView
 				android:id="@+id/tvSwitch"
 				android:layout_width="wrap_content"
@@ -323,7 +324,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_switch"
-				android:text="租电"
+				android:text="额外租电"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"
@@ -334,7 +335,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_stop_contract"
-				android:text="冻结"
+				android:text="冻结套餐"
 				android:gravity="center_horizontal"
 				android:drawablePadding="8dp"
 				android:textColor="#ffffffff"

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
@@ -19,6 +20,7 @@ import com.amap.api.maps.model.animation.ScaleAnimation
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.App
 import com.ruimeng.things.FgtMain
+import com.ruimeng.things.MainViewModel
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
@@ -40,6 +42,7 @@ import wongxd.http
 class FgtNetStationMap : MainTabFragment() {
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_map
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private var aMap: AMap? = null
     private var mMapView: MapView? = null
     private var location: Location? = null
@@ -110,12 +113,16 @@ class FgtNetStationMap : MainTabFragment() {
     }
 
     private fun initLocationData() {
-        AMapLocUtils().getLonLat(activity?.applicationContext) {
-            App.lat = it.latitude
-            App.lng = it.longitude
-            App.province = it.province
-            App.city = it.city
-        }
+        mainViewModel.requestCityInfo(requireContext())
+//        LocationUtil.getLocation(requireContext(),object : LocationUtil.Companion.LocationCallback {
+//            override fun onLocationReceived(location: Location) {
+//                App.lat = location.latitude
+//                App.lng = location.longitude
+//            }
+//
+//            override fun onLocationFailed(errorMessage: String) {
+//            }
+//        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

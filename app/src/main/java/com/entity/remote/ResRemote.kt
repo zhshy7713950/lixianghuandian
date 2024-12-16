@@ -79,3 +79,10 @@ data class ServerPayResultRemote(
     val order_status: Int
 )
 
+data class GetCityInfoRemote(
+    val province: String,
+    val city: String,
+    val area: String,
+    val city_id: String,
+)
+

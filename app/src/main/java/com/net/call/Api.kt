@@ -23,4 +23,6 @@ object Api {
     const val Get_Code = "api/getcode"
 
     const val Unregister = "apiv6/user/unregister"
+
+    const val Get_City_Info = "apiv6/xlluser/getcityinfo"
 }

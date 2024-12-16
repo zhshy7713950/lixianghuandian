@@ -1,6 +1,7 @@
 package com.ruimeng.things.net_station
 
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -64,18 +65,21 @@ class FgtNetStation : BaseBackFragment() {
             PermissionType.FINE_LOCATION,
 
             allGranted = {
+                LocationUtil.getLocation(requireContext(),object : LocationUtil.Companion.LocationCallback{
+                    override fun onLocationReceived(location: Location) {
+                        App.lat = location.latitude
+                        App.lng = location.longitude
+                        loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
+                        dlg.dismissWithAnimation()
+                    }
 
-                AMapLocUtils().getLonLat(activity?.applicationContext) {
-                    Log.i("TAG", "setView: ${it.province}:${it.city}")
-                    App.lat = it.latitude
-                    App.lng = it.longitude
-                    App.province = it.province
-                    App.city = it.city
-                    SPUtils.getInstance().put("SP_PROVINCE",it.province)
-                    SPUtils.getInstance().put("SP_City",it.city)
-                    loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
-                    dlg.dismissWithAnimation()
-                }
+                    override fun onLocationFailed(errorMessage: String) {
+                    }
+                })
+
+//                AMapLocUtils().getLonLat(activity?.applicationContext) {
+//
+//                }
 
             })
 

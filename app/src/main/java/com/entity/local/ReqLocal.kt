@@ -66,3 +66,8 @@ data class UnregisterLocal(
     val mobile: String,
     val code: String
 )
+
+data class GetCityInfoLocal(
+    val lat: String,
+    val lng: String
+)

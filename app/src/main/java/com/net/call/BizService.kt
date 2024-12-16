@@ -4,6 +4,7 @@ import com.entity.local.AdPayLocal
 import com.entity.local.AgentByCodeLocal
 import com.entity.local.ChangeErrorLocal
 import com.entity.local.GetAdInfoLocal
+import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
 import com.entity.local.OneKeyLoginLocal
@@ -14,6 +15,7 @@ import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
+import com.entity.remote.GetCityInfoRemote
 import com.entity.remote.LoginRemote
 import com.entity.remote.RentStep1Remote
 import com.entity.remote.ServerPayResultRemote
@@ -89,5 +91,10 @@ object BizService {
     suspend fun unregister(unregisterLocal: UnregisterLocal) = Server.call<UnregisterLocal,Any>(
         Api.Unregister,
         unregisterLocal
+    )
+
+    suspend fun getCityInfo(getCityInfoLocal: GetCityInfoLocal) = Server.call<GetCityInfoLocal, GetCityInfoRemote>(
+        Api.Get_City_Info,
+        getCityInfoLocal
     )
 }

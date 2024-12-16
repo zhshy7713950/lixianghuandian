@@ -122,9 +122,9 @@
 		<!--		阿里推送-->
 
 
-<!--		<meta-data-->
-<!--				android:name="com.amap.api.v2.apikey"-->
-<!--				android:value="9cbb7366cc4dbd6441d221fdb5e3fe7b" />-->
+		<meta-data
+				android:name="com.amap.api.v2.apikey"
+				android:value="9cbb7366cc4dbd6441d221fdb5e3fe7b" />
 
 
 		<provider

@@ -24,6 +24,7 @@ import com.ruimeng.things.MainViewModel
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.ruimeng.things.net_station.bean.filterSelf
 import com.ruimeng.things.net_station.bean.getAvaModelNum
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
 import com.utils.GlideHelper
@@ -107,6 +108,10 @@ class FgtNetStationMap : MainTabFragment() {
         }
         //设置希望展示的地图缩放级别
         aMap?.moveCamera(CameraUpdateFactory.zoomTo(13f))
+        aMap?.setOnMarkerClickListener {
+            selectMarker(it)
+            false
+        }
         initLocationData()
         showPosInMap()
         getNetStationList()
@@ -160,10 +165,6 @@ class FgtNetStationMap : MainTabFragment() {
                 this@FgtNetStationMap.location = location
                 moveLocation()
             }
-            this.setOnMarkerClickListener {
-                selectMarker(it)
-                false
-            }
         }
     }
 
@@ -185,9 +186,10 @@ class FgtNetStationMap : MainTabFragment() {
                     markInfoMap.clear()
 
                     data.forEach { item ->
+                        item.filterSelf(FgtHome.getBatteryV())
                         locations.addAll(item.list)
                     }
-                    showMarkList()
+                    showMarkList(name.isNotEmpty())
                 }
             }
             onFail { _, s ->
@@ -199,11 +201,23 @@ class FgtNetStationMap : MainTabFragment() {
         }
     }
 
-    private fun showMarkList() {
+    private fun showMarkList(showFirstLocation: Boolean = false) {
         locations.forEach { loc ->
             addMarker(loc)
         }
-        showPosInMap()
+        if(showFirstLocation){
+            if(locations.size > 0){
+                EasyToast.DEFAULT.show("已为您找到${locations.size}个站点")
+                locations[0]?.let {
+                    aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it?.lat, it?.lng)))
+                    aMap?.moveCamera(CameraUpdateFactory.zoomTo(13f))
+                }
+            }else{
+                EasyToast.DEFAULT.show("已为您找到0个站点")
+            }
+        }else{
+            showPosInMap()
+        }
     }
 
     private fun selectMarker(marker: Marker){

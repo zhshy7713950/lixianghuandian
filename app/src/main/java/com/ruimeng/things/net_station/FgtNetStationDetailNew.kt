@@ -227,7 +227,10 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                     }
 
                     if (lockStatus == 0) {// 禁用
+                        h.setTextColor(R.id.tv_battery_status, Color.parseColor("#F78E6B"))
+                        h.setImageResource(R.id.iv_battery, R.drawable.ic_battery_fault)
                         h.setText(R.id.tv_battery_status, "该仓已禁用")
+                        h.setAlpha(R.id.cl_container, 0.8f)
                     }
                 }
             }

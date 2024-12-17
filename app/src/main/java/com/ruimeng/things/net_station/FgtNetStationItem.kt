@@ -14,7 +14,9 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.App
 import com.ruimeng.things.R
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
+import com.ruimeng.things.net_station.bean.filterSelf
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
@@ -159,10 +161,11 @@ class FgtNetStationItem : MainTabFragment() {
                     if (data.isEmpty()){
                         tv_empty_net_station.visibility =View.VISIBLE
                         stationAdapter.setNewData(null)
+                        tv_station_count.text = "已为您找到0个站点"
                     }else{
                         tv_empty_net_station.visibility =View.GONE
                         currentIndex = 0
-                        var list = data[currentIndex].list
+                        var list = data[currentIndex].filterSelf(FgtHome.getBatteryV()).list
                         list.forEach {
                             it.distance =AMapUtils.calculateLineDistance(LatLng(it.lat, it.lng), LatLng(App.lat, App.lng))
                             it.distanceStr =  if (it.distance >= 1000)
@@ -173,8 +176,8 @@ class FgtNetStationItem : MainTabFragment() {
                         var list2  = list.sortedBy { it.distance }
 
                         stationAdapter.setNewData(list2)
+                        tv_station_count.text = "已为您找到${list2.size}个站点"
                     }
-
                 }
             }
         }

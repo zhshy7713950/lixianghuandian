@@ -25,6 +25,7 @@ data class NetStationBean(
             var lng: Double = 0.0, // 104.059652
             var id: String = "",
             var site_name: String = "", // 服务中心4
+            var cabinetType: String = "",//柜子类型
             var tag: String = "",
             var count: String = "",
             var available_battery : String = "",
@@ -54,6 +55,15 @@ data class NetStationBean(
             var model_48: Int = 0,
         ): Parcelable
     }
+}
+
+fun NetStationBean.Data.filterSelf(curV: String):NetStationBean.Data {
+    if(this.city_id == 420500 && (curV == MODEL_48 || curV == MODEL_60)){
+        this.list = this.list.filter {
+            it.cabinetType != "1"
+        }.toList()
+    }
+    return this
 }
 
 fun NetStationBean.Data.Model.getAvaModelNum(curV: String) = when (curV) {

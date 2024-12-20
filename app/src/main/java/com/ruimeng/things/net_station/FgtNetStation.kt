@@ -1,5 +1,6 @@
 package com.ruimeng.things.net_station
 
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,8 +10,10 @@ import com.qmuiteam.qmui.widget.QMUITopBar
 import com.ruimeng.things.App
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.R
+import com.ruimeng.things.net_station.bean.GetCityInfoBean
 import com.ruimeng.things.net_station.bean.NetWorkShowBean
 import com.ruimeng.things.net_station.net_city_data.CityDataWorker
+import com.utils.LocationUtil
 import com.utils.LogHelper
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.fgt_net_station.*
@@ -65,6 +68,22 @@ class FgtNetStation : MainTabFragment() {
     //    private var fragmentList = arrayOf<SupportFragment>()
     //    private var fragmentList = arrayOf(FgtNetStationItem.newInstance("2"))
     private var titleList = ArrayList<String>()
+
+    private fun getCityInfo(dlg: SweetAlertDialog,list: Array<SupportFragment>){
+        http{
+            url = "apiv6/xlluser/getcityinfo"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
+            onSuccess {res ->
+                val data = res.toPOJO<GetCityInfoBean>().data
+                App.province = data.province
+                App.city = data.city
+
+                loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
+                dlg.dismissWithAnimation()
+            }
+        }
+    }
 
     private fun requestNetWorkShow() {
         http {
@@ -183,16 +202,29 @@ class FgtNetStation : MainTabFragment() {
             PermissionType.READ_PHONE_STATE,
 
             allGranted = {
+                LocationUtil.getLocation(requireContext(), object : LocationUtil.Companion.LocationCallback {
+                    override fun onLocationReceived(location: Location) {
+                        App.lat = location.latitude
+                        App.lng = location.longitude
+                        getCityInfo(dlg,list)
+//                        App.province = it.province
+//                        App.city = it.city
+                    }
 
-                AMapLocUtils().getLonLat(activity?.applicationContext) {
-                    Log.e("pos", it.latitude.toString() + "--" + it.longitude.toString())
-                    App.lat = it.latitude
-                    App.lng = it.longitude
-                    App.province = it.province
-                    App.city = it.city
-                    loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
-                    dlg.dismissWithAnimation()
-                }
+                    override fun onLocationFailed(errorMessage: String) {
+                    }
+
+                })
+
+//                AMapLocUtils().getLonLat(activity?.applicationContext) {
+//                    Log.e("pos", it.latitude.toString() + "--" + it.longitude.toString())
+//                    App.lat = it.latitude
+//                    App.lng = it.longitude
+//                    App.province = it.province
+//                    App.city = it.city
+//                    loadMultipleRootFragment(R.id.fl_net_station, 0, *list)
+//                    dlg.dismissWithAnimation()
+//                }
 
             })
 

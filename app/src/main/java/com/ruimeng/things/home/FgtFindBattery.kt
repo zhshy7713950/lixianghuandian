@@ -38,7 +38,7 @@ class FgtFindBattery : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
-        initTopbar(topbar, "寻车")
+        initTopbar(topbar, "定位")
         right = topbar.addRightImageButton(com.ruimeng.things.R.drawable.icon_refresh, com.ruimeng.things.R.id.right)
             .apply {
                 setOnClickListener { view ->

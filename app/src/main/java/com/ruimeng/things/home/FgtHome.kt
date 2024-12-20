@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -32,6 +33,7 @@ import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.credit.FgtCreditReckoning
 import com.ruimeng.things.net_station.AMapLocUtils
+import com.ruimeng.things.net_station.bean.GetCityInfoBean
 import com.tbruyelle.rxpermissions2.Permission
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.utils.*
@@ -55,6 +57,8 @@ import wongxd.common.permission.goSetting
 import wongxd.http
 import wongxd.utils.utilcode.util.ScreenUtils
 import java.util.Arrays
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 
 /**
@@ -185,6 +189,19 @@ class FgtHome : MainTabFragment() {
 
     }
 
+    private fun getCityInfo(){
+        http{
+            url = "apiv6/xlluser/getcityinfo"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
+            onSuccess {res ->
+                val data = res.toPOJO<GetCityInfoBean>().data
+                App.province = data.province
+                App.city = data.city
+            }
+        }
+    }
+
     override fun getLayoutRes(): Int = R.layout.fgt_home
     var showSweetAlertDialog = false
     private fun getLocation(isInit: Boolean) {
@@ -197,16 +214,24 @@ class FgtHome : MainTabFragment() {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onNext(aBoolean: Boolean) {
                     if (aBoolean) {
-                        AMapLocUtils().getLonLat(activity?.applicationContext) {
-                            App.lat = it.latitude
-                            App.lng = it.longitude
-                            App.province = it.province
-                            App.city = it.city
-                            getNewUserCoupon(it.longitude, it.latitude)
-                            if(isInit){
-                                getAdInfo(App.lat, App.lng)
+                        LocationUtil.getLocation(requireContext(), object : LocationUtil.Companion.LocationCallback {
+                            override fun onLocationReceived(location: Location) {
+                                App.lat = location.latitude
+                                App.lng = location.longitude
+                                getCityInfo()
+                                getNewUserCoupon(location.longitude, location.latitude)
+                                if(isInit){
+                                    getAdInfo(App.lat, App.lng)
+                                }
                             }
-                        }
+
+                            override fun onLocationFailed(errorMessage: String) {
+                            }
+
+                        })
+//                        AMapLocUtils().getLonLat(activity?.applicationContext) {
+//
+//                        }
                     } else if (!showSweetAlertDialog) {
                         val dlg: SweetAlertDialog =
                             SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
@@ -620,7 +645,7 @@ class FgtHome : MainTabFragment() {
                                 null
                             )
                             val width =
-                                (ScreenUtils.getScreenWidth() - DensityHelper.dp2px(30f)) / 5
+                                (ScreenUtils.getScreenWidth() - DensityHelper.dp2px(30f)) / 4
                             val lp = v.layoutParams ?: ViewGroup.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -639,7 +664,7 @@ class FgtHome : MainTabFragment() {
 
                             removeAllViews()
 
-                            addView(initFloatLayoutItemView(R.drawable.find_devices, "寻车") {
+                            addView(initFloatLayoutItemView(R.drawable.find_devices, "定位") {
                                 getPermissions(
                                     activity,
                                     PermissionType.COARSE_LOCATION,
@@ -704,11 +729,11 @@ class FgtHome : MainTabFragment() {
                                     "退还"
                                 ) { startFgt(FgtReturn()) })
 
-                            addView(initFloatLayoutItemView(R.drawable.trajectory, "轨迹") {
-                                startFgt(
-                                    FgtTrajectory()
-                                )
-                            })
+//                            addView(initFloatLayoutItemView(R.drawable.trajectory, "轨迹") {
+//                                startFgt(
+//                                    FgtTrajectory()
+//                                )
+//                            })
 
                             item.credit.let { credit ->
                                 if (credit.is_credit == 1) {

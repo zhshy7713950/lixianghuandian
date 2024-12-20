@@ -132,6 +132,7 @@
 		/>
 
 	<LinearLayout
+		android:visibility="invisible"
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
@@ -164,6 +165,7 @@
 	</LinearLayout>
 
 	<ImageView
+		android:visibility="invisible"
 		android:id="@+id/iv_wechat_login"
 		android:layout_marginTop="10dp"
 		android:layout_marginBottom="20dp"

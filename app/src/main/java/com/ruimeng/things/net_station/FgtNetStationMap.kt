@@ -91,7 +91,7 @@ class FgtNetStationMap : MainTabFragment() {
 
     private fun showHidePermission(){
         val isAllGranted = isAllGrantedPermissions(activity,PermissionType.COARSE_LOCATION,
-            PermissionType.FINE_LOCATION,)
+            PermissionType.FINE_LOCATION)
         iv_permission?.visibility = if (isAllGranted) View.GONE else View.VISIBLE
     }
 
@@ -118,7 +118,11 @@ class FgtNetStationMap : MainTabFragment() {
     }
 
     private fun initLocationData() {
-        mainViewModel.requestCityInfo(requireContext())
+        try {
+            mainViewModel.requestCityInfo(requireContext())
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
 //        LocationUtil.getLocation(requireContext(),object : LocationUtil.Companion.LocationCallback {
 //            override fun onLocationReceived(location: Location) {
 //                App.lat = location.latitude

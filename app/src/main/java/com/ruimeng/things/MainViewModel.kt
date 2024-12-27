@@ -83,7 +83,6 @@ class MainViewModel : BaseViewModel() {
             }
 
             override fun onLocationFailed(errorMessage: String) {
-                con.resumeWithException(Exception(errorMessage))
             }
 
         })

@@ -105,16 +105,10 @@ class FgtNetStationItem : MainTabFragment() {
         val dlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "获取城市数据中", true)
         dlg.show()
         if (null == p) {
-            val (pp, cc) = CityDataWorker.getProvinceAndCityInfoByName(App.province, App.city)
-            doAsync {
-                Thread.sleep(2000)
-                uiThread {
-                    tv_city?.let {
-                        afterGetCityId(pp, cc, dlg)
-                    }
-                }
-            }
-
+            tv_city?.postDelayed({
+                val (pp, cc) = CityDataWorker.getProvinceAndCityInfoByName(App.province, App.city)
+                afterGetCityId(pp, cc, dlg)
+            }, 2000L)
         } else {
             afterGetCityId(p, c, dlg)
         }

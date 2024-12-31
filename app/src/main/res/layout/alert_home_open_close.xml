@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="240dp"
+    android:layout_height="230dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/rectangle_gray_bg">
+
+    <ImageView
+        android:id="@+id/ivStatus"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_open_close_loading"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        tools:text="正在关电，请稍等"/>
+    
+    <Button
+        android:id="@+id/btnStatus"
+        android:layout_width="140dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="50dp"
+        android:textColor="#272934"
+        android:textSize="15sp"
+        tools:text="取消"
+        android:background="@drawable/bg_gradient_color_btn_1"
+        />
+
+</LinearLayout>

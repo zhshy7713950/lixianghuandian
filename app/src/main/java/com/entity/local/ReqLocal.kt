@@ -2,6 +2,10 @@ package com.entity.local
 
 import wongxd.Config
 
+data class OneDeviceLocal(
+    val device_id: String
+)
+
 data class RentStep1Local(
     val device_id: String,
     val cg_mode: String

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.ruimeng.things.*
+import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.bean.showName
@@ -16,11 +17,15 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
+import com.utils.WeChatHelper
 import com.utils.isZero
 import com.utils.safeToFloat
 import com.utils.safeToInt
+import com.youth.banner.Banner
+import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.fgt_me.*
 import kotlinx.android.synthetic.main.fgt_setting.tv_version_setting
+import kotlinx.android.synthetic.main.home_status_item.banner
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -32,6 +37,7 @@ import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.SystemUtils
+import wongxd.utils.utilcode.util.ScreenUtils
 
 /**
  * Created by wongxd on 2018/11/9.
@@ -232,6 +238,27 @@ class FgtMe : MainTabFragment() {
         val versionName = packageInfo?.versionName ?: "未知版本"
 
         tv_version_setting.text = "当前版本:v$versionName($versionCode)"
+        initBanner()
+    }
+
+    private fun initBanner() {
+        banner.apply {
+            banner.layoutParams?.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()
+            val dataList = listOf(
+                "https://downxll.oss-cn-beijing.aliyuncs.com/frontAd/wxMin.png"
+            )
+            (this as Banner<String, BannerImageCommonAdapter>)
+                .setAdapter(BannerImageCommonAdapter(dataList).apply {
+                    this.setOnBannerListener { _, position ->
+                        WeChatHelper.launchWXMiniProgram(
+                            requireContext(),
+                            resources.getString(R.string.wx_appid)
+                        )
+                    }
+                }, true)
+                .addBannerLifecycleObserver(this@FgtMe)
+                .indicator = CircleIndicator(activity)
+        }
     }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {

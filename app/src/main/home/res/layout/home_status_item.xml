@@ -355,6 +355,18 @@
 				android:textSize="13sp"/>
 
 		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+		<com.youth.banner.Banner
+			android:id="@+id/banner"
+			android:layout_width="match_parent"
+			android:layout_height="80dp"
+			android:layout_marginLeft="12dp"
+			android:layout_marginTop="16dp"
+			android:layout_marginBottom="16dp"
+			android:layout_marginRight="12dp"
+			app:banner_loop_time="5000"
+			app:banner_radius="10dp" />
+
 		<com.qmuiteam.qmui.widget.QMUITabSegment
 			android:id="@+id/tabBattery"
 			android:layout_width="match_parent"
@@ -369,7 +381,6 @@
 			android:id="@+id/layoutPackage"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="20dp"
 			android:layout_marginBottom="20dp"
 			android:orientation="horizontal">
 
@@ -554,7 +565,7 @@
 						android:layout_height="wrap_content"
 						android:layout_marginTop="112dp"
 						android:textColor="#ffffffff"
-						android:textSize="12sp"
+						android:textSize="10sp"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent"
 						tools:text="2023/06/01至2023/08/01" />
@@ -651,7 +662,7 @@
 							android:layout_height="wrap_content"
 							android:layout_marginTop="112dp"
 							android:textColor="#ffffffff"
-							android:textSize="12sp"
+							android:textSize="10sp"
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent"
 							tools:text="2023/06/01至2023/07/01" />

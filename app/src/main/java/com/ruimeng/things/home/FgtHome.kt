@@ -14,36 +14,50 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.View.VISIBLE
+import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.batchat.preview.PreviewTools
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
+import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
 import com.ruimeng.things.home.view.PopupHelpEvent
 import com.ruimeng.things.home.view.PopupHelpWindow
+import com.ruimeng.things.home.view.PopupRemindWindow
 import com.ruimeng.things.home.view.ShowCouponPopup
+import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtMeDeposit
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
+import com.youth.banner.Banner
+import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_home.*
+import kotlinx.android.synthetic.main.fgt_net_station_detail_new.station_banner
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -60,6 +74,7 @@ import wongxd.common.permission.getPermissions
 import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.SystemUtils
+import wongxd.utils.utilcode.util.ScreenUtils
 
 
 /**
@@ -168,6 +183,7 @@ class FgtHome : MainTabFragment() {
 
     private val vm: HomeViewModel by viewModels()
     private val vmMain: MainViewModel by activityViewModels()
+    private var showRemind = true
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
@@ -203,8 +219,8 @@ class FgtHome : MainTabFragment() {
                 activity?.startActivity(intent)
             }
             userId = userInfo.id
-            tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) View.VISIBLE else GONE
-            tvUnbind.visibility = if (userInfo.is_debug == 1) View.VISIBLE else GONE
+            tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) VISIBLE else GONE
+            tvUnbind.visibility = if (userInfo.is_debug == 1) VISIBLE else GONE
             tv_title.text = userInfo.showName()
             getAdInfo()
         }
@@ -222,6 +238,28 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
         initTabLayout()
+        initBanner()
+    }
+
+    private fun initBanner() {
+        banner.apply {
+            banner.layoutParams?.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()
+            val dataList = listOf(
+                "https://downxll.oss-cn-beijing.aliyuncs.com/frontAd/wxMin.png"
+            )
+            (this as Banner<String, BannerImageCommonAdapter>)
+                .setAdapter(BannerImageCommonAdapter(dataList).apply {
+                    this.setOnBannerListener { _, position ->
+                        WeChatHelper.launchWXMiniProgram(
+                            requireContext(),
+                            resources.getString(R.string.wx_appid)
+                        )
+                    }
+                }, true)
+                .addBannerLifecycleObserver(this@FgtHome)
+                .indicator = CircleIndicator(activity)
+
+        }
     }
 
     private fun initEvent() {
@@ -234,6 +272,30 @@ class FgtHome : MainTabFragment() {
             launch {
                 vm.userInfo.simpleObserver(this@FgtHome) {
                     tv_title.text = it.showName()
+                }
+            }
+            launch {
+                vm.deviceDetailLiveData.observe(this@FgtHome) {
+                    when (it) {
+                        is GetDeviceStatusEvent.Success -> {
+                            updateOpenOrCloseLayer()
+                            IS_OPEN = !IS_OPEN
+                            lifecycleScope.launch {
+                                delay(2000)
+                                dismissOpenOrCloseLayer()
+                                onGetBatteryDetailInfo(it.deviceDetail)
+                            }
+                        }
+
+                        is GetDeviceStatusEvent.Error -> {
+                            EasyToast.DEFAULT.show(it.error)
+                            lifecycleScope.launch {
+                                delay(2000)
+                                dismissOpenOrCloseLayer()
+                                getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -398,17 +460,17 @@ class FgtHome : MainTabFragment() {
     /**
      * 首页布局 有 已添加设备 和未加设备两种状态
      */
-    private fun dealTwoStatus(isHasItem: Boolean,isFirstInit: Boolean = false) {
+    private fun dealTwoStatus(isHasItem: Boolean, isFirstInit: Boolean = false) {
         root_has_item.visibility = GONE
         root_no_item.visibility = GONE
 
-        if(isFirstInit) return
+        if (isFirstInit) return
 
         if (isHasItem) {
-            root_has_item.visibility = View.VISIBLE
+            root_has_item.visibility = VISIBLE
             initHasItemView()
         } else {
-            root_no_item.visibility = View.VISIBLE
+            root_no_item.visibility = VISIBLE
             initNoItemView()
         }
     }
@@ -449,18 +511,19 @@ class FgtHome : MainTabFragment() {
             }
 
             3 -> {
-                tv_log_info.text = "您的租电套餐已过期，请及时续费"
+                tv_log_info.text =
+                    "您的租电套餐已过期，请及时续费或者归还电池，尽量减少不必要的费用和纠纷。感谢您的理解和配合，祝您生活愉快！"
                 tv_add_device.text = "点击购买套餐"
                 iv_add_device.visibility = GONE
                 root_has_item.visibility = GONE
-                root_no_item.visibility = View.VISIBLE
-                btnReturnInfo.visibility = View.VISIBLE
+                root_no_item.visibility = VISIBLE
+                btnReturnInfo.visibility = VISIBLE
             }
 
             else -> {
                 tv_add_device.text = "扫码租电"
                 tv_log_info.text = "您还没有添加电池设备"
-                iv_add_device.visibility = View.VISIBLE
+                iv_add_device.visibility = VISIBLE
                 btnReturnInfo.visibility = GONE
             }
         }
@@ -498,13 +561,13 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
         tvHelp.setOnClickListener {
-            if(!hasBatteryInfo()) return@setOnClickListener
-            PopupHelpWindow(requireActivity()){
-                when(it){
+            if (!hasBatteryInfo()) return@setOnClickListener
+            PopupHelpWindow(requireActivity()) {
+                when (it) {
                     is PopupHelpEvent.SelfService -> {
-                        if("3" == activeStatus || virtaul){
+                        if ("3" == activeStatus || virtaul) {
                             EasyToast.DEFAULT.show("没有需要取回的电池")
-                        }else {
+                        } else {
                             ToastHelper.shortToast(context, "请扫描电柜二维码")
                             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -513,20 +576,24 @@ class FgtHome : MainTabFragment() {
                             })
                         }
                     }
+
                     is PopupHelpEvent.OnlineService -> {
                         val tel = "4000283969"
                         AnyLayer.with(getCurrentAppAty())
                             .contentView(R.layout.alert_phone_call_dialog)
                             .bindData { anyLayer ->
-                                anyLayer.contentView.findViewById<TextView>(R.id.tv_name).text = "联系在线客服"
+                                anyLayer.contentView.findViewById<TextView>(R.id.tv_name).text =
+                                    "联系在线客服"
                                 anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).text = tel
-                                anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener {
-                                    SystemUtils.call(activity, tel)
-                                    anyLayer.dismiss()
-                                }
-                                anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
-                                    anyLayer.dismiss()
-                                }
+                                anyLayer.contentView.findViewById<View>(R.id.fl_call)
+                                    .setOnClickListener {
+                                        SystemUtils.call(activity, tel)
+                                        anyLayer.dismiss()
+                                    }
+                                anyLayer.contentView.findViewById<ImageView>(R.id.ivClose)
+                                    .setOnClickListener {
+                                        anyLayer.dismiss()
+                                    }
                             }.backgroundColorInt(Color.parseColor("#85000000"))
                             .backgroundBlurRadius(10f)
                             .backgroundBlurScale(10f)
@@ -536,14 +603,14 @@ class FgtHome : MainTabFragment() {
             }.show(tvHelp)
         }
         tvOpenClose.setOnClickListener {
-            if(!hasBatteryInfo()) return@setOnClickListener
+            if (!hasBatteryInfo()) return@setOnClickListener
             if (checkStatus()) {
                 var title =
                     if (tvOpenClose.text.toString() == "关闭电源") "是否关闭电源？" else "是否开启电源？"
                 AnyLayer.with(getCurrentAppAty())
                     .contentView(R.layout.alert_dialog_new)
                     .bindData { anyLayer ->
-                        anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(title)
+                        anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).text = title
                         anyLayer.contentView.findViewById<TextView>(R.id.tvConfirm)
                             .setOnClickListener {
                                 changeBatteryStatus(IS_OPEN)
@@ -561,15 +628,89 @@ class FgtHome : MainTabFragment() {
 
         }
         btn_continue_rant.setOnClickListener {
-            if(!hasBatteryInfo()) return@setOnClickListener
+            if (!hasBatteryInfo()) return@setOnClickListener
             if (activeStatus == "3") {
                 ToastHelper.shortToast(context, "请先完成解冻操作")
                 return@setOnClickListener
             }
             doContinueRant()
         }
+    }
 
+    private lateinit var openOrCloseLayer: AnyLayer
 
+    private fun dismissOpenOrCloseLayer() {
+        if (this::openOrCloseLayer.isInitialized) {
+            openOrCloseLayer.dismiss()
+        }
+    }
+
+    private fun updateOpenOrCloseLayer() {
+        if (this::openOrCloseLayer.isInitialized) {
+            var title =
+                if (IS_OPEN) "电源关闭成功" else "电源开启成功"
+            with(openOrCloseLayer.contentView) {
+                findViewById<TextView>(R.id.tvStatus).text = title
+                findViewById<Button>(R.id.btnStatus)
+                    .apply {
+                        text = "好的"
+                        isEnabled = false
+                    }
+                findViewById<ImageView>(R.id.ivStatus)
+                    .apply {
+                        clearAnimation()
+                        setImageResource(R.drawable.ic_open_close_ok)
+                    }
+            }
+        }
+    }
+
+    private fun showOpenOrCloseLoading() {
+        var title =
+            if (IS_OPEN) "正在关电，请稍等" else "正在开电，请稍等"
+        AnyLayer.with(getCurrentAppAty())
+            .contentView(R.layout.alert_home_open_close)
+            .bindData { anyLayer ->
+                openOrCloseLayer = anyLayer
+                anyLayer.contentView.findViewById<TextView>(R.id.tvStatus).text = title
+                anyLayer.contentView.findViewById<Button>(R.id.btnStatus)
+                    .apply {
+                        text = "取消"
+                    }
+                    .setOnClickListener {
+                        NormalDialog(activity)
+                            .apply {
+                                style(NormalDialog.STYLE_TWO)
+                                btnNum(2)
+                                title("提示")
+                                content("当前电源操作进行中，\"取消\"操作可能导致开关电失败，请确定是否\"取消\"？")
+                                btnText("确定", "取消")
+                                setOnBtnClickL(OnBtnClickL {
+                                    dismiss()
+                                    vm.isPollingServerDeviceStatus = false
+                                    anyLayer.dismiss()
+                                    getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
+                                }, OnBtnClickL {
+                                    dismiss()
+                                })
+
+                            }.show()
+                    }
+                val ivStatus = anyLayer.contentView.findViewById<ImageView>(R.id.ivStatus)
+                val rotate = RotateAnimation(
+                    0f, 360f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                    0.5f
+                ).also {
+                    it.duration = 1000 // 设置动画的持续时间为1秒
+                    it.repeatCount = Animation.INFINITE // 设置动画无限循环
+                    it.interpolator = LinearInterpolator() // 设置动画为匀速
+                }
+                ivStatus.startAnimation(rotate)
+            }.backgroundColorInt(Color.parseColor("#85000000"))
+            .backgroundBlurRadius(10f)
+            .backgroundBlurScale(10f)
+            .show()
     }
 
 
@@ -677,11 +818,13 @@ class FgtHome : MainTabFragment() {
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
                 val device_status = data.optInt("device_status")
-                ToastHelper.shortToast(context, "操作成功")
-                srl_home.postDelayed(Runnable {
-                    getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
-                    IS_OPEN = !IS_OPEN
-                }, 6000)
+                vm.pollDeviceStatus(IS_OPEN, CURRENT_DEVICEID.ifBlank { "0" })
+                showOpenOrCloseLoading()
+//                ToastHelper.shortToast(context, "操作成功")
+//                srl_home.postDelayed(Runnable {
+//                    getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
+//                    IS_OPEN = !IS_OPEN
+//                }, 6000)
 
 //                if (device_status == 1) {
 //                    openOrCloseBatter(BatteryOpenEvent(true))
@@ -727,6 +870,17 @@ class FgtHome : MainTabFragment() {
     private var paymentCode = 200
     private var deviceCode = 200
 
+    private fun onGetBatteryDetailInfo(data: DeviceDetailBean.Data) {
+        deviceDetailBean = data
+        deviceCode = 200
+        rent_day = deviceDetailBean!!.device_contract.rent_day
+        rent_time = deviceDetailBean!!.device_contract.rent_time
+        CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
+        getPaymentInfo()
+        updateRequestTime()
+        updateBatteryStatus()
+    }
+
     @SuppressLint("SetTextI18n")
     private fun getBatteryDetailInfo(deviceId: String = "0") {
         CURRENT_DEVICEID = deviceId
@@ -737,14 +891,7 @@ class FgtHome : MainTabFragment() {
             IS_SHOW_MSG = false
 
             onSuccess { res ->
-                deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
-                deviceCode = 200
-                rent_day = deviceDetailBean!!.device_contract.rent_day
-                rent_time = deviceDetailBean!!.device_contract.rent_time
-                CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
-                getPaymentInfo()
-                updateRequestTime()
-                updateBatteryStatus()
+                onGetBatteryDetailInfo(res.toPOJO<DeviceDetailBean>().data)
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
@@ -761,15 +908,15 @@ class FgtHome : MainTabFragment() {
     private fun updateBatteryStatus() {
         val protect = deviceDetailBean?.device_base?.protect
         val deviceStatus = deviceDetailBean?.device_base?.device_status
-        if(protect == "0" || protect == "4096" || protect == "1" || protect == "4097"){
-            if(deviceStatus == "1"){
+        if (protect == "0" || protect == "4096" || protect == "1" || protect == "4097") {
+            if (deviceStatus == "1") {
                 tvBatteryStatus.text = "已通电"
                 tvBatteryStatus.textColor = Color.parseColor("#2fe19c")
-            }else{
+            } else {
                 tvBatteryStatus.text = "已断电"
                 tvBatteryStatus.textColor = Color.parseColor("#def0e9")
             }
-        }else{
+        } else {
             tvBatteryStatus.text = "已故障"
             tvBatteryStatus.textColor = Color.parseColor("#ff7a5a")
         }
@@ -907,7 +1054,7 @@ class FgtHome : MainTabFragment() {
                                         }.show()
 
                                 }
-                            }else if("自助开仓" == getType){
+                            } else if ("自助开仓" == getType) {
                                 result?.let {
                                     selfService(it)
                                 }
@@ -921,8 +1068,8 @@ class FgtHome : MainTabFragment() {
         }
     }
 
-    private fun selfService(code: String){
-        vm.changeError(CURRENT_DEVICEID,code).observe(this){
+    private fun selfService(code: String) {
+        vm.changeError(CURRENT_DEVICEID, code).observe(this) {
             EasyToast.DEFAULT.show(it)
             autoRefreshImmediately()
         }
@@ -1003,26 +1150,26 @@ class FgtHome : MainTabFragment() {
 //        }
         initInfoEvent(item)
         tabBattery.selectTab(0)
-        layoutPackage.visibility = View.VISIBLE
+        layoutPackage.visibility = VISIBLE
         layoutBattery.visibility = GONE
     }
 
-    private fun autoRefreshImmediately(){
+    private fun autoRefreshImmediately() {
         srl_home.autoRefresh()
     }
 
     private fun showDeviceInfo(info: DeviceDetailBean.Data.DeviceBase) {
         if (info.protect != "0" && info.protect != "4096") {
             //故障状态
-            ivWrongBt.visibility = View.VISIBLE
+            ivWrongBt.visibility = VISIBLE
             tvProgress.setTextColor(Color.parseColor("#FFE177"))
             pvBattery.colors = intArrayOf(
                 Color.parseColor("#FFE177"),
                 Color.parseColor("#FF7A5A"),
                 Color.parseColor("#FFE177")
             )
-            tv_error_title.visibility = View.VISIBLE
-            tv_error_info.visibility = View.VISIBLE
+            tv_error_title.visibility = VISIBLE
+            tv_error_info.visibility = VISIBLE
             tv_error_info.text = info.protect_desc
         } else {
             // 通电或者关电状态
@@ -1041,7 +1188,7 @@ class FgtHome : MainTabFragment() {
         if (info.device_id.startsWith("8") && info.device_id.length == 8) {
             tv_remark_num.text = "虚拟编号"
             tvProgress.textColor = Color.parseColor("#29EBB6")
-            tv_please_change.visibility = View.VISIBLE
+            tv_please_change.visibility = VISIBLE
             tv_left_battery.visibility = GONE
             tv_voltage.visibility = GONE
             tvBatteryStatus.visibility = GONE
@@ -1050,7 +1197,7 @@ class FgtHome : MainTabFragment() {
             if (paymentDetailBean?.active_status == "1") {
                 tvProgress.text = "待取电"
                 tv_please_change.text = "(请进行\"扫码换电\")"
-                tv_package_status.visibility = View.VISIBLE
+                tv_package_status.visibility = VISIBLE
                 tv_package_status.text = "生效中"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
             } else if (paymentDetailBean?.active_status == "3") {
@@ -1061,7 +1208,7 @@ class FgtHome : MainTabFragment() {
                     null,
                     context?.getDrawable(R.mipmap.ic_scan_box), null, null
                 )
-                tv_package_status.visibility = View.VISIBLE
+                tv_package_status.visibility = VISIBLE
                 tv_package_status.text = "已冻结"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)
             }
@@ -1074,10 +1221,10 @@ class FgtHome : MainTabFragment() {
             tvProgress.text = "${info.rsoc}%"
             tv_voltage.text = "电压 ${info.totalvoltage}V"
             tv_please_change.visibility = GONE
-            tv_left_battery.visibility = View.VISIBLE
-            tv_voltage.visibility = View.VISIBLE
-            pvBattery.visibility = View.VISIBLE
-            tv_package_status.visibility = View.VISIBLE
+            tv_left_battery.visibility = VISIBLE
+            tv_voltage.visibility = VISIBLE
+            pvBattery.visibility = VISIBLE
+            tv_package_status.visibility = VISIBLE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
         }
@@ -1092,6 +1239,13 @@ class FgtHome : MainTabFragment() {
         tv_detail_protect_status.text = info.protect
         tv_detail_fet.text = info.fet
         tv_detail_software_ver.text = info.softversion
+    }
+
+    private fun showRemindDialog() {
+        if (showRemind) {
+            showRemind = false
+            PopupRemindWindow(requireActivity()).show(tv_exp_remind)
+        }
     }
 
     private fun showPackageInfo() {
@@ -1116,9 +1270,10 @@ class FgtHome : MainTabFragment() {
                     paymentDetailBean!!.begin_time,
                     paymentDetailBean!!.exp_time
                 )
-                if (paymentDetailBean!!.exp_remind == 1) {
-                    tv_exp_remind.visibility = View.VISIBLE
+                if (paymentDetailBean!!.exp_remind == 1 && !TextUtils.isEmpty(paymentDetailBean!!.exp_remind_msg)) {
+                    tv_exp_remind.visibility = VISIBLE
                     tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
+                    showRemindDialog()
                 }
 
                 tv_change_package_type.text = "次数无限制"
@@ -1475,8 +1630,8 @@ class FgtHome : MainTabFragment() {
             selectTab(0)
             notifyDataChanged()
             setOnTabClickListener { index ->
-                layoutPackage.visibility = if (index == 0) View.VISIBLE else GONE
-                layoutBattery.visibility = if (index == 1) View.VISIBLE else GONE
+                layoutPackage.visibility = if (index == 0) VISIBLE else GONE
+                layoutBattery.visibility = if (index == 1) VISIBLE else GONE
             }
         }
 

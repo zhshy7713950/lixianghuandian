@@ -7,6 +7,7 @@ import com.entity.local.GetAdInfoLocal
 import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
+import com.entity.local.OneDeviceLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
 import com.entity.local.ServerPayResultLocal
@@ -22,6 +23,7 @@ import com.entity.remote.ServerPayResultRemote
 import com.entity.remote.UserPaymentInfoRemote
 import com.net.Server
 import com.ruimeng.things.Path
+import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.MyDevicesBean
 
@@ -96,5 +98,10 @@ object BizService {
     suspend fun getCityInfo(getCityInfoLocal: GetCityInfoLocal) = Server.call<GetCityInfoLocal, GetCityInfoRemote>(
         Api.Get_City_Info,
         getCityInfoLocal
+    )
+
+    suspend fun getOneDevice(oneDeviceLocal: OneDeviceLocal) = Server.call<OneDeviceLocal, DeviceDetailBean.Data>(
+        Api.Get_One_Device,
+        oneDeviceLocal
     )
 }

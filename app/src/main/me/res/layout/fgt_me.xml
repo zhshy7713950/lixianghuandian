@@ -196,6 +196,17 @@
 
             </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
 
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="12dp"
+                app:banner_loop_time="5000"
+                app:banner_radius="10dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -203,9 +214,7 @@
                 android:textColor="#ffffffff"
                 android:textSize="14sp"
                 android:layout_marginLeft="13dp"
-                android:layout_marginTop="30dp"
                 />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"

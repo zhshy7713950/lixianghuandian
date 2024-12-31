@@ -54,8 +54,10 @@ class FgtNetStationMap : MainTabFragment() {
     private val netStationCtl by unsafeLazy {
         DefaultNetStationCtl.create()
     }
+    private var savedInstanceState: Bundle? = null
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
+        this.savedInstanceState = savedInstanceState
         tv_right.setOnClickListener {
             FgtMain.instance?.start(FgtNetStation())
         }
@@ -93,6 +95,9 @@ class FgtNetStationMap : MainTabFragment() {
         val isAllGranted = isAllGrantedPermissions(activity,PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION)
         iv_permission?.visibility = if (isAllGranted) View.GONE else View.VISIBLE
+        if(isAllGranted){
+            afterGetPermission(savedInstanceState)
+        }
     }
 
     override fun onResume() {

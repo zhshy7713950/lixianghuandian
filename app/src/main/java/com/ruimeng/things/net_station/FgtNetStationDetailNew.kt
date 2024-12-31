@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ruimeng.things.R
+import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
 import com.ruimeng.things.net_station.view.AbsNetStationDetailCtl
@@ -89,8 +90,8 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                 } else {
                     station_banner.isVisible = true
                     val dataList = bean.site_image.filter { it.isNullOrEmpty().not() }
-                    (station_banner as Banner<String, BannerImageAdapterImpl>)
-                        .setAdapter(BannerImageAdapterImpl(dataList).apply {
+                    (station_banner as Banner<String, BannerImageCommonAdapter>)
+                        .setAdapter(BannerImageCommonAdapter(dataList).apply {
                             this.setOnBannerListener { _, position ->
                                 PreviewTools.startImagePreview(this@FgtNetStationDetailNew.requireActivity(), ArrayList(dataList), station_banner, position)
                             }
@@ -108,19 +109,6 @@ class FgtNetStationDetailNew : BaseBackFragment() {
         }
     }
 
-    inner class BannerImageAdapterImpl(private val dataList: List<String>) : BannerImageAdapter<String>(dataList) {
-        override fun onBindView(
-            holder: BannerImageHolder,
-            data: String,
-            position: Int,
-            size: Int
-        ) {
-            Glide.with(holder.itemView)
-                .load(data)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
-                .into(holder.imageView)
-        }
-    }
 
     inner class RvAdapter :
         BaseQuickAdapter<NetStationDetailBeanTwo.Data.ExchangeBean.DeviceBean, BaseViewHolder>(R.layout.item_rv_net_station_detail_new) {

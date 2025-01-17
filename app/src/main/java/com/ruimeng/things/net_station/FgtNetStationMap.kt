@@ -102,7 +102,9 @@ class FgtNetStationMap : MainTabFragment() {
 
     override fun onResume() {
         super.onResume()
-        showHidePermission()
+        if(isAdded && isVisible){
+            showHidePermission()
+        }
     }
 
     private fun afterGetPermission(savedInstanceState: Bundle?) {

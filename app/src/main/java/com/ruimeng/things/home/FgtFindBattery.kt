@@ -1,5 +1,6 @@
 package com.ruimeng.things.home
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,7 @@ import wongxd.navi.Converter
 import wongxd.navi.CoodinateCovertor
 import wongxd.navi.LngLat
 import wongxd.navi.NaviUtil
+import wongxd.utils.SystemUtils
 import wongxd.utils.ToastUtils
 
 
@@ -256,13 +258,17 @@ class FgtFindBattery : BaseBackFragment() {
                 val data = json.optJSONObject("data")
                 val geo = data.optJSONObject("geo")
 
-                val gpsLat = geo.optDouble("lat")
-                val gpsLng = geo.optDouble("lng")
+                val lat = geo.optDouble("lat")
+                val lng = geo.optDouble("lng")
                 val timeline = geo.optInt("timeline")
+                val address =
+                    geo.optString("province") + geo.getString("city") + geo.getString("area") + geo.getString(
+                        "address"
+                    )
 
-                val latLng = Converter.gps2gaode(gpsLat, gpsLng)
+//                val latLng = Converter.gps2gaode(gpsLat, gpsLng)
 
-                addBatteryMarkder(latLng.latitude, latLng.longitude, timeline)
+                addBatteryMarkder(lat, lng, timeline, address)
             }
 
             onFail { i, s ->
@@ -277,52 +283,76 @@ class FgtFindBattery : BaseBackFragment() {
     /**
      * 在地图上添加marker
      */
-    private fun addBatteryMarkder(lat: Double, lng: Double, timeline: Int) {
-
+    private fun addBatteryMarkder(lat: Double, lng: Double, timeline: Int,address: String) {
         markerOption = MarkerOptions()
             .zIndex(10f)
             .position(LatLng(lat, lng))
             .draggable(false)
-        val v = View.inflate(activity, R.layout.layout_battery_marker, null)
-        val tvTime = v.findViewById<TextView>(R.id.tv_time)
-        val tvLocation = v.findViewById<TextView>(R.id.tv_location)
-        tvTime.text = timeline.toLong().getTime()
-        markerOption?.icon(BitmapDescriptorFactory.fromView(v))
-        aMap?.addMarker(markerOption)
+
+        markerOption?.icon(BitmapDescriptorFactory.fromBitmap(
+            BitmapFactory.decodeResource(
+            requireContext().resources,
+            R.mipmap.marker_battery
+        )))
 
         aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
 
-
-
-
-        val geocoder = GeocodeSearch(activity)
-        geocoder.getFromLocationAsyn(RegeocodeQuery(LatLonPoint(lat,lng),100f,GeocodeSearch.AMAP))
-        geocoder.setOnGeocodeSearchListener(object :OnGeocodeSearchListener{
-            override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
-                Log.i("TAG", "onRegeocodeSearched: "+p1)
-                if (p1 == 1000 && p0 != null){
-                    aMap?.clear()
-                    val v = View.inflate(activity, R.layout.layout_battery_marker, null)
-                    val tvTime = v.findViewById<TextView>(R.id.tv_time)
-                    val tvLocation = v.findViewById<TextView>(R.id.tv_location)
-                    tvLocation.text = p0.regeocodeAddress.formatAddress
-                    tvTime.text = timeline.toLong().getTime()
-                    markerOption?.icon(BitmapDescriptorFactory.fromView(v))
-                    aMap?.addMarker(markerOption)
-
-                    aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
-
-
-                }else{
-                    ToastUtils.showShortSafe("状态码"+p1)
-                }
+        aMap?.setOnMarkerClickListener { marker ->
+            marker.showInfoWindow()
+            true
+        }
+        aMap?.setInfoWindowAdapter(object : AMap.InfoWindowAdapter {
+            override fun getInfoContents(marker: Marker?): View? {
+                return null
             }
 
-            override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
-                Log.i("TAG", "onGeocodeSearched: ")
+            override fun getInfoWindow(marker: Marker): View {
+                val v = View.inflate(activity, R.layout.layout_battery_marker, null)
+                val tvTime = v.findViewById<TextView>(R.id.tv_time)
+                val tvLocation = v.findViewById<TextView>(R.id.tv_location)
+                tvLocation.text = address
+                tvTime.text = timeline.toLong().getTime()
+                marker.showInfoWindow()
+                return v
             }
-
         })
+
+        aMap?.addMarker(markerOption)
+
+//        val geocoder = GeocodeSearch(activity)
+//        geocoder.getFromLocationAsyn(
+//            RegeocodeQuery(
+//                LatLonPoint(lat, lng),
+//                100f,
+//                GeocodeSearch.AMAP
+//            )
+//        )
+//        geocoder.setOnGeocodeSearchListener(object : OnGeocodeSearchListener {
+//            override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
+//                Log.i("TAG", "onRegeocodeSearched: " + p1)
+//                if (p1 == 1000 && p0 != null) {
+//                    aMap?.clear()
+//                    val v = View.inflate(activity, R.layout.layout_battery_marker, null)
+//                    val tvTime = v.findViewById<TextView>(R.id.tv_time)
+//                    val tvLocation = v.findViewById<TextView>(R.id.tv_location)
+//                    tvLocation.text = p0.regeocodeAddress.formatAddress
+//                    tvTime.text = timeline.toLong().getTime()
+//                    markerOption?.icon(BitmapDescriptorFactory.fromView(v))
+//                    aMap?.addMarker(markerOption)
+//
+//                    aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
+//
+//
+//                } else {
+//                    ToastUtils.showShortSafe("状态码" + p1)
+//                }
+//            }
+//
+//            override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+//                Log.i("TAG", "onGeocodeSearched: ")
+//            }
+//
+//        })
 
     }
 

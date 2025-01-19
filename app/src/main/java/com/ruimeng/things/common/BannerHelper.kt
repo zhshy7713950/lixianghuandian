@@ -15,7 +15,7 @@ import wongxd.utils.utilcode.util.ScreenUtils
 object BannerHelper {
     fun initCommonBanner(
         banner: Banner<*, *>,
-        fgt: FgtBase,
+        fgt: FgtBase
     ) {
         banner.apply {
             layoutParams?.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()

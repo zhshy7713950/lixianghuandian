@@ -857,6 +857,14 @@ class FgtPayRentMoney : BaseBackFragment() {
                 }
             }
 
+            onFail { code, _ ->
+                if(code==215 || code==301){
+                    tv_ticket_pay_rent_money.text = "不使用优惠券"
+                    couponId = 0
+                    computeAmount()
+                }
+            }
+
         }
     }
 

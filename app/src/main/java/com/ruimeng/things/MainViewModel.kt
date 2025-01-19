@@ -79,6 +79,8 @@ class MainViewModel : BaseViewModel() {
     private suspend fun requestLocation(context: Context) = suspendCoroutine<Location> { con ->
         LocationUtil.getLocation(context, object : LocationUtil.Companion.LocationCallback {
             override fun onLocationReceived(location: Location) {
+                App.lat = location.latitude
+                App.lng = location.longitude
                 con.resume(location)
             }
 

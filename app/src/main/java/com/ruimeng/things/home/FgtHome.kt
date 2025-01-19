@@ -35,6 +35,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.showName
+import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
@@ -242,24 +243,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun initBanner() {
-        banner.apply {
-            banner.layoutParams?.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()
-            val dataList = listOf(
-                "https://downxll.oss-cn-beijing.aliyuncs.com/frontAd/wxMin.png"
-            )
-            (this as Banner<String, BannerImageCommonAdapter>)
-                .setAdapter(BannerImageCommonAdapter(dataList).apply {
-                    this.setOnBannerListener { _, position ->
-                        WeChatHelper.launchWXMiniProgram(
-                            requireContext(),
-                            resources.getString(R.string.wx_appid)
-                        )
-                    }
-                }, true)
-                .addBannerLifecycleObserver(this@FgtHome)
-                .indicator = CircleIndicator(activity)
-
-        }
+        BannerHelper.initCommonBanner(banner,this@FgtHome)
     }
 
     private fun initEvent() {
@@ -710,6 +694,8 @@ class FgtHome : MainTabFragment() {
             }.backgroundColorInt(Color.parseColor("#85000000"))
             .backgroundBlurRadius(10f)
             .backgroundBlurScale(10f)
+            .cancelableOnClickKeyBack(false)
+            .cancelableOnTouchOutside(false)
             .show()
     }
 

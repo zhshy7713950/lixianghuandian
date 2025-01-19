@@ -12,6 +12,7 @@ import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.bean.showName
+import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.FgtFollowWechatAccount
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
@@ -242,23 +243,7 @@ class FgtMe : MainTabFragment() {
     }
 
     private fun initBanner() {
-        banner.apply {
-            banner.layoutParams?.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()
-            val dataList = listOf(
-                "https://downxll.oss-cn-beijing.aliyuncs.com/frontAd/wxMin.png"
-            )
-            (this as Banner<String, BannerImageCommonAdapter>)
-                .setAdapter(BannerImageCommonAdapter(dataList).apply {
-                    this.setOnBannerListener { _, position ->
-                        WeChatHelper.launchWXMiniProgram(
-                            requireContext(),
-                            resources.getString(R.string.wx_appid)
-                        )
-                    }
-                }, true)
-                .addBannerLifecycleObserver(this@FgtMe)
-                .indicator = CircleIndicator(activity)
-        }
+        BannerHelper.initCommonBanner(banner,this@FgtMe)
     }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {

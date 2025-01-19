@@ -10,7 +10,7 @@ apply from: '../wongxd/config.gradle'
 //读取Git commit number
 static def getGitCommitNumber() {
 //    return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
-    return 605
+    return 606
 }
 
 
@@ -156,5 +156,8 @@ dependencies {
         exclude group: 'com.ta.utdid2' //by group
         exclude group: 'com.aliyun.ams', module: 'alicloud-android-utdid'
     }
+
+    //轮播图
+    implementation 'io.github.youth5201314:banner:2.2.3'
 
 }

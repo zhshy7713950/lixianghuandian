@@ -109,7 +109,6 @@
 						android:layout_gravity="bottom"
 						android:layout_marginLeft="10dp"
 						android:layout_marginRight="10dp"
-						android:layout_marginBottom="5dp"
 						android:elevation="3dp"
 						android:orientation="horizontal"
 						app:qmui_backgroundColor="@color/white"
@@ -139,13 +138,23 @@
 
 			</FrameLayout>
 
+			<com.youth.banner.Banner
+				android:id="@+id/banner"
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginBottom="10dp"
+				android:layout_marginRight="10dp"
+				app:banner_loop_time="5000"
+				app:banner_radius="10dp" />
+
 
 			<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
 					android:layout_marginLeft="10dp"
-					android:layout_marginTop="20dp"
 					android:layout_marginRight="10dp"
 					android:elevation="3dp"
 					android:orientation="vertical"

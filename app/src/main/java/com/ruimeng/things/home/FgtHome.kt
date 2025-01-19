@@ -25,6 +25,8 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
 import com.ruimeng.things.*
+import com.ruimeng.things.adapter.BannerImageCommonAdapter
+import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.AdInfoBean
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.helper.AdPopHelper
@@ -38,6 +40,7 @@ import com.tbruyelle.rxpermissions2.Permission
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
+import com.youth.banner.Banner
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fgt_home.*
@@ -335,7 +338,11 @@ class FgtHome : MainTabFragment() {
 
         srl_home.autoRefresh()
 
+        initBanner()
+    }
 
+    private fun initBanner() {
+        BannerHelper.initCommonBanner(banner,this@FgtHome)
     }
 
     private fun getAdInfo(lat: Double, lng: Double) {

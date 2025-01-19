@@ -9,14 +9,18 @@ import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.flyco.roundview.RoundViewDelegate
 import com.ruimeng.things.*
+import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
+import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.FgtFollowWechatAccount
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.me.credit.FgtCreditSystem
+import com.youth.banner.Banner
 import kotlinx.android.synthetic.main.fgt_me.*
+import kotlinx.android.synthetic.main.home_status_item.banner
 import me.yokeyword.fragmentation.SupportFragment
 import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
@@ -187,6 +191,12 @@ class FgtMe : MainTabFragment() {
         withdrawalAccountLayout?.setOnClickListener {
             startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
+
+        initBanner()
+    }
+
+    private fun initBanner() {
+        BannerHelper.initCommonBanner(banner,this@FgtMe)
     }
 
 

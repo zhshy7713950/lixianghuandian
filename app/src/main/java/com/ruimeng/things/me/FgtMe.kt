@@ -249,12 +249,15 @@ class FgtMe : MainTabFragment() {
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {
         return if (deviceDeposit.safeToFloat() > 0) {
             tv_ya_money_me.isEnabled = true
+            tv_ya_money_me_title.isEnabled = true
             return deviceDeposit ?: "0.00"
         } else if (freeMark == "1") {//存在免押
             tv_ya_money_me.isEnabled = true
+            tv_ya_money_me_title.isEnabled = true
             "已免押"
         } else {
             tv_ya_money_me.isEnabled = false
+            tv_ya_money_me_title.isEnabled = false
             deviceDeposit ?: "0.00"
         }
     }

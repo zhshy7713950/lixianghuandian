@@ -36,7 +36,7 @@ class BasePackageAdapter :BaseQuickAdapter<PaymentInfo,BaseViewHolder>(R.layout.
             }
             if (p0.layoutPosition ==0){
                 val layoutParam = p0.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(R.dimen.packageLeft)
+                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(R.dimen.packageLeft_24)
                 layoutParam.leftMargin = marginInPixels
                 p0.itemView.layoutParams = layoutParam
             }else{

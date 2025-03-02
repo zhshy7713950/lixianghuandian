@@ -190,6 +190,7 @@ class FgtContractSignStep2 : BaseBackFragment() {
                 val json = JSONObject(res)
                 val data = json.optJSONObject("data")
                 val imgUrl = data.optString("string")
+                hwImgUrl = imgUrl
 
 //                if (!isHwImg) setFrontImg(imgUrl) else setHwImg(imgUrl)
                 doSubmit()

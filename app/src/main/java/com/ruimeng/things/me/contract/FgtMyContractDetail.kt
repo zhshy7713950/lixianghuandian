@@ -176,18 +176,18 @@ class FgtMyContractDetail : BaseBackFragment() {
                     if (bean.paymentName == "") {
                         tv_base_package.text =
                             TextUtil.getSpannableString(arrayOf("租电套餐：", "暂无"))
-                        tv_base_package_time.visibility = View.GONE
+                        tv_base_package_time_start.visibility = View.GONE
                         tv_change_package.text =
-                            TextUtil.getSpannableString(arrayOf("换电套餐：", "暂无"))
-                        tv_change_package_time.visibility = View.GONE
+                            TextUtil.getSpannableString(arrayOf("换电次数：", "暂无"))
+                        tv_base_package_time_end.visibility = View.GONE
                     } else {
                         tv_base_package.text =
                             TextUtil.getSpannableString(arrayOf("租电套餐：", bean.paymentName))
-                        tv_base_package_time.text =
-                            TextUtil.formatTime(bean.begin_time, bean.exp_time)
+                        tv_base_package_time_start.text =
+                            TextUtil.getSpannableString(arrayOf("开始时间：", TextUtil.formatTime(bean.begin_time)))
                         tv_change_package.text =
-                            TextUtil.getSpannableString(arrayOf("换电套餐：", "次数无限制"))
-                        tv_change_package_time.text = tv_base_package_time.text
+                            TextUtil.getSpannableString(arrayOf("换电次数：", "次数无限制"))
+                        tv_base_package_time_end.text = TextUtil.getSpannableString(arrayOf("结束时间：", TextUtil.formatTime(bean.exp_time)))
                     }
 
 //                    val options = bean.userOptions?.filter { it.option_type == "2" }

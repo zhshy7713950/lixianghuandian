@@ -15,11 +15,8 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.R
-import com.ruimeng.things.net_station.FgtNetStationItem
 import kotlinx.android.synthetic.main.fgt_my_contract.*
-import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
-import wongxd.base.BaseBackFragment
 import wongxd.base.MainTabFragment
 import wongxd.base.custom.caneffect.CanRippleLayout
 import wongxd.base.custom.caneffect.CanShadowDrawable

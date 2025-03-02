@@ -467,6 +467,7 @@
 				android:orientation="vertical">
 
 				<androidx.constraintlayout.widget.ConstraintLayout
+					android:id="@+id/cl_rant_info"
 					android:layout_width="match_parent"
 					android:layout_height="139dp"
 					android:background="@drawable/rectangle_gray_bg"
@@ -573,22 +574,23 @@
 					<com.flyco.roundview.RoundTextView
 						android:id="@+id/btn_continue_rant"
 						android:layout_width="50dp"
-						android:layout_height="18dp"
+						android:layout_height="22dp"
 						android:layout_marginTop="12dp"
 						android:layout_marginRight="10dp"
 						android:gravity="center"
 						android:text="续期"
-						android:textColor="#ff29ebb6"
+						android:textColor="#313944"
 						android:textSize="11sp"
 						app:layout_constraintRight_toRightOf="parent"
 						app:layout_constraintTop_toTopOf="parent"
-						app:rv_backgroundColor="#404E59"
+						app:rv_backgroundColor="#29EBB6"
 						app:rv_cornerRadius="9dp"
 						app:rv_strokeColor="#29EBB6"
 						app:rv_strokeWidth="0.5dp" />
 				</androidx.constraintlayout.widget.ConstraintLayout>
 
 				<androidx.constraintlayout.widget.ConstraintLayout
+					android:id="@+id/cl_change_info"
 					android:layout_width="match_parent"
 					android:layout_height="139dp"
 					android:layout_marginTop="10dp"
@@ -599,7 +601,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="12dp"
-						android:text="换电套餐"
+						android:text="换电次数"
 						android:textColor="#ffffffff"
 						android:textSize="12sp"
 						android:layout_marginLeft="10dp"
@@ -615,7 +617,7 @@
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_marginTop="41dp"
-							android:text="套餐内容"
+							android:text="剩余次数"
 							android:textColor="#ff9eaab3"
 							android:drawablePadding="6dp"
 							android:textSize="11sp"
@@ -666,6 +668,23 @@
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent"
 							tools:text="2023/06/01至2023/07/01" />
+
+						<com.flyco.roundview.RoundTextView
+							android:id="@+id/btn_buy_change_package"
+							android:layout_width="50dp"
+							android:layout_height="22dp"
+							android:layout_marginTop="12dp"
+							android:layout_marginRight="10dp"
+							android:gravity="center"
+							android:text="购买"
+							android:textColor="#313944"
+							android:textSize="11sp"
+							app:layout_constraintRight_toRightOf="parent"
+							app:layout_constraintTop_toTopOf="parent"
+							app:rv_backgroundColor="#29EBB6"
+							app:rv_cornerRadius="9dp"
+							app:rv_strokeColor="#29EBB6"
+							app:rv_strokeWidth="0.5dp" />
 					</androidx.constraintlayout.widget.ConstraintLayout>
 					<TextView
 						android:id="@+id/tv_no_package"

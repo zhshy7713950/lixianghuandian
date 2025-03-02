@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.core.view.isVisible
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.FgtMain
@@ -14,6 +15,7 @@ import com.ruimeng.things.home.bean.PaymentOption
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.fgt_scan_open.*
+import kotlinx.android.synthetic.main.package_details_layout.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.openInApp
 import wongxd.common.toPOJO
@@ -61,15 +63,13 @@ class FgtScanOpen : BaseBackFragment() {
         if (checkPayBean != null){
             tv_battery_num_pay_rent_money.text = checkPayBean!!.device_id
             tv_battery_model_pay_rent_money.text = checkPayBean!!.modelName
-            tv_base_package.text = checkPayBean!!.paymentInfo.pname
-            tv_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(checkPayBean!!.begin_time)),textColors)
-            tv_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(checkPayBean!!.exp_time)),textColors)
+            tv_base_package_name.text = checkPayBean!!.paymentInfo.pname
+            tv_base_package_time.text = "${getTimeShow(checkPayBean!!.begin_time)} - ${getTimeShow(checkPayBean!!.exp_time)}"
             val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}
             var needActiveNew = false // 是否需要启用新套餐
 //            if (!options.isEmpty()){
-                tv_change_package_name.text = "次数无限制"
-                tv_change_package_start_time.text = tv_package_start_time.text
-                tv_change_package_end_time.text =  tv_package_end_time.text
+            tv_package_remaining_times.text = "次数无限制"
+            ll_other_options.isVisible = false
 //                tv_change_times.text = "剩余${options[0].change_times}次"
 //                if (options[0].change_times == "1"){
 //                    tv_update_package.text = "立即续期"

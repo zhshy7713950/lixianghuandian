@@ -1,180 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/bg_gray"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
 
-	<include layout="@layout/layout_topbar" />
-
-
+    <include layout="@layout/layout_topbar" />
 
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="10dp"
-				android:orientation="vertical"
-			android:paddingLeft="14dp"
-			android:background="@drawable/rectangle_gray_bg">
-			<TextView
-				android:id="@+id/tv_device_num_my_contract_detail"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="电池编号：20000155"
-				android:textColor="#ffffffff"
-				android:textSize="14sp"
-				android:layout_marginTop="14dp"
-				/>
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="0.5dp"
-				android:background="@drawable/shape_line"
-				android:layout_marginTop="10dp"/>
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				android:orientation="horizontal">
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="型        号："
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
-				<TextView
-					android:id="@+id/tv_device_model_my_contract_detail"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:text="48伏60安"
-					android:textColor="#ffffffff"
-					android:textSize="12sp"
-					/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/rectangle_gray_bg"
+        android:orientation="vertical"
+        android:paddingLeft="14dp">
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="租用时长："
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
+        <TextView
+            android:id="@+id/tv_device_num_my_contract_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="电池编号：20000155"
+            android:textColor="#ffffffff"
+            android:textSize="14sp" />
 
-				<TextView
-					android:id="@+id/tv_rent_long_my_contract_detail"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:textSize="12sp"
-					android:textColor="@color/white"
-					tools:text="9个月" />
-			</LinearLayout>
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				android:orientation="horizontal">
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="押        金："
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
-				<TextView
-					android:id="@+id/tv_deposit_my_contract_detail"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:text="48伏60安"
-					android:textColor="#ffffffff"
-					android:textSize="12sp"
-					/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_line" />
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="租        金："
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-				<TextView
-					android:id="@+id/tv_rent_money_my_contract_detail"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:textSize="12sp"
-					android:textColor="@color/white"
-					tools:text="9个月" />
-			</LinearLayout>
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="10dp"
-				android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="型        号："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
 
-				<TextView
-					android:id="@+id/tv_base_package"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="租电套餐："
-					android:layout_weight="1"
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
-				<TextView
-					android:id="@+id/tv_base_package_time"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					tools:text="2023/01/02至2023/04/02"
-					android:textColor="#ffffffff"
-					android:drawableLeft="@mipmap/ic_trajector_calendar"
-					android:drawablePadding="5dp"
-					android:textSize="12sp"
-					/>
-			</LinearLayout>
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_device_model_my_contract_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="48伏60安"
+                android:textColor="#ffffffff"
+                android:textSize="12sp" />
 
-				<TextView
-					android:id="@+id/tv_change_package"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="换电套餐："
-					android:layout_weight="1"
-					android:layout_gravity="center_vertical"
-					android:textColor="#ff929fab"
-					android:textSize="12sp"
-					/>
-				<TextView
-					android:id="@+id/tv_change_package_time"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:layout_gravity="center_vertical"
-					tools:text="2023/01/02至2023/04/02"
-					android:textColor="#ffffffff"
-					android:drawableLeft="@mipmap/ic_trajector_calendar"
-					android:drawablePadding="5dp"
-					android:textSize="12sp"
-					/>
-			</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="租用时长："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/tv_rent_long_my_contract_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="9个月" />
+        </LinearLayout>
 
-		</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="押        金："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_deposit_my_contract_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="48伏60安"
+                android:textColor="#ffffffff"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="租        金："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_rent_money_my_contract_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="9个月" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_base_package"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="租电套餐："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_change_package"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="换电次数："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_base_package_time_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="开始时间："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_base_package_time_end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="结束时间："
+                android:textColor="#ff929fab"
+                android:textSize="12sp" />
+        </LinearLayout>
 
 
-	<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rv_my_contract_detail"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-		android:layout_marginLeft="12dp"
-		android:layout_marginRight="12dp"/>
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_my_contract_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp" />
 </LinearLayout>

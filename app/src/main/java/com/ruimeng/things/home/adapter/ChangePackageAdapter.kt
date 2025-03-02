@@ -8,7 +8,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.NewGetRentBean
 import com.ruimeng.things.home.bean.PaymentOption
 
-class ChangePackageAdapter :BaseQuickAdapter<PaymentOption,BaseViewHolder>(R.layout.item_rv_rent_long_pay_change) {
+class ChangePackageAdapter(private val margin: Int = R.dimen.packageLeft_24) :BaseQuickAdapter<PaymentOption,BaseViewHolder>(R.layout.item_rv_rent_long_pay_change) {
     var selectPos = 0
     override fun convert(p0: BaseViewHolder, item: PaymentOption?) {
         if (item != null ){
@@ -27,12 +27,12 @@ class ChangePackageAdapter :BaseQuickAdapter<PaymentOption,BaseViewHolder>(R.lay
             }
             if (p0.layoutPosition % 2 ==0){
                 val layoutParam = p0.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(R.dimen.packageLeft)
+                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(margin)
                 layoutParam.leftMargin = marginInPixels
                 p0.itemView.layoutParams = layoutParam
             }else{
                 val layoutParam = p0.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(R.dimen.packageLeft)
+                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(margin)
                 layoutParam.rightMargin = marginInPixels
                 p0.itemView.layoutParams = layoutParam
             }

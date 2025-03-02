@@ -224,18 +224,18 @@ class FgtMyContractItem : MainTabFragment() {
                 a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
                 a.getView<TextView>(R.id.tv_rent_long).text = "${b.renttime_str}"
                 if (b.paymentName != "" && b.paymentName != null){
-                    a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
-                        .setVisible(R.id.tv_base_package_time,true)
+                    a.setText(R.id.tv_package_time_start, TextUtil.getSpannableString(arrayOf("开始时间：",formatTime(b.begin_time)), textColors))
+                        .setVisible(R.id.tv_package_time_start,true)
                         .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("租电套餐：",   b.paymentName), textColors))
-                        .setVisible(R.id.tv_change_package_time, true)
-                        .setText(R.id.tv_change_package_time,"${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
-                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电套餐：", "次数无限制"), textColors))
+                        .setVisible(R.id.tv_package_time_end, true)
+                        .setText(R.id.tv_package_time_end,TextUtil.getSpannableString(arrayOf("结束时间：",formatTime(b.end_time)), textColors))
+                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电次数：", "次数无限制"), textColors))
                 }else{
-                    a.setText(R.id.tv_base_package_time, "${formatTime(b.begin_time)}至${formatTime(b.end_time)}")
-                        .setVisible(R.id.tv_base_package_time,false)
+                    a.setText(R.id.tv_package_time_start, TextUtil.getSpannableString(arrayOf("开始时间：",formatTime(b.begin_time)), textColors))
+                        .setVisible(R.id.tv_package_time_start,false)
                         .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("租电套餐：",   "暂无"), textColors))
-                    a.setVisible(R.id.tv_change_package_time, false)
-                        .setText(R.id.tv_change_package,  TextUtil.getSpannableString(arrayOf("换电套餐：", "暂无"), textColors))
+                    a.setVisible(R.id.tv_package_time_end, false)
+                        .setText(R.id.tv_change_package,  TextUtil.getSpannableString(arrayOf("换电次数：", "暂无"), textColors))
                 }
 
 

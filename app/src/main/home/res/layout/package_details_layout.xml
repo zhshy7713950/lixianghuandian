@@ -1,0 +1,199 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_package_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已购套餐信息"
+        android:textColor="#ffffffff"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:background="@drawable/rectangle_gray_bg_20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="套餐内容"
+                android:textColor="#9EAAB3"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_base_package_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                tools:text="成都2个月"
+                android:layout_marginLeft="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余次数"
+                android:textColor="#9EAAB3"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_package_remaining_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                tools:text="22次"
+                android:layout_marginLeft="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="有效期限"
+                android:textColor="#9EAAB3"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_base_package_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                tools:text="2023/06/01至2023/08/01"
+                android:layout_marginLeft="12dp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_other_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:background="@drawable/rectangle_gray_bg_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="附加选项"
+            android:textColor="#9EAAB3"
+            android:textSize="14sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否带充电器"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="left|center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/tv_other_option1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:text="否"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="right|center_vertical"
+                />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否租赁车架"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="left|center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/tv_other_option2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:text="否"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="right|center_vertical"
+                />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否购买保险"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="left|center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/tv_other_option3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:text="否"
+                android:textColor="#ffffffff"
+                android:textSize="14sp"
+                android:layout_gravity="right|center_vertical"
+                />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -5,33 +5,28 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
-import com.net.Server
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
-import com.ruimeng.things.home.adapter.BasePackageAdapter
 import com.ruimeng.things.home.adapter.ChangePackageAdapter
 import com.ruimeng.things.home.bean.CountAmountBean
 import com.ruimeng.things.home.bean.CouponsInfoBean
 import com.ruimeng.things.home.bean.GetRentPayBean
-import com.ruimeng.things.home.bean.NewGetRentBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.home.bean.PaymentOption
 import com.ruimeng.things.home.bean.UpdateGetRentBean
-import com.ruimeng.things.home.view.CompanyDescPopup
 import com.ruimeng.things.home.view.SelectCouponPopup
-import com.ruimeng.things.home.vm.PayRentMoneyViewModel
+import com.ruimeng.things.home.vm.PayReplacementTimesViewModel
 import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.contract.FgtMyContractDetail
@@ -40,7 +35,7 @@ import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
-import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
+import kotlinx.android.synthetic.main.fgt_pay_replacement_times.*
 import kotlinx.android.synthetic.main.package_details_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -58,27 +53,22 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
-
 /**
- * Created by wongxd on 2018/11/13.
+ * 购买换电次数页
  */
-class FgtPayRentMoney : BaseBackFragment() {
+class FgtPayReplacementTimes : BaseBackFragment() {
 
     data class EventInstallmentPaymentSuccess(val isNeedPop: Boolean = false)
 
     companion object {
-        const val TAG = "FgtPayRentMoneyTag"
-        public val PAGE_TYPE_CREATE = 0
-        public val PAGE_TYPE_UPDATE = 1
+        const val TAG = "FgtPayReplacementTimesTag"
         fun newInstance(
             deviceId: String,
-            type: Int = PAGE_TYPE_CREATE,
             cabinetCode: String? = null
-        ): FgtPayRentMoney {
-            val fgt = FgtPayRentMoney()
+        ): FgtPayReplacementTimes {
+            val fgt = FgtPayReplacementTimes()
             val b = Bundle()
             b.putString("deviceId", deviceId)
-            b.putInt("pageType", type)
             b.putString("cabinetCode", cabinetCode)
             Log.d(TAG, "cabinetCode = $cabinetCode")
             fgt.arguments = b
@@ -86,15 +76,11 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
 
-    private val vm: PayRentMoneyViewModel by viewModels()
+    private val vm: PayReplacementTimesViewModel by viewModels()
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
     private val cabinetCode: String? by lazy { arguments?.getString("cabinetCode") }//柜子编码
-    val pageType: Int by lazy {
-        arguments?.getInt("pageType") ?: PAGE_TYPE_CREATE
-    } //页面类型 0 创建租金，1 续费升级
-    private val basePackageAdapter: BasePackageAdapter by lazy { BasePackageAdapter() }
-    private val changePackageAdapter: ChangePackageAdapter by lazy { ChangePackageAdapter() }
-    override fun getLayoutRes(): Int = R.layout.fgt_pay_rent_money
+    private val changePackageAdapter: ChangePackageAdapter by lazy { ChangePackageAdapter(R.dimen.packageLeft_12) }
+    override fun getLayoutRes(): Int = R.layout.fgt_pay_replacement_times
     private var IS_CHECKED_PROTOCOL = false
     private var newGetRentBean: PaymentInfo? = null
     private var selectOption: PaymentOption? = null
@@ -104,69 +90,18 @@ class FgtPayRentMoney : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         EventBus.getDefault().register(this)
-        initTopbar(topbar, if (pageType == PAGE_TYPE_CREATE) "购买套餐" else "套餐续期升级")
+        initTopbar(topbar, "购买换电次数")
         initEvent()
         getRent()
         dealPayWay()
         initView()
-//        initTicket()
     }
 
     private fun initEvent() {
-        vm.agentInfo.observe(this, Observer {
-            it?.code?.let { code ->
-                tv_agnet_name_pay_rent_money.text = "${it.agentName}(${code})"
-            }
-        })
     }
 
     private fun initView() {
-        val colors = arrayOf("#FFFFFF", "#929FAB")
-        tv_change_package_create_title.text = "选择换电次数"
-        tv_base_package_create_title.text = "可选套餐信息"
-
-        if (pageType == PAGE_TYPE_CREATE) {
-            ll_package.visibility = View.GONE
-            ll_change_package_create_title.visibility = View.VISIBLE
-            tv_change_package_update_title.visibility = View.GONE
-            tv_base_package_create_title.visibility = View.VISIBLE
-            tv_choose_package_create_title.visibility = View.VISIBLE
-            cl_update_package_title.visibility = View.GONE
-        } else {
-            ll_package.visibility = View.VISIBLE
-            tv_base_package_update_title.text = "可选续期套餐"
-            ll_change_package_create_title.visibility = View.GONE
-            tv_change_package_update_title.visibility = View.VISIBLE
-            tv_base_package_create_title.visibility = View.GONE
-            tv_choose_package_create_title.visibility = View.GONE
-            tv_rent_desc.visibility = View.GONE
-            cl_update_package_title.visibility = View.VISIBLE
-        }
-        tv_company_desc.setOnClickListener {
-            var text = "1.换电服务的使用资费\n" +
-                    "2.请在【租电套餐】选择完成后，再继续选择对应的换电服务\n" +
-                    "3.本套餐起租后，不支持退租金\n" +
-                    "注：【换电套餐】的有效期限取决于【租电套餐】。若【租电套餐】失效，那么【换电套餐】也会无法继续使用"
-            activity?.let { it1 -> CompanyDescPopup(it1, "换电套餐说明", text) }
-        }
-        tv_option_desc.setOnClickListener {
-            var text = "1.【租电套餐】选择完毕后，”带充电器“选项将会显示出对应的押金金额\n" +
-                    "2.同时，”租赁车架“选项，将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
-            if (pageType == PAGE_TYPE_UPDATE) {
-                text = "1.若在【已购套餐】中，已经支付过”充电器“的押金，则后续无需再次支付\n" +
-                        "2.若在【已购套餐】中，已经选择过”租赁车架“，则续期升级时，无法进行更改对应选项，将会延续选择如下：\n" +
-                        "1）选择其他【租电套餐】，”租赁车架“选项将会依据所选【租电套餐】的月数时长，计算相应所需支付金额"
-            }
-            activity?.let { it1 -> CompanyDescPopup(it1, "附加选项说明", text) }
-        }
-        tv_rent_desc.setOnClickListener {
-            var text = "1.租用电池的基础套餐费用\n" +
-                    "换电操作不会引起租电套餐费用变更\n" +
-                    "2.本套餐起租后，不支持退租金"
-            activity?.let { it1 -> CompanyDescPopup(it1, "附加选项说明", text) }
-        }
-        tv_option_time.text = showExpireTitle() + "无"
-        tv_rant_long_pay_time.text = showExpireTitle() + "无"
+        ll_other_options.isVisible = false
     }
 
     @Subscribe
@@ -281,9 +216,6 @@ class FgtPayRentMoney : BaseBackFragment() {
 //        optionList.add(PaymentOption(name = paymentName))
         newGetRentBean?.let {
             optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
-            tv_rant_long_pay_time.text =
-                showExpireTitle() + TextUtil.formatTime(it.show_start_time, it.show_end_time)
-            tv_option_time.text = tv_rant_long_pay_time.text
         }
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
@@ -293,11 +225,6 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
 
     private fun initAgentCodeView() {
-        if (cabinetCode.isNullOrEmpty()) {//柜码为空，直接赋值
-            tv_agnet_name_pay_rent_money.text = "${baseInfo!!.agentName}(${baseInfo!!.agentCode})"
-        } else {
-            vm.getAgentByCode(cabinetCode!!)
-        }
     }
 
     private fun initViewAfterData(list: List<PaymentInfo>) {
@@ -319,20 +246,8 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         newGetRentBean = list.get(0)
 
-        basePackageAdapter.setNewData(list)
         resetSelectOptionList()
-        rv_rant_long_pay_rent_money.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        rv_rant_long_pay_rent_money.adapter = basePackageAdapter
 
-        basePackageAdapter.onItemClickListener =
-            BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
-                newGetRentBean = list.get(p2)
-                basePackageAdapter.selectPos = p2
-                basePackageAdapter.notifyDataSetChanged()
-                resetSelectOptionList()
-                computeAmount()
-            }
         rv_change_package.layoutManager = GridLayoutManager(activity, 2)
         rv_change_package.adapter = changePackageAdapter
         changePackageAdapter.onItemClickListener =
@@ -341,17 +256,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
-                //                selectOption.let {
-                //                    if (it != null) {
-                //                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
-                //                            it.show_start_time,
-                //                            it.show_end_time
-                //                        )
-                //                    }
-                //                }
             }
         setSelectOption()
-//        computeAmount()
 
         btn_pay_now_pay_rent_money.setOnClickListener { view ->
             if (!IS_CHECKED_PROTOCOL) {
@@ -367,35 +273,15 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         iv_check_pay_rent_money.setOnClickListener {
-            if (pageType == PAGE_TYPE_CREATE) {
-                if (sighStatus) {
-                    IS_CHECKED_PROTOCOL = true
-                    iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
-                } else {
-                    baseInfo.let {
-                        if (it != null) {
-                            start(
-                                FgtContractSignStep1.newInstance(
-                                    baseInfo!!.contract_id,
-                                    "",
-                                    0,
-                                    if (pageType == PAGE_TYPE_CREATE) 2 else 1,
-                                    deviceId,
-                                    baseInfo!!.model_name
-                                )
-                            )
-                        }
-                    }
-                }
-            } else {
-                if (IS_CHECKED_PROTOCOL) {
-                    iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_unselect)
-                } else {
-                    iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
-                }
 
-                IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
+            if (IS_CHECKED_PROTOCOL) {
+                iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_unselect)
+            } else {
+                iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
             }
+
+            IS_CHECKED_PROTOCOL = !IS_CHECKED_PROTOCOL
+
 
         }
 
@@ -415,7 +301,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                         baseInfo!!.contract_id,
                         "",
                         0,
-                        if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                        1,
                         deviceId,
                         baseInfo!!.model_name
                     )
@@ -487,12 +373,10 @@ class FgtPayRentMoney : BaseBackFragment() {
                 }
 
                 var alreadyBuy = false
-                if (pageType == PAGE_TYPE_UPDATE) {
-                    if (type == "5" && tv_other_option1.text.toString() != "否") {
-                        alreadyBuy = true
-                    } else if (type == "4" && tv_other_option2.text.toString() != "否") {
-                        alreadyBuy = true
-                    }
+                if (type == "5" && tv_other_option1.text.toString() != "否") {
+                    alreadyBuy = true
+                } else if (type == "4" && tv_other_option2.text.toString() != "否") {
+                    alreadyBuy = true
                 }
                 if (alreadyBuy) {
                     val price =
@@ -542,38 +426,19 @@ class FgtPayRentMoney : BaseBackFragment() {
                 textView.text = "否"
             }
         }
-        if (type == "5" && tv_other_option1.text.toString() != "否" && pageType == PAGE_TYPE_UPDATE) {
+        if (type == "5" && tv_other_option1.text.toString() != "否") {
             textView.text = "押金已付"
             textView.textColor = Color.parseColor("#929FAB")
         }
     }
 
     private fun setSelectOption() {
-        newGetRentBean.let {
-            if (it != null) {
-//                showOptionSelector(it,"5",tv_select_charge,cl_select_charge,tv_select_charge_title)
-                showOptionSelector(
-                    it,
-                    "4",
-                    tv_select_platform,
-                    cl_select_platform,
-                    tv_select_platform_title
-                )
-                showOptionSelector(
-                    it,
-                    "3",
-                    tv_select_insurance,
-                    cl_select_insurance,
-                    tv_select_insurance_title
-                )
-            }
-        }
+
     }
 
 
     private fun showExpireTitle(): String {
-        val expire = if (pageType == PAGE_TYPE_CREATE) "有效期：" else "有效期："
-        return expire
+        return "有效期："
     }
 
     @Subscribe
@@ -679,34 +544,6 @@ class FgtPayRentMoney : BaseBackFragment() {
 
     private var pvOptions: OptionsPickerView<MyCouponBean.Data>? = null
 
-//    private fun initTicket() {
-//
-//        http {
-//            url = Path.GET_MY_COUPON
-//            params["device_id"] = deviceId
-//
-//            onSuccess {
-//                IS_TICKET_DATA_INIT = true
-//                val result = it.toPOJO<MyCouponBean>().data
-//                if (result.isEmpty()) {
-//                    tv_ticket_pay_rent_money.text = "暂无可用优惠券"
-//                } else {
-//                    couponList.addAll(result)
-//                    couponId = couponList.get(0).id
-//                    tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-////                    computeAmount(false)
-//                }
-//
-//
-//            }
-//
-//
-//            onFail { i, s ->
-//                IS_TICKET_DATA_INIT = false
-//            }
-//
-//        }
-//    }
 
     private var PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
 
@@ -715,58 +552,29 @@ class FgtPayRentMoney : BaseBackFragment() {
      * 获取设备租用信息
      */
     private fun getRent() {
-        if (pageType == PAGE_TYPE_CREATE) {
-            http {
-                url = PathV3.GET_RENT
-                params["deviceId"] = deviceId
-                onSuccessWithMsg { res, msg ->
-                    iv_battery_pay_rent_money?.let {
-                        val result = res.toPOJO<NewGetRentBean>().data
-                        if (result.paymentInfo.isNotEmpty()) {
-                            baseInfo = result.paymentInfo[0]
-                            initViewAfterData(result.paymentInfo)
-                        }
-                        if (result.coupons.isEmpty()) {
-                            tv_ticket_pay_rent_money.text = "暂无可用优惠券"
-                        } else {
-                            couponList.addAll(result.coupons)
-                            couponId = couponList.get(0).id
-                            tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-                        }
-                        computeAmount()
-                    }
-                }
-                onFail { i, s ->
-                    iv_battery_pay_rent_money.postDelayed({
-                        pop()
-                    }, 1000)
-                }
-            }
-        } else {
-            http {
-                url = "/apiv6/payment/upgrade"
-                params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
-                params["device_id"] = deviceId
-                onSuccessWithMsg { res, msg ->
-                    iv_battery_pay_rent_money?.let {
-                        val result = res.toPOJO<UpdateGetRentBean>().data
-                        var payments = ArrayList<PaymentInfo>();
+        http {
+            url = "/apiv6/payment/upgrade"
+            params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
+            params["device_id"] = deviceId
+            onSuccessWithMsg { res, msg ->
+                iv_battery_pay_rent_money?.let {
+                    val result = res.toPOJO<UpdateGetRentBean>().data
+                    var payments = ArrayList<PaymentInfo>();
 //                        payments.add(PaymentInfo(pname = "暂不续期", options = result.options))
-                        payments.addAll(result.paymentInfo)
-                        baseInfo = result.baseInfo
-                        baseInfo!!.model_name = baseInfo!!.modelName
-                        showBaseInfo(result)
-                        initViewAfterData(payments)
+                    payments.addAll(result.paymentInfo)
+                    baseInfo = result.baseInfo
+                    baseInfo!!.model_name = baseInfo!!.modelName
+                    showBaseInfo(result)
+                    initViewAfterData(payments)
 
-                        if (result.coupons.isEmpty()) {
-                            tv_ticket_pay_rent_money.text = "暂无可用优惠券"
-                        } else {
-                            couponList.addAll(result.coupons)
-                            couponId = couponList.get(0).id
-                            tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
-                        }
-                        computeAmount()
+                    if (result.coupons.isEmpty()) {
+                        tv_ticket_pay_rent_money.text = "暂无可用优惠券"
+                    } else {
+                        couponList.addAll(result.coupons)
+                        couponId = couponList.get(0).id
+                        tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
                     }
+                    computeAmount()
                 }
             }
         }
@@ -803,37 +611,6 @@ class FgtPayRentMoney : BaseBackFragment() {
             } else {
                 tv_other_option3.text = "否"
             }
-//            val changeOptions = userOptions.filter { it.option_type == "2" }
-            ll_change_package_no_active.visibility = View.GONE
-//            ll_change_package_active.visibility = View.GONE
-//            tv_change_package_title.visibility = View.GONE
-//            if (!changeOptions.isEmpty()) {
-//            tv_change_package_title.visibility = View.VISIBLE
-//            ll_change_package_active.visibility = View.VISIBLE
-//            tv_change_package_name1.text = "次数无限制"
-//            tv_change_package_time1.text = tv_base_package_time.text
-//                changeOptions.forEach {
-//                    if (it.active_status == "1") {
-//                        ll_change_package_active.visibility = View.VISIBLE
-//                        tv_change_package_name1.text = "次数无限制"
-//                        tv_change_package_time1.text = tv_base_package_time.text
-//                    } else if (it.active_status == "2") {
-//                        ll_change_package_no_active.visibility = View.VISIBLE
-//                        tv_change_package_name2.text = "换电${it.total_times}次"
-//                        tv_change_package_time2.text = tv_base_package_time.text
-//                    }
-//                }
-//            }
-//            tv_expand.text = "展开"
-//            tv_expand.setOnClickListener {
-//                if (tv_expand.text.equals("展开")) {
-//                    ll_package.visibility = View.VISIBLE
-//                    tv_expand.text = "收起"
-//                } else {
-//                    ll_package.visibility = View.GONE
-//                    tv_expand.text = "展开"
-//                }
-//            }
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("TAG", "showBaseInfo: " + e.message)
@@ -855,7 +632,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             }
 
             onFail { code, _ ->
-                if(code==215 || code==301){
+                if (code == 215 || code == 301) {
                     tv_ticket_pay_rent_money.text = "不使用优惠券"
                     couponId = 0
                     computeAmount()
@@ -872,8 +649,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         dlgPayFailed = getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")
         dlgPayProgress?.show()
         http {
-            url =
-                if (pageType == PAGE_TYPE_CREATE) "apiv6/payment/payrentmoney" else "/apiv6/payment/upgradepay"
+            url = "/apiv6/payment/upgradepay"
             jsonParam = getSubmitParam()
             //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权
             jsonParam["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
@@ -936,15 +712,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                         EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
                         startWithPop(FgtCreditSystem())
                     }
-//                        FgtDeposit.Companion.PayWay.FQ -> {
-//                            dlgPayProgress?.dismiss()
-//                            start(
-//                                FgtRentInstallmentPayment.newInstance(
-//                                    data.contract_id,
-//                                    result.orderid
-//                                )
-//                            )
-//                        }
+
                     FgtDeposit.Companion.PayWay.GROUPPAP -> {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
@@ -989,19 +757,6 @@ class FgtPayRentMoney : BaseBackFragment() {
             val options: ArrayList<PaymentOption> = ArrayList();
             if (selectOption != null && selectOption!!.id != "") {
                 options.add(selectOption!!)
-            }
-            newGetRentBean!!.options.forEach {
-                if (tv_select_charge.text.toString().contains("元") && it.option_type == "5") {
-                    options.add(it)
-                }
-                if (tv_select_platform.text.toString().contains("元") && it.option_type == "4") {
-                    options.add(it)
-                }
-                if (tv_select_insurance.text.toString().contains("元") && it.option_type == "3") {
-                    if (tv_select_insurance.text.toString().startsWith(it.name)) {
-                        options.add(it)
-                    }
-                }
             }
             params["options"] = options
         }

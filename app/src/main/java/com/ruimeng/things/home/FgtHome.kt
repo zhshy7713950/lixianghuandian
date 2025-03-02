@@ -234,12 +234,23 @@ class FgtHome : MainTabFragment() {
         WaitViewController.from(root_has_item) { renderChilds() }
 
         srl_home?.setEnableLoadMore(false)
-        srl_home.setOnRefreshListener { getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }) }
+        srl_home.setOnRefreshListener { refreshHomeData() }
 
         srl_home.autoRefresh()
 
         initTabLayout()
         initBanner()
+    }
+
+    private fun refreshHomeData(){
+        vm.getMyDevice().observeForever {
+            if(it.isEmpty()){
+                CURRENT_DEVICEID = ""
+                NO_PAY_DEVICEID = ""
+                payType = ""
+            }
+            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
+        }
     }
 
     private fun initBanner() {
@@ -611,13 +622,21 @@ class FgtHome : MainTabFragment() {
             }
 
         }
-        btn_continue_rant.setOnClickListener {
+        cl_rant_info.setOnClickListener {
             if (!hasBatteryInfo()) return@setOnClickListener
             if (activeStatus == "3") {
                 ToastHelper.shortToast(context, "请先完成解冻操作")
                 return@setOnClickListener
             }
             doContinueRant()
+        }
+        cl_change_info.setOnClickListener {
+            if (!hasBatteryInfo()) return@setOnClickListener
+            FgtMain.instance?.start(
+                FgtPayReplacementTimes.newInstance(
+                    CURRENT_DEVICEID
+                )
+            )
         }
     }
 
@@ -1183,7 +1202,7 @@ class FgtHome : MainTabFragment() {
             if (paymentDetailBean?.active_status == "1") {
                 tvProgress.text = "待取电"
                 tv_please_change.text = "(请进行\"扫码换电\")"
-                tv_package_status.visibility = VISIBLE
+                tv_package_status.visibility = GONE
                 tv_package_status.text = "生效中"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
             } else if (paymentDetailBean?.active_status == "3") {
@@ -1210,7 +1229,7 @@ class FgtHome : MainTabFragment() {
             tv_left_battery.visibility = VISIBLE
             tv_voltage.visibility = VISIBLE
             pvBattery.visibility = VISIBLE
-            tv_package_status.visibility = VISIBLE
+            tv_package_status.visibility = GONE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
         }

@@ -17,10 +17,21 @@ import com.net.whenError
 import com.net.whenSuccess
 import com.ruimeng.things.UserInfoLiveData
 import com.ruimeng.things.home.bean.DeviceDetailBean
+import com.ruimeng.things.home.bean.MyDevicesBean
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
+
+    fun getMyDevice(): LiveData<List<MyDevicesBean.Data>>{
+        val myDevicesLiveData = MutableLiveData<List<MyDevicesBean.Data>>()
+        viewModelScope.launch {
+            BizService.getMyDevice().whenSuccess {
+                myDevicesLiveData.value = it.data
+            }
+        }
+        return myDevicesLiveData
+    }
 
     val userInfo: UserInfoLiveData = UserInfoLiveData.getInstance()
 

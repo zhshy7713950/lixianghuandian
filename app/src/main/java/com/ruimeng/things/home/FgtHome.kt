@@ -185,6 +185,8 @@ class FgtHome : MainTabFragment() {
     private val vm: HomeViewModel by viewModels()
     private val vmMain: MainViewModel by activityViewModels()
     private var showRemind = true
+    private var restTimes = 0 // 换电剩余次数
+    private var isUnlimited = false // 是否无限制次数
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
@@ -533,7 +535,7 @@ class FgtHome : MainTabFragment() {
                 }
 
                 1 -> {
-                    ToastHelper.shortToast(context, "请扫描电柜二维码”")
+                    ToastHelper.shortToast(context, "请扫描电柜二维码")
                     tryToScan()
                 }
 
@@ -941,6 +943,27 @@ class FgtHome : MainTabFragment() {
             onSuccess { res ->
                 paymentCode = 200
                 paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                
+                // 计算剩余次数
+                restTimes = 0 // 默认为0
+                isUnlimited = paymentDetailBean?.paymentInfo?.open_check == 1
+                
+                if (isUnlimited) {
+                    restTimes = 999 // 次数无限制
+                } else {
+                    // 获取实际次数
+                    paymentDetailBean?.paymentInfo?.userOptions?.let { options ->
+                        if (options.isNotEmpty()) {
+                            restTimes = options[0].change_times.safeToInt()
+                        }
+                    }
+                }
+
+                // 如果剩余次数小于4次,弹窗提示
+                if (restTimes < 4) {
+                    showLowTimesDialog()
+                }
+
                 NO_PAY_DEVICEID = paymentDetailBean!!.device_id
                 modelName = paymentDetailBean!!.battery.model_name
                 totalvoltage = paymentDetailBean!!.battery.totalvoltage
@@ -984,6 +1007,19 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    // 添加剩余次数不足提示弹窗
+    private fun showLowTimesDialog() {
+        NormalDialog(activity).apply {
+            style(NormalDialog.STYLE_TWO)
+            btnNum(1)
+            title("提示")
+            content("您的可用换电次数已不足，为避免影响使用，请及时购买次数或续期套餐")
+            btnText("确定")
+            setOnBtnClickL(OnBtnClickL {
+                dismiss()
+            }, null)
+        }.show()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1400,13 +1436,13 @@ class FgtHome : MainTabFragment() {
             }
         }
         tvSwitch.setOnClickListener {
+
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
                 intent.putExtra("type", "换电")
                 intent.putExtra("contract_id", item.device_contract.contract_id)
                 startActivityForResult(intent, 1)
             })
-
         }
         tv_scan_box.setOnClickListener {
             http {
@@ -1448,7 +1484,7 @@ class FgtHome : MainTabFragment() {
 
         }
         tvReback.setOnClickListener {
-            //3.【退还】按钮点击后，如果判断是虚拟电池：“8开头 + 8位”，就走老流程，跳转到“退还”页面（需要上传图片、填写原因那个）
+            //3.【退还】按钮点击后，如果判断是虚拟电池："8开头 + 8位"，就走老流程，跳转到"退还"页面（需要上传图片、填写原因那个）
             //否则，进入扫码页，获取到电柜码，调用新接口returnBattery】
             if (activeStatus == "3") {
                 ToastHelper.shortToast(context, "没有需要退还的电池")
@@ -1469,6 +1505,12 @@ class FgtHome : MainTabFragment() {
                 getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
                 return@setOnClickListener
             }
+            // 检查剩余次数
+            if (restTimes <= 0) {
+                ToastHelper.shortToast(context, "您的可用换电次数已为0，无法取电/换电，请购买次数或续期套餐")
+                return@setOnClickListener
+            }
+
             if (activeStatus == "3") {
                 ToastHelper.shortToast(context, "请先完成解冻操作")
             } else {

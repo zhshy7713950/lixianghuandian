@@ -442,6 +442,28 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llSpreadTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="24dp"
+                    android:background="@drawable/round_txt_bg"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="补齐差价后，立享包月套餐"
+                    android:textColor="#ffb2c1ce"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp">

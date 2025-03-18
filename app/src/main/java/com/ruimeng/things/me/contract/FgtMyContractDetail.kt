@@ -186,7 +186,7 @@ class FgtMyContractDetail : BaseBackFragment() {
                         tv_base_package_time_start.text =
                             TextUtil.getSpannableString(arrayOf("开始时间：", TextUtil.formatTime(bean.begin_time)))
                         tv_change_package.text =
-                            TextUtil.getSpannableString(arrayOf("换电次数：", "次数无限制"))
+                            TextUtil.getSpannableString(arrayOf("换电次数：", changeTimes(bean)))
                         tv_base_package_time_end.text = TextUtil.getSpannableString(arrayOf("结束时间：", TextUtil.formatTime(bean.exp_time)))
                     }
 
@@ -226,6 +226,23 @@ class FgtMyContractDetail : BaseBackFragment() {
                 EasyToast.DEFAULT.show(msg)
             }
         }
+    }
+
+    private fun changeTimes(item: MyContractDetailBean.Data): String{
+        val isUnlimited = item?.open_check == 1
+
+        var restTimes = ""
+        if (isUnlimited) {
+            restTimes = "次数无限制" // 次数无限制
+        } else {
+            // 获取实际次数
+            item?.userOptions?.let { options ->
+                if (options.isNotEmpty()) {
+                    restTimes = options[0].change_times
+                }
+            }
+        }
+        return restTimes
     }
 
 

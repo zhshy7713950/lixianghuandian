@@ -1,40 +1,65 @@
 package com.ruimeng.things.home.adapter
 
+import android.graphics.Color
 import android.text.TextUtils
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.NewGetRentBean
 import com.ruimeng.things.home.bean.PaymentOption
+import com.utils.safeToInt
 
 class ChangePackageAdapter(private val margin: Int = R.dimen.packageLeft_24) :BaseQuickAdapter<PaymentOption,BaseViewHolder>(R.layout.item_rv_rent_long_pay_change) {
     var selectPos = 0
-    override fun convert(p0: BaseViewHolder, item: PaymentOption?) {
+    override fun convert(helper: BaseViewHolder, item: PaymentOption?) {
         if (item != null ){
-            p0.setText(R.id.tv_price,"¥"+item.price)
-                .setText(R.id.tv_name, "次数无限制")
-                .setVisible(R.id.tv_price,!TextUtils.isEmpty(item.id))
-                .setVisible(R.id.no_pay,TextUtils.isEmpty(item.id))
-                .setText(R.id.no_pay, item.name)
-                .setVisible(R.id.tv_name,!TextUtils.isEmpty(item.id))
-            if (p0.layoutPosition == selectPos){
-                p0.setBackgroundRes(R.id.item_bg,R.drawable.rectangle_gray_bg_1)
-                p0.setVisible(R.id.iv_select,true)
-            }else{
-                p0.setBackgroundRes(R.id.item_bg,R.drawable.rectangle_gray_bg)
-                p0.setVisible(R.id.iv_select,false)
+            // 设置套餐名称和价格
+            val packageName = when {
+                item.change_times.safeToInt() >= 999 -> {
+                    "次数无限制"
+                }
+                else -> "${item.change_times}次换电"
             }
-            if (p0.layoutPosition % 2 ==0){
-                val layoutParam = p0.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(margin)
+
+            helper.setText(R.id.tv_name, packageName)
+                .setText(R.id.tv_price, "¥${item.price}")
+                .setVisible(R.id.tv_price, !TextUtils.isEmpty(item.id))
+                .setVisible(R.id.no_pay, TextUtils.isEmpty(item.id))
+                .setText(R.id.no_pay, item.name)
+                .setVisible(R.id.tv_name, !TextUtils.isEmpty(item.id))
+
+            // 设置差价提示
+            if (item.spread > 0) {
+                helper.getView<TextView>(R.id.tv_spread_tip).apply {
+                    visibility = View.VISIBLE
+                    text = "(需补￥${item.spread})"
+                }
+            } else {
+                helper.getView<TextView>(R.id.tv_spread_tip)?.visibility = View.GONE
+            }
+
+            // 设置选中状态
+            if (helper.layoutPosition == selectPos) {
+                helper.setBackgroundRes(R.id.item_bg, R.drawable.rectangle_gray_bg_1)
+                helper.setVisible(R.id.iv_select, true)
+            } else {
+                helper.setBackgroundRes(R.id.item_bg, R.drawable.rectangle_gray_bg)
+                helper.setVisible(R.id.iv_select, false)
+            }
+
+            if (helper.layoutPosition % 2 == 0){
+                val layoutParam = helper.itemView.layoutParams as ViewGroup.MarginLayoutParams
+                val marginInPixels = helper.itemView.context.resources.getDimensionPixelSize(margin)
                 layoutParam.leftMargin = marginInPixels
-                p0.itemView.layoutParams = layoutParam
+                helper.itemView.layoutParams = layoutParam
             }else{
-                val layoutParam = p0.itemView.layoutParams as ViewGroup.MarginLayoutParams
-                val marginInPixels = p0.itemView.context.resources.getDimensionPixelSize(margin)
+                val layoutParam = helper.itemView.layoutParams as ViewGroup.MarginLayoutParams
+                val marginInPixels = helper.itemView.context.resources.getDimensionPixelSize(margin)
                 layoutParam.rightMargin = marginInPixels
-                p0.itemView.layoutParams = layoutParam
+                helper.itemView.layoutParams = layoutParam
             }
         }
     }

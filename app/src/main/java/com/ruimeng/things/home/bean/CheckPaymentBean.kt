@@ -27,7 +27,8 @@ data class CheckPaymentBean(
         val rent_status: String,
         val rent_time: String,
         val user_id: String,
-        val singleChangeInfo:PaymentOption
+        val singleChangeInfo:PaymentOption,
+        val open_check: Int,
     ){
 
     }

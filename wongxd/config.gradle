@@ -129,7 +129,7 @@ dependencies {
     //几行代码快速集成二维码扫描功能
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
 
-    implementation 'com.github.REBOOTERS:Matisse:0.5.7'
+    implementation 'com.github.REBOOTERS:Matisse:v0.5.7'
     implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
 
     implementation 'com.contrarywind:Android-PickerView:4.1.6'

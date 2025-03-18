@@ -23,7 +23,11 @@ allprojects {
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
         mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' }
         maven {
             url 'http://maven.aliyun.com/nexus/content/repositories/releases/'

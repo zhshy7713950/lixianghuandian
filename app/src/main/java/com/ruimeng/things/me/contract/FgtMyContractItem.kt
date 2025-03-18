@@ -229,7 +229,7 @@ class FgtMyContractItem : MainTabFragment() {
                         .setText(R.id.tv_base_package, TextUtil.getSpannableString(arrayOf("租电套餐：",   b.paymentName), textColors))
                         .setVisible(R.id.tv_package_time_end, true)
                         .setText(R.id.tv_package_time_end,TextUtil.getSpannableString(arrayOf("结束时间：",formatTime(b.end_time)), textColors))
-                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电次数：", "次数无限制"), textColors))
+                        .setText(R.id.tv_change_package, TextUtil.getSpannableString(arrayOf("换电次数：", changeTimes(b)), textColors))
                 }else{
                     a.setText(R.id.tv_package_time_start, TextUtil.getSpannableString(arrayOf("开始时间：",formatTime(b.begin_time)), textColors))
                         .setVisible(R.id.tv_package_time_start,false)
@@ -250,6 +250,23 @@ class FgtMyContractItem : MainTabFragment() {
                     startFgt(FgtMyContractDetail.newInstance(b.contract_id, b.device_id.toString()))
                 }
             }
+        }
+
+        private fun changeTimes(item: MyContractListBean.Data): String{
+            val isUnlimited = item?.open_check == 1
+
+            var restTimes = ""
+            if (isUnlimited) {
+                restTimes = "次数无限制" // 次数无限制
+            } else {
+                // 获取实际次数
+                item?.userOptions?.let { options ->
+                    if (options.isNotEmpty()) {
+                        restTimes = options[0].change_times
+                    }
+                }
+            }
+            return restTimes
         }
 
         private fun formatTime(time: String): String {

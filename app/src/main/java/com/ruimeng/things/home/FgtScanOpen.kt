@@ -14,6 +14,7 @@ import com.ruimeng.things.home.bean.CheckPaymentBean
 import com.ruimeng.things.home.bean.PaymentOption
 import com.utils.TextUtil
 import com.utils.ToastHelper
+import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_scan_open.*
 import kotlinx.android.synthetic.main.package_details_layout.*
 import wongxd.base.BaseBackFragment
@@ -68,7 +69,20 @@ class FgtScanOpen : BaseBackFragment() {
             val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}
             var needActiveNew = false // 是否需要启用新套餐
 //            if (!options.isEmpty()){
-            tv_package_remaining_times.text = "次数无限制"
+            val isUnlimited = checkPayBean?.open_check == 1
+
+            var restTimes = ""
+            if (isUnlimited) {
+                restTimes = "次数无限制" // 次数无限制
+            } else {
+                // 获取实际次数
+                checkPayBean?.paymentInfo?.userOptions?.let { options ->
+                    if (options.isNotEmpty()) {
+                        restTimes = options[0].change_times
+                    }
+                }
+            }
+            tv_package_remaining_times.text = restTimes
             ll_other_options.isVisible = false
 //                tv_change_times.text = "剩余${options[0].change_times}次"
 //                if (options[0].change_times == "1"){

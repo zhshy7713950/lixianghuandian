@@ -120,27 +120,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     }
 
     /**
-     * 选中的租借时长 id
-     */
-    private var selectedRentLongId = ""
-
-    /**
-     * 选中的租借时长 带主机价格
-     */
-    private var priceHost = ""
-
-    /**
-     * 选中的租借时长 不带主机价格
-     */
-    private var price = ""
-
-    /**
-     * 经销商代码
-     */
-    private var agnetCode = ""
-
-
-    /**
      * 退押金
      */
     private fun tryReturnDeposit(contractId: String) {
@@ -553,7 +532,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
      */
     private fun getRent() {
         http {
-            url = "/apiv6/payment/upgrade"
+            url = "/apiv6/payment/buycgtimes"
             params["user_id"] = "${InfoViewModel.getDefault().userInfo.value?.id}"
             params["device_id"] = deviceId
             onSuccessWithMsg { res, msg ->
@@ -561,9 +540,10 @@ class FgtPayReplacementTimes : BaseBackFragment() {
                     val result = res.toPOJO<UpdateGetRentBean>().data
                     var payments = ArrayList<PaymentInfo>();
 //                        payments.add(PaymentInfo(pname = "暂不续期", options = result.options))
-                    payments.addAll(result.paymentInfo)
+                    if(result.paymentInfo != null){
+                        payments.addAll(result.paymentInfo)
+                    }
                     baseInfo = result.baseInfo
-                    baseInfo!!.model_name = baseInfo!!.modelName
                     showBaseInfo(result)
                     initViewAfterData(payments)
 
@@ -583,6 +563,20 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private fun showBaseInfo(data: UpdateGetRentBean.Data) {
 
         try {
+            val isUnlimited = baseInfo?.open_check == 1
+
+            var restTimes = ""
+            if (isUnlimited) {
+                restTimes = "次数无限制" // 次数无限制
+            } else {
+                // 获取实际次数
+                data?.userOptions?.let { options ->
+                    if (options.isNotEmpty()) {
+                        restTimes = options[0].change_times
+                    }
+                }
+            }
+            tv_package_remaining_times.text = restTimes
             tv_base_package_name.text = data.baseInfo.paymentName
             try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -633,9 +627,9 @@ class FgtPayReplacementTimes : BaseBackFragment() {
 
             onFail { code, _ ->
                 if (code == 215 || code == 301) {
-                    tv_ticket_pay_rent_money.text = "不使用优惠券"
+                    tv_ticket_pay_rent_money?.text = "不使用优惠券"
                     couponId = 0
-                    computeAmount()
+//                    computeAmount()
                 }
             }
 

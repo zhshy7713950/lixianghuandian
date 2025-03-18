@@ -39,6 +39,7 @@ import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
+import com.utils.safeToInt
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -333,6 +334,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 resetSelectOptionList()
                 computeAmount()
             }
+        llSpreadTip.visibility = View.GONE
         rv_change_package.layoutManager = GridLayoutManager(activity, 2)
         rv_change_package.adapter = changePackageAdapter
         changePackageAdapter.onItemClickListener =
@@ -341,6 +343,17 @@ class FgtPayRentMoney : BaseBackFragment() {
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
+
+                // 处理差价提示
+                if (selectOption?.spread ?: 0f > 0) {
+                    ToastHelper.shortToast(context, "需补差价￥${selectOption?.spread}，可立享包月套餐")
+
+                    // 添加补充说明
+                    llSpreadTip.visibility = View.VISIBLE
+                } else {
+                    llSpreadTip.visibility = View.GONE
+                }
+
                 //                selectOption.let {
                 //                    if (it != null) {
                 //                        tv_option_time.text = showExpireTitle() + TextUtil.formatTime(
@@ -775,6 +788,21 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun showBaseInfo(data: UpdateGetRentBean.Data) {
 
         try {
+            val isUnlimited = baseInfo?.open_check == 1
+
+            var restTimes = ""
+            if (isUnlimited) {
+                restTimes = "次数无限制" // 次数无限制
+            } else {
+                // 获取实际次数
+                data?.userOptions?.let { options ->
+                    if (options.isNotEmpty()) {
+                        restTimes = options[0].change_times
+                    }
+                }
+            }
+            tv_package_remaining_times.text = restTimes
+
             tv_base_package_name.text = data.baseInfo.paymentName
             try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -788,7 +816,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             val userOptions = data.userOptions
             tv_other_option1.text = "${
                 if (userOptions.count { it.option_type == "5" } > 0) "是(${
-                    userOptions.filter { it.option_type == "5" }.first().price
+                    userOptions.first { it.option_type == "5" }.price
                 }元)" else "否"
             }"
             tv_other_option2.text = "${

@@ -23,6 +23,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -634,6 +635,7 @@ class FgtHome : MainTabFragment() {
         }
         cl_change_info.setOnClickListener {
             if (!hasBatteryInfo()) return@setOnClickListener
+            if (isUnlimited) return@setOnClickListener
             FgtMain.instance?.start(
                 FgtPayReplacementTimes.newInstance(
                     CURRENT_DEVICEID
@@ -1317,13 +1319,19 @@ class FgtHome : MainTabFragment() {
                     showRemindDialog()
                 }
 
-                tv_change_package_type.text = "次数无限制"
+                var timesStr = "次数无限制"
+                if (!isUnlimited) {
+                    timesStr = "$restTimes"
+                }
+                tv_change_package_type.text = timesStr
                 tv_change_package_left_times.visibility = GONE
                 tv_change_package_time.text = tv_package_time.text
                 tv_no_package.visibility = GONE
                 tv_btn_change_package.visibility = GONE
                 tv_more.visibility = GONE
                 tv_btn_change_package_update.visibility = GONE
+                btn_buy_change_package.isVisible = !isUnlimited
+
 
 //                val options = ArrayList<PaymentOption>()
 //                options.addAll(paymentDetailBean!!.paymentInfo.userOptions.filter { it.option_type == "2" })

@@ -82,7 +82,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private val changePackageAdapter: ChangePackageAdapter by lazy { ChangePackageAdapter(R.dimen.packageLeft_12) }
     override fun getLayoutRes(): Int = R.layout.fgt_pay_replacement_times
     private var IS_CHECKED_PROTOCOL = false
-    private var newGetRentBean: PaymentInfo? = null
     private var selectOption: PaymentOption? = null
     private var baseInfo: PaymentInfo? = null
     private var sighStatus = false
@@ -189,16 +188,9 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         }
     }
 
-    private fun resetSelectOptionList() {
-        var optionList: ArrayList<PaymentOption> = ArrayList()
-//        val paymentName = if (pageType == PAGE_TYPE_CREATE) "暂不购买" else "暂不续期"
-//        optionList.add(PaymentOption(name = paymentName))
-        newGetRentBean?.let {
-            optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
-        }
+    private fun resetSelectOptionList(optionList: List<PaymentOption>) {
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
-//        tv_option_time.text = showExpireTitle() + "无"
         selectOption = null
         setSelectOption()
     }
@@ -206,26 +198,21 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private fun initAgentCodeView() {
     }
 
-    private fun initViewAfterData(list: List<PaymentInfo>) {
-        baseInfo.let {
+    private fun initViewAfterData(optionList: List<PaymentOption>) {
+        baseInfo?.let {
             initAgentCodeView()
-            tv_battery_num_pay_rent_money.text = it!!.device_id
-            tv_battery_model_pay_rent_money.text = it!!.model_name
-            et_agnet_name_deposit.text = it!!.agentName
+            tv_battery_num_pay_rent_money.text = it.device_id
+            tv_battery_model_pay_rent_money.text = it.modelName
+            et_agnet_name_deposit.text = it.agentName
             btn_return_deposit_pay_rent_money.visibility =
-                if (it!!.btn_return == 1) View.GONE else View.GONE
+                if (it.btn_return == 1) View.GONE else View.GONE
             btn_return_deposit_pay_rent_money.setOnClickListener {
                 tryReturnDeposit(baseInfo!!.contract_id)
             }
             getSignStatus(it.contract_id)
         }
-        if (list.isEmpty()) {
-            ToastHelper.shortToast(context, "没有找到套餐")
-            return
-        }
-        newGetRentBean = list.get(0)
 
-        resetSelectOptionList()
+        resetSelectOptionList(optionList)
 
         rv_change_package.layoutManager = GridLayoutManager(activity, 2)
         rv_change_package.adapter = changePackageAdapter
@@ -545,7 +532,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
                     }
                     baseInfo = result.baseInfo
                     showBaseInfo(result)
-                    initViewAfterData(payments)
+                    initViewAfterData(result.options)
 
                     if (result.coupons.isEmpty()) {
                         tv_ticket_pay_rent_money.text = "暂无可用优惠券"
@@ -739,21 +726,20 @@ class FgtPayReplacementTimes : BaseBackFragment() {
             params["code"] = it
         }
         if (couponId != 0) {
-            params["couponId"] = "${couponId}"
+            params["couponId"] = "$couponId"
         }
 
-        if (newGetRentBean != null) {
-            if (newGetRentBean!!.id != "") {
-                params["payment_id"] = newGetRentBean!!.id
-                params["package_id"] = newGetRentBean!!.package_id
-                params["price"] = "${newGetRentBean!!.price}"
-            }
+//        baseInfo?.let {
+//            params["payment_id"] = it.id
+//            params["package_id"] = newGetRentBean!!.package_id
+//            params["price"] = "${newGetRentBean!!.price}"
+//        }
+
             val options: ArrayList<PaymentOption> = ArrayList();
             if (selectOption != null && selectOption!!.id != "") {
                 options.add(selectOption!!)
             }
             params["options"] = options
-        }
         return params
     }
 

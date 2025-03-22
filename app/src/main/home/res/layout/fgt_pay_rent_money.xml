@@ -252,7 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="24dp"
+
                 >
 
                 <TextView
@@ -262,7 +262,7 @@
                     android:text="可选套餐信息 "
                     android:textColor="#ffffffff"
                     android:textSize="15sp"
-
+                    android:layout_marginTop="24dp"
                     />
 
                 <ImageView

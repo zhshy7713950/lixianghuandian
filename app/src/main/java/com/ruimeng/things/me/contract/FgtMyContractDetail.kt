@@ -238,7 +238,7 @@ class FgtMyContractDetail : BaseBackFragment() {
             // 获取实际次数
             item?.userOptions?.let { options ->
                 if (options.isNotEmpty()) {
-                    restTimes = options[0].change_times
+                    restTimes = "${options[0].change_times}次"
                 }
             }
         }

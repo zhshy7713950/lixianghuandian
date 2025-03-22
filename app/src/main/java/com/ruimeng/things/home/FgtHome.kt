@@ -1321,7 +1321,7 @@ class FgtHome : MainTabFragment() {
 
                 var timesStr = "次数无限制"
                 if (!isUnlimited) {
-                    timesStr = "$restTimes"
+                    timesStr = "${restTimes}次"
                 }
                 tv_change_package_type.text = timesStr
                 tv_change_package_left_times.visibility = GONE

@@ -29,20 +29,20 @@ object TextUtil {
     }
 
     fun formatTime(startTime: String?, endTime: String?): String {
-        try {
+        return try {
             val time =
                 if (startTime == null || endTime == null || startTime == "" || endTime == "") {
                     "无"
                 } else if (startTime.length > 10 && endTime.length > 10) {
-                    startTime.replace("-", "/").substring(0, 10) + "至" + endTime.replace("-", "/")
+                    startTime.replace("-", "/").substring(0, 10) + " - " + endTime.replace("-", "/")
                         .substring(0, 10)
                 } else {
-                    startTime + "至" + endTime
+                    "$startTime - $endTime"
                 }
-            return time
+            time
         } catch (e: Exception) {
             e.printStackTrace()
-            return "暂无"
+            "暂无"
         }
 
 

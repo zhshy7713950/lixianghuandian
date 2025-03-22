@@ -13,7 +13,6 @@ import com.bigkoo.pickerview.view.OptionsPickerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
-import com.net.Server
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
@@ -39,7 +38,6 @@ import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
-import com.utils.safeToInt
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -135,7 +133,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             cl_update_package_title.visibility = View.GONE
         } else {
             ll_package.visibility = View.VISIBLE
-            tv_base_package_update_title.text = "可选续期套餐"
+            tv_base_package_update_title.text = "可选套餐信息"
             ll_change_package_create_title.visibility = View.GONE
             tv_change_package_update_title.visibility = View.VISIBLE
             tv_base_package_create_title.visibility = View.GONE
@@ -288,9 +286,22 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
-//        tv_option_time.text = showExpireTitle() + "无"
-        selectOption = null
+        if(optionList.isNotEmpty()){
+            selectChangePackage(optionList[0])
+        }else{
+            selectChangePackage(null)
+        }
         setSelectOption()
+    }
+
+    private fun selectChangePackage(paymentOption: PaymentOption?){
+        paymentOption?.let {
+            selectOption = paymentOption
+            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
+        }?: run {
+            selectOption = null
+            tv_option_time.text = "${showExpireTitle()}暂无"
+        }
     }
 
     private fun initAgentCodeView() {
@@ -339,7 +350,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         rv_change_package.adapter = changePackageAdapter
         changePackageAdapter.onItemClickListener =
             BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
-                selectOption = changePackageAdapter.data.get(p2)
+                selectChangePackage(changePackageAdapter.data[p2])
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
@@ -585,8 +596,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
     private fun showExpireTitle(): String {
-        val expire = if (pageType == PAGE_TYPE_CREATE) "有效期：" else "有效期："
-        return expire
+        return if (pageType == PAGE_TYPE_CREATE) "有效期：" else "有效期："
     }
 
     @Subscribe
@@ -797,7 +807,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                 // 获取实际次数
                 data?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = options[0].change_times
+                        restTimes = "${options[0].change_times}次"
                     }
                 }
             }
@@ -805,9 +815,9 @@ class FgtPayRentMoney : BaseBackFragment() {
 
             tv_base_package_name.text = data.baseInfo.paymentName
             try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val sdf = SimpleDateFormat("yyyy/MM/dd")
                 tv_base_package_time.text =
-                    sdf.format(Date(data.baseInfo.begin_time.toLong() * 1000)) + "至" + sdf.format(
+                    sdf.format(Date(data.baseInfo.begin_time.toLong() * 1000)) + " - " + sdf.format(
                         Date(data.baseInfo.exp_time.toLong() * 1000)
                     )
             } catch (e: Exception) {
@@ -1005,7 +1015,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             params["code"] = it
         }
         if (couponId != 0) {
-            params["couponId"] = "${couponId}"
+            params["couponId"] = "$couponId"
         }
 
         if (newGetRentBean != null) {

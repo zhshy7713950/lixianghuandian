@@ -252,6 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
                 >
 
                 <TextView
@@ -388,7 +389,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="12dp"
-                android:text="选择换电测试"
+                android:text="选择换电次数"
                 android:textColor="#29EBB6"
                 android:textSize="14sp" />
 
@@ -401,11 +402,12 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_marginLeft="24dp"
                     android:background="@drawable/round_txt_bg"
                     />
@@ -416,18 +418,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:text="有效期：暂无"
-                    android:textColor="#ffb2c1ce"
+                    android:textColor="#ffffffff"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_marginTop="5dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_marginLeft="24dp"
                     android:background="@drawable/round_txt_bg"
                     />
@@ -437,7 +440,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:text="本套餐起租后，不支持退租金"
-                    android:textColor="#ffb2c1ce"
+                    android:textColor="#ffffffff"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -445,11 +448,12 @@
                 android:id="@+id/llSpreadTip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_marginTop="5dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_marginLeft="24dp"
                     android:background="@drawable/round_txt_bg"
                     />
@@ -459,7 +463,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:text="补齐差价后，立享包月套餐"
-                    android:textColor="#ffb2c1ce"
+                    android:textColor="#ffffffff"
                     android:textSize="12sp" />
             </LinearLayout>
 

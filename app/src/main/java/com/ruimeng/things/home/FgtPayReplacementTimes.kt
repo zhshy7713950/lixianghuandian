@@ -35,6 +35,7 @@ import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
+import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_option_time
 import kotlinx.android.synthetic.main.fgt_pay_replacement_times.*
 import kotlinx.android.synthetic.main.package_details_layout.*
 import org.greenrobot.eventbus.EventBus
@@ -191,8 +192,21 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private fun resetSelectOptionList(optionList: List<PaymentOption>) {
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
-        selectOption = null
-        setSelectOption()
+        if(!optionList.isNullOrEmpty()){
+            selectChangePackage(optionList[0])
+        }else{
+            selectChangePackage(null)
+        }
+    }
+
+    private fun selectChangePackage(paymentOption: PaymentOption?){
+        paymentOption?.let {
+            selectOption = paymentOption
+            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
+        }?: run {
+            selectOption = null
+            tv_option_time.text = "${showExpireTitle()}暂无"
+        }
     }
 
     private fun initAgentCodeView() {
@@ -218,12 +232,12 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         rv_change_package.adapter = changePackageAdapter
         changePackageAdapter.onItemClickListener =
             BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
-                selectOption = changePackageAdapter.data.get(p2)
+                selectChangePackage(changePackageAdapter.data[p2])
                 changePackageAdapter.selectPos = p2
                 changePackageAdapter.notifyDataSetChanged()
                 computeAmount()
             }
-        setSelectOption()
+//        setSelectOption()
 
         btn_pay_now_pay_rent_money.setOnClickListener { view ->
             if (!IS_CHECKED_PROTOCOL) {
@@ -398,9 +412,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         }
     }
 
-    private fun setSelectOption() {
-
-    }
 
 
     private fun showExpireTitle(): String {
@@ -538,8 +549,8 @@ class FgtPayReplacementTimes : BaseBackFragment() {
                         tv_ticket_pay_rent_money.text = "暂无可用优惠券"
                     } else {
                         couponList.addAll(result.coupons)
-                        couponId = couponList.get(0).id
-                        tv_ticket_pay_rent_money.text = couponList.get(0).coupon_label
+                        couponId = couponList[0].id
+                        tv_ticket_pay_rent_money.text = couponList[0].coupon_label
                     }
                     computeAmount()
                 }
@@ -559,16 +570,16 @@ class FgtPayReplacementTimes : BaseBackFragment() {
                 // 获取实际次数
                 data?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = options[0].change_times
+                        restTimes = "${options[0].change_times}次"
                     }
                 }
             }
             tv_package_remaining_times.text = restTimes
             tv_base_package_name.text = data.baseInfo.paymentName
             try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val sdf = SimpleDateFormat("yyyy/MM/dd")
                 tv_base_package_time.text =
-                    sdf.format(Date(data.baseInfo.begin_time.toLong() * 1000)) + "至" + sdf.format(
+                    sdf.format(Date(data.baseInfo.begin_time.toLong() * 1000)) + " - " + sdf.format(
                         Date(data.baseInfo.exp_time.toLong() * 1000)
                     )
             } catch (e: Exception) {
@@ -602,6 +613,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         http {
             url = "/apiv6/payment/computeamount"
             jsonParam = getSubmitParam()
+            Log.d("FgtPayRepl",jsonParam.toString())
             onSuccessWithMsg { res, msg ->
                 val result = res.toPOJO<CountAmountBean>().data
                 tv_total_price.text =
@@ -616,7 +628,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
                 if (code == 215 || code == 301) {
                     tv_ticket_pay_rent_money?.text = "不使用优惠券"
                     couponId = 0
-//                    computeAmount()
+                    computeAmount()
                 }
             }
 

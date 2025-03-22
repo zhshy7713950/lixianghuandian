@@ -474,6 +474,7 @@
 					android:paddingLeft="10dp">
 
 					<TextView
+						android:id="@+id/tv_rant_name"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="12dp"
@@ -575,14 +576,14 @@
 						android:id="@+id/btn_continue_rant"
 						android:layout_width="50dp"
 						android:layout_height="22dp"
-						android:layout_marginTop="12dp"
 						android:layout_marginRight="10dp"
 						android:gravity="center"
 						android:text="续期"
 						android:textColor="#313944"
 						android:textSize="11sp"
 						app:layout_constraintRight_toRightOf="parent"
-						app:layout_constraintTop_toTopOf="parent"
+						app:layout_constraintTop_toTopOf="@+id/tv_rant_name"
+						app:layout_constraintBottom_toBottomOf="@+id/tv_rant_name"
 						app:rv_backgroundColor="#29EBB6"
 						app:rv_cornerRadius="9dp"
 						app:rv_strokeColor="#29EBB6"
@@ -598,6 +599,7 @@
 					>
 
 					<TextView
+						android:id="@+id/tv_change_name"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="12dp"
@@ -607,11 +609,11 @@
 						android:layout_marginLeft="10dp"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toTopOf="parent" />
-					<androidx.constraintlayout.widget.ConstraintLayout
-						android:id="@+id/cl_change_package"
-						android:layout_width="match_parent"
-						android:layout_marginLeft="10dp"
-						android:layout_height="match_parent">
+<!--					<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--						android:id="@+id/cl_change_package"-->
+<!--						android:layout_width="match_parent"-->
+<!--						android:layout_marginLeft="10dp"-->
+<!--						android:layout_height="match_parent">-->
 						<TextView
 							android:id="@+id/tv_change_package_title"
 							android:layout_width="wrap_content"
@@ -621,6 +623,7 @@
 							android:textColor="#ff9eaab3"
 							android:drawablePadding="6dp"
 							android:textSize="11sp"
+							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent" />
 
@@ -631,6 +634,7 @@
 							android:layout_marginTop="62dp"
 							android:textColor="#ffffffff"
 							android:textSize="12sp"
+							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent"
 							tools:text="单次付费" />
@@ -655,6 +659,7 @@
 							android:text="有效期"
 							android:textColor="#ff9eaab3"
 							android:textSize="11sp"
+							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent" />
 
@@ -665,6 +670,7 @@
 							android:layout_marginTop="112dp"
 							android:textColor="#ffffffff"
 							android:textSize="10sp"
+							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"
 							app:layout_constraintTop_toTopOf="parent"
 							tools:text="2023/06/01至2023/07/01" />
@@ -673,19 +679,19 @@
 							android:id="@+id/btn_buy_change_package"
 							android:layout_width="50dp"
 							android:layout_height="22dp"
-							android:layout_marginTop="12dp"
 							android:layout_marginRight="10dp"
 							android:gravity="center"
 							android:text="购买"
 							android:textColor="#313944"
 							android:textSize="11sp"
 							app:layout_constraintRight_toRightOf="parent"
-							app:layout_constraintTop_toTopOf="parent"
+							app:layout_constraintTop_toTopOf="@+id/tv_change_name"
+							app:layout_constraintBottom_toBottomOf="@+id/tv_change_name"
 							app:rv_backgroundColor="#29EBB6"
 							app:rv_cornerRadius="9dp"
 							app:rv_strokeColor="#29EBB6"
 							app:rv_strokeWidth="0.5dp" />
-					</androidx.constraintlayout.widget.ConstraintLayout>
+<!--					</androidx.constraintlayout.widget.ConstraintLayout>-->
 					<TextView
 						android:id="@+id/tv_no_package"
 						android:layout_width="wrap_content"

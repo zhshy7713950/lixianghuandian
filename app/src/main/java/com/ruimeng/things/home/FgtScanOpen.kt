@@ -65,7 +65,7 @@ class FgtScanOpen : BaseBackFragment() {
             tv_battery_num_pay_rent_money.text = checkPayBean!!.device_id
             tv_battery_model_pay_rent_money.text = checkPayBean!!.modelName
             tv_base_package_name.text = checkPayBean!!.paymentInfo.pname
-            tv_base_package_time.text = "${getTimeShow(checkPayBean!!.begin_time)} - ${getTimeShow(checkPayBean!!.exp_time)}"
+            tv_base_package_time.text = TextUtil.formatTime(checkPayBean!!.begin_time,checkPayBean!!.exp_time)
             val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}
             var needActiveNew = false // 是否需要启用新套餐
 //            if (!options.isEmpty()){
@@ -78,39 +78,13 @@ class FgtScanOpen : BaseBackFragment() {
                 // 获取实际次数
                 checkPayBean?.paymentInfo?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = options[0].change_times
+                        restTimes = "${options[0].change_times}次"
                     }
                 }
             }
             tv_package_remaining_times.text = restTimes
             ll_other_options.isVisible = false
-//                tv_change_times.text = "剩余${options[0].change_times}次"
-//                if (options[0].change_times == "1"){
-//                    tv_update_package.text = "立即续期"
-//                    tv_update_package.visibility = View.VISIBLE
-//                    needActiveNew = true
-//                }else{
-//                    tv_update_package.visibility = View.GONE
-//                }
-//            }else{
-//                if (checkPayBean!!.singleChangeInfo != null){
-//                    tv_change_package_name.text = "单次换电"
-//                    tv_change_package_start_time.text = TextUtil.getSpannableString(arrayOf("开始时间：",getTimeShow(checkPayBean!!.singleChangeInfo.start_time)),textColors)
-//                    tv_change_package_end_time.text = TextUtil.getSpannableString(arrayOf("结束时间：",getTimeShow(checkPayBean!!.singleChangeInfo.end_time)),textColors)
-//                    tv_change_times.text = "剩余1次"
-//                    tv_update_package.text = "升级套餐"
-//                    tv_update_package.visibility = View.VISIBLE
-//                    needActiveNew = true
-//                }
-//            }
-            if (needActiveNew){
-                needActiveNew = checkPayBean!!.paymentInfo.userOptions.count{ it.option_type == "2" && it.active_status != "1"} > 0
-            }
 
-
-            tv_update_package.setOnClickListener {
-                FgtMain.instance?.start(FgtPayRentMoney.newInstance(FgtHome.CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE))
-            }
             tv_change_battery.setOnClickListener {
                 http {
                     url = "/apiv6/cabinet/openDoor"

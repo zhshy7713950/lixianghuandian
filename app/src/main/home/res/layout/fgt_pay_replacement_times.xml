@@ -220,11 +220,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                >
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_marginLeft="12dp"
                     android:background="@drawable/round_txt_bg"
                     />
@@ -235,18 +237,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:text="有效期：暂无"
-                    android:textColor="#ffb2c1ce"
+                    android:textColor="#ffffff"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:layout_marginLeft="12dp"
                     android:background="@drawable/round_txt_bg"
                     />
@@ -255,8 +258,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:text="本套餐起租后，不支持退租金"
-                    android:textColor="#ffb2c1ce"
+                    android:text="不支持退还购买费用"
+                    android:textColor="#ffffff"
                     android:textSize="12sp" />
             </LinearLayout>
 

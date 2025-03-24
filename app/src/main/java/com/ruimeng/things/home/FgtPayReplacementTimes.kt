@@ -202,11 +202,12 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private fun selectChangePackage(paymentOption: PaymentOption?){
         paymentOption?.let {
             selectOption = paymentOption
-            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
+//            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
         }?: run {
             selectOption = null
-            tv_option_time.text = "${showExpireTitle()}暂无"
+//            tv_option_time.text = "${showExpireTitle()}暂无"
         }
+        tv_option_time.text = tv_base_package_time.text
     }
 
     private fun initAgentCodeView() {

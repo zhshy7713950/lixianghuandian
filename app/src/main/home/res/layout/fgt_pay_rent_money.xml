@@ -295,7 +295,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="24dp"
                     android:text="可选套餐信息"
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -353,7 +353,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:text="本套餐起租后，不支持退租金"
+                    android:text="套餐起租后，不支持退租金"
                     android:textColor="#ffb2c1ce"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -439,7 +439,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
-                    android:text="本套餐起租后，不支持退租金"
+                    android:text="套餐起租后，不支持退租金"
                     android:textColor="#ffffffff"
                     android:textSize="12sp" />
             </LinearLayout>

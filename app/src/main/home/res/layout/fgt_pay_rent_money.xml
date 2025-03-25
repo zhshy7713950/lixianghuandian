@@ -486,6 +486,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="8dp"
+                    android:visibility="gone"
                     android:src="@mipmap/ic_rant_long_pay_rent_money" />
             </LinearLayout>
 

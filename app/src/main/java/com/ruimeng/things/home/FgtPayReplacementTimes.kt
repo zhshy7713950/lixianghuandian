@@ -34,7 +34,9 @@ import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
+import com.utils.fixHeight
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
+import kotlinx.android.synthetic.main.fgt_pay_rent_money.rv_change_package
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.tv_option_time
 import kotlinx.android.synthetic.main.fgt_pay_replacement_times.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -85,7 +87,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private var IS_CHECKED_PROTOCOL = false
     private var selectOption: PaymentOption? = null
     private var baseInfo: PaymentInfo? = null
-    private var sighStatus = false
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
@@ -192,6 +193,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
     private fun resetSelectOptionList(optionList: List<PaymentOption>) {
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
+        rv_change_package.fixHeight(optionList.size)
         if(!optionList.isNullOrEmpty()){
             selectChangePackage(optionList[0])
         }else{
@@ -207,7 +209,7 @@ class FgtPayReplacementTimes : BaseBackFragment() {
             selectOption = null
 //            tv_option_time.text = "${showExpireTitle()}暂无"
         }
-        tv_option_time.text = tv_base_package_time.text
+        tv_option_time.text = "${showExpireTitle()}${tv_base_package_time.text}"
     }
 
     private fun initAgentCodeView() {
@@ -224,7 +226,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
             btn_return_deposit_pay_rent_money.setOnClickListener {
                 tryReturnDeposit(baseInfo!!.contract_id)
             }
-            getSignStatus(it.contract_id)
         }
 
         resetSelectOptionList(optionList)
@@ -270,24 +271,17 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
 //            val dlg = DialogFragmentRentProtocol()
 //            dlg.show(childFragmentManager, "protocol")
-            if (sighStatus) {
-                baseInfo.let {
-                    if (it != null) {
-                        start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
-                    }
-                }
-            } else {
-                start(
-                    FgtContractSignStep1.newInstance(
-                        baseInfo!!.contract_id,
-                        "",
-                        0,
-                        1,
-                        deviceId,
-                        baseInfo!!.model_name
-                    )
+            start(
+                FgtContractSignStep1.newInstance(
+                    baseInfo!!.contract_id,
+                    "",
+                    0,
+                    1,
+                    deviceId,
+                    baseInfo!!.model_name
                 )
-            }
+            )
+
 
         }
 
@@ -419,20 +413,6 @@ class FgtPayReplacementTimes : BaseBackFragment() {
         return "有效期："
     }
 
-    @Subscribe
-    fun checkContract(event: ContractCheckEvent) {
-        IS_CHECKED_PROTOCOL = true
-        sighStatus = true
-        iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
-        tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-            baseInfo.let {
-                if (it != null) {
-                    start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
-                }
-            }
-
-        }
-    }
 
     private var dlgPayProgress: SweetAlertDialog? = null
 
@@ -754,24 +734,5 @@ class FgtPayReplacementTimes : BaseBackFragment() {
             }
             params["options"] = options
         return params
-    }
-
-    private fun getSignStatus(contractId: String) {
-        http {
-            url = PathV3.SIGN_CONTRACT
-            params["contract_id"] = contractId
-            params["appType"] = "lxhd"
-            IS_SHOW_MSG = false
-            onSuccess {
-                sighStatus = false
-
-            }
-            onFail { i, s ->
-                if (i == 202) {
-                    sighStatus = true
-
-                }
-            }
-        }
     }
 }

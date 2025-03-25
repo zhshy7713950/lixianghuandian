@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,6 +40,7 @@ import com.ruimeng.things.me.credit.FgtCreditSystem
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
+import com.utils.fixHeight
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -52,6 +55,7 @@ import wongxd.common.getSweetDialog
 import wongxd.common.toPOJO
 import wongxd.http
 import java.lang.Exception
+import java.lang.Math.ceil
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -286,6 +290,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         changePackageAdapter.selectPos = 0
         changePackageAdapter.setNewData(optionList)
+        rv_change_package.fixHeight(optionList.size)
         if(optionList.isNotEmpty()){
             selectChangePackage(optionList[0])
         }else{
@@ -297,10 +302,10 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun selectChangePackage(paymentOption: PaymentOption?){
         paymentOption?.let {
             selectOption = paymentOption
-            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
+//            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
         }?: run {
             selectOption = null
-            tv_option_time.text = "${showExpireTitle()}暂无"
+//            tv_option_time.text = "${showExpireTitle()}暂无"
         }
     }
 
@@ -427,25 +432,37 @@ class FgtPayRentMoney : BaseBackFragment() {
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
 //            val dlg = DialogFragmentRentProtocol()
 //            dlg.show(childFragmentManager, "protocol")
-            if (sighStatus) {
-                baseInfo.let {
-                    if (it != null) {
-                        start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
+            if (pageType == PAGE_TYPE_CREATE) {
+                if (sighStatus) {
+                    baseInfo.let {
+                        if (it != null) {
+                            start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
+                        }
                     }
+                } else {
+                    start(
+                        FgtContractSignStep1.newInstance(
+                            baseInfo!!.contract_id,
+                            "",
+                            0,
+                            if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                            deviceId,
+                            baseInfo!!.model_name
+                        )
+                    )
                 }
-            } else {
+            }else{
                 start(
                     FgtContractSignStep1.newInstance(
                         baseInfo!!.contract_id,
                         "",
                         0,
-                        if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                        1,
                         deviceId,
                         baseInfo!!.model_name
                     )
                 )
             }
-
         }
 
 

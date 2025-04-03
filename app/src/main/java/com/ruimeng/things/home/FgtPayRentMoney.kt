@@ -41,6 +41,7 @@ import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.utils.fixHeight
+import com.utils.safeToInt
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -824,7 +825,12 @@ class FgtPayRentMoney : BaseBackFragment() {
                 // 获取实际次数
                 data?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = "${options[0].change_times}次"
+                        val times = options.first().change_times.safeToInt()
+                        restTimes = if (times >= 999) {
+                            "次数无限制"
+                        }else {
+                            "${times}次"
+                        }
                     }
                 }
             }

@@ -78,7 +78,12 @@ class FgtScanOpen : BaseBackFragment() {
                 // 获取实际次数
                 checkPayBean?.paymentInfo?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = "${options[0].change_times}次"
+                        val times = options.first().change_times.safeToInt()
+                        restTimes = if (times >= 999) {
+                            "次数无限制"
+                        }else {
+                            "${times}次"
+                        }
                     }
                 }
             }

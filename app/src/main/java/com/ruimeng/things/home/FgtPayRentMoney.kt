@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.fragment.app.viewModels
@@ -29,6 +30,7 @@ import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.NewGetRentBean
 import com.ruimeng.things.home.bean.PaymentInfo
 import com.ruimeng.things.home.bean.PaymentOption
+import com.ruimeng.things.home.bean.PeriodAmountBean
 import com.ruimeng.things.home.bean.UpdateGetRentBean
 import com.ruimeng.things.home.view.CompanyDescPopup
 import com.ruimeng.things.home.view.SelectCouponPopup
@@ -41,6 +43,7 @@ import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.utils.fixHeight
+import com.utils.safeToInt
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_rent_money.*
 import kotlinx.android.synthetic.main.package_details_layout.*
@@ -273,7 +276,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             when (id) {
                 R.id.rbWx -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
                 R.id.rbAlipay -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
-                R.id.rbOffline -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.XX
+//                R.id.rbOffline -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.XX
             }
         }
     }
@@ -283,6 +286,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 //        val paymentName = if (pageType == PAGE_TYPE_CREATE) "暂不购买" else "暂不续期"
 //        optionList.add(PaymentOption(name = paymentName))
         newGetRentBean?.let {
+            showHideByStages(it)
             optionList.addAll(newGetRentBean!!.options.filter { it.option_type == "2" })
             tv_rant_long_pay_time.text =
                 showExpireTitle() + TextUtil.formatTime(it.show_start_time, it.show_end_time)
@@ -302,10 +306,8 @@ class FgtPayRentMoney : BaseBackFragment() {
     private fun selectChangePackage(paymentOption: PaymentOption?){
         paymentOption?.let {
             selectOption = paymentOption
-//            tv_option_time.text = "${showExpireTitle()}${TextUtil.formatTime(it.show_start_time, it.show_end_time)}"
         }?: run {
             selectOption = null
-//            tv_option_time.text = "${showExpireTitle()}暂无"
         }
     }
 
@@ -315,6 +317,12 @@ class FgtPayRentMoney : BaseBackFragment() {
         } else {
             vm.getAgentByCode(cabinetCode!!)
         }
+    }
+
+    private fun showHideByStages(paymentInfo: PaymentInfo){
+        val isShowByStages = isByStages(paymentInfo)
+        rb_by_stages.isVisible = isShowByStages
+        ll_by_stages.isVisible = isShowByStages
     }
 
     private fun initViewAfterData(list: List<PaymentInfo>) {
@@ -344,7 +352,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
         basePackageAdapter.onItemClickListener =
             BaseQuickAdapter.OnItemClickListener { p0, p1, p2 ->
-                newGetRentBean = list.get(p2)
+                newGetRentBean = list[p2]
                 basePackageAdapter.selectPos = p2
                 basePackageAdapter.notifyDataSetChanged()
                 resetSelectOptionList()
@@ -895,6 +903,35 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
 
+    private fun isByStages(paymentInfo: PaymentInfo) = paymentInfo.time_type == "2" && paymentInfo.time_num.safeToInt() >= 3
+
+    private fun getPeriodAmount(totalPrice: Double,submit: Boolean){
+        newGetRentBean?.let{paymentInfo ->
+            if(isByStages(paymentInfo)){
+                http {
+                    url = "/apiv6/llgpay/getperiodamount"
+                    params["amount"] = "$totalPrice"
+                    onSuccessWithMsg { res, msg ->
+                        val result = res.toPOJO<PeriodAmountBean>().data
+                        if(!result.isNullOrEmpty()){
+                            tv_by_stages_title.text = "￥${DecimalFormat("#.##").format(result.first().periodAmount)} x ${result.first().period}期"
+                            if(submit && !baseInfo?.contract_id.isNullOrEmpty() && result.first().period >= 3){
+                                start(
+                                    FgtRentByStagesPayment.newInstance(
+                                        baseInfo!!.contract_id,
+                                        totalPrice,
+                                        result.first().periodAmount,
+                                        result.first().period)
+                                )
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun computeAmount(submit: Boolean = false) {
         http {
             url = "/apiv6/payment/computeamount"
@@ -905,7 +942,14 @@ class FgtPayRentMoney : BaseBackFragment() {
                     TextUtil.getMoneyText("${DecimalFormat("#.##").format(result.totalPrice)}")
                 tv_coupon_price.text = "已优惠¥${DecimalFormat("#.##").format(result.couponAmount)}"
                 if (submit) {
-                    countPay()
+                    if(rgPayRent.checkedRadioButtonId == R.id.rb_by_stages){
+                        getPeriodAmount(result.totalPrice,true)
+                    }else{
+                        countPay()
+                        getPeriodAmount(result.totalPrice,false)
+                    }
+                }else{
+                    getPeriodAmount(result.totalPrice,false)
                 }
             }
 

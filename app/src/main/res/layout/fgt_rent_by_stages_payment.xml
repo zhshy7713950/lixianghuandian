@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_topbar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/rectangle_gray_bg">
+
+        <ImageView
+            android:id="@+id/iv_battery_pay_rent_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/battery_five"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="136dp"
+            android:layout_marginTop="16dp"
+            android:text="支付金额"
+            android:textColor="#ffb2c1ce"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="136dp"
+            android:layout_marginTop="37dp"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="908.22" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="41dp"
+            android:text="分享信息(0利息)"
+            android:textColor="#ffb2c1ce"
+            android:textSize="12sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_by_stages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv1"
+            tools:text="￥233.33 x 3期" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvAgreementTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="分期协议" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+
+    </androidx.cardview.widget.CardView>
+
+
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginHorizontal="42dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_gradient_color_btn"
+        android:text="我已阅读协议并确认"
+        android:textSize="15sp" />
+
+</LinearLayout> 

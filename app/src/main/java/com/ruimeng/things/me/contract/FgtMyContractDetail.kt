@@ -23,6 +23,7 @@ import com.ruimeng.things.me.contract.bean.MyContractDetailBean
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManager
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManagerListener
 import com.utils.TextUtil
+import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_my_contract_detail.*
 import org.jetbrains.anko.collections.forEachWithIndex
 import org.jetbrains.anko.doAsync
@@ -238,7 +239,12 @@ class FgtMyContractDetail : BaseBackFragment() {
             // 获取实际次数
             item?.userOptions?.let { options ->
                 if (options.isNotEmpty()) {
-                    restTimes = "${options[0].change_times}次"
+                    val times = options.first().change_times.safeToInt()
+                    restTimes = if (times >= 999) {
+                        "次数无限制"
+                    }else {
+                        "${times}次"
+                    }
                 }
             }
         }

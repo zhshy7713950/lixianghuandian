@@ -18,6 +18,7 @@ import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
 import com.utils.TextUtil
+import com.utils.safeToInt
 import kotlinx.android.synthetic.main.fgt_my_contract_item.*
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
@@ -262,7 +263,12 @@ class FgtMyContractItem : MainTabFragment() {
                 // 获取实际次数
                 item?.userOptions?.let { options ->
                     if (options.isNotEmpty()) {
-                        restTimes = "${options[0].change_times}次"
+                        val times = options.first().change_times.safeToInt()
+                        restTimes = if (times >= 999) {
+                            "次数无限制"
+                        }else {
+                            "${times}次"
+                        }
                     }
                 }
             }

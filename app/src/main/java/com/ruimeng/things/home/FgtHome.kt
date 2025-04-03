@@ -960,7 +960,9 @@ class FgtHome : MainTabFragment() {
                         }
                     }
                 }
-
+                if(restTimes >= 999){
+                    isUnlimited = true
+                }
                 // 如果剩余次数小于4次,弹窗提示
                 if (restTimes < 4) {
                     showLowTimesDialog()

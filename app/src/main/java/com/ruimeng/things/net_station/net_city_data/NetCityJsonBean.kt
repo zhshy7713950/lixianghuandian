@@ -24,3 +24,11 @@ data class NetCityJsonBean(
         }
     }
 }
+
+
+data class AreaBean(
+    var key: String = "",
+    var value: String = "", // 区名字
+): IPickerViewData {
+    override fun getPickerViewText(): String = value
+}

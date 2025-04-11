@@ -13,16 +13,42 @@ import com.entity.local.GetMapKeyLocal
 import com.entity.remote.AdInfoRemote
 import com.net.call.BizService
 import com.net.whenSuccess
+import com.ruimeng.things.home.bean.BannerData
+import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.net_station.LocationUtil
 import com.utils.MapUtils
 import com.utils.unsafeLazy
 import kotlinx.coroutines.launch
+import wongxd.common.toPOJO
+import wongxd.http
 import wongxd.utils.utilcode.util.SPUtils
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel : BaseViewModel() {
+
+    private val _bannerData = MutableLiveData<List<BannerInfo>>()
+    val bannerData: LiveData<List<BannerInfo>> get() = _bannerData
+
+    fun fetchBannerData(context: Context,userId: String) {
+        viewModelScope.launch {
+            val mapLocation = requestLocation(context)
+            http {
+                url = "/apiv6/advertisementinfo/getbanner"
+                params["userId"] = userId
+                params["position"] = "1" // 首页
+                params["lat"] = mapLocation.latitude.toString()
+                params["lng"] = mapLocation.longitude.toString()
+
+                onSuccess { res ->
+                    val bannerList = res.toPOJO<BannerData>().data
+                    _bannerData.value = bannerList
+                }
+            }
+        }
+    }
+
     fun getMapKey() {
         val localMapKey = SPUtils.getInstance().getString("map_key")
         MapUtils.initializer(localMapKey)
@@ -44,19 +70,16 @@ class MainViewModel : BaseViewModel() {
     fun getAdInfo(context: Context, userId: String) {
         viewModelScope.launch {
             val mapLocation = requestLocation(context)
-            if (BuildConfig.DEBUG) {//debug mock
-                BizService.getAdInfo(GetAdInfoLocal(userId, "30.57", "104.07"))
-            } else {
-                BizService.getAdInfo(
-                    GetAdInfoLocal(
-                        userId,
-                        mapLocation.latitude.toString(),
-                        mapLocation.longitude.toString()
-                    )
+            BizService.getAdInfo(
+                GetAdInfoLocal(
+                    userId,
+                    mapLocation.latitude.toString(),
+                    mapLocation.longitude.toString()
                 )
-            }.whenSuccess {
-                _adInfoLiveData.value = it.data
-            }
+            )
+                .whenSuccess {
+                    _adInfoLiveData.value = it.data
+                }
         }
     }
 

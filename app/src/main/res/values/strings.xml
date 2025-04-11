@@ -5,4 +5,6 @@
     <string name="wx_appid">wxa489c8092492e68d</string>
 <!--    <string name="home_url">http://xlltest.scxll.cn/</string>-->
     <string name="home_url">http://xianglilai.scxll.cn/</string>
+    
+    <string name="extended_gift_tip">(租期≥3期可享免息&amp;好礼，点击查看)</string>
 </resources>

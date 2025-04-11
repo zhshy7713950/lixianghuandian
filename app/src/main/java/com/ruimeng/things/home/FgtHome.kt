@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
@@ -77,6 +78,7 @@ import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.SystemUtils
 import wongxd.utils.utilcode.util.ScreenUtils
+import com.bumptech.glide.Glide
 
 
 /**
@@ -188,6 +190,7 @@ class FgtHome : MainTabFragment() {
     private var showRemind = true
     private var restTimes = 0 // 换电剩余次数
     private var isUnlimited = false // 是否无限制次数
+    private var hasShowReceiptDialog = false
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
@@ -242,7 +245,6 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
         initTabLayout()
-        initBanner()
     }
 
     private fun refreshHomeData(){
@@ -256,15 +258,17 @@ class FgtHome : MainTabFragment() {
         }
     }
 
-    private fun initBanner() {
-        BannerHelper.initCommonBanner(banner,this@FgtHome)
-    }
-
     private fun initEvent() {
         lifecycleScope.launchWhenCreated {
             launch {
+                // 观察 banner 数据
+                vmMain.bannerData.observe(viewLifecycleOwner) { bannerList ->
+                    setupBanner(bannerList)
+                }
+            }
+            launch {
                 vmMain.adInfoLiveData.observe(this@FgtHome, Observer {
-                    AdPopHelper.showAdPop(requireActivity(), it, rootView)
+                    AdPopHelper.showAdPop(this@FgtHome, it, rootView)
                 })
             }
             launch {
@@ -306,6 +310,7 @@ class FgtHome : MainTabFragment() {
             contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
             allGranted = {
                 vmMain.getAdInfo(requireActivity(), userId)
+                vmMain.fetchBannerData(requireActivity(),userId)
             }
         )
     }
@@ -636,6 +641,10 @@ class FgtHome : MainTabFragment() {
         cl_change_info.setOnClickListener {
             if (!hasBatteryInfo()) return@setOnClickListener
             if (isUnlimited) return@setOnClickListener
+            if (activeStatus == "3") {
+                ToastHelper.shortToast(context, "请先完成解冻操作")
+                return@setOnClickListener
+            }
             FgtMain.instance?.start(
                 FgtPayReplacementTimes.newInstance(
                     CURRENT_DEVICEID
@@ -945,7 +954,13 @@ class FgtHome : MainTabFragment() {
             onSuccess { res ->
                 paymentCode = 200
                 paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
-                
+
+                // 检查 receiptInfo
+                val receiptInfo = paymentDetailBean?.receiptInfo
+                if (!receiptInfo.isNullOrEmpty() && shouldShowReceiptDialog()) {
+                    showReceiptDialog(receiptInfo)
+                }
+
                 // 计算剩余次数
                 restTimes = 0 // 默认为0
                 isUnlimited = paymentDetailBean?.paymentInfo?.open_check == 1
@@ -1009,6 +1024,30 @@ class FgtHome : MainTabFragment() {
                 srl_home?.finishRefresh()
             }
         }
+    }
+
+    // 判断是否应该显示收货地址对话框
+    private fun shouldShowReceiptDialog(): Boolean {
+        return !hasShowReceiptDialog
+    }
+
+    // 显示收货地址对话框
+    private fun showReceiptDialog(receiptInfo: List<ReceiptInfo>) {
+        if(hasShowReceiptDialog) return
+        NormalDialog(activity).apply {
+            style(NormalDialog.STYLE_TWO)
+            btnNum(2)
+            title("填写收货地址")
+            content("您有未填写的收货地址信息，请及时完善")
+            btnText("稍后补充", "立即完善")
+            setOnBtnClickL(OnBtnClickL {
+                dismiss()
+            }, OnBtnClickL {
+                dismiss()
+                start(FgtShippingAddress.newInstance(receiptInfo[0].id))
+            })
+        }.show()
+        hasShowReceiptDialog = true
     }
 
     // 添加剩余次数不足提示弹窗
@@ -1715,5 +1754,10 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+
+    // 设置 Banner
+    private fun setupBanner(bannerList: List<BannerInfo>) {
+        BannerHelper.setupBanner(banner, bannerList, this)
+    }
 
 }

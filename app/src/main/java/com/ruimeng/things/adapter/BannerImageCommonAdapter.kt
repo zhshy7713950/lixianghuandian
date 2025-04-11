@@ -6,7 +6,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 
-class BannerImageCommonAdapter(private val dataList: List<String>) : BannerImageAdapter<String>(dataList) {
+class BannerImageCommonAdapter(dataList: List<String>) : BannerImageAdapter<String>(dataList) {
     override fun onBindView(
         holder: BannerImageHolder,
         data: String,

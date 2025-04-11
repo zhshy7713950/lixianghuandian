@@ -173,6 +173,12 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
         tv_option_time.text = showExpireTitle() + "无"
         tv_rant_long_pay_time.text = showExpireTitle() + "无"
+        tv_extended_gift_package_create.setOnClickListener {
+            start(FgtExtendedGift.newInstance())
+        }
+        tv_extended_gift_update_package.setOnClickListener {
+            start(FgtExtendedGift.newInstance())
+        }
     }
 
     @Subscribe
@@ -323,6 +329,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         val isShowByStages = isByStages(paymentInfo)
         rb_by_stages.isVisible = isShowByStages
         ll_by_stages.isVisible = isShowByStages
+        tv_extended_gift_tip.isVisible = isShowByStages
     }
 
     private fun initViewAfterData(list: List<PaymentInfo>) {

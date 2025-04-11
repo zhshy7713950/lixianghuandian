@@ -14,21 +14,27 @@ import com.entity.remote.Promotions
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtCouponPurchase
+import com.ruimeng.things.home.FgtExtendedGift
+import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.me.activity.AtyWeb2
+import com.ruimeng.things.share.FgtShare
+import com.utils.WeChatHelper
+import wongxd.base.FgtBase
 
-class PopupAdWindow (private val activity: Activity,
+class PopupAdWindow (private val fgtBase: FgtBase,
                      private val promotions: Promotions
-) : PopupWindow(activity) {
+) : PopupWindow(fgtBase.requireActivity()) {
 
     init {
-        contentView = View.inflate(activity, R.layout.popup_ad_layout, null)
+        val context = fgtBase.requireContext()
+        contentView = View.inflate(context, R.layout.popup_ad_layout, null)
         val ivClose = contentView.findViewById<ImageView>(R.id.ivClose)
         val ivContent = contentView.findViewById<ImageView>(R.id.ivContent)
         with(promotions){
             when(mediaType){
                 "1" ->{
                     ivContent.isVisible = true
-                    Glide.with(activity).load(mediaURL).into(ivContent)
+                    Glide.with(context).load(mediaURL).into(ivContent)
                     ivContent.setOnClickListener {
                         when(operationType){
                             "0" ->{
@@ -45,10 +51,10 @@ class PopupAdWindow (private val activity: Activity,
                                 }
                             }
                             "2" -> {//app内网页
-                                AtyWeb2.start(operationTitle,operationURL)
+                                handleInternalLink(operationURL,operationTitle,fgtBase)
                             }
                             "3" -> {//外部浏览器
-                                AtyWeb2.startBrowser(activity,operationURL)
+                                AtyWeb2.startBrowser(context,operationURL)
                             }
                         }
                         dismiss()
@@ -70,8 +76,22 @@ class PopupAdWindow (private val activity: Activity,
         isClippingEnabled = false
     }
 
+    private fun handleInternalLink(linkUrl: String?, title: String?, fgt: FgtBase) {
+        if (linkUrl.isNullOrBlank()) return
+        when {
+            linkUrl.startsWith("extendedGift://") -> {
+                fgt.start(FgtExtendedGift.newInstance())
+            }
+            else -> {
+                // 打开内部网页
+                AtyWeb2.start(title,linkUrl)
+            }
+        }
+    }
+
+
     fun show(view: View) {
-        if (activity.window.decorView.windowToken != null) {
+        if (fgtBase.requireActivity().window.decorView.windowToken != null) {
             showAtLocation(view, Gravity.CENTER, 0, 0)
         }
     }

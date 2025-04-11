@@ -7,13 +7,15 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.ruimeng.things.*
-import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.FgtFollowWechatAccount
+import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
@@ -27,6 +29,7 @@ import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.fgt_me.*
 import kotlinx.android.synthetic.main.fgt_setting.tv_version_setting
 import kotlinx.android.synthetic.main.home_status_item.banner
+import kotlinx.coroutines.launch
 import me.yokeyword.fragmentation.SupportFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -44,9 +47,13 @@ import wongxd.utils.utilcode.util.ScreenUtils
  * Created by wongxd on 2018/11/9.
  */
 class FgtMe : MainTabFragment() {
+
+    private val vmMain: MainViewModel by activityViewModels()
+
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
 //        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
         EventBus.getDefault().register(this)
+        initEvent()
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
             if (!TextUtils.isEmpty(userinfo.logo)) {
@@ -239,11 +246,22 @@ class FgtMe : MainTabFragment() {
         val versionName = packageInfo?.versionName ?: "未知版本"
 
         tv_version_setting.text = "当前版本:v$versionName($versionCode)"
-        initBanner()
     }
 
-    private fun initBanner() {
-        BannerHelper.initCommonBanner(banner,this@FgtMe)
+    private fun initEvent() {
+        lifecycleScope.launchWhenCreated {
+            launch {
+                // 观察 banner 数据
+                vmMain.bannerData.observe(viewLifecycleOwner) { bannerList ->
+                    setupBanner(bannerList)
+                }
+            }
+        }
+    }
+
+    // 设置 Banner
+    private fun setupBanner(bannerList: List<BannerInfo>) {
+        BannerHelper.setupBanner(banner, bannerList, this)
     }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {

@@ -49,7 +49,8 @@ data class Data(
     val exp_remind:Int,
     val exp_remind_msg:String,
     val singleChangeInfo:PaymentOption,
-    val battery : BatteryInfo
+    val battery : BatteryInfo,
+    val receiptInfo: List<ReceiptInfo>?
 )
 
 

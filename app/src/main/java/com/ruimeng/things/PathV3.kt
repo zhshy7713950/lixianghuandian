@@ -60,6 +60,8 @@ object PathV3 {
      */
     val GET_AREA_LIST = "/apiv3/getarealist"
 
+    val GET_AREA_INFO = "/apiv6/address/getareainfo"
+
 
     /**
      * V3-获取未读消息

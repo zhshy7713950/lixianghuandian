@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_gray">
+
+    <include layout="@layout/layout_topbar" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="感谢您选择锂享换电，请填写详细地址，我们将尽快为您邮寄礼品"
+        android:textColor="@color/white"
+        android:paddingBottom="16dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="29dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rectangle_white_bg2"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textColor="#ff4A4A4A"
+                android:textSize="14sp"
+                android:text="收货人"/>
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请填写收货人姓名"
+                android:background="@null"
+                android:textColor="#ff858383"
+                android:textColorHint="#ff858383"
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"/>
+            
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffD8D8D8"
+            android:layout_marginTop="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textColor="#ff4A4A4A"
+                android:textSize="14sp"
+                android:text="联系电话"/>
+
+            <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请填写收货人联系电话"
+                android:background="@null"
+                android:textColor="#ff858383"
+                android:textSize="14sp"
+                android:textColorHint="#ff858383"
+                android:layout_marginLeft="15dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffD8D8D8"
+            android:layout_marginTop="10dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/llArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textColor="#ff4A4A4A"
+                android:textSize="14sp"
+                android:text="所在地区"/>
+
+            <TextView
+                android:id="@+id/tvArea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请选择省市区"
+                android:background="@null"
+                android:textColor="#ff858383"
+                android:textSize="14sp"
+                android:textColorHint="#ff858383"
+                android:layout_marginLeft="15dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_right_black"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffD8D8D8"
+            android:layout_marginTop="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textColor="#ff4A4A4A"
+                android:textSize="14sp"
+                android:text="详细地址"/>
+
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请填写真实详细的地址:如道路、小区等"
+                android:background="@null"
+                android:textColor="#ff858383"
+                android:textSize="14sp"
+                android:textColorHint="#ff858383"
+                android:layout_marginLeft="15dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffD8D8D8"
+            android:layout_marginTop="10dp"
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注：\n1、为确保您能收到礼品，请准确填写收货信息；\n2、若因收货信息有误导致礼品无法送达，礼品将不再补发；\n3、如您需要更改收货信息，请及时与客服联系，发货后信息将无法更改；\n4、若发生退租情况，礼品将不予发放。"
+            android:textColor="#ff858383"
+            android:textSize="14sp"
+            android:paddingTop="16dp" />
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="154dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/bg_btn_common6"
+            android:text="立即提交"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout> 

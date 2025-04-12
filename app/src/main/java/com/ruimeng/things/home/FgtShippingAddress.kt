@@ -75,7 +75,7 @@ class FgtShippingAddress : BaseBackFragment() {
 
             onSuccess {
                 ToastHelper.shortToast(context, "提交成功，我们将尽快为您安排发货")
-                popTo(FgtHome::class.java, false)
+                pop()
             }
         }
     }

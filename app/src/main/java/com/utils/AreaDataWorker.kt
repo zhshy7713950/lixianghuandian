@@ -80,6 +80,9 @@ object AreaDataWorker {
         areaItems.clear()
         provinceItems.forEach { p ->
             val cityList = p.child.toMutableList()
+            if (cityList.isEmpty()) {
+                cityList.add(NetCityJsonBean.Data.Child("", "", ""))
+            }
             cityItems.add(cityList)
             val areaList = mutableListOf<MutableList<AreaBean>>()
             cityList.forEach { _ ->
@@ -112,12 +115,12 @@ object AreaDataWorker {
 
         pvOptions = OptionsPickerBuilder(activity,
             OnOptionsSelectListener { options1, options2, options3, v -> //返回的分别是三个级别的选中位置
-                //
-                val p = provinceItems[options1]
-                val c = cityItems[options1][options2]
-                val a = areaItems[options1][options2][options3]
+                //做安全控制，防止数组越界
+                val p = if(options1 < 0 || options1 >= provinceItems.size) "" else provinceItems[options1].name
+                val c = if(options2 < 0 || options2 >= cityItems[options1].size) "" else cityItems[options1][options2].name
+                val a = if(options3 < 0 || options3 >= areaItems[options1][options2].size) "" else areaItems[options1][options2][options3].value
 
-                callback.invoke(p.name,c.name,a.value)
+                callback.invoke(p,c,a)
             })
 
             .setTitleText(title)
@@ -141,17 +144,8 @@ object AreaDataWorker {
             .setOptionsSelectChangeListener { options1, options2, options3 ->
                 //                val str = "options1: $options1\noptions2: $options2\noptions3: $options3"
                 Log.d("CityDataWorker", "onOptionsSelectChanged: $options1, $options2, $options3")
-                if (options1 >= 0 && options2 >= 0) {
-                    val cityId = cityItems[options1]?.get(options2)?.id
-                    if (cityId.isNotEmpty()) {
-                        getAreaData(cityId) { areaList ->
-                            if (areaList.isNotEmpty()) {
-                                areaItems[options1][options2] = areaList.toMutableList()
-                                pvOptions!!.setPicker(provinceItems.toList(), cityItems.toList(), areaItems.toList())
-                                pvOptions!!.setSelectOptions(options1, options2, 0)
-                            }
-                        }
-                    }
+                if (options1 >= 0 && options2 >= 0 && areaItems[options1][options2].isEmpty()) {
+                    updateAreaData(options1, options2, options3)
                 }
             }
             .setBackgroundId(0x50000000) //设置外部遮罩颜色
@@ -159,10 +153,22 @@ object AreaDataWorker {
 
         pvOptions!!.show()
         pvOptions!!.setSelectOptions(0, 0, 0)
-
         pvOptions!!.setPicker(provinceItems.toList(), cityItems.toList(), areaItems.toList())//二级选择器
+        updateAreaData(0, 0, 0)
     }
 
+    private fun updateAreaData(options1: Int, options2: Int, options3: Int){
+        val cityId = cityItems[options1]?.get(options2)?.id
+        if (cityId.isNotEmpty()) {
+            getAreaData(cityId) { areaList ->
+                if (areaList.isNotEmpty()) {
+                    areaItems[options1][options2] = areaList.toMutableList()
+                    pvOptions!!.setPicker(provinceItems.toList(), cityItems.toList(), areaItems.toList())
+                    pvOptions!!.setSelectOptions(options1, options2, options3)
+                }
+            }
+        }
+    }
 
     private fun getAreaData(cityId: String, callback: (List<AreaBean>) -> Unit) {
         http {

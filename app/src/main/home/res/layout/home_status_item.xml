@@ -362,7 +362,6 @@
 			android:layout_height="80dp"
 			android:layout_marginLeft="12dp"
 			android:layout_marginTop="16dp"
-			android:layout_marginBottom="16dp"
 			android:layout_marginRight="12dp"
 			app:banner_loop_time="5000"
 			app:banner_radius="10dp" />
@@ -382,6 +381,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="20dp"
+			android:layout_marginTop="16dp"
 			android:orientation="horizontal">
 
 			<androidx.constraintlayout.widget.ConstraintLayout

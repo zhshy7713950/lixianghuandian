@@ -137,6 +137,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_change_package_update_title.visibility = View.GONE
             tv_base_package_create_title.visibility = View.VISIBLE
             tv_choose_package_create_title.visibility = View.VISIBLE
+            tv_extended_gift_update_package.visibility = View.GONE
             cl_update_package_title.visibility = View.GONE
         } else {
             ll_package.visibility = View.VISIBLE
@@ -146,6 +147,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             tv_base_package_create_title.visibility = View.GONE
             tv_choose_package_create_title.visibility = View.GONE
             tv_rent_desc.visibility = View.GONE
+            tv_extended_gift_package_create.visibility = View.GONE
             cl_update_package_title.visibility = View.VISIBLE
         }
         tv_company_desc.setOnClickListener {

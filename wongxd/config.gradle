@@ -132,8 +132,6 @@ dependencies {
     implementation 'com.github.REBOOTERS:Matisse:v0.5.7'
     implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
 
-    implementation 'com.contrarywind:Android-PickerView:4.1.6'
-
     //Android 版本更新
     implementation 'com.qianwen:update-app:3.5.2'
 

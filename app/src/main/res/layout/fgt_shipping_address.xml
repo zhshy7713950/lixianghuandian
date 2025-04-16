@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:hint="请填写收货人姓名"
                 android:background="@null"
-                android:textColor="#ff858383"
-                android:textColorHint="#ff858383"
+                android:textColor="@color/black"
+                android:textColorHint="#CCCCCC"
                 android:textSize="14sp"
                 android:layout_marginLeft="15dp"/>
             
@@ -84,9 +84,9 @@
                 android:layout_height="wrap_content"
                 android:hint="请填写收货人联系电话"
                 android:background="@null"
-                android:textColor="#ff858383"
+                android:textColor="@color/black"
                 android:textSize="14sp"
-                android:textColorHint="#ff858383"
+                android:textColorHint="#CCCCCC"
                 android:layout_marginLeft="15dp"
                 android:inputType="phone"/>
 
@@ -121,9 +121,9 @@
                 android:layout_weight="1"
                 android:hint="请选择省市区"
                 android:background="@null"
-                android:textColor="#ff858383"
+                android:textColor="@color/black"
                 android:textSize="14sp"
-                android:textColorHint="#ff858383"
+                android:textColorHint="#CCCCCC"
                 android:layout_marginLeft="15dp"/>
 
             <ImageView
@@ -160,9 +160,9 @@
                 android:layout_height="wrap_content"
                 android:hint="请填写真实详细的地址:如道路、小区等"
                 android:background="@null"
-                android:textColor="#ff858383"
+                android:textColor="@color/black"
                 android:textSize="14sp"
-                android:textColorHint="#ff858383"
+                android:textColorHint="#CCCCCC"
                 android:layout_marginLeft="15dp"/>
 
         </LinearLayout>

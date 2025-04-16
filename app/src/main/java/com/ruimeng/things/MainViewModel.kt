@@ -5,7 +5,6 @@ import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.amap.api.location.AMapLocation
 import com.base.viewmodel.BaseViewModel
 import com.entity.local.GetAdInfoLocal
 import com.entity.local.GetCityInfoLocal
@@ -17,33 +16,38 @@ import com.ruimeng.things.home.bean.BannerData
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.net_station.LocationUtil
 import com.utils.MapUtils
-import com.utils.unsafeLazy
 import kotlinx.coroutines.launch
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.utilcode.util.SPUtils
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel : BaseViewModel() {
 
-    private val _bannerData = MutableLiveData<List<BannerInfo>>()
-    val bannerData: LiveData<List<BannerInfo>> get() = _bannerData
+    private val _homeBannerData = MutableLiveData<List<BannerInfo>>()
+    val homeBannerData: LiveData<List<BannerInfo>> get() = _homeBannerData
 
-    fun fetchBannerData(context: Context,userId: String) {
+    private val _meBannerData = MutableLiveData<List<BannerInfo>>()
+    val meBannerData: LiveData<List<BannerInfo>> get() = _meBannerData
+
+    fun fetchBannerData(context: Context,userId: String,position: String) {
         viewModelScope.launch {
             val mapLocation = requestLocation(context)
             http {
                 url = "/apiv6/advertisementinfo/getbanner"
                 params["userId"] = userId
-                params["position"] = "1" // 首页
+                params["position"] = position // 首页
                 params["lat"] = mapLocation.latitude.toString()
                 params["lng"] = mapLocation.longitude.toString()
 
                 onSuccess { res ->
                     val bannerList = res.toPOJO<BannerData>().data
-                    _bannerData.value = bannerList
+                    if("1" == position){
+                        _homeBannerData.value = bannerList
+                    }else{
+                        _meBannerData.value = bannerList
+                    }
                 }
             }
         }

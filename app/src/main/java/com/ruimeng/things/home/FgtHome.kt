@@ -1,11 +1,9 @@
 package com.ruimeng.things.home
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
@@ -15,27 +13,23 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.View.VISIBLE
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.batchat.preview.PreviewTools
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
-import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.*
@@ -47,17 +41,13 @@ import com.ruimeng.things.home.view.PopupRemindWindow
 import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
-import com.ruimeng.things.me.FgtMeDeposit
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import com.youth.banner.Banner
-import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
 import kotlinx.android.synthetic.main.fgt_deposit.*
 import kotlinx.android.synthetic.main.fgt_home.*
-import kotlinx.android.synthetic.main.fgt_net_station_detail_new.station_banner
 import kotlinx.android.synthetic.main.home_status_item.*
 import kotlinx.android.synthetic.main.home_status_no_item.*
 import kotlinx.coroutines.delay
@@ -77,8 +67,6 @@ import wongxd.common.permission.getPermissions
 import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.SystemUtils
-import wongxd.utils.utilcode.util.ScreenUtils
-import com.bumptech.glide.Glide
 
 
 /**
@@ -262,7 +250,7 @@ class FgtHome : MainTabFragment() {
         lifecycleScope.launchWhenCreated {
             launch {
                 // 观察 banner 数据
-                vmMain.bannerData.observe(viewLifecycleOwner) { bannerList ->
+                vmMain.homeBannerData.observe(viewLifecycleOwner) { bannerList ->
                     setupBanner(bannerList)
                 }
             }
@@ -310,7 +298,8 @@ class FgtHome : MainTabFragment() {
             contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
             allGranted = {
                 vmMain.getAdInfo(requireActivity(), userId)
-                vmMain.fetchBannerData(requireActivity(),userId)
+                vmMain.fetchBannerData(requireActivity(),userId,"1")
+                vmMain.fetchBannerData(requireActivity(),userId,"2")
             }
         )
     }
@@ -1038,7 +1027,7 @@ class FgtHome : MainTabFragment() {
             style(NormalDialog.STYLE_TWO)
             btnNum(2)
             title("填写收货地址")
-            content("您有未填写的收货地址信息，请及时完善")
+            content("您有活动礼品的收货地址待完善")
             btnText("稍后补充", "立即完善")
             setOnBtnClickL(OnBtnClickL {
                 dismiss()

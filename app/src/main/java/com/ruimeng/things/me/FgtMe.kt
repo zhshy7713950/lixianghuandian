@@ -20,12 +20,7 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
-import com.utils.WeChatHelper
-import com.utils.isZero
 import com.utils.safeToFloat
-import com.utils.safeToInt
-import com.youth.banner.Banner
-import com.youth.banner.indicator.CircleIndicator
 import kotlinx.android.synthetic.main.fgt_me.*
 import kotlinx.android.synthetic.main.fgt_setting.tv_version_setting
 import kotlinx.android.synthetic.main.home_status_item.banner
@@ -41,7 +36,6 @@ import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.SystemUtils
-import wongxd.utils.utilcode.util.ScreenUtils
 
 /**
  * Created by wongxd on 2018/11/9.
@@ -252,7 +246,7 @@ class FgtMe : MainTabFragment() {
         lifecycleScope.launchWhenCreated {
             launch {
                 // 观察 banner 数据
-                vmMain.bannerData.observe(viewLifecycleOwner) { bannerList ->
+                vmMain.meBannerData.observe(viewLifecycleOwner) { bannerList ->
                     setupBanner(bannerList)
                 }
             }

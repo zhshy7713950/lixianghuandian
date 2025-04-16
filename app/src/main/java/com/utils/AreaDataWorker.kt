@@ -23,7 +23,7 @@ object AreaDataWorker {
     private var cityDataJson: String? = null
 
     private fun getCityData() {
-        cityDataJson = Config.getDefault().stringCacheUtils.getAsString("downloadCityData")
+//        cityDataJson = Config.getDefault().stringCacheUtils.getAsString("downloadCityData")
         if (cityDataJson.isNullOrBlank()) {
             downloadCityData()
         } else {

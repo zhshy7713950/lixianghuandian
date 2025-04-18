@@ -10,6 +10,8 @@ data class UpdateGetRentBean(
      val baseInfo :PaymentInfo,
      val userOptions : List<PaymentOption>,
      val options : List<PaymentOption>,
-     val coupons: List<CouponsInfoBean>
+     val coupons: List<CouponsInfoBean>,
+     val isAllowExtendedGift: String,
+     val isAllowUnionPay: String
  )
 }

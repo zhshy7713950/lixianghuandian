@@ -7,6 +7,8 @@ data class NewGetRentBean(
 ) {
     data class Data(
         val paymentInfo : List<PaymentInfo>,
-        val coupons: List<CouponsInfoBean>
+        val coupons: List<CouponsInfoBean>,
+        val isAllowExtendedGift: String,
+        val isAllowUnionPay: String
     )
 }

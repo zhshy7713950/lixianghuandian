@@ -286,7 +286,7 @@ class FgtPayRentMoney : BaseBackFragment() {
             when (id) {
                 R.id.rbWx -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.WX
                 R.id.rbAlipay -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.AL
-//                R.id.rbOffline -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.XX
+                R.id.rb_by_stages -> PAY_WAY_TAG = FgtDeposit.Companion.PayWay.FQ
             }
         }
     }
@@ -957,14 +957,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                                 tv_by_stages_title.text =
                                     "￥${DecimalFormat("#.##").format(periodAmount.periodAmount)} x ${periodAmount.period}期"
                                 if (submit && !baseInfo?.contract_id.isNullOrEmpty() && periodAmount.period >= 3) {
-                                    start(
-                                        FgtRentByStagesPayment.newInstance(
-                                            baseInfo!!.contract_id,
-                                            totalPrice,
-                                            periodAmount.periodAmount,
-                                            periodAmount.period
-                                        )
-                                    )
+                                    countPay(totalPrice,periodAmount.periodAmount,periodAmount.period)
                                 }
                             }
                         }
@@ -1006,7 +999,7 @@ class FgtPayRentMoney : BaseBackFragment() {
         }
     }
 
-    private fun countPay() {
+    private fun countPay(totalPrice: Double = 0.0, periodAmount: Double = 0.0, period: Int = 0) {
         dlgPayProgress = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
         dlgPaySuccessed =
             getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") { paySuccessed() }
@@ -1017,12 +1010,14 @@ class FgtPayRentMoney : BaseBackFragment() {
                 if (pageType == PAGE_TYPE_CREATE) "apiv6/payment/payrentmoney" else "/apiv6/payment/upgradepay"
             jsonParam = getSubmitParam()
             //支付方式 1微信支付2支付宝支付3白条4免息支付99线下现金100套餐订单101支付宝预授权
-            jsonParam["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1"
-            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.AL) "2"
-            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.BT) "3"
-            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.FQ) "4"
-            else if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.GROUPPAP) "102"
-            else "99"
+            jsonParam["payType"] = when (PAY_WAY_TAG) {
+                FgtDeposit.Companion.PayWay.WX -> "1"
+                FgtDeposit.Companion.PayWay.AL -> "2"
+                FgtDeposit.Companion.PayWay.BT -> "3"
+                FgtDeposit.Companion.PayWay.FQ -> "4"
+                FgtDeposit.Companion.PayWay.GROUPPAP -> "102"
+                else -> "99"
+            }
 
             onFail { code, msg ->
                 dlgPayProgress?.dismiss()
@@ -1063,6 +1058,19 @@ class FgtPayRentMoney : BaseBackFragment() {
                             })
                     }
 
+                    FgtDeposit.Companion.PayWay.FQ -> {
+                        dlgPayProgress?.dismiss()
+                        start(
+                            FgtRentByStagesPayment.newInstance(
+                                baseInfo!!.contract_id,
+                                result.orderid,
+                                totalPrice,
+                                periodAmount,
+                                period
+                            )
+                        )
+                    }
+
                     FgtDeposit.Companion.PayWay.AL -> {
 
                         BaseAlipay.tryPay(result.alipay.paystr) { resultInfo, resultStatus, isLocalSuccessed ->
@@ -1077,15 +1085,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                         EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
                         startWithPop(FgtCreditSystem())
                     }
-//                        FgtDeposit.Companion.PayWay.FQ -> {
-//                            dlgPayProgress?.dismiss()
-//                            start(
-//                                FgtRentInstallmentPayment.newInstance(
-//                                    data.contract_id,
-//                                    result.orderid
-//                                )
-//                            )
-//                        }
+
                     FgtDeposit.Companion.PayWay.GROUPPAP -> {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()

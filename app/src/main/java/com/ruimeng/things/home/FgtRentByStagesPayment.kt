@@ -19,13 +19,14 @@ import wongxd.http
 class FgtRentByStagesPayment : BaseBackFragment() {
 
     companion object {
-        fun newInstance(contractId: String, totalAmount: Double, periodAmount: Double, period: Int): FgtRentByStagesPayment {
+        fun newInstance(contractId: String, orderId: String,totalAmount: Double, periodAmount: Double, period: Int): FgtRentByStagesPayment {
             val fragment = FgtRentByStagesPayment()
             val args = Bundle()
             args.putString("contractId", contractId)
             args.putDouble("totalAmount", totalAmount)
             args.putDouble("periodAmount", periodAmount)
             args.putInt("period", period)
+            args.putString("orderId", orderId)
             fragment.arguments = args
             return fragment
         }
@@ -35,6 +36,7 @@ class FgtRentByStagesPayment : BaseBackFragment() {
     private val totalAmount: Double by lazy { arguments?.getDouble("totalAmount") ?: 0.0 }
     private val periodAmount: Double by lazy { arguments?.getDouble("periodAmount") ?: 0.0 }
     private val period: Int by lazy { arguments?.getInt("period") ?: 3 }
+    private val orderId: String by lazy { arguments?.getString("orderId") ?: "" }
 
     override fun getLayoutRes(): Int = R.layout.fgt_rent_by_stages_payment
 
@@ -84,7 +86,7 @@ class FgtRentByStagesPayment : BaseBackFragment() {
                 } else {
                     // 跳转到WebView页面
                     pop()
-                    start(FgtRentByStagesWebView.newInstance(data.url, data.target))
+                    start(FgtRentByStagesWebView.newInstance(data.url, orderId))
                 }
             }
 

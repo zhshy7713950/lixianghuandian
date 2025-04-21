@@ -5,7 +5,7 @@ package   com.ruimeng.things.shop
  */
 object TkPath {
 
-    var tkHost = "http://ntstk.xianlubang.com/"
+    var tkHost = "http://xianglilai.scxll.cn/"
 
     /**
      * 【淘客】-客户端初始化并登录获取配置数据

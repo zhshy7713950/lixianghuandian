@@ -92,7 +92,7 @@ class FgtRentByStagesWebView : BaseBackFragment() {
             if (isSuccess) {
                 // 支付成功，发送事件返回首页
                 pop()
-                EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
+                EventBus.getDefault().post(FgtPayRentMoney.EventInstallmentPaymentSuccess(true))
             } else {
                 // 支付失败，返回上一页
                 pop()

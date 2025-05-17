@@ -1,5 +1,6 @@
 package com.ruimeng.things.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.viewModels
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.entity.local.AdPayLocal
 import com.entity.remote.OperationInnerData
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.net.whenError
 import com.net.whenSuccess
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
@@ -81,7 +84,22 @@ class FgtCouponPurchase : BaseBackFragment() {
         }
         btnPayNow.setOnClickListener {
             if (operationInnerDataList != null && operationInnerDataList!!.size > 0) {
-                payNow(operationInnerDataList!![couponAdapter.selectPos])
+                NormalDialog(activity)
+                    .apply {
+                        style(NormalDialog.STYLE_TWO)
+                        btnNum(2)
+                        content("为保障您的权益，请仔细确认后再行购买。本券售出后不支持退换，感谢您的理解与配合！")
+                        btnText("取消", "确定")
+                        btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+                        setOnBtnClickL(OnBtnClickL {
+                            // 继续续期
+                            dismiss()
+                        }, OnBtnClickL {
+                            // 立即切换
+                            dismiss()
+                            payNow(operationInnerDataList!![couponAdapter.selectPos])
+                        })
+                    }.show()
             }
         }
         if (operationInnerDataList != null && operationInnerDataList!!.size > 0) {

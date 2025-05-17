@@ -625,7 +625,8 @@ class FgtHome : MainTabFragment() {
                 ToastHelper.shortToast(context, "请先完成解冻操作")
                 return@setOnClickListener
             }
-            doContinueRant()
+            // 新增二次弹窗逻辑
+            showContinueRantConfirm()
         }
         cl_change_info.setOnClickListener {
             if (!hasBatteryInfo()) return@setOnClickListener
@@ -765,6 +766,48 @@ class FgtHome : MainTabFragment() {
             )
         )
 //        rentStep1(CURRENT_DEVICEID,FgtPayRentMoney.PAGE_TYPE_UPDATE)
+    }
+
+    // 新增方法：二次弹窗确认续期逻辑
+    private fun showContinueRantConfirm() {
+        // 1. 调用接口获取电池信息
+        vm.getMyDevice().observeForever {deviceList ->
+            if (deviceList.isNullOrEmpty()) {
+                EasyToast.DEFAULT.show("未获取到电池信息")
+                return@observeForever
+            }
+            if (deviceList.size == 1) {
+                // 只有一个电池，直接进入续期升级
+                doContinueRant()
+                return@observeForever
+            }
+            // 有两个电池，遍历判断
+            val needSwitch = deviceList.find { it.rentStatus == 2 || it.rentStatus == 3 }
+            if (needSwitch != null && needSwitch.device_id != CURRENT_DEVICEID) {
+                // 弹窗提示
+                NormalDialog(activity)
+                    .apply {
+                        style(NormalDialog.STYLE_TWO)
+                        btnNum(2)
+                        title("提示")
+                        content("您还有额外电池租金待支付，是否为您切换到该电池(${needSwitch.device_id})")
+                        btnText("继续续期", "立即切换")
+                        btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+                        setOnBtnClickL(OnBtnClickL {
+                            // 继续续期
+                            dismiss()
+                            doContinueRant()
+                        }, OnBtnClickL {
+                            // 立即切换
+                            dismiss()
+                            getBatteryDetailInfo(needSwitch.device_id)
+                        })
+                    }.show()
+            } else {
+                // 没有需要切换的，直接进入续期升级
+                doContinueRant()
+            }
+        }
     }
 
     class RefreshMyDeviceList

@@ -41,7 +41,7 @@ object Server {
             onSuccess {
                 Log.d(TAG,"=========net response start=========\n$it\n==========net response end============")
                 val type: Type =
-                    TypeToken.getParameterized(ResCommon::class.java, T::class.java).type
+                    TypeToken.getParameterized(ResCommon::class.java, object : TypeToken<T>() {}.type).type
                 val resData: ResCommon<T> = gson.fromJson(it, type)
                 if (200 == resData.errcode) {
                     con.resume(NetworkResponse.Success(resData))

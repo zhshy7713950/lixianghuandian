@@ -22,7 +22,7 @@ data class MyDevicesBean(
         var remark: String = "",
         var rent_day: String = "", // 1
         var rent_money: String = "", // 100.00
-        var rent_status: String = "", // 0
+        var rentStatus: Int = 0, // 0
         var rent_time: String = "", // 1542165966
         var total_rent_money: String = "", // 100.00
         var user_id: String = "" ,// 2

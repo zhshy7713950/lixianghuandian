@@ -23,7 +23,8 @@ data class MyContractDetailBean(
         var down_sign: Int = 0,
         var deposit_status: String = "",
         val userOptions :List<PaymentOption>? = null,
-        var open_check: Int = 0
+        var open_check: Int = 0,
+        var pay_type: String = ""
     ) {
         data class SignPng(
             var png: String = "" // https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577341978542&di=4c5c522ef9cfa79cf718fcf6ef3bd243&imgtype=0&src=http%3A%2F%2Fm.360buyimg.com%2Fn12%2Fjfs%2Ft2194%2F6%2F2805788145%2F52875%2Fa40fa579%2F57174d1aN66ce14d9.jpg%2521q70.jpg

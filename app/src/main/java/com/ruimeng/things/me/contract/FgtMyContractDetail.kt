@@ -11,15 +11,16 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
+import android.webkit.WebViewClient
 import androidx.core.content.FileProvider
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
-import com.ruimeng.things.FgtViewBigImg
+import com.ruimeng.things.Path
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.contract.bean.MyContractDetailBean
+import com.ruimeng.things.me.contract.bean.ProtocolBean
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManager
 import com.ruimeng.things.me.contract.download_pdf.AndroidDownloadManagerListener
 import com.utils.TextUtil
@@ -30,10 +31,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
-import wongxd.common.loadImg
-import wongxd.common.permission.PermissionType
-import wongxd.common.permission.getPermissions
-import wongxd.common.recycleview.yaksa.linear
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.OpenFileThing
@@ -132,6 +129,22 @@ class FgtMyContractDetail : BaseBackFragment() {
 
 
     private fun getInfo() {
+        http {
+            url = Path.GET_PROTOCOL
+            params["userId"] = FgtHome.userId
+            params["deviceId"] = FgtHome.CURRENT_DEVICEID
+
+            onSuccess { res ->
+                val bean = res.toPOJO<ProtocolBean>()
+                if(!bean?.data.isNullOrEmpty()){
+                    wvContractDetail?.apply {
+                        settings.javaScriptEnabled = true
+                        webViewClient = WebViewClient()
+                        loadUrl(bean?.data)
+                    }
+                }
+            }
+        }
 
         http {
             url = PathV3.MY_CONTRACT_DETAIL
@@ -143,25 +156,25 @@ class FgtMyContractDetail : BaseBackFragment() {
 
                     val bean = res.toPOJO<MyContractDetailBean>().data
 
-                    if (bean.down_sign == 1) {
-                        topbar.addRightTextButton("下载", com.ruimeng.things.R.id.right_text)
-                            .apply {
-                                setTextColor(Color.WHITE)
-                                setOnClickListener {
-                                    QMUIDialog.MenuDialogBuilder(activity)
-                                        .addItem("pdf下载") { dialog, which ->
-                                            doSavePdf()
-                                            dialog.dismiss()
-                                        }
-                                        .addItem("png下载") { dialog, which ->
-                                            doSaveContractPngs()
-                                            dialog.dismiss()
-                                        }
-                                        .show()
-
-                                }
-                            }
-                    }
+//                    if (bean.down_sign == 1) {
+//                        topbar.addRightTextButton("下载", com.ruimeng.things.R.id.right_text)
+//                            .apply {
+//                                setTextColor(Color.WHITE)
+//                                setOnClickListener {
+//                                    QMUIDialog.MenuDialogBuilder(activity)
+//                                        .addItem("pdf下载") { dialog, which ->
+//                                            doSavePdf()
+//                                            dialog.dismiss()
+//                                        }
+//                                        .addItem("png下载") { dialog, which ->
+//                                            doSaveContractPngs()
+//                                            dialog.dismiss()
+//                                        }
+//                                        .show()
+//
+//                                }
+//                            }
+//                    }
 
                     tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
@@ -173,7 +186,7 @@ class FgtMyContractDetail : BaseBackFragment() {
                     } else {
                         "${bean.deposit}元"
                     }
-                    tv_rent_money_my_contract_detail.text = "${bean.rent}元"
+                    tv_rent_money_my_contract_detail.text = if("集团支付" == bean.rentMoneyStr) bean.rentMoneyStr else "${bean.rentMoneyStr}元"
                     if (bean.paymentName == "") {
                         tv_base_package.text =
                             TextUtil.getSpannableString(arrayOf("租电套餐：", "暂无"))
@@ -201,23 +214,6 @@ class FgtMyContractDetail : BaseBackFragment() {
                     pdfUrl = bean.pdf
                     pngs.clear()
                     pngs.addAll(bean.sign_pngs.map { it.png })
-
-                    rv_my_contract_detail.linear {
-
-                        bean.sign_pngs.forEach { png ->
-
-                            itemDsl {
-                                xml(com.ruimeng.things.R.layout.item_rv_my_contract_detail)
-                                renderX { position, view ->
-                                    view.findViewById<ImageView>(com.ruimeng.things.R.id.iv)
-                                        .loadImg(png.png)
-                                    view.setOnClickListener {
-                                        start(FgtViewBigImg.newInstance(png.png))
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
 
             }

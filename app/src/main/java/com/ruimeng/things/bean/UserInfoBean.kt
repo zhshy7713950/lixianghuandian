@@ -1,5 +1,7 @@
 package com.ruimeng.things.bean
 
+import org.json.JSONObject
+
 data class UserInfoBean(
     var `data`: Data = Data(),
     var errcode: Int = 0, // 200
@@ -30,8 +32,54 @@ data class UserInfoBean(
             var realname_auth: Int = 0,
             var is_debug: Int = 0,  //1是调试账号 0正常账号
             var freeMark: String? = null, //1 存在免押，0不存在免押金
-            var phone: String = ""
+            var phone: String = "",
+            var online_time: Int = 0,
+            var city: String = "",
+            var electric: Any? = null,
+        ){
+            fun getElectric(): Electric?{
+                return getElectricList().firstOrNull()
+            }
+
+            private fun getElectricList(): List<Electric> {
+                return when (electric) {
+                    is List<*> -> {
+                        // 处理数组情况
+                        (electric as List<Map<String, Any>>).mapNotNull { mapToElectricItem(it) }
+                    }
+                    is Map<*, *> -> {
+                        // 处理对象情况
+                        listOfNotNull(mapToElectricItem(electric as Map<String, Any>))
+                    }
+                    else -> emptyList()
+                }
+            }
+
+            private fun mapToElectricItem(map: Map<String, Any>): Electric? {
+                return try {
+                    Electric(
+                        exchangeTimes = map["exchangeTimes"]?.toString()?:"",
+                        useElectr = map["useElectr"]?.toString()?:"",
+                        cityName = map["cityName"]?.toString()?:"",
+                        days = map["days"]?.toString()?:"",
+                        perDayElectric = map["perDayElectric"]?.toString()?:""
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+
+        }
+
+        data class Electric(
+            var exchangeTimes: String = "",
+            var useElectr: String = "",
+            var cityName: String = "",
+            var days: String = "",
+            var perDayElectric: String = "",
         )
+
+
     }
 }
 

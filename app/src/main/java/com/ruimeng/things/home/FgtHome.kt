@@ -217,6 +217,10 @@ class FgtHome : MainTabFragment() {
             tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) VISIBLE else GONE
             tvUnbind.visibility = if (userInfo.is_debug == 1) VISIBLE else GONE
             tv_title.text = userInfo.showName()
+            tvOnlineTime.text = "${it.online_time}"
+            tvDailyElec.text = it.getElectric()?.perDayElectric ?: "0.0"
+            tvTotalElec.text = it.getElectric()?.useElectr ?: "0.0"
+            tvTotalExchange.text = it.getElectric()?.exchangeTimes ?: "0"
             getAdInfo()
         }
 
@@ -235,9 +239,9 @@ class FgtHome : MainTabFragment() {
         initTabLayout()
     }
 
-    private fun refreshHomeData(){
+    private fun refreshHomeData() {
         vm.getMyDevice().observeForever {
-            if(it.isEmpty()){
+            if (it.isEmpty()) {
                 CURRENT_DEVICEID = ""
                 NO_PAY_DEVICEID = ""
                 payType = ""
@@ -298,8 +302,8 @@ class FgtHome : MainTabFragment() {
             contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
             allGranted = {
                 vmMain.getAdInfo(requireActivity(), userId)
-                vmMain.fetchBannerData(requireActivity(),userId,"1")
-                vmMain.fetchBannerData(requireActivity(),userId,"2")
+                vmMain.fetchBannerData(requireActivity(), userId, "1")
+                vmMain.fetchBannerData(requireActivity(), userId, "2")
             }
         )
     }
@@ -493,6 +497,48 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    private fun handleOverduePayments() {
+        http {
+            url = Path.GET_USER_LATE_FEE
+            params["userId"] = userId
+            params["contractId"] = contractId
+            onSuccess {
+                val userLateFee = it.toPOJO<UserLateFeeBean>().data
+                val isLessThan3Days = userLateFee.actualLateDays <= 3
+                tv_log_info.text =
+                    "您的租电套餐已逾期${userLateFee.actualLateDays}天，预计产生逾期费用${if (isLessThan3Days) "0" else userLateFee.actualLateFee}元。请及时续费或者归还电池，感谢您的理解和配合，祝您生活愉快！"
+
+                if(isLessThan3Days){
+                    tv_add_device.text = "点击购买套餐"
+                }else{
+                    tv_add_device.text = "支付逾期费用"
+                }
+                addDeviceBtn.setOnClickListener {
+                    if(isLessThan3Days){
+                        rentStep1(NO_PAY_DEVICEID)
+                    }else{
+                        FgtMain.instance?.start(FgtPayLateFee.newInstance())
+                    }
+                }
+                tvLateFeeInfo.visibility = VISIBLE
+                tvLateFeeInfo.setOnClickListener {
+                    NormalDialog(activity)
+                        .apply {
+                            style(NormalDialog.STYLE_TWO)
+                            btnNum(1)
+                            title("逾期费用说明")
+                            content("1.逾期3天内，不收取逾期费用；\n2.逾期超过3天，将按${userLateFee.perDayFee}元/天，从第1天开始计算逾期费用；\n3.逾期超过10天，将扣除全部押金，并继续计算逾期费用；\n4.逾期超过30天，我公司将提交法务处理，并继续计算逾期费用")
+                            btnText("确定")
+                            setOnBtnClickL(OnBtnClickL {
+                                dismiss()
+                            })
+
+                        }.show()
+                }
+            }
+        }
+    }
+
     private fun initNoItemView() {
         when (deviceStatus) {
             2 -> {
@@ -500,6 +546,7 @@ class FgtHome : MainTabFragment() {
                 tv_add_device.text = "点击购买套餐"
                 iv_add_device.visibility = GONE
                 btnReturnInfo.visibility = GONE
+                tvLateFeeInfo.visibility = GONE
             }
 
             3 -> {
@@ -510,6 +557,7 @@ class FgtHome : MainTabFragment() {
                 root_has_item.visibility = GONE
                 root_no_item.visibility = VISIBLE
                 btnReturnInfo.visibility = VISIBLE
+                handleOverduePayments()
             }
 
             else -> {
@@ -517,6 +565,7 @@ class FgtHome : MainTabFragment() {
                 tv_log_info.text = "您还没有添加电池设备"
                 iv_add_device.visibility = VISIBLE
                 btnReturnInfo.visibility = GONE
+                tvLateFeeInfo.visibility = GONE
             }
         }
 
@@ -771,7 +820,7 @@ class FgtHome : MainTabFragment() {
     // 新增方法：二次弹窗确认续期逻辑
     private fun showContinueRantConfirm() {
         // 1. 调用接口获取电池信息
-        vm.getMyDevice().observeForever {deviceList ->
+        vm.getMyDevice().observeForever { deviceList ->
             if (deviceList.isNullOrEmpty()) {
                 EasyToast.DEFAULT.show("未获取到电池信息")
                 return@observeForever
@@ -996,7 +1045,7 @@ class FgtHome : MainTabFragment() {
                 // 计算剩余次数
                 restTimes = 0 // 默认为0
                 isUnlimited = paymentDetailBean?.paymentInfo?.open_check == 1
-                
+
                 if (isUnlimited) {
                     restTimes = 999 // 次数无限制
                 } else {
@@ -1007,7 +1056,7 @@ class FgtHome : MainTabFragment() {
                         }
                     }
                 }
-                if(restTimes >= 999){
+                if (restTimes >= 999) {
                     isUnlimited = true
                 }
                 // 如果剩余次数小于4次,弹窗提示
@@ -1065,7 +1114,7 @@ class FgtHome : MainTabFragment() {
 
     // 显示收货地址对话框
     private fun showReceiptDialog(receiptInfo: List<ReceiptInfo>) {
-        if(hasShowReceiptDialog) return
+        if (hasShowReceiptDialog) return
         NormalDialog(activity).apply {
             style(NormalDialog.STYLE_TWO)
             btnNum(2)
@@ -1371,21 +1420,10 @@ class FgtHome : MainTabFragment() {
         if (paymentDetailBean != null) {
 
 
-            tv_ya_monety.text =
-                if (payType == "101" || payType == "99" || payType == "102") "已免押" else "${paymentDetailBean!!.deposit}元"
-            tv_rent_money.text = "${paymentDetailBean!!.rent_money}元"
-//            tv_ya_monety.setOnClickListener {
-//                if (tv_ya_monety.text != "0.00") {
-//                    startFgt(FgtMeDeposit())
-//                }
-//            }
             if (paymentDetailBean!!.paymentInfo != null) {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
-                tv_package_time.text = TextUtil.formatTime(
-                    paymentDetailBean!!.begin_time,
-                    paymentDetailBean!!.exp_time
-                )
+                tv_package_time.text = TextUtil.formatTime16(paymentDetailBean!!.exp_time)
                 if (paymentDetailBean!!.exp_remind == 1 && !TextUtils.isEmpty(paymentDetailBean!!.exp_remind_msg)) {
                     tv_exp_remind.visibility = VISIBLE
                     tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
@@ -1588,7 +1626,10 @@ class FgtHome : MainTabFragment() {
             }
             // 检查剩余次数
             if (restTimes <= 0) {
-                ToastHelper.shortToast(context, "您的可用换电次数已为0，无法取电/换电，请购买次数或续期套餐")
+                ToastHelper.shortToast(
+                    context,
+                    "您的可用换电次数已为0，无法取电/换电，请购买次数或续期套餐"
+                )
                 return@setOnClickListener
             }
 

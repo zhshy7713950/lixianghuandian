@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import wongxd.base.AppManager
@@ -232,6 +237,14 @@ fun ImageView.loadImg(path: Any) {
 }
 
 
+
+
+fun ImageView.loadCircleImg(path: Any) {
+    Glide.with(this.context).load(path)
+        .transform(CircleCrop())
+        .into(this)
+}
+
 fun ImageView.loadBigImg(path: Any) {
 
 
@@ -245,6 +258,27 @@ fun ImageView.loadBigImg(path: Any) {
 //        .override(Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
         .into(this)
 
+}
+
+fun View.loadBackgroundImg(path: Any) {
+    Glide.with(this.context)
+        .load(path)
+        .into(object : CustomTarget<Drawable>() {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                this@loadBackgroundImg.background = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+                // 可以在这里设置占位图片，当图片加载完成或失败后清除占位图片时调用
+                // this@loadBackgroundImg.background = placeholder
+            }
+
+            override fun onLoadFailed(errorDrawable: Drawable?) {
+                super.onLoadFailed(errorDrawable)
+                // 可以在这里处理加载失败的情况，比如设置默认背景图片
+                // this@loadBackgroundImg.background = errorDrawable
+            }
+        })
 }
 
 

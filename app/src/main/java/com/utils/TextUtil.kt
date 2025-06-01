@@ -28,6 +28,23 @@ object TextUtil {
         }
     }
 
+    fun formatTime16(srcTime: String?): String {
+        return try {
+            val time =
+                if (srcTime.isNullOrEmpty()) {
+                    "无"
+                } else if (srcTime.length > 16) {
+                    srcTime.replace("-", "/").substring(0, 16)
+                } else {
+                    srcTime
+                }
+            time
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "暂无"
+        }
+    }
+
     fun formatTime(startTime: String?, endTime: String?): String {
         return try {
             val time =

@@ -329,4 +329,28 @@ object Path {
      */
     val COMPOSE_BIND = "/api/composebind"
 
+    /**
+     * 验证手机号
+     */
+    val VERIFY_MOBILE = "/apiv6/user/checkmobile"
+    /**
+     * 更新手机号
+     */
+    val CHANGE_MOBILE = "/apiv6/user/updatemobile"
+
+    /**
+     * 获取租赁协议
+     * */
+    val GET_PROTOCOL = "/apiv6/user/getprotocol"
+
+    /**
+     * 获取用户逾期费用
+     * */
+    val GET_USER_LATE_FEE = "/apiv6/user/getuserlatefee"
+
+    /**
+     * 支付用户逾期费用
+     * */
+    val PAY_LATE_FEE = "/apiv6/payment/paylatefee"
+
 }

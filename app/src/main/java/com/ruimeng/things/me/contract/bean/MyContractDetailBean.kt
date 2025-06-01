@@ -13,6 +13,7 @@ data class MyContractDetailBean(
         var device_id: Int = 0, // 968
         var model_str: String = "", // 型号a68
         var rent: String = "",
+        var rentMoneyStr: String = "", // 10000.00
         var renttime_str: String = "", // 5 个月
         var sign_pngs: List<SignPng> = listOf(),
         var pdf: String = "",

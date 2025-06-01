@@ -384,7 +384,7 @@
 			android:layout_marginTop="16dp"
 			android:orientation="horizontal">
 
-			<androidx.constraintlayout.widget.ConstraintLayout
+			<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="288dp"
 				android:layout_marginLeft="12dp"
@@ -392,71 +392,173 @@
 				android:layout_weight="1"
 				android:background="@drawable/rectangle_gray_bg"
 				android:paddingLeft="12dp"
-				android:paddingRight="12dp">
+				android:paddingRight="12dp"
+				android:orientation="vertical">
 
 				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="12dp"
-					android:text="设备押金"
+					android:text="个人中心"
 					android:textColor="#ffffffff"
 					android:textSize="12sp"
-					app:layout_constraintLeft_toLeftOf="parent"
-					app:layout_constraintTop_toTopOf="parent" />
+					/>
 
 				<ImageView
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="48dp"
+					android:layout_height="0dp"
+					android:layout_weight="1"
+					android:layout_marginTop="12dp"
 					android:src="@mipmap/ic_home_deposit"
-					app:layout_constraintLeft_toLeftOf="parent"
-					app:layout_constraintRight_toRightOf="parent"
-					app:layout_constraintTop_toTopOf="parent" />
+					/>
 
-				<TextView
-					android:layout_width="wrap_content"
+				<LinearLayout
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="245dp"
-					android:text="押金金额"
-					android:textColor="#ff9eaab3"
-					android:textSize="14sp"
-					app:layout_constraintLeft_toLeftOf="parent"
-					app:layout_constraintTop_toTopOf="parent" />
+					android:orientation="vertical"
+					android:paddingTop="12dp"
+					android:paddingBottom="12dp">
 
-				<TextView
-					android:id="@+id/tv_ya_monety"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="245dp"
-					android:textColor="#ffffffff"
-					android:textSize="14sp"
-					app:layout_constraintRight_toRightOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					tools:text="600元" />
+					<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:orientation="horizontal"
+						android:layout_marginBottom="10dp"
+						android:gravity="center_horizontal|bottom"
+						>
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="16dp"
-					android:text="租金金额"
-					android:visibility="gone"
-					android:textColor="#ff9eaab3"
-					android:textSize="14sp"
-					app:layout_constraintLeft_toLeftOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/tv_ya_monety" />
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="12sp"
+							android:textColor="#9EAAB3"
+							android:text="在网"/>
 
-				<TextView
-					android:id="@+id/tv_rent_money"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="16dp"
-					android:textColor="#ffffffff"
-					android:textSize="14sp"
-					android:visibility="gone"
-					app:layout_constraintRight_toRightOf="parent"
-					app:layout_constraintTop_toBottomOf="@id/tv_ya_monety"
-					tools:text="200元" />
-			</androidx.constraintlayout.widget.ConstraintLayout>
+						<TextView
+							android:id="@+id/tvOnlineTime"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="25sp"
+							android:textColor="#29EBB6"
+							android:textStyle="bold"
+							tools:text="1889"/>
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="12sp"
+							android:textColor="#9EAAB3"
+							android:text="天"/>
+
+					</LinearLayout>
+
+					<LinearLayout
+						android:layout_height="wrap_content"
+						android:layout_width="match_parent"
+						android:orientation="horizontal"
+						android:gravity="bottom">
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="11sp"
+							android:textColor="#9EAAB3"
+							android:text="日均电量"/>
+
+						<TextView
+							android:id="@+id/tvDailyElec"
+							android:layout_width="0dp"
+							android:layout_height="wrap_content"
+							android:layout_weight="1"
+							android:textSize="12sp"
+							android:textColor="@color/white"
+							tools:text="12"
+							android:text="0.0"
+							android:gravity="right"
+							android:layout_marginRight="2dp"
+							/>
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="10sp"
+							android:textColor="@color/white"
+							android:text="度"/>
+
+					</LinearLayout>
+					<LinearLayout
+						android:layout_height="wrap_content"
+						android:layout_width="match_parent"
+						android:orientation="horizontal"
+						android:gravity="bottom">
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="11sp"
+							android:textColor="#9EAAB3"
+							android:text="总用电量"/>
+
+						<TextView
+							android:id="@+id/tvTotalElec"
+							android:layout_width="0dp"
+							android:layout_height="wrap_content"
+							android:layout_weight="1"
+							android:textSize="12sp"
+							android:textColor="@color/white"
+							android:text="0.0"
+							tools:text="12"
+							android:gravity="right"
+							android:layout_marginRight="2dp"
+							/>
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="10sp"
+							android:textColor="@color/white"
+							android:text="度"/>
+
+					</LinearLayout>
+					<LinearLayout
+						android:layout_height="wrap_content"
+						android:layout_width="match_parent"
+						android:orientation="horizontal"
+						android:gravity="bottom">
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="11sp"
+							android:textColor="#9EAAB3"
+							android:text="总换电数"/>
+
+						<TextView
+							android:id="@+id/tvTotalExchange"
+							android:layout_width="0dp"
+							android:layout_height="wrap_content"
+							android:layout_weight="1"
+							android:textSize="12sp"
+							android:textColor="@color/white"
+							android:text="0"
+							tools:text="0"
+							android:gravity="right"
+							android:layout_marginRight="2dp"
+							/>
+
+						<TextView
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:textSize="10sp"
+							android:textColor="@color/white"
+							android:text="次"/>
+
+					</LinearLayout>
+
+				</LinearLayout>
+
+
+			</LinearLayout>
 
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -536,7 +638,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginTop="91dp"
-						android:text="有效期"
+						android:text="有效期至"
 						android:textColor="#ff9eaab3"
 						android:textSize="11sp"
 						app:layout_constraintLeft_toLeftOf="parent"
@@ -656,7 +758,7 @@
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_marginTop="91dp"
-							android:text="有效期"
+							android:text="有效期至"
 							android:textColor="#ff9eaab3"
 							android:textSize="11sp"
 							android:layout_marginLeft="10dp"

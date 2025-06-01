@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_topbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_gray_bg">
+
+                <ImageView
+                    android:id="@+id/iv_battery_pay_rent_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@mipmap/battery_five"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="136dp"
+                    android:layout_marginTop="16dp"
+                    android:text="电池编号"
+                    android:textColor="#ffb2c1ce"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_battery_num_pay_rent_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="136dp"
+                    android:layout_marginTop="37dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="10000222" />
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="41dp"
+                    android:text="电池型号"
+                    android:textColor="#ffb2c1ce"
+                    android:textSize="12sp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_battery_model_pay_rent_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="@id/tv1"
+                    app:layout_constraintTop_toBottomOf="@id/tv1"
+                    tools:text="48伏50安" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="53dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="24dp"
+                    android:background="@drawable/lin_ver"
+                    app:layout_constraintLeft_toRightOf="@id/tv2"
+                    app:layout_constraintRight_toLeftOf="@id/tv1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="12dp"
+                android:text="逾期信息"
+                android:textColor="#ffffffff"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rectangle_gray_bg"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="逾期天数"
+                        android:textColor="#9EAAB3"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvLateDays"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:textColor="#ffffffff"
+                        android:textSize="14sp"
+                        tools:text="成都2个月" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="逾期费用"
+                        android:textColor="#9EAAB3"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvLateFee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:textColor="#ffffffff"
+                        android:textSize="14sp"
+                        tools:text="22次" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="逾期费用说明"
+                    android:textColor="#9EAAB3"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvLateFeeExplain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    tools:text="2023/06/01至2023/08/01" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
+                android:text="支付选项"
+                android:textColor="#ffffffff"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/rectangle_gray_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginTop="14dp"
+                    android:text="请选择支付方式"
+                    android:textColor="#ff929fab"
+                    android:textSize="14sp" />
+
+                <RadioGroup
+                    android:id="@+id/rgPayRent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp">
+
+                    <RadioButton
+                        android:id="@+id/rbWx"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginRight="14dp"
+                        android:button="@null"
+                        android:checked="true"
+                        android:drawableLeft="@mipmap/ic_withdrawal_wx"
+                        android:drawableRight="@drawable/radio_select"
+                        android:drawablePadding="12dp"
+                        android:layoutDirection="rtl"
+                        android:text="微信支付"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"></RadioButton>
+
+                    <RadioButton
+                        android:id="@+id/rbAlipay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginBottom="20dp"
+                        android:button="@null"
+                        android:drawableLeft="@mipmap/ic_withdrawal_alipay"
+                        android:drawableRight="@drawable/radio_select"
+                        android:drawablePadding="12dp"
+                        android:layoutDirection="rtl"
+                        android:text="支付宝支付"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"></RadioButton>
+
+
+                    <RadioButton
+                        android:id="@+id/rbOffline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginBottom="20dp"
+                        android:button="@null"
+                        android:drawableLeft="@mipmap/ic_pay_offline"
+                        android:drawableRight="@drawable/radio_select"
+                        android:drawablePadding="12dp"
+                        android:layoutDirection="rtl"
+                        android:text="线下支付"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:visibility="gone"></RadioButton>
+                </RadioGroup>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rectangle_gray_bg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:gravity="center_vertical"
+                    android:text="合计："
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:textColor="#ff29ebb6"
+                    android:textSize="20sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="¥200.00" />
+
+                <TextView
+                    android:id="@+id/tv_coupon_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="#ff929fab"
+                    android:textSize="11sp"
+                    android:text="已优惠¥0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    tools:text="已优惠¥0" />
+
+                <TextView
+                    android:id="@+id/btnPayNow"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rectangle_pay_bg"
+                    android:gravity="center"
+                    android:text="立即支付"
+                    android:textColor="#ff272934"
+                    android:textSize="15sp"
+                    app:layout_constraintRight_toRightOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

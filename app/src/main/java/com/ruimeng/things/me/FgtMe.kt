@@ -7,13 +7,19 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.ruimeng.things.*
+import com.ruimeng.things.bean.myVipLevel
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
+import com.ruimeng.things.bean.bgImage
+import com.ruimeng.things.bean.description
 import com.ruimeng.things.bean.showName
+import com.ruimeng.things.bean.stateImage
 import com.ruimeng.things.common.BannerHelper
+import com.ruimeng.things.home.FgtChangeMobile
 import com.ruimeng.things.home.FgtFollowWechatAccount
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.me.activity.AtyWeb2
@@ -32,6 +38,8 @@ import wongxd.base.MainTabFragment
 import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.EasyToast
 import wongxd.common.getCurrentAppAty
+import wongxd.common.loadBackgroundImg
+import wongxd.common.loadCircleImg
 import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
@@ -50,8 +58,19 @@ class FgtMe : MainTabFragment() {
         initEvent()
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
+            myVipLevel(userinfo.online_time)?.let {
+                llVipState.loadBackgroundImg(it.bgImage())
+                ivVipState.loadImg(it.stateImage())
+                tvVipState.text = it.stateCN
+                tvVipState.setTextColor(it.stateColor)
+                tvVipDescription.text = it.description(userinfo.online_time)
+                tvVipDescription.setTextColor(it.descriptionColor)
+            }?: run {
+                llVipState.isVisible = false
+            }
+
             if (!TextUtils.isEmpty(userinfo.logo)) {
-                iv_header_me.loadImg(userinfo.logo)
+                iv_header_me.loadCircleImg(userinfo.logo)
             }
 
             tv_username_me.text = userinfo.showName()
@@ -123,8 +142,19 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
+            if("成都市" !== userinfo.city && tv_ya_money_me.isEnabled){
+                llTerminate.isVisible = true
+                llPlaceHolder5.visibility = View.GONE
+            }
         }
 
+        llTerminate.setOnClickListener {
+            startFgt(FgtMeDeposit())
+        }
+
+        llChangeMobile.setOnClickListener {
+            startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE))
+        }
 
         ll_ticket_me.setOnClickListener {
             startFgt(FgtTicket())

@@ -5,103 +5,122 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#272831"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/gradiant_bg_home">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_gravity="bottom"
-            android:src="@mipmap/home_bg"
-            android:layout_marginBottom="40dp"/>
-    </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/gradiant_bg_home">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="40dp"
+                    android:src="@mipmap/home_bg" />
+            </FrameLayout>
 
-
-
-    <TextView
-        android:id="@+id/tv_log_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="您还没有添加电池设备"
-        android:textColor="@color/white"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        />
-
-
-    <FrameLayout
-
-        android:id="@+id/addDeviceBtn"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="50dp"
-        android:background="@drawable/bg_btn_common1"
-
-        >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_add_device"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@mipmap/ic_scan_blank" />
 
             <TextView
-                android:id="@+id/tv_add_device"
+                android:id="@+id/tv_log_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:gravity="center"
+                android:text="您还没有添加电池设备"
+                android:textColor="@color/white" />
+
+
+            <TextView
+                android:id="@+id/tvLateFeeInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="点击添加"
-                android:textSize="15sp"
-                android:textColor="#272934" />
-        </LinearLayout>
-    </FrameLayout>
-    <TextView
+                android:layout_marginTop="5dp"
+                android:visibility="visible"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="#29EBB6"
+                android:text="逾期费用说明"
+                android:gravity="center"
+                android:drawablePadding="3dp"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@mipmap/ic_rant_long_pay_rent_money"/>
 
-        android:id="@+id/btnReturn"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginBottom="50dp"
-        android:text="点击退还电池"
-        android:textSize="15sp"
-        android:textColor="#272934"
-        android:visibility="gone"
-        android:gravity="center"
-        android:background="@drawable/bg_btn_common1"/>
+
+            <FrameLayout
+
+                android:id="@+id/addDeviceBtn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/bg_btn_common1"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_add_device"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@mipmap/ic_scan_blank" />
+
+                    <TextView
+                        android:id="@+id/tv_add_device"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:text="点击添加"
+                        android:textColor="#272934"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+
+                android:id="@+id/btnReturn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/bg_btn_common1"
+                android:gravity="center"
+                android:text="点击退还电池"
+                android:textColor="#272934"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/btnReturnInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="12sp"
                 android:layout_marginLeft="60dp"
-                android:layout_marginRight="60dp"
                 android:layout_marginTop="60dp"
+                android:layout_marginRight="60dp"
                 android:gravity="center_horizontal"
-                android:text="如需退租，请进入「我的-账号押金」中操作退网。若持有电池，请及时归还"/>
+                android:text="如需退租，请进入「我的-账号押金」中操作退网。若持有电池，请及时归还"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

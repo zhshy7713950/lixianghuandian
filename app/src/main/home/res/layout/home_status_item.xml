@@ -432,7 +432,7 @@
 							android:layout_height="wrap_content"
 							android:textSize="12sp"
 							android:textColor="#9EAAB3"
-							android:text="在网"/>
+							android:text="在网 "/>
 
 						<TextView
 							android:id="@+id/tvOnlineTime"
@@ -448,9 +448,17 @@
 							android:layout_height="wrap_content"
 							android:textSize="12sp"
 							android:textColor="#9EAAB3"
-							android:text="天"/>
+							android:text=" 天"/>
 
 					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="最近30天"
+						android:layout_marginBottom="6dp"
+						android:textSize="14sp"
+						android:textColor="#29EBB6"/>
 
 					<LinearLayout
 						android:layout_height="wrap_content"

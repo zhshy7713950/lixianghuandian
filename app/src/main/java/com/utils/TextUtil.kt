@@ -34,7 +34,7 @@ object TextUtil {
                 if (srcTime.isNullOrEmpty()) {
                     "无"
                 } else if (srcTime.length > 16) {
-                    srcTime.replace("-", "/").substring(0, 16)
+                    srcTime.substring(0, 16)
                 } else {
                     srcTime
                 }

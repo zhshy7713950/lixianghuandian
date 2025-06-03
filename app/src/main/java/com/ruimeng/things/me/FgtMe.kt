@@ -142,9 +142,11 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
-            if("成都市" !== userinfo.city && tv_ya_money_me.isEnabled){
+            if("成都市" != userinfo.city && tv_ya_money_me.isEnabled){
                 llTerminate.isVisible = true
                 llPlaceHolder5.visibility = View.GONE
+            }else{
+                llTerminate.isVisible = false
             }
         }
 

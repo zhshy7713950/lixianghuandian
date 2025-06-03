@@ -84,7 +84,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
         http {
             url = Path.GET_PROTOCOL
             params["userId"] = FgtHome.userId
-            params["deviceId"] = FgtHome.CURRENT_DEVICEID
+            params["deviceId"] = if(getPageType == 2)FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
 
             onSuccess { res ->
                 val bean = res.toPOJO<ProtocolBean>()
@@ -115,12 +115,14 @@ class FgtContractSignStep1 : BaseBackFragment() {
                     val data = bean.data
 
                     if (getPageType != 0) {
-                        layout_battery1.visibility = View.VISIBLE
-                        layout_battery2.visibility = View.GONE
                         if (getPageType == 1) {
-                            tv_battery_num_pay_rent_money.text = deviceId
-                            tv_battery_model_pay_rent_money.text = deviceModel
+                            layout_battery1.visibility = View.GONE
+                            layout_battery2.visibility = View.GONE
+//                            tv_battery_num_pay_rent_money.text = deviceId
+//                            tv_battery_model_pay_rent_money.text = deviceModel
                         } else {
+                            layout_battery1.visibility = View.VISIBLE
+                            layout_battery2.visibility = View.GONE
                             tv_battery_num_pay_rent_money.text = "${data.device_id}"
                             tv_battery_model_pay_rent_money.text = "${data.model_str}"
                         }
@@ -139,14 +141,14 @@ class FgtContractSignStep1 : BaseBackFragment() {
                             override fun onTick(millisUntilFinished: Long) {
                                 MainLooper.runOnUiThread {
                                     btn_sign_contract?.text =
-                                        "我已阅读并同意合同内容(${millisUntilFinished / 1000}s)"
+                                        "我已确认合同内容(${millisUntilFinished / 1000}s)"
                                     btn_sign_contract?.setOnClickListener {}
                                 }
                             }
 
                             override fun onFinish() {
                                 MainLooper.runOnUiThread {
-                                    btn_sign_contract?.text = "我已阅读并同意合同内容"
+                                    btn_sign_contract?.text = "我已确认合同内容"
                                     btn_sign_contract?.setOnClickListener {
                                         startForResult(
                                             FgtContractSignStep2.newInstance(data.contract_id),

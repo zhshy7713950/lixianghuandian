@@ -430,6 +430,31 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/llChangeMobile"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/ic_change_mobile" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="变更手机号码"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/llTerminate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -454,31 +479,6 @@
                         android:layout_marginTop="8dp"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llChangeMobile"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:scaleType="centerInside"
-                        android:src="@mipmap/ticket_me" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="变更手机号码"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
 
 

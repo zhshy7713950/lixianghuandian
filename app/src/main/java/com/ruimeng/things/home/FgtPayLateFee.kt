@@ -23,6 +23,7 @@ import wongxd.common.getSweetDialog
 import wongxd.common.toPOJO
 import wongxd.http
 import java.text.DecimalFormat
+import kotlin.math.abs
 
 /**
  * 支付逾期费用
@@ -183,7 +184,8 @@ class FgtPayLateFee : BaseBackFragment() {
 
             onSuccessWithMsg { s, msg ->
                 val result = s.toPOJO<LateFeePayBean>().data
-                if(result.lateFee - userLateFee!!.actualLateFee > 0.01){
+                if(abs(result.lateFee - userLateFee!!.actualLateFee) > 0.001){
+                    dlgPayProgress?.dismiss()
                     NormalDialog(activity)
                         .apply {
                             style(NormalDialog.STYLE_TWO)

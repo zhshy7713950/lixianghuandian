@@ -80,11 +80,11 @@ class FgtContractSignStep1 : BaseBackFragment() {
         }
     }
 
-    private fun getContractInfo() {
+    private fun getProtocol(deviceId: String) {
         http {
             url = Path.GET_PROTOCOL
             params["userId"] = FgtHome.userId
-            params["deviceId"] = if(getPageType == 2)FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
+            params["deviceId"] = deviceId
 
             onSuccess { res ->
                 val bean = res.toPOJO<ProtocolBean>()
@@ -97,6 +97,9 @@ class FgtContractSignStep1 : BaseBackFragment() {
                 }
             }
         }
+    }
+
+    private fun getContractInfo() {
         http {
             url = if (getPageType == 1) PathV3.PAYMENT_SIGN_CONTRACT else PathV3.SIGN_CONTRACT
             if (getPageType != 1) {
@@ -114,10 +117,12 @@ class FgtContractSignStep1 : BaseBackFragment() {
                     val bean = res.toPOJO<ContractSignStepOneBean>()
                     val data = bean.data
 
+                    var deviceId = ""
                     if (getPageType != 0) {
                         if (getPageType == 1) {
                             layout_battery1.visibility = View.GONE
                             layout_battery2.visibility = View.GONE
+                            deviceId = this@FgtContractSignStep1.deviceId
 //                            tv_battery_num_pay_rent_money.text = deviceId
 //                            tv_battery_model_pay_rent_money.text = deviceModel
                         } else {
@@ -125,8 +130,10 @@ class FgtContractSignStep1 : BaseBackFragment() {
                             layout_battery2.visibility = View.GONE
                             tv_battery_num_pay_rent_money.text = "${data.device_id}"
                             tv_battery_model_pay_rent_money.text = "${data.model_str}"
+                            deviceId = data.device_id
                         }
                     } else {
+                        deviceId = data.device_id
                         layout_battery1.visibility = View.GONE
                         layout_battery2.visibility = View.VISIBLE
                         tv_device_num_my_contract_detail.text = "电池编号：${data.device_id}"
@@ -135,6 +142,7 @@ class FgtContractSignStep1 : BaseBackFragment() {
                         tv_deposit_my_contract_detail.text = "${data.deposit}元"
                         tv_rent_money_my_contract_detail.text = "${data.rent}元"
                     }
+                    getProtocol(deviceId)
 
                     if (getPageType != 1) {
                         object : CountDownTimer((data.wait_sec * 1000).toLong(), 1000.toLong()) {

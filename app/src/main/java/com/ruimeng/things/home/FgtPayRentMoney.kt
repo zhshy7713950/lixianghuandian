@@ -461,7 +461,15 @@ class FgtPayRentMoney : BaseBackFragment() {
                 if (sighStatus) {
                     baseInfo.let {
                         if (it != null) {
-                            start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
+                            start(FgtContractSignStep1.newInstance(
+                                it.contract_id,
+                                "",
+                                0,
+                                1,
+                                deviceId,
+                                it.model_name
+                            ))
+//                            start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
                         }
                     }
                 } else {

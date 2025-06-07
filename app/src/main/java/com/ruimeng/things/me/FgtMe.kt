@@ -147,6 +147,7 @@ class FgtMe : MainTabFragment() {
                 llPlaceHolder5.visibility = View.GONE
             }else{
                 llTerminate.isVisible = false
+                llPlaceHolder5.visibility = View.INVISIBLE
             }
         }
 

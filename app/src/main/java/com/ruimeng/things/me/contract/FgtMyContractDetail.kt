@@ -127,12 +127,11 @@ class FgtMyContractDetail : BaseBackFragment() {
             .download()
     }
 
-
-    private fun getInfo() {
+    private fun getProtocol(deviceId: String) {
         http {
             url = Path.GET_PROTOCOL
             params["userId"] = FgtHome.userId
-            params["deviceId"] = FgtHome.CURRENT_DEVICEID
+            params["deviceId"] = deviceId
 
             onSuccess { res ->
                 val bean = res.toPOJO<ProtocolBean>()
@@ -145,7 +144,10 @@ class FgtMyContractDetail : BaseBackFragment() {
                 }
             }
         }
+    }
 
+
+    private fun getInfo() {
         http {
             url = PathV3.MY_CONTRACT_DETAIL
             params["contract_id"] = contractId
@@ -177,6 +179,7 @@ class FgtMyContractDetail : BaseBackFragment() {
 //                    }
 
                     tv_device_num_my_contract_detail.text = "电池编号：${bean.device_id}"
+                    getProtocol("${bean.device_id}")
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
                     tv_deposit_my_contract_detail.text = if ("0" == bean.deposit_status) {

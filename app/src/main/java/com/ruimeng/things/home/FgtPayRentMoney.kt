@@ -455,46 +455,19 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-//            val dlg = DialogFragmentRentProtocol()
-//            dlg.show(childFragmentManager, "protocol")
-            if (pageType == PAGE_TYPE_CREATE) {
-                if (sighStatus) {
-                    baseInfo.let {
-                        if (it != null) {
-                            start(FgtContractSignStep1.newInstance(
-                                it.contract_id,
-                                "",
-                                0,
-                                1,
-                                deviceId,
-                                it.model_name
-                            ))
-//                            start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
-                        }
-                    }
-                } else {
+            baseInfo.let {
+                if (it != null) {
                     start(
                         FgtContractSignStep1.newInstance(
-                            baseInfo!!.contract_id,
+                            it.contract_id,
                             "",
                             0,
-                            if (pageType == PAGE_TYPE_CREATE) 2 else 1,
+                            if (sighStatus || pageType != PAGE_TYPE_CREATE) 1 else 2,
                             deviceId,
-                            baseInfo!!.model_name
+                            it.model_name
                         )
                     )
                 }
-            } else {
-                start(
-                    FgtContractSignStep1.newInstance(
-                        baseInfo!!.contract_id,
-                        "",
-                        0,
-                        1,
-                        deviceId,
-                        baseInfo!!.model_name
-                    )
-                )
             }
         }
 
@@ -654,14 +627,6 @@ class FgtPayRentMoney : BaseBackFragment() {
         IS_CHECKED_PROTOCOL = true
         sighStatus = true
         iv_check_pay_rent_money.setImageResource(R.mipmap.ic_radio_select)
-        tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-            baseInfo.let {
-                if (it != null) {
-                    start(FgtMyContractDetail.newInstance(it.contract_id, it.device_id))
-                }
-            }
-
-        }
     }
 
     private var dlgPayProgress: SweetAlertDialog? = null
@@ -795,10 +760,10 @@ class FgtPayRentMoney : BaseBackFragment() {
                 onSuccessWithMsg { res, msg ->
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<NewGetRentBean>().data
-                        isAllowExtendedGift = if(result.isAllowExtendedGift == "1"){
+                        isAllowExtendedGift = if (result.isAllowExtendedGift == "1") {
                             tv_extended_gift_package_create.visibility = View.VISIBLE
                             true
-                        }else{
+                        } else {
                             false
                         }
                         isAllowUnionPay = result.isAllowUnionPay == "1"
@@ -831,10 +796,12 @@ class FgtPayRentMoney : BaseBackFragment() {
                 onSuccessWithMsg { res, msg ->
                     iv_battery_pay_rent_money?.let {
                         val result = res.toPOJO<UpdateGetRentBean>().data
-                        isAllowExtendedGift = if(result.isAllowExtendedGift == "1"){
+                        isAllowExtendedGift = if (result.isAllowExtendedGift == "1") {
                             tv_extended_gift_update_package.visibility = View.VISIBLE
                             true
-                        }else { false }
+                        } else {
+                            false
+                        }
                         isAllowUnionPay = result.isAllowUnionPay == "1"
 
                         var payments = ArrayList<PaymentInfo>();
@@ -965,7 +932,11 @@ class FgtPayRentMoney : BaseBackFragment() {
                                 tv_by_stages_title.text =
                                     "￥${DecimalFormat("#.##").format(periodAmount.periodAmount)} x ${periodAmount.period}期"
                                 if (submit && !baseInfo?.contract_id.isNullOrEmpty() && periodAmount.period >= 3) {
-                                    countPay(totalPrice,periodAmount.periodAmount,periodAmount.period)
+                                    countPay(
+                                        totalPrice,
+                                        periodAmount.periodAmount,
+                                        periodAmount.period
+                                    )
                                 }
                             }
                         }

@@ -20,7 +20,9 @@ data class NetStationBean(
             var count: String = "",
             var tel: String = "", // 028-85214458
         var distance:Float = 0.0f,
-            var distanceStr :String =""
+            var distanceStr :String ="",
+            var isOnline: Int = 0, // 1
+            var available_battery: String = ""
         )
     }
 }

@@ -40,25 +40,27 @@
 						tools:text="编号：1226" />
 
 
-				<TextView
-						android:id="@+id/tv_device_model_my_contract_detail"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="center"
-						android:textColor="@color/white"
-						android:textSize="12sp"
-						tools:text="型号：60V  40ah" />
 
 				<TextView
 						android:id="@+id/tv_rent_long_my_contract_detail"
 						android:layout_width="0dp"
 						android:layout_height="match_parent"
 						android:layout_weight="1"
-						android:gravity="center_vertical|right"
+						android:gravity="left|center_vertical"
 						android:textColor="@color/white"
 						android:textSize="12sp"
 						tools:text="租期：9个月" />
+
+				<TextView
+					android:id="@+id/tv_device_model_my_contract_detail"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:gravity="center"
+					android:textColor="@color/white"
+					android:textSize="12sp"
+					tools:text="型号：60V  40ah"
+					android:visibility="invisible"/>
 			</LinearLayout>
 
 
@@ -81,7 +83,7 @@
 						android:layout_width="0dp"
 						android:layout_height="match_parent"
 						android:layout_weight="1"
-						android:gravity="center"
+						android:gravity="left|center_vertical"
 						android:textColor="@color/white"
 						android:textSize="12sp"
 						tools:text="租金：￥120.00" />

@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.google.gson.Gson
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import wongxd.base.AppManager
@@ -215,6 +216,12 @@ fun ImageView.loadImg(path: Any) {
 //        .centerCrop()
         .into(this)
 
+}
+
+fun ImageView.loadCircleImg(path: Any) {
+    Glide.with(this.context).load(path)
+        .transform(CircleCrop())
+        .into(this)
 }
 
 

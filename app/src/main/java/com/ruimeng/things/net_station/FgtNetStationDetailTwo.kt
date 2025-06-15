@@ -218,7 +218,7 @@ class FgtNetStationDetailTwo : BaseBackFragment() {
                     }
 
                 a.getView<TextView>(R.id.textView)?.apply {
-                    text = "编号：${b.device_id}\n电量：${b.electricity}%\n${getStatus}"
+                    text = "型号：${b.device_type}\n电量：${b.electricity}%\n${getStatus}"
                 }
 
             }

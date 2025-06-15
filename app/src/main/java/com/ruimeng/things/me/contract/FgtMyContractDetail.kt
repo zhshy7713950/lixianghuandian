@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog

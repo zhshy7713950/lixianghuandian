@@ -415,12 +415,11 @@ class FgtHome : MainTabFragment() {
 
         tv_switch_battery.setOnClickListener { startFgt(FgtSwitchBattery()) }
 
-        fl_switch.setOnClickListener {
-            if (tv_switch_des.text.toString().contains("开启")) {
-                changeBatteryStatus(true)
-            } else {
-                changeBatteryStatus(false)
-            }
+        fl_switch_open.setOnClickListener {
+            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }, ChangeStatusEvent(true))
+        }
+        fl_switch_close.setOnClickListener {
+            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }, ChangeStatusEvent(false))
         }
 
 
@@ -492,29 +491,20 @@ class FgtHome : MainTabFragment() {
 
     @Subscribe
     fun openOrCloseBatter(event: BatteryOpenEvent) {
-        fun changeRoundFramLayoutBg(rfl: QMUIRoundFrameLayout, isOpen: Boolean) {
-            val dra = rfl.background as QMUIRoundButtonDrawable
-            dra.setBgData(ColorStateList.valueOf(if (isOpen) Color.RED else Color.GREEN))
-        }
 
         IS_OPEN = event.isOpen
 
-        changeRoundFramLayoutBg(fl_switch, IS_OPEN)
-
-        iv_switch.setColorFilter(Color.WHITE)
-        tv_switch_des.setTextColor(Color.WHITE)
-
         if (IS_OPEN) {
-            tv_switch_des.text = "点击关闭电源"
             iv_battery_status.setImageResource(R.drawable.battery_work)
             rl_status.setBackgroundResource(R.drawable.bg_battery_open_has_item)
         } else {
-            tv_switch_des.text = "点击开启电源"
             iv_battery_status.setImageResource(R.drawable.battery_not_work)
             rl_status.setBackgroundResource(R.drawable.bg_battery_close_has_item)
         }
 
     }
+
+
 
 
     private fun changeBatteryStatus(isOpen: Boolean) {
@@ -574,8 +564,7 @@ class FgtHome : MainTabFragment() {
     private var deviceDetailBean: DeviceDetailBean.Data? = null
 
     @SuppressLint("SetTextI18n")
-    private fun getBatteryDetailInfo(deviceId: String = "0") {
-
+    private fun getBatteryDetailInfo(deviceId: String = "0", changeStatusEvent: ChangeStatusEvent? = null) {
 
         http {
             url = "/apiv4/getonedevice"
@@ -591,8 +580,33 @@ class FgtHome : MainTabFragment() {
                     deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
 
 
-
                     deviceDetailBean?.let { item ->
+
+                        if (changeStatusEvent != null) {
+                            val isOpen = item.device_base.device_status == "1"
+                            if (changeStatusEvent.isOpen != isOpen) {
+                                CommonPromptDialogHelper.promptCommonDialog(
+                                    activity!!,
+                                    "",
+                                    if(changeStatusEvent.isOpen) "请确认是否开启电源" else "请确认是否关闭电源",
+                                    "",
+                                    "",
+                                    true,
+                                    false,
+                                    true,
+                                    true,
+                                    object : CommonDialogCallBackHelper {
+                                        override fun back(viewId: Int, msg: String?) {
+                                            if(viewId == R.id.confirmBtn){
+                                                changeBatteryStatus(changeStatusEvent.isOpen)
+                                            }
+                                        }
+                                    }
+                                )
+                            }else{
+                                ToastHelper.longToast(context, if(isOpen) "当前已是开电状态，请勿重复操作" else "当前已是关电状态，请勿重复操作")
+                            }
+                        }
 
                         if (1 == item.popmsg.show_msg) {
                             CommonPromptDialogHelper.promptCommonDialog(
@@ -623,8 +637,6 @@ class FgtHome : MainTabFragment() {
                             changeElectricModelLabelImage?.visibility = View.GONE
 //                            tv_unbind_battery_home?.visibility = View.VISIBLE
 
-                            val dra = fl_switch.background as QMUIRoundButtonDrawable
-                            dra.setBgData(ColorStateList.valueOf(Color.parseColor("#FF7171")))
                             changeOpenDoor?.visibility = View.GONE
                         } else {
                             iv_signal?.visibility = View.GONE
@@ -711,7 +723,7 @@ class FgtHome : MainTabFragment() {
                                 addView(
                                     initFloatLayoutItemView(
                                         R.mipmap.change_electric_model_image,
-                                        "换电"
+                                        "手动切换"
                                     ) {
                                         //                                        Log.i("data===","===contract_id1===${item.device_contract.contract_id}")
 //                                        tryToScan(AtyScanQrcode.TYPE_CHANGE, item.device_contract.contract_id,getIsHost)
@@ -861,7 +873,7 @@ class FgtHome : MainTabFragment() {
                         tv_avg_speed.text = item.device_base.speed_avg + "KM/H"
 
 
-                        tv_total_u.text = item.device_base.totalvoltage + "V"
+                        tv_battery_u.text = "总电压：" + item.device_base.totalvoltage + "V"
                         tv_rant_time.text =
                             item.device_contract.begin_time.toLong()
                                 .getTime(isShowHour = false) + "至" +

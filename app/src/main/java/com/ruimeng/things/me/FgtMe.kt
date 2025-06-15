@@ -3,6 +3,7 @@ package com.ruimeng.things.me
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import com.flyco.dialog.listener.OnBtnClickL
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.home_status_item.banner
 import me.yokeyword.fragmentation.SupportFragment
 import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
+import wongxd.common.loadCircleImg
 import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
@@ -38,7 +40,9 @@ class FgtMe : MainTabFragment() {
 
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
-            iv_header_me.loadImg(userinfo.logo)
+            if (!TextUtils.isEmpty(userinfo.logo)) {
+                iv_header_me.loadCircleImg(userinfo.logo)
+            }
 
             tv_username_me.text =
                 if (userinfo.mobile.isBlank()) userinfo.nickname else userinfo.mobile

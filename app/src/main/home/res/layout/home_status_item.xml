@@ -93,16 +93,28 @@
                     tools:text="故障描述" />
 
                 <TextView
-                    android:id="@+id/tv_battery_num"
+                    android:id="@+id/tv_battery_u"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_below="@+id/iv_battery"
                     android:layout_alignLeft="@+id/iv_battery"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="电池编号"
+                    android:text="总电压"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_battery_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/tv_battery_u"
+                    android:layout_alignLeft="@+id/iv_battery"
+                    android:gravity="center"
+                    android:text="电池编号"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_change_reamrk_home"
@@ -174,6 +186,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_operation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -184,16 +197,16 @@
 
 
                     <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
-                        android:id="@+id/fl_switch"
+                        android:id="@+id/fl_switch_open"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginBottom="20dp"
                         android:layout_weight="1"
                         android:background="?attr/selectableItemBackground"
                         android:elevation="2dp"
-                        app:qmui_backgroundColor="@color/white"
-                        app:qmui_borderColor="@color/white"
-                        app:qmui_radius="20dp">
+                        app:qmui_backgroundColor="#22DF98"
+                        app:qmui_borderColor="#22DF98"
+                        app:qmui_radius="10dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -202,7 +215,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/iv_switch"
+                                android:id="@+id/iv_switch_open"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_gravity="center"
@@ -210,12 +223,54 @@
                                 android:src="@drawable/switch_ico" />
 
                             <TextView
-                                android:id="@+id/tv_switch_des"
+                                android:id="@+id/tv_switch_open_des"
                                 android:layout_width="wrap_content"
                                 android:layout_height="20dp"
                                 android:gravity="center"
                                 android:paddingLeft="5dp"
-                                android:text="点击开启电源"
+                                android:text="电池开电"
+                                android:textSize="12sp" />
+
+
+                        </LinearLayout>
+
+                    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
+
+                    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout
+                        android:id="@+id/fl_switch_close"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:elevation="2dp"
+                        app:qmui_backgroundColor="#FF7171"
+                        app:qmui_borderColor="#FF7171"
+                        app:qmui_radius="10dp"
+                        android:layout_marginRight="50dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/iv_switch_close"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/switch_ico_close" />
+
+                            <TextView
+                                android:id="@+id/tv_switch_close_des"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:gravity="center"
+                                android:paddingLeft="5dp"
+                                android:text="电池关电"
                                 android:textSize="12sp" />
 
 
@@ -238,7 +293,7 @@
                         android:elevation="2dp"
                         app:qmui_backgroundColor="#0FF1D4"
                         app:qmui_borderColor="@color/white"
-                        app:qmui_radius="20dp">
+                        app:qmui_radius="10dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -259,7 +314,7 @@
                                 android:gravity="center"
                                 android:paddingLeft="5dp"
                                 android:text="换电开门"
-                                android:textColor="@color/white"
+                                android:textColor="@color/black"
                                 android:textSize="12sp" />
 
 
@@ -309,24 +364,26 @@
 
                     </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout>
 
-
-                    <com.flyco.roundview.RoundTextView
-                        android:id="@+id/tv_unbind_battery_home"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:padding="2dp"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="解绑电池"
-                        android:textSize="10sp"
-                        android:visibility="gone"
-                        app:rv_backgroundColor="@color/white"
-                        app:rv_cornerRadius="5dp" />
                 </LinearLayout>
+
+                <com.flyco.roundview.RoundTextView
+                    android:id="@+id/tv_unbind_battery_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:padding="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="解绑"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:rv_backgroundColor="@color/white"
+                    app:rv_cornerRadius="5dp"
+                    android:layout_above="@+id/ll_operation"
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
 
@@ -574,7 +631,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="15dp"

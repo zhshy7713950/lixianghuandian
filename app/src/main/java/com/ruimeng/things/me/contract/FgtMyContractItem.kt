@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.flyco.dialog.listener.OnBtnClickL
@@ -211,7 +212,8 @@ class FgtMyContractItem : MainTabFragment() {
             bothNotNull(helper, item) { a, b ->
 
                 a.getView<TextView>(R.id.tv_num).text = "编号：${b.device_id}"
-                a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
+//                a.getView<TextView>(R.id.tv_model).text = "${b.model_str}"
+                a.getView<TextView>(R.id.tv_model).isVisible = false
                 a.getView<TextView>(R.id.tv_rent_long).text = "租期：${b.renttime_str}"
                 a.getView<TextView>(R.id.tv_rent_start_time).text = "租用日期:${b.begin_time}"
                 a.getView<TextView>(R.id.tv_rent_end_time).text = "结束日期:${b.end_time}"

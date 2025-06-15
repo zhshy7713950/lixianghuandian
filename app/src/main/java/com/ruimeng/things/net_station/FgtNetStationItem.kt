@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -307,7 +308,14 @@ class FgtNetStationItem : MainTabFragment() {
                 val tvTitle = a.getView<TextView>(com.ruimeng.things.R.id.tv_title)
                 val qmf = a.getView<QMUIFloatLayout>(com.ruimeng.things.R.id.qmf)
                 val tvLocation = a.getView<TextView>(com.ruimeng.things.R.id.tv_location)
+                val llAvailableCount = a.getView<LinearLayout>(R.id.ll_available_count)
+                val tvAvailableCount = a.getView<TextView>(R.id.tv_available_count)
+                val tvOffline = a.getView<TextView>(R.id.tv_offline)
 
+                val isOnline = item?.isOnline == 1
+                llAvailableCount.isVisible = isOnline
+                tvOffline.isVisible = !isOnline
+                tvAvailableCount.text = item?.available_battery?: ""
 
                 a.itemView.setOnClickListener {
                     if ("3"==getType){

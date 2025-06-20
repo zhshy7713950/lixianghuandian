@@ -73,25 +73,26 @@ class FgtTicket : BaseBackFragment() {
         rv_ticket.layoutManager = LinearLayoutManager(activity)
         rv_ticket.adapter = adapter
         adapter!!.setEmptyView(R.layout.layout_empty,rv_ticket)
-        adapter.setOnItemChildClickListener(object :OnItemChildClickListener{
-            override fun onItemChildClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+        adapter.onItemChildClickListener =
+            OnItemChildClickListener { p0, p1, p2 ->
                 if (p1 != null) {
                     if (p1.id == R.id.tv_use){
-                        if (isUsed == 0 ){
-                            if (FgtHome.CURRENT_DEVICEID.isNullOrEmpty() && FgtHome.NO_PAY_DEVICEID.isNullOrEmpty()){
-                                ToastHelper.shortToast(context, "请先完成押金支付")
-                                return
-                            }
-                            vm.getUserPaymentInfo(FgtHome.userId,FgtHome.CURRENT_DEVICEID)
-                        }
+                        //                        if (isUsed == 0 ){
+                        //                            if (FgtHome.CURRENT_DEVICEID.isNullOrEmpty() && FgtHome.NO_PAY_DEVICEID.isNullOrEmpty()){
+                        //                                ToastHelper.shortToast(context, "请先完成押金支付")
+                        //                                return
+                        //                            }
+                        //                            vm.getUserPaymentInfo(FgtHome.userId,FgtHome.CURRENT_DEVICEID)
+                        //                        }
                     }else{
-                        adapter.data.get(p2).expond = !adapter.data.get(p2).expond
-                        adapter.notifyDataSetChanged()
+                        if(isUsed == 0){
+                            val data = adapter.data[p2]
+                            data.expond = !data.expond
+                            adapter.notifyDataSetChanged()
+                        }
                     }
                 }
             }
-
-        })
 
 
         srl_ticket?.setOnRefreshListener { page = 1;getInfo() }
@@ -156,37 +157,48 @@ class FgtTicket : BaseBackFragment() {
         var isUsed = 0
         override fun convert(helper: BaseViewHolder, item: MyCouponBean.Data?) {
             bothNotNull(helper, item) { a, b ->
-                a.setText(R.id.tv_money,TextUtil.getMoneyText(b.coupon_price))
-                    .setText(R.id.tv_limit,b.limit_day)
+                a.setText(R.id.tv_money,b.coupon_price)
+                    .setText(R.id.tv_limit,"${b.act_time}~${b.exp_time}")
                     .setText(R.id.tv_use,b.is_use)
-                    .setText(R.id.tv_time,"有效期至：${b.exp_time}")
                 if (item != null) {
-                    if (isUsed== 0){
-                        a.setTextColor(R.id.tv_money,Color.parseColor("#F9BB6C"))
-                            .setTextColor(R.id.tv_coupon_name,Color.parseColor("#F9BB6C"))
-                            .setTextColor(R.id.tv_limit,Color.parseColor("#FFFFFF"))
-                            .setText(R.id.tv_use,"去使用")
-
-                    }else if (isUsed == 1){
-                        a.setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))
-                            .setTextColor(R.id.tv_coupon_name,Color.parseColor("#C3B199"))
-                            .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
-                            .setText(R.id.tv_use,"已使用")
-
+                    when (isUsed) {
+                        0 -> {
+                            a.setTextColor(R.id.tvRmb,Color.parseColor("#F9BB6C"))
+                                .setTextColor(R.id.tv_money,Color.parseColor("#F9BB6C"))
+                                .setTextColor(R.id.tv_coupon_name,Color.parseColor("#F9BB6C"))
+                                .setTextColor(R.id.tv_limit,Color.parseColor("#FFFFFF"))
+                                .setText(R.id.tv_use,"待使用")
+                                .setBackgroundRes(R.id.cl_coupon,if(b.expond) R.drawable.bg_ticket_me else R.drawable.bg_ticket_unuse)
+                        }
+                        1 -> {
+                            a.setTextColor(R.id.tvRmb,Color.parseColor("#C3B199"))
+                                .setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))
+                                .setTextColor(R.id.tv_coupon_name,Color.parseColor("#C3B199"))
+                                .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
+                                .setText(R.id.tv_use,"已使用")
+                                .setTextColor(R.id.tv_use,Color.parseColor("#C4CAD0"))
+                                .setBackgroundRes(R.id.cl_coupon,R.drawable.bg_ticket_used)
+                        }
+                        else -> {
+                            a.setTextColor(R.id.tvRmb,Color.parseColor("#706D65"))
+                                .setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))
+                                .setTextColor(R.id.tv_coupon_name,Color.parseColor("#C3B199"))
+                                .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
+                                .setText(R.id.tv_use,"已过期")
+                                .setTextColor(R.id.tv_use,Color.parseColor("#798289"))
+                                .setBackgroundRes(R.id.cl_coupon,R.drawable.bg_ticket_expire)
+                        }
                     }
-                    else{
-                        a.setTextColor(R.id.tv_money,Color.parseColor("#C3B199"))
-                            .setTextColor(R.id.tv_coupon_name,Color.parseColor("#C3B199"))
-                            .setTextColor(R.id.tv_limit,Color.parseColor("#D7D7D7"))
-                            .setText(R.id.tv_use,"已过期")
-                    }
-
+                    a.setText(R.id.tv_coupon_name,"${b.coupon_category}")
+                    a.setText(R.id.tv_coupon_type,"优惠类型：${b.coupon_type}")
+                    a.setText(R.id.tv_app_type,"适用品牌：${b.app_type}")
+                    a.setText(R.id.tv_limit_city,"适用城市：${b.limit_city}")
+                    a.setText(R.id.tv_limit_voltage,"适用伏数：${b.limit_voltage}")
+                    a.setText(R.id.tv_limit_day_desc,"适用天数：${b.limit_day_desc}")
+                    a.setText(R.id.tv_act_time,"生效时间：${b.act_time}")
+                    a.setText(R.id.tv_exp_time,"过期时间：${b.exp_time}")
                     a.setGone(R.id.cl_time,b.expond)
-                    a.setBackgroundRes(R.id.ll_content,if (b.expond) R.mipmap.bg_ticket_me_big else R.mipmap.bg_ticket_me)
-
-
                 }
-                a.addOnClickListener(R.id.tv_use)
                 a.addOnClickListener(R.id.cl_coupon_info)
             }
         }

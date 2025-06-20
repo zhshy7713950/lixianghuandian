@@ -82,7 +82,7 @@ class SelectCouponPopup (private val activity: Activity,
                     .setImageResource(R.id.iv_select,if (selectId == b.id) R.mipmap.ic_radio_select else R.mipmap.ic_radio_unselect)
                     .setText(R.id.tv_time,"有效期至：${b.exp_time}")
                 a.setGone(R.id.cl_time,b.expond)
-                a.setBackgroundRes(R.id.ll_content,if (b.expond) R.mipmap.bg_ticket_me_big else R.mipmap.bg_ticket_me)
+                a.setBackgroundRes(R.id.ll_content,if (b.expond) R.mipmap.bg_ticket_me_big else R.drawable.bg_ticket_me)
                 a.addOnClickListener(R.id.cl_info)
                 a.addOnClickListener(R.id.iv_select)
             }

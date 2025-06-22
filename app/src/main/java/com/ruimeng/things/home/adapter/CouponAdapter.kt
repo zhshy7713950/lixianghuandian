@@ -17,6 +17,8 @@ class CouponAdapter : BaseQuickAdapter<OperationInnerData, BaseViewHolder>(R.lay
                 }else{
                     setImageResource(R.id.ivCheck,R.mipmap.ic_radio_unselect)
                 }
+                addOnClickListener(R.id.ivCheck)
+                addOnClickListener(R.id.clInfo)
             }
         }
     }

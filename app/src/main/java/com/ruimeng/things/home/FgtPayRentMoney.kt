@@ -473,7 +473,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         tv_ticket_pay_rent_money.setOnClickListener {
-            if (!couponList.isEmpty()) {
+            if (couponList.isNotEmpty()) {
                 activity?.let { it1 ->
                     SelectCouponPopup(it1, couponList, couponId,
                         object : SelectCouponPopup.OnCouponSelect {

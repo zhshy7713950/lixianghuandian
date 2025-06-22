@@ -1,8 +1,10 @@
 package com.ruimeng.things.home
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.net.whenError
 import com.net.whenSuccess
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
+import com.ruimeng.things.CustomDialog
 import com.ruimeng.things.R
 import com.ruimeng.things.home.adapter.CouponAdapter
 import com.ruimeng.things.home.vm.CouponPurchaseViewModel
@@ -75,11 +78,18 @@ class FgtCouponPurchase : BaseBackFragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = couponAdapter.also {
                 it.setNewData(operationInnerDataList)
-                it.onItemClickListener = BaseQuickAdapter.OnItemClickListener { _, _, i ->
-                    updatePrice(operationInnerDataList?.get((i)))
-                    it.selectPos = i
-                    it.notifyDataSetChanged()
-                }
+                it.onItemChildClickListener =
+                    BaseQuickAdapter.OnItemChildClickListener { _, view, i ->
+                        if (view.id == R.id.ivCheck) {
+                            updatePrice(operationInnerDataList?.get((i)))
+                            it.selectPos = i
+                            it.notifyDataSetChanged()
+                        } else if (view.id == R.id.clInfo) {
+                            operationInnerDataList?.get(i)?.let {
+                                couponInfoDialog(context, it)
+                            }
+                        }
+                    }
             }
         }
         btnPayNow.setOnClickListener {
@@ -104,6 +114,36 @@ class FgtCouponPurchase : BaseBackFragment() {
         }
         if (operationInnerDataList != null && operationInnerDataList!!.size > 0) {
             updatePrice(operationInnerDataList!![0])
+        }
+    }
+
+    private fun couponInfoDialog(
+        context: Context,
+        couponInfo: OperationInnerData
+    ) {
+        CustomDialog(context, R.layout.dialog_coupon_info).apply {
+            gravity = Gravity.TOP
+            show()
+
+            setText(R.id.tvMoney,couponInfo.price)
+            setText(R.id.tvDes,couponInfo.description)
+            setText(R.id.tv_coupon_type, "优惠类型：${couponInfo.coupon_type}")
+            setText(R.id.tv_app_type, "适用品牌：${couponInfo.app_type}")
+            setText(R.id.tv_limit_city, "适用城市：${couponInfo.limit_city}")
+            setText(R.id.tv_limit_voltage, "适用伏数：${couponInfo.limit_voltage}")
+            setText(R.id.tv_limit_day_desc, "适用天数：${couponInfo.limit_day_desc}")
+            setText(R.id.tv_act_duration, "有效时间：${couponInfo.act_duration}")
+            setOnItemClickListener(R.id.iv_close_dialog) {
+                dismiss()
+            }
+
+            val dialogWindow = window
+            val lp = dialogWindow!!.attributes
+            val d = context.resources.displayMetrics // 获取屏幕宽、高用
+
+            lp.height = d.heightPixels
+            lp.width = d.widthPixels
+            dialogWindow!!.attributes = lp
         }
     }
 

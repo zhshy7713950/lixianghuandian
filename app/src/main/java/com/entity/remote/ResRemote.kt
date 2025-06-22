@@ -48,9 +48,21 @@ data class OperationInnerData(
     val id: String?,//优惠券包ID
     val price: String?,//优惠券包售卖价格
     val discount: String?,//券包已优惠金额（比如：原价300，折后49，优惠251）
-    val description: String?//券包描述信息
+    val description: String?,//券包描述信息
+    val coupon_type: String?,//优惠券类型
+    val app_type: String?,//APP类型
+    val limit_city: String?,//限制城市
+    val limit_voltage: String?,//限制电压
+    val limit_day_desc: String?,//限制天数描述
+    val act_duration: String?,//活动有效期
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -61,6 +73,12 @@ data class OperationInnerData(
         parcel.writeString(price)
         parcel.writeString(discount)
         parcel.writeString(description)
+        parcel.writeString(coupon_type)
+        parcel.writeString(app_type)
+        parcel.writeString(limit_city)
+        parcel.writeString(limit_voltage)
+        parcel.writeString(limit_day_desc)
+        parcel.writeString(act_duration)
     }
     override fun describeContents(): Int {
         return 0

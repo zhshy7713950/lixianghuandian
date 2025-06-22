@@ -43,25 +43,23 @@ class SelectCouponPopup (private val activity: Activity,
         var adapter = CouponSelectAdapter()
         adapter.setNewData(coupons)
         rvCoupon.adapter = adapter
-        adapter.setOnItemChildClickListener(object :OnItemChildClickListener{
-            override fun onItemChildClick(p0: BaseQuickAdapter<*, *>?, p1: View?, p2: Int) {
+        adapter.onItemChildClickListener =
+            OnItemChildClickListener { p0, p1, p2 ->
                 if (p1 != null) {
-                    if (p1.id == R.id.cl_info){
-                        coupons.get(p2).expond = !coupons.get(p2).expond
+                    if (p1.id == R.id.cl_coupon_info){
+                        coupons[p2].expond = !coupons[p2].expond
 
                     }else if (p1.id == R.id.iv_select){
-                        if (selectId == coupons.get(p2).id){
-                            selectId = 0
+                        selectId = if (selectId == coupons[p2].id){
+                            0
                         }else{
-                            selectId = coupons.get(p2).id
+                            coupons[p2].id
                         }
-                        listener.selectId(selectId,coupons.get(p2).coupon_label)
+                        listener.selectId(selectId, coupons[p2].coupon_label)
                     }
                     adapter.notifyDataSetChanged()
                 }
             }
-
-        })
         show(activity.window.decorView)
 
     }
@@ -74,17 +72,26 @@ class SelectCouponPopup (private val activity: Activity,
             showAtLocation(view, Gravity.BOTTOM, 0, 0)
         }
     }
-    inner class CouponSelectAdapter : BaseQuickAdapter<CouponsInfoBean, BaseViewHolder>(R.layout.item_coupon_select) {
+    inner class CouponSelectAdapter : BaseQuickAdapter<CouponsInfoBean, BaseViewHolder>(R.layout.item_rv_ticket) {
         override fun convert(p0: BaseViewHolder, p1: CouponsInfoBean?) {
             bothNotNull(p0, p1) { a, b ->
-                a.setText(R.id.tv_money,"¥"+ b.coupon_price)
-                    .setText(R.id.tv_limit,b.limit_day)
+                a.setText(R.id.tv_money,b.coupon_price)
+                    .setText(R.id.tv_limit,"${b.act_time}~${b.exp_time}")
+                    .setBackgroundRes(R.id.cl_coupon,if(b.expond) R.drawable.bg_ticket_me else R.drawable.bg_ticket_unuse)
+                    .setText(R.id.tv_coupon_name, "${b.coupon_category}")
+                    .setText(R.id.tv_coupon_type, "优惠类型：${b.coupon_type}")
+                    .setText(R.id.tv_app_type, "适用品牌：${b.app_type}")
+                    .setText(R.id.tv_limit_city, "适用城市：${b.limit_city}")
+                    .setText(R.id.tv_limit_voltage, "适用伏数：${b.limit_voltage}")
+                    .setText(R.id.tv_limit_day_desc, "适用天数：${b.limit_day_desc}")
+                    .setText(R.id.tv_act_time, "生效时间：${b.act_time}")
+                    .setText(R.id.tv_exp_time, "过期时间：${b.exp_time}")
+                    .setGone(R.id.cl_time, b.expond)
+                    .setVisible(R.id.iv_select,true)
+                    .setVisible(R.id.tv_use,false)
                     .setImageResource(R.id.iv_select,if (selectId == b.id) R.mipmap.ic_radio_select else R.mipmap.ic_radio_unselect)
-                    .setText(R.id.tv_time,"有效期至：${b.exp_time}")
-                a.setGone(R.id.cl_time,b.expond)
-                a.setBackgroundRes(R.id.ll_content,if (b.expond) R.mipmap.bg_ticket_me_big else R.drawable.bg_ticket_me)
-                a.addOnClickListener(R.id.cl_info)
-                a.addOnClickListener(R.id.iv_select)
+                    .addOnClickListener(R.id.cl_coupon_info)
+                    .addOnClickListener(R.id.iv_select)
             }
         }
 

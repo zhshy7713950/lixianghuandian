@@ -23,6 +23,7 @@ import com.ruimeng.things.home.FgtChangeRentBattery
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPackageBind
 import com.ruimeng.things.home.FgtPayRentMoney
+import com.ruimeng.things.home.bean.ScanResult
 import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.shop.tkLogin
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -330,6 +331,9 @@ class AtyMain : BaseBackActivity() {
                                 result
                             )
                         )
+                    } else if(prefix == AtyScanQrcode.TYPE_TICKET) {
+                        EventBus.getDefault()
+                            .post(ScanResult(result))
                     } else {
                         EventBus.getDefault()
                             .post(ScanResultEvent(result, FgtPayRentMoney.PAGE_TYPE_CREATE))

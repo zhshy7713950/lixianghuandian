@@ -246,7 +246,43 @@ class FgtHome : MainTabFragment() {
                 NO_PAY_DEVICEID = ""
                 payType = ""
             }
-            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
+            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }) { _ ->
+                showSwitchBattery(it)
+            }
+        }
+    }
+
+    private fun showSwitchBattery(deviceList: List<MyDevicesBean.Data>){
+        if(deviceList.size == 2 && !deviceList.first()?.device_id.isNullOrEmpty() && !deviceList[1]?.device_id.isNullOrEmpty()){
+            ll_switch_battery.isVisible = true
+            val mainDeviceId = deviceList.first().device_id
+            val subDeviceId = deviceList[1].device_id
+            val changeSwitchBtn = {
+                if(mainDeviceId == CURRENT_DEVICEID){
+                    tv_main_battery_checked.isVisible = true
+                    tv_sub_battery_unchecked.isVisible = true
+                    tv_main_battery_unchecked.isVisible = false
+                    tv_sub_battery_checked.isVisible = false
+                }else if(subDeviceId == CURRENT_DEVICEID){
+                    tv_main_battery_unchecked.isVisible = true
+                    tv_sub_battery_checked.isVisible = true
+                    tv_main_battery_checked.isVisible = false
+                    tv_sub_battery_unchecked.isVisible = false
+                }
+            }
+            changeSwitchBtn()
+            tv_sub_battery_unchecked.setOnClickListener {
+                getBatteryDetailInfo(subDeviceId) { _ ->
+                    changeSwitchBtn()
+                }
+            }
+            tv_main_battery_unchecked.setOnClickListener {
+                getBatteryDetailInfo(mainDeviceId) { _ ->
+                    changeSwitchBtn()
+                }
+            }
+        }else{
+            ll_switch_battery.isVisible = false
         }
     }
 
@@ -839,7 +875,7 @@ class FgtHome : MainTabFragment() {
                         style(NormalDialog.STYLE_TWO)
                         btnNum(2)
                         title("提示")
-                        content("您还有额外电池租金待支付，是否为您切换到该电池(${needSwitch.device_id})")
+                        content("您还没有为第2块电池购买套餐，是否为您切换到该电池？")
                         btnText("继续续期", "立即切换")
                         btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
                         setOnBtnClickL(OnBtnClickL {
@@ -981,7 +1017,7 @@ class FgtHome : MainTabFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getBatteryDetailInfo(deviceId: String = "0") {
+    private fun getBatteryDetailInfo(deviceId: String = "0",callback: ((Boolean)->Unit)? = null) {
         CURRENT_DEVICEID = deviceId
 
         http {
@@ -991,12 +1027,14 @@ class FgtHome : MainTabFragment() {
 
             onSuccess { res ->
                 onGetBatteryDetailInfo(res.toPOJO<DeviceDetailBean>().data)
+                callback?.invoke(true)
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
 //                CURRENT_DEVICEID = ""
                 deviceCode = i
                 getPaymentInfo()
+                callback?.invoke(false)
             }
             onFinish {
 

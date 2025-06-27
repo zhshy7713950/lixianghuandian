@@ -674,6 +674,7 @@ class FgtPayRentMoney : BaseBackFragment() {
                     99 -> {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
+                        FgtHome.CURRENT_DEVICEID = deviceId
                     }
 
                     0 -> {

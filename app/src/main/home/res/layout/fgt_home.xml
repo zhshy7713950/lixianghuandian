@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="#272831"
-		android:orientation="vertical">
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:background="#272831"
+	android:orientation="vertical">
 
 	<FrameLayout
 		android:layout_width="match_parent"
@@ -49,9 +50,10 @@
 			android:layout_gravity="left|center_vertical"
 			/>
 	</FrameLayout>
-	<FrameLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
+
 		<com.scwang.smartrefresh.layout.SmartRefreshLayout
 			android:id="@+id/srl_home"
 			android:layout_width="match_parent"
@@ -74,12 +76,14 @@
 		</com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 		<LinearLayout
+			android:id="@+id/ll_top_tips"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:layout_marginLeft="12dp"
 			android:layout_marginRight="12dp"
-			android:background="@drawable/rectangle_gray_bg_line">
+			android:background="@drawable/rectangle_gray_bg_line"
+			app:layout_constraintTop_toTopOf="parent">
 			<TextView
 				android:id="@+id/tv_follow_wechat"
 				android:layout_width="match_parent"
@@ -119,11 +123,71 @@
 
 
 			</LinearLayout>
+
 		</LinearLayout>
 
-	</FrameLayout>
+		<LinearLayout
+			android:id="@+id/ll_switch_battery"
+			android:layout_width="150dp"
+			android:layout_height="34dp"
+			android:layout_gravity="center_horizontal|top"
+			android:orientation="horizontal"
+			android:background="@drawable/bg_switch_battery"
+			android:padding="4dp"
+			android:visibility="gone"
+			app:layout_constraintTop_toBottomOf="@+id/ll_top_tips"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent">
 
+			<TextView
+				android:id="@+id/tv_main_battery_checked"
+				android:layout_width="95dp"
+				android:layout_height="match_parent"
+				android:text="主电"
+				android:textColor="@color/white"
+				android:textSize="14sp"
+				android:gravity="center"
+				android:background="@drawable/bg_switch_battery_checked"
+				android:visibility="gone"
+				/>
 
+			<TextView
+				android:id="@+id/tv_sub_battery_unchecked"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:textColor="@color/black"
+				android:gravity="center"
+				android:text="副电"
+				android:textSize="11sp"
+				android:visibility="gone"/>
+
+			<TextView
+				android:id="@+id/tv_main_battery_unchecked"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:textColor="@color/black"
+				android:gravity="center"
+				android:text="主电"
+				android:textSize="11sp"
+				android:visibility="gone"/>
+
+			<TextView
+				android:id="@+id/tv_sub_battery_checked"
+				android:layout_width="95dp"
+				android:layout_height="match_parent"
+				android:text="副电"
+				android:textColor="@color/white"
+				android:textSize="14sp"
+				android:gravity="center"
+				android:background="@drawable/bg_switch_battery_checked"
+				android:visibility="gone"
+				/>
+
+		</LinearLayout>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

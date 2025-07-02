@@ -51,6 +51,7 @@
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/tv_base_price"
 		android:layout_marginTop="3dp"
+		android:gravity="center_horizontal"
 		/>
 	<TextView
 		android:id="@+id/tv_no_package"

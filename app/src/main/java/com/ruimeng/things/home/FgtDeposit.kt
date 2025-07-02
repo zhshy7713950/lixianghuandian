@@ -391,6 +391,7 @@ class FgtDeposit : BaseBackFragment() {
                 dlgPaySuccessed = getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") {
                     //押金支付成功  跳转租金支付界面
 //                    startWithPop(FgtPayRentMoney.newInstance(deviceId))
+                    FgtHome.CURRENT_DEVICEID = deviceId
                     pop()
                     FgtHome.tryToScan(prefix = AtyScanQrcode.TYPE_PAY_RENT)
                     EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())

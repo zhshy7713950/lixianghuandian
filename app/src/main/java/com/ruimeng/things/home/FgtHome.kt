@@ -75,6 +75,7 @@ import wongxd.utils.SystemUtils
 class FgtHome : MainTabFragment() {
 
     companion object {
+        const val TAG = "FgtHomeTag"
         const val REQUEST_ZXING_CODE = 1025
         const val KEY_LAST_DEVICE_ID = "lastDeviceId"
 
@@ -246,14 +247,15 @@ class FgtHome : MainTabFragment() {
                 NO_PAY_DEVICEID = ""
                 payType = ""
             }
-            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" }) { _ ->
-                showSwitchBattery(it)
-            }
+            this.myDeviceList = it
+            getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
         }
     }
 
-    private fun showSwitchBattery(deviceList: List<MyDevicesBean.Data>){
-        if(deviceList.size == 2 && !deviceList.first()?.device_id.isNullOrEmpty() && !deviceList[1]?.device_id.isNullOrEmpty()){
+    private var myDeviceList: List<MyDevicesBean.Data>? = null
+
+    private fun showSwitchBattery(deviceList: List<MyDevicesBean.Data>?){
+        if(deviceList != null && deviceList.size == 2 && !deviceList.first()?.device_id.isNullOrEmpty() && !deviceList[1]?.device_id.isNullOrEmpty()){
             ll_switch_battery.isVisible = true
             val mainDeviceId = deviceList.first().device_id
             val subDeviceId = deviceList[1].device_id
@@ -272,14 +274,10 @@ class FgtHome : MainTabFragment() {
             }
             changeSwitchBtn()
             tv_sub_battery_unchecked.setOnClickListener {
-                getBatteryDetailInfo(subDeviceId) { _ ->
-                    changeSwitchBtn()
-                }
+                getBatteryDetailInfo(subDeviceId)
             }
             tv_main_battery_unchecked.setOnClickListener {
-                getBatteryDetailInfo(mainDeviceId) { _ ->
-                    changeSwitchBtn()
-                }
+                getBatteryDetailInfo(mainDeviceId)
             }
         }else{
             ll_switch_battery.isVisible = false
@@ -1017,7 +1015,7 @@ class FgtHome : MainTabFragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getBatteryDetailInfo(deviceId: String = "0",callback: ((Boolean)->Unit)? = null) {
+    private fun getBatteryDetailInfo(deviceId: String = "0") {
         CURRENT_DEVICEID = deviceId
 
         http {
@@ -1027,14 +1025,14 @@ class FgtHome : MainTabFragment() {
 
             onSuccess { res ->
                 onGetBatteryDetailInfo(res.toPOJO<DeviceDetailBean>().data)
-                callback?.invoke(true)
+                showSwitchBattery(myDeviceList)
             }
             onFail { i, s ->
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
 //                CURRENT_DEVICEID = ""
                 deviceCode = i
                 getPaymentInfo()
-                callback?.invoke(false)
+                showSwitchBattery(myDeviceList)
             }
             onFinish {
 
@@ -1312,7 +1310,6 @@ class FgtHome : MainTabFragment() {
             params["device_id"] = CURRENT_DEVICEID
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
-
                 autoRefresh()
             }
 
@@ -1847,7 +1844,7 @@ class FgtHome : MainTabFragment() {
     private fun showPopMsg(popmsg: DeviceDetailBean.Data.PopMsgBean) {
         if (1 == popmsg.show_msg) {
             CommonPromptDialogHelper.promptCommonDialog(
-                activity!!,
+                requireActivity(),
                 "",
                 popmsg.msg,
                 "",

@@ -127,6 +127,8 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
 
     private fun initView() {
+        Log.d(FgtHome.TAG, "initView: ${FgtHome.CURRENT_DEVICEID}")
+        Log.d(FgtHome.TAG, "initView: $deviceId")
         val colors = arrayOf("#FFFFFF", "#929FAB")
         tv_change_package_create_title.text = "选择换电次数"
         tv_base_package_create_title.text = "可选套餐信息"
@@ -665,6 +667,8 @@ class FgtPayRentMoney : BaseBackFragment() {
 
             onSuccess {
                 retryTime = 0
+
+                Log.d(FgtHome.TAG, "getServerPayResult : $it")
 
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")

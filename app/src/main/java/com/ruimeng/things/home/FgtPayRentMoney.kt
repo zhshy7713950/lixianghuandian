@@ -920,7 +920,7 @@ class FgtPayRentMoney : BaseBackFragment() {
     }
 
     private fun isByStages(paymentInfo: PaymentInfo) =
-        paymentInfo.time_type == "2" && paymentInfo.time_num.safeToInt() >= 3
+        paymentInfo.time_type == "2" && (paymentInfo.time_num.safeToInt() == 3 || paymentInfo.time_num.safeToInt() == 6 || paymentInfo.time_num.safeToInt() == 12)
 
     private fun getPeriodAmount(totalPrice: Double, submit: Boolean) {
         newGetRentBean?.let { paymentInfo ->

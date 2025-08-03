@@ -301,13 +301,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:scaleType="centerInside"
-                            android:src="@mipmap/ticket_me" />
+                            android:src="@drawable/ic_my_contract" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="优惠券"
+                            android:text="合约"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             android:layout_marginTop="8dp"/>

@@ -26,6 +26,7 @@ import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
+import com.ruimeng.things.me.contract.FgtMyContract
 import com.utils.safeToFloat
 import kotlinx.android.synthetic.main.fgt_me.*
 import kotlinx.android.synthetic.main.fgt_setting.tv_version_setting
@@ -160,8 +161,7 @@ class FgtMe : MainTabFragment() {
         }
 
         ll_ticket_me.setOnClickListener {
-            startFgt(FgtTicket())
-
+            startFgt(FgtMyContract())
         }
 
         ll_safe_center.setOnClickListener { startFgt(FgtSafeCenter()) }

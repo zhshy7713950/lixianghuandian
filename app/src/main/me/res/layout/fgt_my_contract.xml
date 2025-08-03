@@ -8,14 +8,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#404E58"
-        android:gravity="center"
-        android:text="合约"
-        android:textColor="#ffffffff"
-        android:textSize="17sp" />
+    <include layout="@layout/layout_topbar" />
 
 
     <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundFrameLayout

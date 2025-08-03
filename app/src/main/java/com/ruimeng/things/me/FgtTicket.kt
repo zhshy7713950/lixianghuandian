@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fgt_ticket.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONObject
-import wongxd.base.BaseBackFragment
+import wongxd.base.MainTabFragment
 import wongxd.common.EasyToast
 import wongxd.common.bothNotNull
 import wongxd.common.getCurrentAppAty
@@ -41,19 +41,22 @@ import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
+import me.yokeyword.fragmentation.SupportFragment
 
 /**
  * Created by wongxd on 2018/11/13.
  */
-class FgtTicket : BaseBackFragment() {
+class FgtTicket : MainTabFragment() {
     private val vm: TicketViewModel by viewModels()
     override fun getLayoutRes(): Int = R.layout.fgt_ticket
 
-    override fun onLazyInitView(savedInstanceState: Bundle?) {
+    override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
-        super.onLazyInitView(savedInstanceState)
 
-        initTopbar(topbar, "优惠券")
+        // 设置刷新按钮点击事件
+        tv_refresh.setOnClickListener {
+            srl_ticket.autoRefresh()
+        }
 
         tab_ticket.addTab(QMUITabSegment.Tab("待使用"))
             .addTab(QMUITabSegment.Tab("已使用"))
@@ -266,5 +269,23 @@ class FgtTicket : BaseBackFragment() {
                 }
             }
         }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if(srl_ticket != null){
+                srl_ticket.autoRefresh()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
+    }
+
+    fun startFgt(toFgt: SupportFragment) {
+        (parentFragment as FgtMain).start(toFgt)
     }
 }

@@ -17,7 +17,7 @@ import com.ruimeng.things.NoReadLiveData
 import com.ruimeng.things.R
 import kotlinx.android.synthetic.main.fgt_my_contract.*
 import org.greenrobot.eventbus.EventBus
-import wongxd.base.MainTabFragment
+import wongxd.base.BaseBackFragment
 import wongxd.base.custom.caneffect.CanRippleLayout
 import wongxd.base.custom.caneffect.CanShadowDrawable
 import wongxd.common.dp2px
@@ -25,7 +25,7 @@ import wongxd.common.dp2px
 /**
  * Created by wongxd on 2019/12/24.
  */
-class FgtMyContract : MainTabFragment() {
+class FgtMyContract : BaseBackFragment() {
 
     companion object{
         var qStr = ""
@@ -39,7 +39,11 @@ class FgtMyContract : MainTabFragment() {
     data class EventDoContractSearch(val q: String = "", val type: Int = 1)
     var  currentPage : FgtMyContractItem? = null
 
-    override fun initView(mView: View?, savedInstanceState: Bundle?) {
+    override fun onLazyInitView(savedInstanceState: Bundle?) {
+        super.onLazyInitView(savedInstanceState)
+        
+        initTopbar(topbar, "合约")
+
         val tabv = arrayOf(R.id.v1,R.id.v2,R.id.v3,R.id.v4)
 
         vp_my_contract.apply {
@@ -128,6 +132,10 @@ class FgtMyContract : MainTabFragment() {
 
         NoReadLiveData.refresh()
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

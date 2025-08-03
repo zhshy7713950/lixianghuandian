@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageView
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
+import com.ruimeng.things.me.FgtTicket
 import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.net_station.FgtNetStation
 import com.ruimeng.things.net_station.FgtNetStationMap
@@ -51,7 +52,7 @@ class FgtMain : FgtBase() {
             FgtHome(),
 //            FgtNetStation(),
             FgtNetStationMap(),
-            FgtMyContract(),
+            FgtTicket(),
             FgtMe()
         )
 

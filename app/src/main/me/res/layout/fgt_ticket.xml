@@ -10,7 +10,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_topbar" />
+        <!-- 标题栏 -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#404E58">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优惠券"
+                android:layout_gravity="center"
+                android:textColor="#ffffffff"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="刷新"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/white"
+                android:layout_gravity="right|center_vertical" />
+
+        </FrameLayout>
 
         <com.qmuiteam.qmui.widget.QMUITabSegment
             android:id="@+id/tab_ticket"

@@ -20,7 +20,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="优惠券"
+                android:text="优惠活动"
                 android:layout_gravity="center"
                 android:textColor="#ffffffff"
                 android:textSize="17sp" />
@@ -35,6 +35,18 @@
                 android:layout_gravity="right|center_vertical" />
 
         </FrameLayout>
+
+        <!-- 轮播广告 -->
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="10dp"
+            app:banner_loop_time="5000"
+            app:banner_radius="10dp" />
 
         <com.qmuiteam.qmui.widget.QMUITabSegment
             android:id="@+id/tab_ticket"

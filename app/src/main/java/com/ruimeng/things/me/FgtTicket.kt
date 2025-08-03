@@ -14,10 +14,12 @@ import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.AtyScanQrcode
 import com.ruimeng.things.home.FgtDeposit
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.FgtPayRentMoney
+import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.home.bean.ScanResult
 import com.ruimeng.things.home.bean.ScanResultEvent
 import com.ruimeng.things.me.bean.MyCouponBean
@@ -42,6 +44,7 @@ import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
 import me.yokeyword.fragmentation.SupportFragment
+import com.ruimeng.things.home.bean.BannerData
 
 /**
  * Created by wongxd on 2018/11/13.
@@ -57,6 +60,9 @@ class FgtTicket : MainTabFragment() {
         tv_refresh.setOnClickListener {
             srl_ticket.autoRefresh()
         }
+
+        // 初始化轮播广告
+        initBanner()
 
         tab_ticket.addTab(QMUITabSegment.Tab("待使用"))
             .addTab(QMUITabSegment.Tab("已使用"))
@@ -287,5 +293,26 @@ class FgtTicket : MainTabFragment() {
 
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)
+    }
+
+    // 初始化轮播广告
+    private fun initBanner() {
+        // 观察轮播广告数据变化
+        vm.bannerData.observe(this) { bannerList ->
+            setupBanner(bannerList)
+        }
+        
+        // 获取轮播广告数据
+        vm.fetchBannerData(requireContext(), FgtHome.userId)
+    }
+
+    // 设置轮播广告
+    private fun setupBanner(bannerList: List<BannerInfo>) {
+        if (bannerList.isEmpty()) {
+            banner.visibility = View.GONE
+            return
+        }
+
+        BannerHelper.setupBanner(banner, bannerList, this)
     }
 }

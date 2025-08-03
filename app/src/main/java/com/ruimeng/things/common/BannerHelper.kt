@@ -18,7 +18,15 @@ import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.bumptech.glide.Glide
 import com.ruimeng.things.home.FgtExtendedGift
+import com.ruimeng.things.home.FgtCouponPurchase
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.activity.AtyWeb2
+import com.entity.remote.OperationInnerData
+import com.entity.remote.OperationData
+import wongxd.common.toPOJO
+import wongxd.http
+import wongxd.common.EasyToast
+import com.ruimeng.things.App
 
 object BannerHelper {
     fun initCommonBanner(
@@ -80,6 +88,10 @@ object BannerHelper {
     private fun handleInternalLink(bannerInfo: BannerInfo, fgt: FgtBase) {
         val linkUrl = bannerInfo.linkUrl
         when {
+            linkUrl.startsWith("couponPurchase://") -> {
+                // 检查用户是否有购买优惠券的资格
+                checkCouponPurchaseQualification(fgt)
+            }
             linkUrl.startsWith("wxMin://") -> {
                 WeChatHelper.launchWXMiniProgram(
                     fgt.requireContext(),
@@ -93,11 +105,53 @@ object BannerHelper {
                 fgt.start(FgtExtendedGift.newInstance())
             }
             else -> {
-                // 打开内部网页
-                AtyWeb2.start(bannerInfo.title,bannerInfo.linkUrl)
+                // 兜底判断：如果banner解析出来的type在APP内查询不到，则提示升级APP
+                EasyToast.DEFAULT.show("功能暂时无法使用，请您升级APP后重试")
             }
         }
     }
+
+    // 检查购买优惠券资格
+    private fun checkCouponPurchaseQualification(fgt: FgtBase) {
+        http {
+            url = "/apiv6/advertisementinfo/getadvertisement"
+            params["userId"] = FgtHome.userId
+            params["position"] = "1"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
+
+            onSuccess { res ->
+                val advertisementList = res.toPOJO<AdvertisementData>().data
+                val couponPurchaseAd = advertisementList.find { ad ->
+                    ad.type == "couponPurchase"
+                }
+                
+                if (couponPurchaseAd != null) {
+                    // 找到优惠券购买广告，进入购买页面
+                    fgt.start(FgtCouponPurchase.newInstance(couponPurchaseAd.operationData?.data))
+                } else {
+                    // 没有找到优惠券购买广告
+                    EasyToast.DEFAULT.show("暂未查询到优惠券包信息")
+                }
+            }
+
+            onFail { _, s ->
+                EasyToast.DEFAULT.show("暂未查询到优惠券包信息")
+            }
+        }
+    }
+
+    // 广告数据类
+    data class AdvertisementData(
+        var `data`: List<AdvertisementInfo> = mutableListOf(),
+        var errcode: Int = 0,
+        var errmsg: String = ""
+    )
+
+    data class AdvertisementInfo(
+        val type: String,
+        val operationData: OperationData? = null
+    )
 
     private fun openExternalWebPage(url: String, context: Context) {
         AtyWeb2.startBrowser(context,url)

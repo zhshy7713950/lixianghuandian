@@ -1099,5 +1099,12 @@
 				</androidx.constraintlayout.widget.ConstraintLayout>
 			</LinearLayout>
 		</LinearLayout>
+
+		<!-- 底部占位视图，用于控制填充高度 -->
+		<View
+			android:id="@+id/v_bottom_padding"
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:visibility="gone" />
 	</LinearLayout>
 </ScrollView>

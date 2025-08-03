@@ -51,8 +51,6 @@ class AtyMain : BaseBackActivity() {
 
         InfoViewModel.getDefault()
 
-        UserInfoLiveData.refresh()
-
         setContentView(R.layout.aty_main)
 
         setSwipeBackEnable(false)
@@ -78,6 +76,12 @@ class AtyMain : BaseBackActivity() {
 //        bindPush(pushService.deviceId, pushService.deviceId)
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 每次进入页面时刷新用户信息
+        UserInfoLiveData.refresh()
     }
 
     private fun bindPush(sdk_userid: String, sdk_channelid: String) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.ruimeng.things.bean.UserInfoBean
+import org.greenrobot.eventbus.EventBus
 import wongxd.Config
 import wongxd.common.gson
 import wongxd.common.toPOJO
@@ -44,6 +45,8 @@ class UserInfoLiveData private constructor() : MutableLiveData<UserInfoBean.Data
                 onSuccess {
                     val result = it.toPOJO<UserInfoBean>().data.userinfo
                     setToString(result)
+                    // 发送EventBus事件通知UserInfo更新
+                    EventBus.getDefault().post(UserInfoUpdateEvent(result))
                     callback.invoke()
                 }
             }
@@ -57,5 +60,7 @@ class UserInfoLiveData private constructor() : MutableLiveData<UserInfoBean.Data
         })
     }
 
-
 }
+
+// UserInfo更新事件
+data class UserInfoUpdateEvent(val userInfo: UserInfoBean.Data.UserInfo)

@@ -67,6 +67,8 @@ import wongxd.common.permission.getPermissions
 import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.SystemUtils
+import com.utils.WeChatHelper
+import wongxd.common.loadCircleImg
 
 
 /**
@@ -222,6 +224,10 @@ class FgtHome : MainTabFragment() {
             tvDailyElec.text = it.getElectric()?.perDayElectric ?: "0.0"
             tvTotalElec.text = it.getElectric()?.useElectr ?: "0.0"
             tvTotalExchange.text = it.getElectric()?.exchangeTimes ?: "0"
+            
+            // 处理关注公众号banner的显示逻辑
+            updateFollowWechatBanner(userInfo.isBindAccount)
+            
             getAdInfo()
         }
 
@@ -1868,4 +1874,38 @@ class FgtHome : MainTabFragment() {
         BannerHelper.setupBanner(banner, bannerList, this)
     }
 
+    /**
+     * 处理UserInfo更新事件
+     */
+    @Subscribe
+    fun onUserInfoUpdate(event: UserInfoUpdateEvent) {
+        // 更新关注公众号banner的显示状态
+        updateFollowWechatBanner(event.userInfo.isBindAccount)
+    }
+
+    private fun updateFollowWechatBanner(isBindAccount: Int) {
+        if (isBindAccount == 1) {
+            // 已绑定，不显示banner
+            ll_follow_wechat_banner.visibility = GONE
+            // 底部占位视图高度为0
+            v_bottom_padding.layoutParams.height = 0
+            v_bottom_padding.visibility = GONE
+        } else {
+            // 未绑定，显示banner
+            ll_follow_wechat_banner.visibility = VISIBLE
+            v_bottom_padding.layoutParams.height = 80.dp2px().toInt()
+            v_bottom_padding.visibility = VISIBLE
+            
+            // 使用loadCircleImg加载圆形图标
+            iv_wx_logo.loadCircleImg(R.drawable.ic_wx_logo)
+            
+            // 设置点击事件
+            ll_follow_wechat_banner.setOnClickListener {
+                WeChatHelper.launchWXMiniProgram(
+                    requireContext(),
+                    resources.getString(R.string.wx_appid)
+                )
+            }
+        }
+    }
 }

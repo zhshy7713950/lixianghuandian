@@ -36,6 +36,7 @@ data class UserInfoBean(
             var online_time: Int = 0,
             var city: String = "",
             var electric: Any? = null,
+            var isBindAccount: Int = 0, // 1-已绑定，0-未绑定
         ){
             fun getElectric(): Electric?{
                 return getElectricList().firstOrNull()

@@ -416,11 +416,6 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-
-
-
-
-
                 </LinearLayout>
 
             <LinearLayout
@@ -481,31 +476,31 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-
                 <LinearLayout
+                    android:id="@+id/ll_follow_wechat"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="5dp"
-                    android:visibility="invisible">
+                    android:padding="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:scaleType="centerInside"
-                        android:src="@mipmap/ic_msg" />
+                        android:src="@drawable/ic_wx" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="消息"
+                        android:text="关注公众号"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="8dp"
+                        android:textSize="12sp" />
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -531,6 +526,7 @@
                         android:textSize="12sp"
                         android:layout_marginTop="8dp"/>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/llPlaceHolder5"

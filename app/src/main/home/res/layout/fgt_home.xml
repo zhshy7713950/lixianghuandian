@@ -187,6 +187,69 @@
 
 		</LinearLayout>
 
+		<!-- 关注公众号悬浮banner -->
+		<LinearLayout
+			android:id="@+id/ll_follow_wechat_banner"
+			android:layout_width="match_parent"
+			android:layout_height="60dp"
+			android:layout_marginLeft="24dp"
+			android:layout_marginRight="24dp"
+			android:layout_marginBottom="20dp"
+			android:background="@drawable/bg_follow_wechat_banner"
+			android:orientation="horizontal"
+			android:gravity="center_vertical"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent">
+
+			<ImageView
+				android:id="@+id/iv_wx_logo"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:layout_marginLeft="10dp"
+				android:src="@drawable/ic_wx_logo"
+				android:scaleType="centerCrop" />
+
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:orientation="vertical"
+				android:layout_marginLeft="10dp"
+				android:gravity="center_vertical">
+
+				<TextView
+					android:id="@+id/tv_follow_title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="关注「锂享换电公众号」"
+					android:textColor="@color/black"
+					android:textSize="15sp"
+					android:textStyle="bold" />
+
+				<TextView
+					android:id="@+id/tv_follow_desc"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="低电、高温、逾期信息，第一时间掌握"
+					android:textColor="#666666"
+					android:textSize="10sp"
+					android:layout_marginTop="0dp" />
+
+			</LinearLayout>
+
+			<TextView
+				android:id="@+id/tv_follow_btn"
+				android:layout_width="80dp"
+				android:layout_height="35dp"
+				android:layout_marginRight="10dp"
+				android:background="@drawable/bg_follow_btn"
+				android:gravity="center"
+				android:text="马上关注"
+				android:textColor="@color/black"
+				android:textSize="14sp" />
+
+		</LinearLayout>
+
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -1,17 +1,12 @@
 package com.ruimeng.things.home
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
 import com.ruimeng.things.home.vm.CustomerServiceViewModel
-import com.ruimeng.things.me.FgtTicket
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.fgt_customer_service.*
 import me.yokeyword.fragmentation.SupportFragment
@@ -24,8 +19,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils
 import wongxd.common.getCurrentAty
 import androidx.fragment.app.viewModels
 import com.net.NetworkResponse
-import com.entity.remote.UserPaymentInfoRemote
-import com.entity.remote.ResCommon
+import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
 
 /**
  * 客服中心页面
@@ -90,42 +84,12 @@ class CustomerServiceFragment : BaseBackFragment() {
     }
 
     private fun loadHelpCenter() {
-        webview_help_center.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            allowFileAccess = true
-        }
-        
-        webview_help_center.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                val url = request?.url?.toString()
-                if (url != null && url != HELP_CENTER_URL) {
-                    // 如果URL与目标URL不一致，说明需要新开Web
-                    openNewWebPage(url)
-                    return true
-                }
-                return false
-            }
-            
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                // 可以显示加载进度
-            }
-            
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                // 页面加载完成
-            }
-        }
+        // 设置URL加载策略
+        val strategy = HelpCenterUrlStrategy(HELP_CENTER_URL, requireContext())
+        webview_help_center.setUrlLoadingStrategy(strategy)
         
         // 加载帮助中心H5页面
         webview_help_center.loadUrl(HELP_CENTER_URL)
-    }
-
-    private fun openNewWebPage(url: String) {
-        // 使用APP内已有的Web页面样式打开新URL
-        // 注意：不需要边距，标题固定为"帮助中心"
-        // TODO: 实现新开Web页面功能
     }
 
     private fun handleBatteryCompartment() {

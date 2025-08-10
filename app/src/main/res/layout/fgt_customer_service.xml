@@ -180,13 +180,22 @@
             android:textSize="15sp"
             android:textColor="#EEEEEE" />
 
-        <!-- H5内容区域 -->
-        <WebView
-            android:id="@+id/webview_help_center"
+        <!-- H5内容区域 - 使用CardView包装 -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:background="@drawable/bg_help_center_webview" />
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardElevation="2dp">
+
+            <com.ruimeng.things.home.webview.CustomWebView
+                android:id="@+id/webview_help_center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF" />
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

@@ -1,4 +1,20 @@
-# xianglilai_android
+# 理想换电 - 安卓应用
+
+## 项目简介
+这是一个名为"理想换电"的安卓应用，主要功能包括：
+- 用户登录和注册
+- 换电站查找和导航
+- 在线客服和帮助中心
+- 优惠活动展示
+- 个人中心管理
+
+## 最近更新
+### 2024年帮助中心UI优化
+- 为帮助中心H5内容区域（WebView）添加了10dp圆角
+- 修改HelpCenterWebFragment使用封装的CustomWebView
+- 使用CardView包装WebView，确保圆角效果正确显示
+- 删除了重复的WebView初始化代码，使用CustomWebView的封装功能
+- 改善了整体视觉效果和代码结构，提高了代码复用性
 
 
 

@@ -78,28 +78,18 @@
 		<LinearLayout
 			android:id="@+id/ll_top_tips"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="27dp"
 			android:orientation="vertical"
 			android:layout_marginLeft="12dp"
 			android:layout_marginRight="12dp"
 			android:background="@drawable/rectangle_gray_bg_line"
 			app:layout_constraintTop_toTopOf="parent">
-			<TextView
-				android:id="@+id/tv_follow_wechat"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:layout_marginTop="6dp"
-				android:text="点击关注微信公众号，第一时间掌握设备数据信息"
-				android:textColor="#29EBB6"
-				android:textSize="11sp" />
-
+			
 			<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
+				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
-				android:layout_marginTop="6dp"
-				android:layout_marginBottom="6dp"
+				android:layout_marginRight="10dp"
 				android:gravity="center_vertical"
 				android:orientation="horizontal"
 				android:paddingRight="15dp">
@@ -120,7 +110,6 @@
 					android:textSize="11sp"
 					android:text="走马灯效果的演示"
 					android:textColor="@color/white" />
-
 
 			</LinearLayout>
 

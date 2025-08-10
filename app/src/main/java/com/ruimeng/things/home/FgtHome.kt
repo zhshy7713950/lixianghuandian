@@ -200,7 +200,7 @@ class FgtHome : MainTabFragment() {
 
         right?.setOnClickListener { tryToScan() }
 
-        tv_follow_wechat.setOnClickListener { start(FgtFollowWechatAccount()) }
+        // 移除微信公众号关注提示的点击事件
         tv_right.setOnClickListener {
             srl_home?.autoRefresh()
         }
@@ -217,7 +217,7 @@ class FgtHome : MainTabFragment() {
                 activity?.startActivity(intent)
             }
             userId = userInfo.id
-            tv_follow_wechat.visibility = if (userInfo.mp_follow == 0) VISIBLE else GONE
+            // 移除微信公众号关注提示的显示逻辑
             tvUnbind.visibility = if (userInfo.is_debug == 1) VISIBLE else GONE
             tv_title.text = userInfo.showName()
             tvOnlineTime.text = "${it.online_time}"

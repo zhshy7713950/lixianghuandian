@@ -15,6 +15,7 @@ import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import org.greenrobot.eventbus.EventBus
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import wongxd.common.getCurrentAty
 import androidx.fragment.app.viewModels
@@ -79,9 +80,9 @@ class CustomerServiceFragment : BaseBackFragment() {
             startFgt(SmartCustomerServiceFragment.newInstance())
         }
         
-        // 客服热线（暂时不做）
+        // 客服热线
         btn_service_hotline.setOnClickListener {
-            // TODO: 实现客服热线功能
+            showCustomerServiceHotlineDialog()
         }
     }
 
@@ -182,6 +183,20 @@ class CustomerServiceFragment : BaseBackFragment() {
         vm.changeError(deviceId, code).observe(this) { msg ->
             ToastHelper.shortToast(activity, msg)
         }
+    }
+    
+    private fun showCustomerServiceHotlineDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("客服热线")
+            .setMessage("4000283969")
+            .setNegativeButton("取消", null)
+            .setPositiveButton("确认") { _, _ ->
+                // 跳转到拨号界面
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.data = android.net.Uri.parse("tel:4000283969")
+                startActivity(intent)
+            }
+            .show()
     }
     
     private fun startFgt(toFgt: SupportFragment) {

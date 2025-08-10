@@ -243,7 +243,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="35"
-            android:background="@drawable/bg_service_hotline_button"
+            android:background="@drawable/bg_customer_service_hotline"
             android:layout_marginStart="12dp"
             android:orientation="horizontal"
             android:gravity="center"
@@ -252,8 +252,8 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_net_station_telephone"
-                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_customer_service_hotline"
+                android:layout_marginEnd="7.5dp"
                 android:scaleType="fitCenter" />
                 
             <TextView
@@ -261,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:text="客服热线"
                 android:textSize="16sp"
-                android:textColor="#333333" />
+                android:textColor="#CCCCCC" />
                 
         </LinearLayout>
 

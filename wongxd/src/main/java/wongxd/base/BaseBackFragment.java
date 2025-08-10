@@ -54,8 +54,16 @@ public abstract class BaseBackFragment extends FgtBase
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        mDelegate.onHiddenChanged(hidden);
+        try {
+            // 添加生命周期检查，避免"Fragment not attached"错误
+            if (isAdded() && !isDetached() && getFragmentManager() != null) {
+                super.onHiddenChanged(hidden);
+                mDelegate.onHiddenChanged(hidden);
+            }
+        } catch (Exception e) {
+            // 记录错误但不崩溃
+            e.printStackTrace();
+        }
     }
 
     public SwipeBackLayout getSwipeBackLayout() {

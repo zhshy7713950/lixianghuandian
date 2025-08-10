@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import com.net.NetworkResponse
 import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
 import com.ruimeng.things.home.SmartCustomerServiceFragment
+import com.ruimeng.things.utils.PageNavigationHelper
 
 /**
  * 客服中心页面
@@ -57,27 +58,25 @@ class CustomerServiceFragment : BaseBackFragment() {
         // 切换电池
         ll_switch_battery.setOnClickListener {
             // 进入首页-切换电池页面
-            startFgt(FgtSwitchBattery())
+            PageNavigationHelper.safeStartFragment(FgtSwitchBattery(), this)
         }
         
         // 变更手机
         ll_change_mobile.setOnClickListener {
             // 进入我的-变更手机号码页面
-            startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE))
+            PageNavigationHelper.safeStartFragment(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE), this)
         }
         
-        // 优惠活动
-        ll_promotional_activities.setOnClickListener {
-            // 返回到主页面并切换到优惠活动tab
-            // 使用EventBus发送SwitchPageEvent来切换tab
-            EventBus.getDefault().post(FgtMain.SwitchPageEvent(2))
-            pop()
-        }
+                    // 优惠活动
+            ll_promotional_activities.setOnClickListener {
+                // 返回到主页面并切换到优惠活动tab
+                PageNavigationHelper.backToMainAndSwitchTab(2, this)
+            }
         
         // 在线客服
         btn_online_service.setOnClickListener {
             // 跳转到智能客服页面
-            startFgt(SmartCustomerServiceFragment.newInstance())
+            PageNavigationHelper.safeStartFragment(SmartCustomerServiceFragment.newInstance(), this)
         }
         
         // 客服热线

@@ -1,0 +1,226 @@
+package com.ruimeng.things.home
+
+import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import com.ruimeng.things.FgtMain
+import com.ruimeng.things.InfoViewModel
+import com.ruimeng.things.R
+import com.ruimeng.things.ScanQrCodeActivity
+import com.ruimeng.things.home.vm.CustomerServiceViewModel
+import com.ruimeng.things.me.FgtTicket
+import com.utils.ToastHelper
+import kotlinx.android.synthetic.main.fgt_customer_service.*
+import me.yokeyword.fragmentation.SupportFragment
+import wongxd.base.BaseBackFragment
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
+import org.greenrobot.eventbus.EventBus
+import androidx.appcompat.app.AppCompatActivity
+import com.uuzuche.lib_zxing.activity.CodeUtils
+import wongxd.common.getCurrentAty
+import androidx.fragment.app.viewModels
+import com.net.NetworkResponse
+import com.entity.remote.UserPaymentInfoRemote
+import com.entity.remote.ResCommon
+
+/**
+ * 客服中心页面
+ */
+class CustomerServiceFragment : BaseBackFragment() {
+
+    companion object {
+        private const val HELP_CENTER_URL = "https://xianglilai.scxll.cn/appH5/SC-HELPCENTER.html"
+        private const val SCAN_QR_REQUEST_CODE = 1001
+        
+        fun newInstance(): CustomerServiceFragment {
+            return CustomerServiceFragment()
+        }
+    }
+
+    private val vm: CustomerServiceViewModel by viewModels()
+
+    override fun getLayoutRes(): Int = R.layout.fgt_customer_service
+
+    override fun onLazyInitView(savedInstanceState: Bundle?) {
+        super.onLazyInitView(savedInstanceState)
+        initTopbar(topbar, "客服中心")
+        setupListeners()
+        loadHelpCenter()
+    }
+
+    private fun setupListeners() {
+        // 电池卡仓
+        ll_battery_compartment.setOnClickListener {
+            handleBatteryCompartment()
+        }
+        
+        // 切换电池
+        ll_switch_battery.setOnClickListener {
+            // 进入首页-切换电池页面
+            startFgt(FgtSwitchBattery())
+        }
+        
+        // 变更手机
+        ll_change_mobile.setOnClickListener {
+            // 进入我的-变更手机号码页面
+            startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE))
+        }
+        
+        // 优惠活动
+        ll_promotional_activities.setOnClickListener {
+            // 返回到主页面并切换到优惠活动tab
+            // 使用EventBus发送SwitchPageEvent来切换tab
+            EventBus.getDefault().post(FgtMain.SwitchPageEvent(2))
+            pop()
+        }
+        
+        // 在线客服（暂时不做）
+        btn_online_service.setOnClickListener {
+            // TODO: 实现在线客服功能
+        }
+        
+        // 客服热线（暂时不做）
+        btn_service_hotline.setOnClickListener {
+            // TODO: 实现客服热线功能
+        }
+    }
+
+    private fun loadHelpCenter() {
+        webview_help_center.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            allowFileAccess = true
+        }
+        
+        webview_help_center.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val url = request?.url?.toString()
+                if (url != null && url != HELP_CENTER_URL) {
+                    // 如果URL与目标URL不一致，说明需要新开Web
+                    openNewWebPage(url)
+                    return true
+                }
+                return false
+            }
+            
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                // 可以显示加载进度
+            }
+            
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                // 页面加载完成
+            }
+        }
+        
+        // 加载帮助中心H5页面
+        webview_help_center.loadUrl(HELP_CENTER_URL)
+    }
+
+    private fun openNewWebPage(url: String) {
+        // 使用APP内已有的Web页面样式打开新URL
+        // 注意：不需要边距，标题固定为"帮助中心"
+        // TODO: 实现新开Web页面功能
+    }
+
+    private fun handleBatteryCompartment() {
+        // 判断电池编号!=空、电池编号!=虚拟号、套餐生效状态!=已过期、套餐生效状态!=已冻结
+        val userInfo = InfoViewModel.getDefault().userInfo.value
+        if (userInfo == null) {
+            ToastHelper.shortToast(activity, "用户信息获取失败")
+            return
+        }
+        
+        // 获取电池信息，判断条件
+        val deviceId = FgtHome.CURRENT_DEVICEID
+        if (deviceId.isNullOrEmpty() || deviceId == "0") {
+            ToastHelper.shortToast(activity, "没有需要取回的电池")
+            return
+        }
+        
+        // 使用ViewModel获取电池状态信息
+        vm.getUserPaymentInfo("${userInfo.id}", deviceId).observe(this) { response ->
+            when (response) {
+                is NetworkResponse.Success -> {
+                    val paymentInfo = response.data.data
+                    if (paymentInfo == null) {
+                        ToastHelper.shortToast(activity, "获取电池信息失败")
+                        return@observe
+                    }
+                    
+                    val activeStatus = paymentInfo.active_status
+                    val isVirtual = deviceId.startsWith("8") && deviceId.length == 8
+                    
+                    // 判断条件：电池编号!=空、电池编号!=虚拟号、套餐生效状态!=已过期、套餐生效状态!=已冻结
+                    if (isVirtual || activeStatus == "2" || activeStatus == "3") {
+                        ToastHelper.shortToast(activity, "没有需要取回的电池")
+                        return@observe
+                    }
+                    
+                    // 条件满足，跳转扫码页面
+                    ToastHelper.shortToast(activity, "请扫描电柜二维码")
+                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                        intent.putExtra("type", "自助开仓")
+                        startActivityForResult(intent, SCAN_QR_REQUEST_CODE)
+                    })
+                }
+                is NetworkResponse.BizError -> {
+                    ToastHelper.shortToast(activity, "获取电池信息失败: ${response.errorMessage}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    ToastHelper.shortToast(activity, "获取电池信息失败: ${response.errorMessage}")
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == SCAN_QR_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
+            data?.let { intent ->
+                val bundle = intent.extras
+                if (bundle != null) {
+                    if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) { // 扫码成功
+                        val result = bundle.getString(CodeUtils.RESULT_STRING)
+                        val getType = bundle.getString("type")
+                        
+                        if ("自助开仓" == getType) {
+                            result?.let { code ->
+                                // 调用自助开仓接口
+                                selfService(code)
+                            }
+                        }
+                    } else {
+                        ToastHelper.shortToast(activity, "解析二维码失败")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun selfService(code: String) {
+        val deviceId = FgtHome.CURRENT_DEVICEID
+        if (deviceId.isNullOrEmpty()) {
+            ToastHelper.shortToast(activity, "电池信息获取失败")
+            return
+        }
+        
+        // 使用ViewModel调用接口
+        vm.changeError(deviceId, code).observe(this) { msg ->
+            ToastHelper.shortToast(activity, msg)
+        }
+    }
+    
+    private fun startFgt(toFgt: SupportFragment) {
+        // 使用FgtMain.instance来启动Fragment，这是项目中标准的启动方式
+        FgtMain.instance?.start(toFgt)
+            ?: ToastHelper.shortToast(activity, "无法启动页面，请稍后重试")
+    }
+}

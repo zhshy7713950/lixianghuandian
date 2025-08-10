@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#2A3340">
+
+    <!-- 标题栏 -->
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#2A3340"
+        app:qmui_topbar_title_color="#EEEEEE" />
+
+    <!-- 快捷服务 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="15dp">
+
+        <!-- 快捷服务标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="快捷服务"
+            android:textSize="15sp"
+            android:textColor="#EEEEEE" />
+
+        <!-- 4个快捷服务按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- 电池卡仓 -->
+            <LinearLayout
+                android:id="@+id/ll_battery_compartment"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_quick_service_button"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_battery_compartment"
+                    android:layout_marginTop="17.5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电池卡仓"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
+
+            <!-- 切换电池 -->
+            <LinearLayout
+                android:id="@+id/ll_switch_battery"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_quick_service_button"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_switch_battery"
+                    android:layout_marginTop="17.5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="切换电池"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
+
+            <!-- 变更手机 -->
+            <LinearLayout
+                android:id="@+id/ll_change_mobile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_quick_service_button"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_change_mobile_phone"
+                    android:layout_marginTop="17.5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="变更手机"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
+
+            <!-- 优惠活动 -->
+            <LinearLayout
+                android:id="@+id/ll_promotional_activities"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_quick_service_button"
+                android:layout_marginStart="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22.5dp"
+                    android:layout_height="22.5dp"
+                    android:src="@drawable/ic_promotions"
+                    android:layout_marginTop="17.5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="优惠活动"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 帮助中心 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="24dp">
+
+        <!-- 帮助中心标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="帮助中心"
+            android:textSize="15sp"
+            android:textColor="#EEEEEE" />
+
+        <!-- H5内容区域 -->
+        <WebView
+            android:id="@+id/webview_help_center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_help_center_webview" />
+
+    </LinearLayout>
+
+    <!-- 底部固定按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="24dp"
+        android:background="#2A3340">
+
+        <!-- 在线客服 -->
+        <Button
+            android:id="@+id/btn_online_service"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="在线客服"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_online_service_button"
+            android:layout_marginEnd="12dp"
+            android:drawableStart="@drawable/ic_online_service"
+            android:drawablePadding="8dp" />
+
+        <!-- 客服热线 -->
+        <Button
+            android:id="@+id/btn_service_hotline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="客服热线"
+            android:textColor="#333333"
+            android:background="@drawable/bg_service_hotline_button"
+            android:layout_marginStart="12dp"
+            android:drawableStart="@drawable/ic_net_station_telephone"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

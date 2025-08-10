@@ -91,16 +91,18 @@ class FgtMain : FgtBase() {
         NoReadLiveData.refresh { }
     }
 
-    class SwitchPageEvent(i: Int) {
-        var page :Int = 0
-    }
+    data class SwitchPageEvent(var page :Int)
+
     @Subscribe
-    public fun switchPage(switchPageEvent: SwitchPageEvent) {
+    fun switchPage(switchPageEvent: SwitchPageEvent) {
         initTab(switchPageEvent.page,fgts)
     }
 
     private fun initTab(index:Int,fgts:Array< MainTabFragment>){
         this.currentIndex = index
+        // 修复tab图标数组，使其与Fragment数组正确对应
+        // Fragment顺序：[FgtHome, FgtNetStationMap, FgtTicket, FgtMe]
+        // Tab ID顺序：[iv_home, iv_nearby, iv_contract, iv_me]
         val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_contract,R.mipmap.tab_me)
         val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_contract_se,R.mipmap.tab_me_se)
         val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
@@ -111,9 +113,9 @@ class FgtMain : FgtBase() {
             }else{
                 tabView.setImageResource(tabImg[i])
             }
-            showHideFragment(fgts[index])
         }
-
+        // 显示选中的Fragment，隐藏其他Fragment
+        showHideFragment(fgts[index])
     }
 
     /**

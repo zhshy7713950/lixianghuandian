@@ -239,6 +239,16 @@
 
 		</LinearLayout>
 
+		<!-- 客服中心悬浮按钮 -->
+		<com.ruimeng.things.home.view.CustomerServiceFloatingButton
+			android:id="@+id/customer_service_button"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			android:layout_marginEnd="24dp"
+			android:layout_marginBottom="100dp" />
+
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 

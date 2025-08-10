@@ -220,6 +220,8 @@
 			android:launchMode="singleTask"/>
 		<activity android:name=".me.activity.AtyWeb2"/>
 
+
+
 		<activity
 			android:name="com.netease.nis.quicklogin.ui.CmccLoginActivity"
 			android:theme="@style/Theme.ActivityTransparentStyle"

@@ -10,4 +10,11 @@
     <color name="gray_7">#929FAB</color>
     <color name="gray_71">#29EBB6</color>
     <color name="green_1">#29EBB6</color>
+    
+    <!-- 客服中心相关颜色 -->
+    <color name="customer_service_bg">#F5F5F5</color>
+    <color name="customer_service_text">#333333</color>
+    <color name="customer_service_border">#E5E5E5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

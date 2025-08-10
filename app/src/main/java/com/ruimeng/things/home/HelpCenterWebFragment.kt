@@ -38,6 +38,8 @@ class HelpCenterWebFragment : BaseBackFragment() {
         loadWebContent()
     }
     
+
+    
     private fun initWebView() {
         webView = rootView.findViewById(R.id.webview_help_center)
         

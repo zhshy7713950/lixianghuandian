@@ -204,34 +204,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp"
-        android:background="#2A3340">
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="48dp"
+        >
 
         <!-- 在线客服 -->
-        <Button
+        <LinearLayout
             android:id="@+id/btn_online_service"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="在线客服"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_online_service_button"
+            android:layout_weight="65"
+            android:background="@drawable/bg_online_customer_service"
             android:layout_marginEnd="12dp"
-            android:drawableStart="@drawable/ic_online_service"
-            android:drawablePadding="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp">
+            
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_online_customer_service"
+                android:layout_marginEnd="7.5dp"
+                android:scaleType="fitCenter" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="在线客服"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+                
+        </LinearLayout>
 
         <!-- 客服热线 -->
-        <Button
+        <LinearLayout
             android:id="@+id/btn_service_hotline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="客服热线"
-            android:textColor="#333333"
+            android:layout_weight="35"
             android:background="@drawable/bg_service_hotline_button"
             android:layout_marginStart="12dp"
-            android:drawableStart="@drawable/ic_net_station_telephone"
-            android:drawablePadding="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp">
+            
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_net_station_telephone"
+                android:layout_marginEnd="8dp"
+                android:scaleType="fitCenter" />
+                
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="客服热线"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+                
+        </LinearLayout>
 
     </LinearLayout>
 

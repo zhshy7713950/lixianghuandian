@@ -20,6 +20,7 @@ import wongxd.common.getCurrentAty
 import androidx.fragment.app.viewModels
 import com.net.NetworkResponse
 import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
+import com.ruimeng.things.home.SmartCustomerServiceFragment
 
 /**
  * 客服中心页面
@@ -72,9 +73,10 @@ class CustomerServiceFragment : BaseBackFragment() {
             pop()
         }
         
-        // 在线客服（暂时不做）
+        // 在线客服
         btn_online_service.setOnClickListener {
-            // TODO: 实现在线客服功能
+            // 跳转到智能客服页面
+            startFgt(SmartCustomerServiceFragment.newInstance())
         }
         
         // 客服热线（暂时不做）

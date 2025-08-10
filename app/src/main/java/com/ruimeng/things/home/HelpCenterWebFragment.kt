@@ -1,5 +1,6 @@
 package com.ruimeng.things.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -38,8 +39,6 @@ class HelpCenterWebFragment : BaseBackFragment() {
         loadWebContent()
     }
     
-
-    
     private fun initWebView() {
         webView = rootView.findViewById(R.id.webview_help_center)
         
@@ -76,17 +75,25 @@ class HelpCenterWebFragment : BaseBackFragment() {
             webView.loadUrl(url)
         }
     }
-    
-    override fun onBackPressedSupport(): Boolean {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-            return true
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        handleFileChooserResult(requestCode, resultCode, data)
+    }
+
+    /**
+     * 处理文件选择结果
+     * 如果H5页面中有文件选择功能，需要调用此方法
+     */
+    private fun handleFileChooserResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (::webView.isInitialized) {
+            webView.handleFileChooserResult(requestCode, resultCode, data)
         }
-        return super.onBackPressedSupport()
     }
     
     override fun onDestroy() {
         if (::webView.isInitialized) {
+            webView.cleanup()
             webView.destroy()
         }
         super.onDestroy()

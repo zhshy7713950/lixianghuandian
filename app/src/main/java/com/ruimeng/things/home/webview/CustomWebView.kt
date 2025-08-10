@@ -1,17 +1,18 @@
 package com.ruimeng.things.home.webview
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.util.AttributeSet
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
+import android.webkit.*
 import android.graphics.Bitmap
+import androidx.annotation.RequiresApi
 
 /**
  * 自定义WebView组件
- * 使用策略模式来处理URL跳转
+ * 使用策略模式来处理URL跳转和文件选择
  */
 class CustomWebView @JvmOverloads constructor(
     context: Context,
@@ -20,9 +21,22 @@ class CustomWebView @JvmOverloads constructor(
 ) : WebView(context, attrs, defStyleAttr) {
     
     private var urlLoadingStrategy: UrlLoadingStrategy? = null
+    private var fileChooserStrategy: FileChooserStrategy? = null
+    
+    // 文件选择相关变量
+    private var uploadMessage: ValueCallback<Uri>? = null
+    private var uploadMessageAboveL: ValueCallback<Array<Uri>>? = null
+    
+    companion object {
+        private const val FILE_CHOOSER_RESULT_CODE = 1001
+    }
     
     init {
         initWebView()
+        // 默认使用DefaultFileChooserStrategy
+        if (context is Activity) {
+            fileChooserStrategy = DefaultFileChooserStrategy(context as Activity)
+        }
     }
     
     /**
@@ -50,6 +64,8 @@ class CustomWebView @JvmOverloads constructor(
             minimumFontSize = 8
             // 设置混合内容模式
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            // 启用文件选择
+            allowContentAccess = true
         }
         
         // 设置WebViewClient
@@ -79,7 +95,93 @@ class CustomWebView @JvmOverloads constructor(
                 super.onProgressChanged(view, newProgress)
                 // 可以在这里更新进度条
             }
+            
+            // 处理文件选择（Android 5.0及以上）
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+            override fun onShowFileChooser(
+                webView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: WebChromeClient.FileChooserParams?
+            ): Boolean {
+                uploadMessageAboveL = filePathCallback
+                handleFileChooserRequest(
+                    fileChooserParams?.acceptTypes?.firstOrNull(),
+                    fileChooserParams?.isCaptureEnabled?.toString()
+                )
+                return true
+            }
         }
+    }
+    
+    /**
+     * 处理文件选择请求
+     */
+    private fun handleFileChooserRequest(acceptType: String?, capture: String?) {
+        if (fileChooserStrategy == null) {
+            // 如果没有设置策略，使用默认策略
+            if (context is Activity) {
+                fileChooserStrategy = DefaultFileChooserStrategy(context as Activity)
+            } else {
+                return
+            }
+        }
+        
+        // 如果是DefaultFileChooserStrategy，设置回调
+        if (fileChooserStrategy is DefaultFileChooserStrategy) {
+            val defaultStrategy = fileChooserStrategy as DefaultFileChooserStrategy
+            defaultStrategy.setFileChooserCallback { uris ->
+                if (uris.isNotEmpty()) {
+                    // 处理Android 5.0以下版本
+                    uploadMessage?.onReceiveValue(uris[0])
+                    uploadMessage = null
+                    
+                    // 处理Android 5.0及以上版本
+                    uploadMessageAboveL?.onReceiveValue(uris)
+                    uploadMessageAboveL = null
+                } else {
+                    // 用户取消选择
+                    uploadMessage?.onReceiveValue(null)
+                    uploadMessageAboveL?.onReceiveValue(null)
+                    uploadMessage = null
+                    uploadMessageAboveL = null
+                }
+            }
+        }
+        
+        // 创建模拟的FileChooserParams
+        val mockParams = createMockFileChooserParams(acceptType, capture == "true")
+        fileChooserStrategy?.handleFileChooser(this, mockParams, FILE_CHOOSER_RESULT_CODE)
+    }
+    
+    /**
+     * 创建模拟的FileChooserParams
+     */
+    private fun createMockFileChooserParams(acceptType: String?, isCapture: Boolean): WebChromeClient.FileChooserParams {
+        return object : WebChromeClient.FileChooserParams() {
+            override fun getMode(): Int = MODE_OPEN
+            override fun getAcceptTypes(): Array<String> = arrayOf(acceptType ?: "*/*")
+            override fun isCaptureEnabled(): Boolean = isCapture
+            override fun getFilenameHint(): String? = null
+            override fun getTitle(): CharSequence? = "选择文件"
+            override fun createIntent(): Intent {
+                return Intent(Intent.ACTION_GET_CONTENT).apply {
+                    type = acceptType ?: "*/*"
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                }
+            }
+        }
+    }
+    
+    /**
+     * 处理文件选择结果
+     * 需要在Activity的onActivityResult中调用
+     */
+    fun handleFileChooserResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        fileChooserStrategy?.handleFileChooserResult(requestCode, resultCode, data)
     }
     
     /**
@@ -88,6 +190,25 @@ class CustomWebView @JvmOverloads constructor(
      */
     fun setUrlLoadingStrategy(strategy: UrlLoadingStrategy) {
         this.urlLoadingStrategy = strategy
+    }
+    
+    /**
+     * 设置文件选择策略
+     * @param strategy 文件选择策略
+     */
+    fun setFileChooserStrategy(strategy: FileChooserStrategy) {
+        this.fileChooserStrategy = strategy
+    }
+    
+    /**
+     * 清理资源
+     */
+    fun cleanup() {
+        uploadMessage?.onReceiveValue(null)
+        uploadMessageAboveL?.onReceiveValue(null)
+        uploadMessage = null
+        uploadMessageAboveL = null
+        fileChooserStrategy?.cleanup()
     }
 }
 

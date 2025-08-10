@@ -9,6 +9,17 @@
 - 个人中心管理
 
 ## 最近更新
+
+### 2024年WebView文件选择功能重构优化
+- 重构CustomWebView，删除重复的文件选择代码，默认使用DefaultFileChooserStrategy
+- 实现了策略模式的文件选择策略，支持相机拍照、录制视频、从相册选择等功能
+- 新增FileChooserStrategy接口和DefaultFileChooserStrategy实现类
+- 支持Android 5.0以下和以上版本的文件选择API
+- 创建了WebViewFileChooserExample示例Activity，展示如何使用重构后的文件选择功能
+- 提供了完整的测试HTML页面，支持图片、视频和通用文件选择测试
+- 遵循SOLID原则，使用策略模式设计，代码结构清晰，易于扩展和维护
+- 代码重构后更加简洁，消除了重复代码，提高了可维护性
+
 ### 2024年帮助中心UI优化
 - 为帮助中心H5内容区域（WebView）添加了10dp圆角
 - 修改HelpCenterWebFragment使用封装的CustomWebView

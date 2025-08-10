@@ -254,9 +254,9 @@ class FgtTicket : MainTabFragment() {
 
                         else -> {
                             a.setTextColor(R.id.tvRmb, Color.parseColor("#706D65"))
-                                .setTextColor(R.id.tv_money, Color.parseColor("#C3B199"))
-                                .setTextColor(R.id.tv_coupon_name, Color.parseColor("#C3B199"))
-                                .setTextColor(R.id.tv_limit, Color.parseColor("#D7D7D7"))
+                                .setTextColor(R.id.tv_money, Color.parseColor("#706D65"))
+                                .setTextColor(R.id.tv_coupon_name, Color.parseColor("#706D65"))
+                                .setTextColor(R.id.tv_limit, Color.parseColor("#797F83"))
                                 .setText(R.id.tv_use, "已过期")
                                 .setTextColor(R.id.tv_use, Color.parseColor("#798289"))
                                 .setBackgroundRes(R.id.cl_coupon, R.drawable.bg_ticket_expire)

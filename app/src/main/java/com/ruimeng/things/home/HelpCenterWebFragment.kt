@@ -75,21 +75,6 @@ class HelpCenterWebFragment : BaseBackFragment() {
             webView.loadUrl(url)
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        handleFileChooserResult(requestCode, resultCode, data)
-    }
-
-    /**
-     * 处理文件选择结果
-     * 如果H5页面中有文件选择功能，需要调用此方法
-     */
-    private fun handleFileChooserResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (::webView.isInitialized) {
-            webView.handleFileChooserResult(requestCode, resultCode, data)
-        }
-    }
     
     override fun onDestroy() {
         if (::webView.isInitialized) {

@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.webkit.*
 import android.graphics.Bitmap
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * 自定义WebView组件
@@ -35,7 +36,7 @@ class CustomWebView @JvmOverloads constructor(
         initWebView()
         // 默认使用DefaultFileChooserStrategy
         if (context is Activity) {
-            fileChooserStrategy = DefaultFileChooserStrategy(context as Activity)
+            fileChooserStrategy = DefaultFileChooserStrategy(context as AppCompatActivity)
         }
     }
     
@@ -103,11 +104,12 @@ class CustomWebView @JvmOverloads constructor(
                 filePathCallback: ValueCallback<Array<Uri>>?,
                 fileChooserParams: WebChromeClient.FileChooserParams?
             ): Boolean {
-                uploadMessageAboveL = filePathCallback
-                handleFileChooserRequest(
-                    fileChooserParams?.acceptTypes?.firstOrNull(),
-                    fileChooserParams?.isCaptureEnabled?.toString()
-                )
+                //暂不需要支持
+//                uploadMessageAboveL = filePathCallback
+//                handleFileChooserRequest(
+//                    fileChooserParams?.acceptTypes?.firstOrNull(),
+//                    fileChooserParams?.isCaptureEnabled?.toString()
+//                )
                 return true
             }
         }
@@ -117,11 +119,15 @@ class CustomWebView @JvmOverloads constructor(
      * 处理文件选择请求
      */
     private fun handleFileChooserRequest(acceptType: String?, capture: String?) {
+        android.util.Log.d("CustomWebView", "handleFileChooserRequest: acceptType=$acceptType, capture=$capture")
+        
         if (fileChooserStrategy == null) {
             // 如果没有设置策略，使用默认策略
             if (context is Activity) {
-                fileChooserStrategy = DefaultFileChooserStrategy(context as Activity)
+                fileChooserStrategy = DefaultFileChooserStrategy(context as AppCompatActivity)
+                android.util.Log.d("CustomWebView", "Created new DefaultFileChooserStrategy")
             } else {
+                android.util.Log.e("CustomWebView", "Context is not an Activity")
                 return
             }
         }
@@ -130,6 +136,7 @@ class CustomWebView @JvmOverloads constructor(
         if (fileChooserStrategy is DefaultFileChooserStrategy) {
             val defaultStrategy = fileChooserStrategy as DefaultFileChooserStrategy
             defaultStrategy.setFileChooserCallback { uris ->
+                android.util.Log.d("CustomWebView", "File chooser callback received: ${uris.size} URIs")
                 if (uris.isNotEmpty()) {
                     // 处理Android 5.0以下版本
                     uploadMessage?.onReceiveValue(uris[0])
@@ -138,8 +145,11 @@ class CustomWebView @JvmOverloads constructor(
                     // 处理Android 5.0及以上版本
                     uploadMessageAboveL?.onReceiveValue(uris)
                     uploadMessageAboveL = null
+                    
+                    android.util.Log.d("CustomWebView", "Successfully sent URIs to WebView: ${uris.joinToString()}")
                 } else {
                     // 用户取消选择
+                    android.util.Log.d("CustomWebView", "User cancelled file selection")
                     uploadMessage?.onReceiveValue(null)
                     uploadMessageAboveL?.onReceiveValue(null)
                     uploadMessage = null
@@ -150,6 +160,7 @@ class CustomWebView @JvmOverloads constructor(
         
         // 创建模拟的FileChooserParams
         val mockParams = createMockFileChooserParams(acceptType, capture == "true")
+        android.util.Log.d("CustomWebView", "Calling fileChooserStrategy.handleFileChooser")
         fileChooserStrategy?.handleFileChooser(this, mockParams, FILE_CHOOSER_RESULT_CODE)
     }
     
@@ -170,18 +181,6 @@ class CustomWebView @JvmOverloads constructor(
                 }
             }
         }
-    }
-    
-    /**
-     * 处理文件选择结果
-     * 需要在Activity的onActivityResult中调用
-     */
-    fun handleFileChooserResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        fileChooserStrategy?.handleFileChooserResult(requestCode, resultCode, data)
     }
     
     /**

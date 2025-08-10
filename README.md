@@ -1,135 +1,91 @@
-# 理想换电 - 安卓应用
+# 理想换电 Android 应用
 
-## 项目简介
-这是一个名为"理想换电"的安卓应用，主要功能包括：
-- 用户登录和注册
-- 换电站查找和导航
-- 在线客服和帮助中心
-- 优惠活动展示
-- 个人中心管理
+## 项目概述
+这是一个基于 Android 的换电应用，提供智能客服、设备管理等功能。
 
 ## 最近更新
 
-### 2024年WebView文件选择功能重构优化
-- 重构CustomWebView，删除重复的文件选择代码，默认使用DefaultFileChooserStrategy
-- 实现了策略模式的文件选择策略，支持相机拍照、录制视频、从相册选择等功能
-- 新增FileChooserStrategy接口和DefaultFileChooserStrategy实现类
-- 支持Android 5.0以下和以上版本的文件选择API
-- 创建了WebViewFileChooserExample示例Activity，展示如何使用重构后的文件选择功能
-- 提供了完整的测试HTML页面，支持图片、视频和通用文件选择测试
-- 遵循SOLID原则，使用策略模式设计，代码结构清晰，易于扩展和维护
-- 代码重构后更加简洁，消除了重复代码，提高了可维护性
+### 智能客服页面文件选择功能修复 (2024年)
 
-### 2024年帮助中心UI优化
-- 为帮助中心H5内容区域（WebView）添加了10dp圆角
-- 修改HelpCenterWebFragment使用封装的CustomWebView
-- 使用CardView包装WebView，确保圆角效果正确显示
-- 删除了重复的WebView初始化代码，使用CustomWebView的封装功能
-- 改善了整体视觉效果和代码结构，提高了代码复用性
+#### 问题描述
+在 `SmartCustomerServiceFragment` 中，当用户选择图片后，`onActivityResult` 方法不执行，导致文件选择功能无法正常工作。
 
-### 2024年在线客服功能实现
-- 重新设计在线客服按钮样式：8dp圆角、#29EBB6背景色
-- 调整按钮布局：上距24px、下距20px、左距12px、右距12px
-- 按钮宽度比例：在线客服65%、客服热线35%
-- 实现在线客服功能：跳转到微信公众号智能客服页面
-- 支持点击蓝色超链接时新开Web页面，标题固定为"帮助中心"
-- 优化按钮样式：图标和文字整体居中，间距7.5dp，文字和图标颜色一致
-- 修复按钮图标居中显示问题，使用LinearLayout包裹ImageView和TextView实现完美居中
-- 智能客服页面人工客服按钮文字颜色设置为白色
-- 实现客服热线按钮完整功能：边框样式、弹窗确认、图标居中、拨号跳转
-- 智能客服页面右上角添加"人工客服"按钮
-- 实现人工客服弹窗确认和系统浏览器跳转功能
-- 修复QMUITopBar按钮添加方法调用错误
-- 创建独立的SmartCustomerServiceFragment，与帮助中心分离
-- 智能客服页面使用HelpCenterUrlStrategy处理URL拦截逻辑
+#### 问题原因分析
+1. **Fragment 生命周期问题**: `SmartCustomerServiceFragment` 继承自 `BaseBackFragment`，在 Fragment 中 `onActivityResult` 的回调机制与 Activity 不同
+2. **Request Code 不匹配**: `CustomWebView` 和 `DefaultFileChooserStrategy` 中定义的请求码不一致
+3. **权限处理机制**: 原有的权限处理方式在 Fragment 中可能无法正常工作
 
+#### 解决方案
+采用**方案一：使用项目现有的权限框架和Activity结果处理框架**
 
+##### 主要修改内容
 
-## Getting started
+1. **DefaultFileChooserStrategy.kt**
+   - 统一请求码为 1001
+   - 集成项目现有的权限框架 `wongxd.common.permission.Permission`
+   - 使用 `getPermissions()` 方法请求相机和存储权限
+   - 集成项目现有的 `SimpleOnActivityResult` 框架处理Activity结果
+   - 支持相机和存储权限的动态请求
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+2. **CustomWebView.kt**
+   - 简化权限处理逻辑
+   - 移除自定义权限请求回调
+   - 移除 `handleFileChooserResult` 方法
+   - 保持文件选择功能完整性
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+3. **SmartCustomerServiceFragment.kt**
+   - 移除自定义权限请求处理
+   - 移除 `onActivityResult` 方法
+   - 使用项目现有框架的权限请求和Activity结果处理机制
 
-## Add your files
+##### 技术特点
+- **框架集成**: 使用项目现有的 `wongxd.common.permission.Permission` 权限框架
+- **结果处理**: 使用项目现有的 `SimpleOnActivityResult` 框架处理Activity结果
+- **请求码处理**: 不依赖特定的请求码，使用 `currentRequestType` 来区分不同的文件选择操作
+- **兼容性**: 完全兼容fragmentation库的Fragment管理
+- **用户体验**: 提供清晰的权限请求流程
+- **代码质量**: 遵循 SOLID 原则，使用策略模式
+- **维护性**: 复用项目现有代码，减少重复实现
+- **调试友好**: 添加详细的日志输出，便于问题排查
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+#### 使用方法
 
+1. **权限请求**: 当 WebView 需要访问相机或存储时，会自动触发权限请求
+2. **文件选择**: 支持图片和视频的选择，包括拍照和从相册选择
+3. **权限管理**: 自动处理权限授予和拒绝的情况
+
+#### 文件结构
 ```
-cd existing_repo
-git remote add origin https://gitlab.wanxuantong.com/qians/xianglilai/xianglilai_android.git
-git branch -M main
-git push -uf origin main
+app/src/main/java/com/ruimeng/things/home/
+├── SmartCustomerServiceFragment.kt    # 智能客服页面
+├── webview/
+│   ├── CustomWebView.kt               # 自定义WebView组件
+│   ├── DefaultFileChooserStrategy.kt  # 默认文件选择策略
+│   ├── FileChooserStrategy.kt         # 文件选择策略接口
+│   └── HelpCenterUrlStrategy.kt       # 帮助中心URL策略
 ```
 
-## Integrate with your tools
+#### 权限要求
+在 `AndroidManifest.xml` 中已声明：
+- `android.permission.CAMERA` - 相机权限
+- `android.permission.WRITE_EXTERNAL_STORAGE` - 存储权限
 
-- [ ] [Set up project integrations](https://gitlab.wanxuantong.com/qians/xianglilai/xianglilai_android/-/settings/integrations)
+#### 注意事项
+1. 确保在 Android 6.0+ 设备上测试权限请求功能
+2. 文件选择功能需要相应的权限支持
+3. 建议在真机上测试相机和文件选择功能
 
-## Collaborate with your team
+## 开发环境
+- Android Studio
+- Kotlin
+- Android SDK 21+
+- 支持 Android 5.0 (API 21) 及以上版本
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+## 构建说明
+1. 克隆项目到本地
+2. 在 Android Studio 中打开项目
+3. 同步 Gradle 依赖
+4. 构建并运行项目
 
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## 联系方式
+如有问题或建议，请联系开发团队。

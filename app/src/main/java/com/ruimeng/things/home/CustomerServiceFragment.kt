@@ -68,10 +68,10 @@ class CustomerServiceFragment : BaseBackFragment() {
         }
         
                     // 优惠活动
-            ll_promotional_activities.setOnClickListener {
-                // 返回到主页面并切换到优惠活动tab
-                PageNavigationHelper.backToMainAndSwitchTab(2, this)
-            }
+        ll_promotional_activities.setOnClickListener {
+            // 返回到主页面并切换到优惠活动tab
+            PageNavigationHelper.backToMainAndSwitchTab(2, this)
+        }
         
         // 在线客服
         btn_online_service.setOnClickListener {

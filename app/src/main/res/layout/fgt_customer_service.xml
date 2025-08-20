@@ -56,7 +56,8 @@
                     android:layout_width="21dp"
                     android:layout_height="21dp"
                     android:src="@drawable/ic_battery_compartment"
-                    android:layout_marginTop="17.5dp" />
+                    android:layout_marginTop="17.5dp"
+                    android:layout_marginBottom="2dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,7 +87,8 @@
                     android:layout_width="21dp"
                     android:layout_height="21dp"
                     android:src="@drawable/ic_switch_battery"
-                    android:layout_marginTop="17.5dp" />
+                    android:layout_marginTop="17.5dp"
+                    android:layout_marginBottom="2dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,7 +118,8 @@
                     android:layout_width="21dp"
                     android:layout_height="21dp"
                     android:src="@drawable/ic_change_mobile_phone"
-                    android:layout_marginTop="17.5dp" />
+                    android:layout_marginTop="17.5dp"
+                    android:layout_marginBottom="2dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -145,7 +148,8 @@
                     android:layout_width="22.5dp"
                     android:layout_height="22.5dp"
                     android:src="@drawable/ic_promotions"
-                    android:layout_marginTop="17.5dp" />
+                    android:layout_marginTop="17.5dp"
+                    android:layout_marginBottom="2dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -206,7 +210,7 @@
         android:orientation="horizontal"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingBottom="48dp"
+        android:paddingBottom="24dp"
         >
 
         <!-- 在线客服 -->
@@ -214,7 +218,7 @@
             android:id="@+id/btn_online_service"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="65"
+            android:layout_weight="60"
             android:background="@drawable/bg_online_customer_service"
             android:layout_marginEnd="12dp"
             android:orientation="horizontal"
@@ -242,7 +246,7 @@
             android:id="@+id/btn_service_hotline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="35"
+            android:layout_weight="40"
             android:background="@drawable/bg_customer_service_hotline"
             android:layout_marginStart="12dp"
             android:orientation="horizontal"

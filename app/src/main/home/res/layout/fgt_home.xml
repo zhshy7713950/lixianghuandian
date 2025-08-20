@@ -212,8 +212,8 @@
 					android:layout_height="wrap_content"
 					android:text="关注「锂享换电公众号」"
 					android:textColor="@color/black"
-					android:textSize="15sp"
-					android:textStyle="bold" />
+					android:textSize="13sp"
+					/>
 
 				<TextView
 					android:id="@+id/tv_follow_desc"
@@ -221,7 +221,7 @@
 					android:layout_height="wrap_content"
 					android:text="低电、高温、逾期信息，第一时间掌握"
 					android:textColor="#666666"
-					android:textSize="10sp"
+					android:textSize="9sp"
 					android:layout_marginTop="0dp" />
 
 			</LinearLayout>

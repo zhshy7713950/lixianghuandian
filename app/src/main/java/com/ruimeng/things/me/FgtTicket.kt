@@ -114,7 +114,11 @@ class FgtTicket : MainTabFragment() {
             }
 
 
-        srl_ticket?.setOnRefreshListener { page = 1;getInfo() }
+        srl_ticket?.setOnRefreshListener {
+            page = 1;getInfo()
+            // 获取轮播广告数据
+            vm.fetchBannerData(requireContext(), FgtHome.userId)
+        }
         srl_ticket?.setOnLoadMoreListener { getInfo() }
         ll_scan?.setOnClickListener {
             ToastHelper.shortToast(context, "请扫描兑换码")

@@ -104,6 +104,9 @@ object BannerHelper {
             linkUrl.startsWith("extendedGift://") -> {
                 fgt.start(FgtExtendedGift.newInstance())
             }
+            linkUrl.startsWith("https://") -> {
+                AtyWeb2.start(bannerInfo.title,linkUrl)
+            }
             else -> {
                 // 兜底判断：如果banner解析出来的type在APP内查询不到，则提示升级APP
                 EasyToast.DEFAULT.show("功能暂时无法使用，请您升级APP后重试")

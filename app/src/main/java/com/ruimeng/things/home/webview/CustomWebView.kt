@@ -53,10 +53,10 @@ class CustomWebView @JvmOverloads constructor(
             allowFileAccess = true
             // 设置缓存模式
             cacheMode = WebSettings.LOAD_DEFAULT
-            // 启用缩放
-            setSupportZoom(true)
-            // 启用内置缩放控件
-            builtInZoomControls = true
+            // 禁用缩放功能
+            setSupportZoom(false)
+            // 禁用内置缩放控件
+            builtInZoomControls = false
             // 隐藏缩放控件
             displayZoomControls = false
             // 设置默认字体大小
@@ -67,6 +67,11 @@ class CustomWebView @JvmOverloads constructor(
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             // 启用文件选择
             allowContentAccess = true
+            // 启用自适应屏幕
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            // 设置视口宽度为设备宽度
+            setInitialScale(0)
         }
         
         // 设置WebViewClient

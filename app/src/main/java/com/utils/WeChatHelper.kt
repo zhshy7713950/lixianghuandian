@@ -20,9 +20,10 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 object WeChatHelper {
 
-    fun launchWXMiniProgram(context: Context?, appId: String) {
+    fun launchWXMiniProgram(context: Context?, appId: String, path: String = "") {
         mIWXAPI = WXAPIFactory.createWXAPI(context, appId, true)
         val req = WXLaunchMiniProgram.Req()
+        req.path = path
         req.userName = "gh_5495b84a5dcd" // 填小程序原始id
         req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE // 可选打开 开发版，体验版和正式版
         mIWXAPI?.sendReq(req)

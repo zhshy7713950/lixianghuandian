@@ -1903,7 +1903,8 @@ class FgtHome : MainTabFragment() {
             ll_follow_wechat_banner.setOnClickListener {
                 WeChatHelper.launchWXMiniProgram(
                     requireContext(),
-                    resources.getString(R.string.wx_appid)
+                    resources.getString(R.string.wx_appid),
+                    "/pages/基础/关注公众号/followWechat"
                 )
             }
         }

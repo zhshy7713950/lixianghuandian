@@ -12,6 +12,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.entity.local.OneKeyLoginLocal
+import com.entity.local.GetCaptchaLocal
+import com.entity.local.CheckCaptchaLocal
 import com.net.whenBizError
 import com.net.whenError
 import com.net.whenSuccess
@@ -26,6 +28,7 @@ import com.utils.quicklogin.PrefetchResult
 import com.utils.quicklogin.QuickLoginHelper
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.aty_login.*
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import wongxd.AtyWeb
 import wongxd.Config
@@ -70,6 +73,33 @@ class AtyLogin : AtyBase() {
 //        btn_login.setOnClickListener { doLogin() }
 
         et_phone.setText(SPUtils.getInstance().getString(TAG_LAST_LOGIN_PHONE))
+        // 初始图形验证码展示或加载
+        initOrLoadCaptcha()
+        et_phone.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(TAG, "phone input: $s")
+                // 当手机号长度为11时自动获取图形验证码
+                if (!s.isNullOrBlank() && s.length == 11) {
+                    loadCaptcha(s.toString())
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        // 点击图形验证码刷新
+        fl_img_captcha.setOnClickListener {
+            val mobile = et_phone.text?.toString()?.trim() ?: ""
+            if (mobile.isBlank() || mobile.length != 11) {
+                EasyToast.DEFAULT.show("请输入手机号码(11位)")
+            } else {
+                loadCaptcha(mobile)
+            }
+        }
         isAgree = !SPUtils.getInstance().getBoolean(FIRST_LAUNCH_APP,true)
         SPUtils.getInstance().put(FIRST_LAUNCH_APP,false)
         cb_login.isChecked = isAgree
@@ -230,26 +260,72 @@ class AtyLogin : AtyBase() {
         }
     }
 
+    private fun initOrLoadCaptcha() {
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank()) {
+            // 显示占位
+            showCaptchaPlaceholder()
+        } else if (mobile.length == 11) {
+            loadCaptcha(mobile)
+        } else {
+            showCaptchaPlaceholder()
+        }
+    }
+
+    private fun showCaptchaPlaceholder() {
+        tv_img_captcha_placeholder.visibility = View.VISIBLE
+        iv_img_captcha.visibility = View.GONE
+    }
+
+    private fun showCaptchaImage(url: String) {
+        tv_img_captcha_placeholder.visibility = View.GONE
+        iv_img_captcha.visibility = View.VISIBLE
+        Glide.with(this)
+            .load(url)
+            .into(iv_img_captcha)
+    }
+
+    private fun loadCaptcha(mobile: String) {
+        vm.getCaptcha(GetCaptchaLocal(mobile)).observe(this, Observer { response ->
+            response.whenSuccess { resCommon ->
+                val rawUrl = resCommon.data
+                val finalUrl = if (rawUrl.startsWith("http")) rawUrl else "https:$rawUrl"
+                if (finalUrl.isBlank()) {
+                    showCaptchaPlaceholder()
+                } else {
+                    showCaptchaImage(finalUrl)
+                }
+            }
+        })
+    }
+
     private fun checkStatus(p: Boolean) {
     }
 
     private fun doLogin() {
-        if (!isAgree && pageType == 0) {
+        if (!isAgree) {
             EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
 
-        val phone = et_phone.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入手机号")
+        val phone = et_phone.text?.toString()?.trim() ?: ""
+        if (phone.isBlank() || phone.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
             return
         }
 
-        val code = et_code.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入验证码")
+        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+        if (imgCode.isBlank() || imgCode.length != 5) {
+            EasyToast.DEFAULT.show("请输入图形验证码(5位)")
             return
         }
+
+        val code = et_code.text?.toString()?.trim() ?: ""
+        if (code.isBlank() || code.length != 6) {
+            EasyToast.DEFAULT.show("请输入短信验证码(6位)")
+            return
+        }
+
         doLoginHttp(phone, code)
     }
 
@@ -328,31 +404,29 @@ class AtyLogin : AtyBase() {
     }
 
     private fun getLoginCode() {
-        if (!isAgree && pageType == 0) {
+        if (!isAgree) {
             EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
-        phone = et_phone.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入手机号")
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank() || mobile.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
+            return
+        }
+        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+        if (imgCode.isBlank() || imgCode.length != 5) {
+            EasyToast.DEFAULT.show("请输入图形验证码(5位)")
             return
         }
 
-        http {
-            url = Path.GET_CODE
-            params["mobile"] = phone
-            params["tag"] = if (pageType == 0) "login" else "bindmobile"
-
-            onSuccess {
+        vm.checkCaptcha(CheckCaptchaLocal(mobile, imgCode)).observe(this, Observer { resp ->
+            resp.whenSuccess {
                 EasyToast.DEFAULT.show("验证码已发送")
                 SmsTimeUtils.startCountdown(WeakReference(tv_get_code))
-            }
-
-
-            onFail { code, msg ->
+            }.whenError { _, msg ->
                 EasyToast.DEFAULT.show(msg)
             }
-        }
+        })
     }
 
     private var isAgree = false

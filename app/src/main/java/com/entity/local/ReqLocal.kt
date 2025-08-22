@@ -75,3 +75,12 @@ data class GetCityInfoLocal(
     val lat: String,
     val lng: String
 )
+
+data class GetCaptchaLocal(
+    val mobile: String
+)
+
+data class CheckCaptchaLocal(
+    val mobile: String,
+    val captcha: String
+)

@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.base.viewmodel.BaseViewModel
 import com.entity.local.OneKeyLoginLocal
+import com.entity.local.GetCaptchaLocal
+import com.entity.local.CheckCaptchaLocal
 import com.entity.local.UploadVersionLocal
 import com.entity.remote.LoginRemote
 import com.entity.remote.ResCommon
@@ -38,6 +40,24 @@ class LoginViewModel : BaseViewModel() {
                 app_version = Config.getDefault().versionName
             ))
         }
+    }
+
+    fun getCaptcha(getCaptchaLocal: GetCaptchaLocal): LiveData<NetworkResponse<ResCommon<String>>> {
+        val liveData = MutableLiveData<NetworkResponse<ResCommon<String>>>()
+        viewModelScope.launch {
+            val response = BizService.getCaptcha(getCaptchaLocal)
+            liveData.value = response
+        }
+        return liveData
+    }
+
+    fun checkCaptcha(checkCaptchaLocal: CheckCaptchaLocal): LiveData<NetworkResponse<ResCommon<Any>>> {
+        val liveData = MutableLiveData<NetworkResponse<ResCommon<Any>>>()
+        viewModelScope.launch {
+            val response = BizService.checkCaptcha(checkCaptchaLocal)
+            liveData.value = response
+        }
+        return liveData
     }
 
 }

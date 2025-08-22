@@ -4,6 +4,8 @@ import com.entity.local.AdPayLocal
 import com.entity.local.AgentByCodeLocal
 import com.entity.local.ChangeErrorLocal
 import com.entity.local.GetAdInfoLocal
+import com.entity.local.GetCaptchaLocal
+import com.entity.local.CheckCaptchaLocal
 import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
@@ -103,5 +105,15 @@ object BizService {
     suspend fun getOneDevice(oneDeviceLocal: OneDeviceLocal) = Server.call<OneDeviceLocal, DeviceDetailBean.Data>(
         Api.Get_One_Device,
         oneDeviceLocal
+    )
+
+    suspend fun getCaptcha(getCaptchaLocal: GetCaptchaLocal) = Server.call<GetCaptchaLocal, String>(
+        Api.Get_Captcha,
+        getCaptchaLocal
+    )
+
+    suspend fun checkCaptcha(checkCaptchaLocal: CheckCaptchaLocal) = Server.call<CheckCaptchaLocal, Any>(
+        Api.Check_Captcha,
+        checkCaptchaLocal
     )
 }

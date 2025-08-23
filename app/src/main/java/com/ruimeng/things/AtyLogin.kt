@@ -93,12 +93,12 @@ class AtyLogin : AtyBase() {
 
         // 点击图形验证码刷新
         fl_img_captcha.setOnClickListener {
-            val mobile = et_phone.text?.toString()?.trim() ?: ""
-            if (mobile.isBlank() || mobile.length != 11) {
-                EasyToast.DEFAULT.show("请输入手机号码(11位)")
-            } else {
-                loadCaptcha(mobile)
-            }
+            refreshCaptcha()
+        }
+        
+        // 点击"换一张"按钮刷新
+        tv_change_captcha.setOnClickListener {
+            refreshCaptcha()
         }
         isAgree = !SPUtils.getInstance().getBoolean(FIRST_LAUNCH_APP,true)
         SPUtils.getInstance().put(FIRST_LAUNCH_APP,false)
@@ -285,15 +285,28 @@ class AtyLogin : AtyBase() {
             .into(iv_img_captcha)
     }
 
+    private fun refreshCaptcha() {
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank() || mobile.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
+        } else {
+            loadCaptcha(mobile)
+        }
+    }
+
     private fun loadCaptcha(mobile: String) {
         vm.getCaptcha(GetCaptchaLocal(mobile)).observe(this, Observer { response ->
             response.whenSuccess { resCommon ->
                 val rawUrl = resCommon.data
-                val finalUrl = if (rawUrl.startsWith("http")) rawUrl else "https:$rawUrl"
+                val finalUrl = if (rawUrl.startsWith("http")) rawUrl else "https$rawUrl"
                 if (finalUrl.isBlank()) {
                     showCaptchaPlaceholder()
                 } else {
-                    showCaptchaImage(finalUrl)
+                    // 拼接时间戳参数，避免缓存问题
+                    val timestamp = System.currentTimeMillis()
+                    val separator = if (finalUrl.contains("?")) "&" else "?"
+                    val urlWithTimestamp = "$finalUrl${separator}timestamp=$timestamp"
+                    showCaptchaImage(urlWithTimestamp)
                 }
             }
         })

@@ -308,6 +308,8 @@ class AtyLogin : AtyBase() {
                     val urlWithTimestamp = "$finalUrl${separator}timestamp=$timestamp"
                     showCaptchaImage(urlWithTimestamp)
                 }
+            }.whenError { _, _ ->
+                showCaptchaPlaceholder()
             }
         })
     }

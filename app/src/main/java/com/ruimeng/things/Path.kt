@@ -30,6 +30,7 @@ object Path {
      */
     val GET_CODE = "/api/getcode"
 
+    val CHECK_CODE = "/apiv6/user/checkcaptcha"
 
     /**
      * 绑定手机号
@@ -348,5 +349,9 @@ object Path {
      * */
     const val ONE_KEY_LOGIN = "wangyilogin/gettoken"
 
+    /**
+     * 获取图形验证码
+     * */
+    const val GET_CAPTCHA = "apiv6/user/getcapcha"
 
 }

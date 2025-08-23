@@ -2,15 +2,18 @@ package com.ruimeng.things
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.netease.nis.quicklogin.listener.QuickLoginTokenListener
 import com.ruimeng.things.bean.LoginBean
 import com.ruimeng.things.wxapi.WXEntryActivity
@@ -19,6 +22,7 @@ import com.utils.quicklogin.PrefetchResult
 import com.utils.quicklogin.QuickLoginHelper
 import kotlinx.android.synthetic.main.aty_login.*
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import wongxd.AtyWeb
 import wongxd.Config
 import wongxd.Http
@@ -49,6 +53,34 @@ class AtyLogin : AtyBase() {
 
         tv_get_code.setOnClickListener { getLoginCode() }
         btn_login.setOnClickListener { doLogin() }
+
+        // 初始图形验证码展示或加载
+        initOrLoadCaptcha()
+        et_phone.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(TAG, "phone input: $s")
+                // 当手机号长度为11时自动获取图形验证码
+                if (!s.isNullOrBlank() && s.length == 11) {
+                    loadCaptcha(s.toString())
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
+        // 点击图形验证码刷新
+        fl_img_captcha.setOnClickListener {
+            refreshCaptcha()
+        }
+
+        // 点击"换一张"按钮刷新
+        tv_change_captcha.setOnClickListener {
+            refreshCaptcha()
+        }
 
 
         cb_login.isChecked = isAgree
@@ -129,6 +161,79 @@ class AtyLogin : AtyBase() {
         requestPermission()
     }
 
+    private fun initOrLoadCaptcha() {
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank()) {
+            // 显示占位
+            showCaptchaPlaceholder()
+        } else if (mobile.length == 11) {
+            loadCaptcha(mobile)
+        } else {
+            showCaptchaPlaceholder()
+        }
+    }
+
+    private fun showCaptchaPlaceholder() {
+        tv_img_captcha_placeholder.visibility = View.VISIBLE
+        iv_img_captcha.visibility = View.GONE
+    }
+
+    private fun refreshCaptcha() {
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank() || mobile.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
+        } else {
+            loadCaptcha(mobile)
+        }
+    }
+
+    private fun loadCaptcha(mobile: String) {
+        http {
+            url = Path.GET_CAPTCHA
+            params["mobile"] = mobile
+            
+            onSuccess { response ->
+                try {
+                    // 将String类型的response解析为JSONObject
+                    val jsonResponse = JSONObject(response)
+                    // 获取图片URL并处理
+                    val imageUrl = jsonResponse.optString("data", "")
+                    if (imageUrl.isNotBlank()) {
+                        // 添加https前缀和时间戳参数避免缓存
+                        val processedUrl = if (imageUrl.startsWith("http")) {
+                            "$imageUrl?t=${System.currentTimeMillis()}"
+                        } else {
+                            "https$imageUrl?t=${System.currentTimeMillis()}"
+                        }
+                        
+                        // 显示图片
+                        showCaptchaImage(processedUrl)
+                    } else {
+                        // 处理空URL情况
+                        showCaptchaPlaceholder()
+                        EasyToast.DEFAULT.show("获取验证码失败，请重试")
+                    }
+                } catch (e: Exception) {
+                    showCaptchaPlaceholder()
+                    EasyToast.DEFAULT.show("获取验证码失败，请重试")
+                }
+            }
+            
+            onFail { _, msg ->
+                showCaptchaPlaceholder()
+                EasyToast.DEFAULT.show(msg)
+            }
+        }
+    }
+
+    private fun showCaptchaImage(url: String) {
+        tv_img_captcha_placeholder.visibility = View.GONE
+        iv_img_captcha.visibility = View.VISIBLE
+        Glide.with(this)
+            .load(url)
+            .into(iv_img_captcha)
+    }
+
     private fun requestPermission() {
         getPermissions(getCurrentAty(), PermissionType.READ_PHONE_STATE,
             result = { _, _ ->
@@ -205,19 +310,25 @@ class AtyLogin : AtyBase() {
 
     private fun doLogin() {
         if (!isAgree) {
-            EasyToast.DEFAULT.show("请同意《登陆注册协议》")
+            EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
 
-        val phone = et_phone.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入手机号")
+        val phone = et_phone.text?.toString()?.trim() ?: ""
+        if (phone.isBlank() || phone.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
             return
         }
 
-        val code = et_code.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入验证码")
+        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+        if (imgCode.isBlank() || imgCode.length != 5) {
+            EasyToast.DEFAULT.show("请输入图形验证码(5位)")
+            return
+        }
+
+        val code = et_code.text?.toString()?.trim() ?: ""
+        if (code.isBlank() || code.length != 6) {
+            EasyToast.DEFAULT.show("请输入短信验证码(6位)")
             return
         }
 
@@ -244,16 +355,25 @@ class AtyLogin : AtyBase() {
 
 
     private fun getLoginCode() {
-        val phone = et_phone.text.toString()
-        if (phone.isBlank()) {
-            EasyToast.DEFAULT.show("请输入手机号")
+        if (!isAgree) {
+            EasyToast.DEFAULT.show("请阅读并同意接受协议")
+            return
+        }
+        val mobile = et_phone.text?.toString()?.trim() ?: ""
+        if (mobile.isBlank() || mobile.length != 11) {
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
+            return
+        }
+        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+        if (imgCode.isBlank() || imgCode.length != 5) {
+            EasyToast.DEFAULT.show("请输入图形验证码(5位)")
             return
         }
 
         http {
-            url = Path.GET_CODE
-            params["mobile"] = phone
-            params["tag"] = "login"
+            url = Path.CHECK_CODE
+            params["mobile"] = mobile
+            params["captcha"] = imgCode
 
             onSuccess {
                 EasyToast.DEFAULT.show("验证码已发送")

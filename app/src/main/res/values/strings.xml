@@ -4,5 +4,6 @@
     <!--微信appID-->
     <string name="wx_appid">wxbc775f5998093d5a</string>
 <!--    <string name="home_url">http://xlltest.scxll.cn/</string>-->
-    <string name="home_url">http://xianglilai.scxll.cn/</string>
+<!--    <string name="home_url">http://xianglilai.scxll.cn/</string>-->
+    <string name="home_url">http://xllbackup.scxll.cn/</string>
 </resources>

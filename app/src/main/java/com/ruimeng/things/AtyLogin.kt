@@ -198,11 +198,15 @@ class AtyLogin : AtyBase() {
         }
         btnOtpLogin.setOnClickListener {
             if (et_phone.text.toString().isEmpty()) {
-                EasyToast.DEFAULT.show("请输入手机号码")
+                EasyToast.DEFAULT.show("请输入手机号码(11位)")
+                return@setOnClickListener
+            }
+            if (et_img_code.text.toString().isEmpty()) {
+                EasyToast.DEFAULT.show("请输入图形验证码(5位)")
                 return@setOnClickListener
             }
             if (et_code.text.toString().isEmpty()) {
-                EasyToast.DEFAULT.show("请输入验证码")
+                EasyToast.DEFAULT.show("请输入短信验证码(6位)")
                 return@setOnClickListener
             }
             doLogin()

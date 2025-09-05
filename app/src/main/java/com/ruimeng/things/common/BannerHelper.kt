@@ -17,6 +17,7 @@ import com.ruimeng.things.home.bean.BannerInfo
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.bumptech.glide.Glide
+import com.entity.remote.AdInfoRemote
 import com.ruimeng.things.home.FgtExtendedGift
 import com.ruimeng.things.home.FgtCouponPurchase
 import com.ruimeng.things.home.FgtHome
@@ -124,9 +125,9 @@ object BannerHelper {
             params["lng"] = App.lng.toString()
 
             onSuccess { res ->
-                val advertisementList = res.toPOJO<AdvertisementData>().data
-                val couponPurchaseAd = advertisementList.find { ad ->
-                    ad.type == "couponPurchase"
+                val adInfo = res.toPOJO<AdvertisementData>().data
+                val couponPurchaseAd = adInfo.promotions?.find { ad ->
+                    ad.operationData?.type == "couponPurchase"
                 }
                 
                 if (couponPurchaseAd != null) {
@@ -146,14 +147,9 @@ object BannerHelper {
 
     // 广告数据类
     data class AdvertisementData(
-        var `data`: List<AdvertisementInfo> = mutableListOf(),
+        var `data`: AdInfoRemote,
         var errcode: Int = 0,
         var errmsg: String = ""
-    )
-
-    data class AdvertisementInfo(
-        val type: String,
-        val operationData: OperationData? = null
     )
 
     private fun openExternalWebPage(url: String, context: Context) {

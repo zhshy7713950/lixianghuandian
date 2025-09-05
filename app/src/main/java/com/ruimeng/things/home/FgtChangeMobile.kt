@@ -19,6 +19,8 @@ import wongxd.common.SmsTimeUtils
 import wongxd.http
 import wongxd.utils.SystemUtils
 import wongxd.utils.utilcode.util.SPUtils
+import org.greenrobot.eventbus.EventBus
+import com.ruimeng.things.FgtMain
 import java.lang.ref.WeakReference
 
 class FgtChangeMobile : BaseBackFragment() {
@@ -99,6 +101,8 @@ class FgtChangeMobile : BaseBackFragment() {
                     onSuccess {
                         ToastHelper.shortToast(context, "更换成功，请重新登录")
                         dismiss()
+                        // 发送切换到首页事件
+                        EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
                         v.postDelayed({
                             Config.getDefault().token = ""
                             Config.getDefault().stringCacheUtils.remove(UserInfoLiveData.STORE_KEY)

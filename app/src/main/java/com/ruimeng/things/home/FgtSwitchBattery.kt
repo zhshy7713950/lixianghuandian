@@ -136,8 +136,8 @@ class FgtSwitchBattery : BaseBackFragment() {
 
 
                             view.setOnClickListener {
-                                EventBus.getDefault().post(BatteryInfoChangeEvent(item.device_id))
                                 pop()
+                                EventBus.getDefault().post(BatteryInfoChangeEvent(item.device_id))
                             }
 
                         }

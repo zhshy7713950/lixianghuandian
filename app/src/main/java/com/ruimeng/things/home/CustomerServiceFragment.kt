@@ -23,6 +23,7 @@ import com.net.NetworkResponse
 import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
 import com.ruimeng.things.home.SmartCustomerServiceFragment
 import com.ruimeng.things.utils.PageNavigationHelper
+import org.greenrobot.eventbus.Subscribe
 
 /**
  * 客服中心页面
@@ -44,6 +45,7 @@ class CustomerServiceFragment : BaseBackFragment() {
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
+        EventBus.getDefault().register(this)
         initTopbar(topbar, "客服中心")
         setupListeners()
         loadHelpCenter()
@@ -83,6 +85,17 @@ class CustomerServiceFragment : BaseBackFragment() {
         btn_service_hotline.setOnClickListener {
             showCustomerServiceHotlineDialog()
         }
+    }
+
+    @Subscribe
+    fun onBatterySwitched(event: BatteryInfoChangeEvent) {
+        // 切换电池成功后，返回主页面并切换到首页tab
+        PageNavigationHelper.backToMainAndSwitchTab(0, this)
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
     }
 
     private fun loadHelpCenter() {

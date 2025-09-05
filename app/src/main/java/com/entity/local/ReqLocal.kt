@@ -82,5 +82,6 @@ data class GetCaptchaLocal(
 
 data class CheckCaptchaLocal(
     val mobile: String,
-    val captcha: String
+    val captcha: String,
+    val tag: String? = null
 )

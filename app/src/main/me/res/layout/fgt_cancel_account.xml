@@ -30,7 +30,7 @@
         android:textColor="@color/white"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:text="\n1）存在「电池未归还」的情况、或者「押金未退还」的情况，请先联系我们的客户人员进行人工处理，号码400-0283969；或者自行在「首页」进行「退还电池」的操作\n\n2）存在「租电套餐仍在有效期」的情况、或者「换电套餐仍在有效期」的情况，请于注销前消耗完毕。否则，我们将视为您自愿放弃该套餐剩余权益"
+        android:text="\n1）存在「电池未归还」的情况、或者「押金未退还」的情况，请先联系我们的客户人员进行人工处理，号码400-028-3969；或者自行在「首页」进行「退还电池」的操作\n\n2）存在「租电套餐仍在有效期」的情况、或者「换电套餐仍在有效期」的情况，请于注销前消耗完毕。否则，我们将视为您自愿放弃该套餐剩余权益"
         />
 
     <TextView
@@ -72,37 +72,121 @@
         android:text="1111"
         />
 
-    <TextView
-        android:id="@+id/tvTip3"
-        android:layout_width="wrap_content"
+    <!-- 图形验证码输入与图片（参照登录页） -->
+    <LinearLayout
+        android:id="@+id/layout_img_captcha"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tvTip2"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/etCode"
-        android:textSize="14sp"
-        android:textColor="#9A9A9A"
+        app:layout_constraintRight_toRightOf="parent"
+        android:orientation="horizontal"
         android:layout_marginLeft="12dp"
-        android:text="验证码   "
-        android:layout_marginTop="20dp"
-        />
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="20dp">
 
-    <EditText
-        android:id="@+id/etCode"
+        <EditText
+            android:id="@+id/et_img_code"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/bg_login_input"
+            android:textColor="#666666"
+            android:hint="请输入图形验证码"
+            android:layout_marginRight="24dp"
+            android:inputType="number"/>
+
+        <LinearLayout
+            android:id="@+id/layout_img_captcha_right"
+            android:layout_width="0dp"
+            android:layout_weight="0.618"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_img_captcha"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginRight="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_img_captcha"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="图形验证码" />
+
+                <TextView
+                    android:id="@+id/tv_img_captcha_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="#CCCCCC"
+                    android:text="图形验证码"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_change_captcha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="看不清楚，换一张"
+                android:textColor="#FFFFFFFF"
+                android:textSize="11sp"
+                android:gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 短信验证码 + 获取验证码按钮 -->
+    <LinearLayout
+        android:id="@+id/layout_sms_code"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="@+id/tvTip3"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTip3"
-        app:layout_constraintLeft_toRightOf="@+id/tvTip3"
+        app:layout_constraintTop_toBottomOf="@+id/layout_img_captcha"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="14sp"
-        android:textColor="@color/white"
-        android:hint="请输入验证码"
-        android:layout_marginLeft="20dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:theme="@style/CodeEditTextStyle"
-        android:inputType="numberSigned"
-        />
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/etCode"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp"
+            android:focusable="true"
+            android:inputType="number"
+            android:focusableInTouchMode="true"
+            android:maxLength="6"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/bg_login_input"
+            android:textColor="#666666"
+            android:hint="请输入短信验证码"
+            android:layout_marginRight="24dp"/>
+
+        <TextView
+            android:id="@+id/tvGetCode"
+            android:layout_width="0dp"
+            android:layout_weight="0.618"
+            android:layout_height="42dp"
+            android:text="获取验证码"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:background="@drawable/bg_btn_common1_8px"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnCancelAccount"
@@ -120,21 +204,7 @@
         android:textSize="15sp"
         android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/btnSendCode"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btnCancelAccount"
-        android:layout_marginLeft="42dp"
-        android:layout_marginRight="42dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/bg_gradient_color_btn"
-        android:text="发送验证码"
-        android:textColor="#272934"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+    
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

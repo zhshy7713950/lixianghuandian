@@ -197,18 +197,28 @@ class AtyLogin : AtyBase() {
             layout_test.visibility = View.GONE
         }
         btnOtpLogin.setOnClickListener {
-            if (et_phone.text.toString().isEmpty()) {
+            // ① 校验手机号码
+            val phone = et_phone.text?.toString()?.trim() ?: ""
+            if (phone.isBlank() || phone.length != 11) {
                 EasyToast.DEFAULT.show("请输入手机号码(11位)")
                 return@setOnClickListener
             }
-            if (et_img_code.text.toString().isEmpty()) {
+            
+            // ② 校验图形验证码
+            val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+            if (imgCode.isBlank() || imgCode.length != 5) {
                 EasyToast.DEFAULT.show("请输入图形验证码(5位)")
                 return@setOnClickListener
             }
-            if (et_code.text.toString().isEmpty()) {
+            
+            // ③ 校验短信验证码
+            val code = et_code.text?.toString()?.trim() ?: ""
+            if (code.isBlank() || code.length != 6) {
                 EasyToast.DEFAULT.show("请输入短信验证码(6位)")
                 return@setOnClickListener
             }
+            
+            // ④ 调用接口
             doLogin()
         }
         btnOneKey.setOnClickListener {
@@ -293,9 +303,9 @@ class AtyLogin : AtyBase() {
         val mobile = et_phone.text?.toString()?.trim() ?: ""
         if (mobile.isBlank() || mobile.length != 11) {
             EasyToast.DEFAULT.show("请输入手机号码(11位)")
-        } else {
-            loadCaptcha(mobile)
+            return
         }
+        loadCaptcha(mobile)
     }
 
     private fun loadCaptcha(mobile: String) {
@@ -423,21 +433,27 @@ class AtyLogin : AtyBase() {
     }
 
     private fun getLoginCode() {
+        // ① 校验协议同意状态
         if (!isAgree) {
             EasyToast.DEFAULT.show("请阅读并同意接受协议")
             return
         }
+        
+        // ② 校验手机号码
         val mobile = et_phone.text?.toString()?.trim() ?: ""
         if (mobile.isBlank() || mobile.length != 11) {
             EasyToast.DEFAULT.show("请输入手机号码(11位)")
             return
         }
+        
+        // ③ 校验图形验证码
         val imgCode = et_img_code.text?.toString()?.trim() ?: ""
         if (imgCode.isBlank() || imgCode.length != 5) {
             EasyToast.DEFAULT.show("请输入图形验证码(5位)")
             return
         }
 
+        // ④ 调用接口
         vm.checkCaptcha(CheckCaptchaLocal(mobile, imgCode)).observe(this, Observer { resp ->
             resp.whenSuccess {
                 EasyToast.DEFAULT.show("验证码已发送")

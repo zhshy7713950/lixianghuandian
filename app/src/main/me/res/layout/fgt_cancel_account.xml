@@ -157,7 +157,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="15dp">
 
         <EditText
             android:id="@+id/etCode"
@@ -179,7 +179,7 @@
             android:id="@+id/tvGetCode"
             android:layout_width="0dp"
             android:layout_weight="0.618"
-            android:layout_height="42dp"
+            android:layout_height="48dp"
             android:text="获取验证码"
             android:textColor="@color/black"
             android:textSize="14sp"

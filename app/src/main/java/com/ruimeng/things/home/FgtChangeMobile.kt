@@ -79,8 +79,9 @@ class FgtChangeMobile : BaseBackFragment() {
             getLoginCode()
         }
         btnOtpLogin.setOnClickListener {
-            val phone = etPhone.text.toString()
-            if (phone.isBlank()) {
+            // ① 校验手机号码
+            val phone = etPhone.text.toString().trim()
+            if (phone.isBlank() || phone.length != 11) {
                 if (type == VERIFY_TYPE) {
                     EasyToast.DEFAULT.show("请输入老手机号码(11位)")
                 } else {
@@ -88,20 +89,26 @@ class FgtChangeMobile : BaseBackFragment() {
                 }
                 return@setOnClickListener
             }
-            val code = etCode.text.toString()
-            if (code.isBlank()) {
-                EasyToast.DEFAULT.show("请输入短信验证码(6位)")
-                return@setOnClickListener
-            }
+            
+            // ② 校验图形验证码
             val imgCode = et_img_code.text?.toString()?.trim() ?: ""
-            if (imgCode.isBlank()) {
+            if (imgCode.isBlank() || imgCode.length != 5) {
                 EasyToast.DEFAULT.show("请输入图形验证码(5位)")
                 return@setOnClickListener
             }
+            
+            // ③ 校验短信验证码
+            val code = etCode.text.toString().trim()
+            if (code.isBlank() || code.length != 6) {
+                EasyToast.DEFAULT.show("请输入短信验证码(6位)")
+                return@setOnClickListener
+            }
+            
+            // ④ 调用接口
             if (type == VERIFY_TYPE) {
                 verifyOldMobile(phone, code)
             } else {
-                changeMobile(phone, code,it)
+                changeMobile(phone, code, it)
             }
         }
     }
@@ -150,9 +157,9 @@ class FgtChangeMobile : BaseBackFragment() {
             } else {
                 EasyToast.DEFAULT.show("请输入新手机号码(11位)")
             }
-        } else {
-            loadCaptcha(mobile)
+            return
         }
+        loadCaptcha(mobile)
     }
 
     private fun loadCaptcha(mobile: String) {
@@ -233,8 +240,8 @@ class FgtChangeMobile : BaseBackFragment() {
 
 
     private fun getLoginCode() {
+        // ① 校验手机号码
         val phone = etPhone.text.toString().trim()
-        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
         if (phone.isBlank() || phone.length != 11) {
             if (type == VERIFY_TYPE) {
                 EasyToast.DEFAULT.show("请输入老手机号码(11位)")
@@ -243,11 +250,15 @@ class FgtChangeMobile : BaseBackFragment() {
             }
             return
         }
+        
+        // ② 校验图形验证码
+        val imgCode = et_img_code.text?.toString()?.trim() ?: ""
         if (imgCode.isBlank() || imgCode.length != 5) {
             EasyToast.DEFAULT.show("请输入图形验证码(5位)")
             return
         }
 
+        // ③ 业务逻辑校验
         if (type == CHANGE_TYPE) {
             val old = oldPhone ?: ""
             if (phone == old) {
@@ -256,7 +267,7 @@ class FgtChangeMobile : BaseBackFragment() {
             }
         }
 
-        // 参照登录页 vm.checkCaptcha
+        // ④ 调用接口
         val tagParam = if (type == VERIFY_TYPE) "change" else null
         vm.checkCaptcha(CheckCaptchaLocal(phone, imgCode, tagParam)).observe(this, Observer { resp ->
             resp.whenSuccess {

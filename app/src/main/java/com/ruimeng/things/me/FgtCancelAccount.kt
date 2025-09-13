@@ -52,12 +52,20 @@ class FgtCancelAccount : BaseBackFragment() {
         fl_img_captcha.setOnClickListener { refreshCaptcha() }
         tv_change_captcha.setOnClickListener { refreshCaptcha() }
         tvGetCode.setOnClickListener {
+            // ① 校验手机号码
+            if (phone.isBlank() || phone.length != 11) {
+                EasyToast.DEFAULT.show("请输入手机号码(11位)")
+                return@setOnClickListener
+            }
+            
+            // ② 校验图形验证码
             val imgCode = et_img_code.text?.toString()?.trim() ?: ""
             if (imgCode.isBlank() || imgCode.length != 5) {
                 EasyToast.DEFAULT.show("请输入图形验证码(5位)")
                 return@setOnClickListener
             }
-            // 发送验证码：/apiv6/user/checkcaptcha tag=unregister
+            
+            // ③ 调用接口
             vmLogin.checkCaptcha(CheckCaptchaLocal(phone, imgCode, "unregister")).observe(this, Observer { resp ->
                 resp.whenSuccess {
                     EasyToast.DEFAULT.show("验证码已发送")
@@ -68,11 +76,28 @@ class FgtCancelAccount : BaseBackFragment() {
             })
         }
         btnCancelAccount.setOnClickListener {
-            if(etCode.text.isNullOrBlank()){
-                EasyToast.DEFAULT.show("请输入验证码")
+            // ① 校验手机号码
+            if (phone.isBlank() || phone.length != 11) {
+                EasyToast.DEFAULT.show("请输入手机号码(11位)")
                 return@setOnClickListener
             }
-            vm.unregister(userId, phone, etCode.text.toString())
+            
+            // ② 校验图形验证码
+            val imgCode = et_img_code.text?.toString()?.trim() ?: ""
+            if (imgCode.isBlank() || imgCode.length != 5) {
+                EasyToast.DEFAULT.show("请输入图形验证码(5位)")
+                return@setOnClickListener
+            }
+            
+            // ③ 校验短信验证码
+            val code = etCode.text?.toString()?.trim() ?: ""
+            if (code.isBlank() || code.length != 6) {
+                EasyToast.DEFAULT.show("请输入短信验证码(6位)")
+                return@setOnClickListener
+            }
+            
+            // ④ 调用接口
+            vm.unregister(userId, phone, code)
         }
     }
 
@@ -109,11 +134,10 @@ class FgtCancelAccount : BaseBackFragment() {
 
     private fun refreshCaptcha() {
         if (phone.isBlank() || phone.length != 11) {
-            // 注销页面的手机号直接读取，通常不提示手机号
-            showCaptchaPlaceholder()
-        } else {
-            loadCaptcha(phone)
+            EasyToast.DEFAULT.show("请输入手机号码(11位)")
+            return
         }
+        loadCaptcha(phone)
     }
 
     private fun loadCaptcha(mobile: String) {

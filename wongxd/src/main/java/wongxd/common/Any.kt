@@ -67,7 +67,7 @@ fun getCurrentAty(): AppCompatActivity =
     AppManager.getAppManager().currentActivity() as AppCompatActivity
 
 fun getSweetDialog(
-    appCompatActivity: AppCompatActivity,
+    context: Context,
     type: Int,
     msg: String,
     cancelable: Boolean = true,
@@ -75,7 +75,7 @@ fun getSweetDialog(
     cancelText: String = "取消",
     confirmLis: () -> Unit = {}
 ): SweetAlertDialog {
-    val dlg = SweetAlertDialog(appCompatActivity, type)
+    val dlg = SweetAlertDialog(context, type)
     val thisCancelable = if (type == SweetAlertDialog.ERROR_TYPE) false else cancelable
     dlg.titleText = msg
     dlg.confirmText = confirmText

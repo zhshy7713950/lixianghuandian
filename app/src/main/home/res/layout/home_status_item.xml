@@ -1101,6 +1101,16 @@
 			</LinearLayout>
 		</LinearLayout>
 
+		<!-- 广告容器 -->
+		<FrameLayout
+			android:id="@+id/ad_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"
+			android:layout_marginBottom="20dp"
+			android:visibility="gone" />
+
 		<!-- 底部占位视图，用于控制填充高度 -->
 		<View
 			android:id="@+id/v_bottom_padding"

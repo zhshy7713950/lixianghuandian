@@ -79,7 +79,8 @@
 			android:requestLegacyExternalStorage="true"
 			android:theme="@style/WTheme"
 			tools:ignore="GoogleAppIndexingWarning"
-			tools:replace="android:allowBackup">
+			tools:replace="android:allowBackup"
+			android:hardwareAccelerated="true">
 
 		<service
 				android:name="wongxd.common.autoInstall.AutoInstallService"

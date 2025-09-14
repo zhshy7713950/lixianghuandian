@@ -31,4 +31,7 @@ object Api {
     // Login / Captcha
     const val Get_Captcha = "apiv6/user/getcapcha"
     const val Check_Captcha = "apiv6/user/checkcaptcha"
+    
+    // Advertisement
+    const val Get_Third_Ad_Status = "apiv6/advertisementinfo/getthridadstatus"
 }

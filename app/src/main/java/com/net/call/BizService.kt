@@ -9,6 +9,7 @@ import com.entity.local.CheckCaptchaLocal
 import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
+import com.entity.local.GetThirdAdStatusLocal
 import com.entity.local.OneDeviceLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
@@ -19,6 +20,7 @@ import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
 import com.entity.remote.GetCityInfoRemote
+import com.entity.remote.GetThirdAdStatusRemote
 import com.entity.remote.LoginRemote
 import com.entity.remote.RentStep1Remote
 import com.entity.remote.ServerPayResultRemote
@@ -115,5 +117,10 @@ object BizService {
     suspend fun checkCaptcha(checkCaptchaLocal: CheckCaptchaLocal) = Server.call<CheckCaptchaLocal, Any>(
         Api.Check_Captcha,
         checkCaptchaLocal
+    )
+
+    suspend fun getThirdAdStatus() = Server.call<GetThirdAdStatusLocal, GetThirdAdStatusRemote>(
+        Api.Get_Third_Ad_Status,
+        GetThirdAdStatusLocal()
     )
 }

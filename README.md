@@ -5,6 +5,114 @@
 
 ## 最近更新
 
+### 全局广告开关功能实现 (2024年)
+
+#### 功能描述
+实现了全局广告开关控制功能，通过后端接口动态控制APP内所有广告的显示状态，确保广告内容的安全性和可控性。
+
+#### 技术实现
+1. **接口集成**: 在启动页调用`apiv6/advertisementinfo/getthridadstatus`接口获取广告开关状态
+2. **单例管理**: 创建`AdManager`单例类统一管理广告开关状态
+3. **ViewModel架构**: 使用`SplashViewModel`处理启动页的广告状态检查逻辑
+4. **状态持久化**: 广告开关状态在APP运行期间保持，支持实时控制
+
+#### 核心组件
+- **AdManager**: 广告管理单例类，提供广告开关状态管理和SDK自动初始化
+- **SplashViewModel**: 启动页ViewModel，处理广告状态检查
+- **GetThirdAdStatusLocal/Remote**: 广告开关接口的请求和响应实体类
+- **BizService**: 网络服务层，封装广告开关接口调用
+
+#### 使用方法
+1. **检查广告状态**: 使用`AdManager.getInstance().isAdEnabled()`检查广告是否允许显示
+2. **检查SDK状态**: 使用`AdManager.getInstance().isSdkInitialized()`检查SDK是否已初始化
+3. **获取状态描述**: 使用`AdManager.getInstance().getStatusDescription()`获取状态描述
+4. **状态控制**: 根据`AdManager`的状态控制广告相关UI的显示和隐藏
+5. **手动初始化**: 使用`AdManager.getInstance().manualInitSdk()`手动触发SDK初始化
+
+#### 文件结构
+```
+app/src/main/java/com/ruimeng/things/
+├── ads/
+│   ├── AdManager.kt                    # 广告管理单例类
+│   └── AdManagerUsageExample.kt        # 使用示例
+├── SplashViewModel.kt                  # 启动页ViewModel
+└── AtySplash.kt                        # 启动页Activity（已集成广告开关检查）
+
+app/src/main/java/com/entity/
+├── local/GetThirdAdStatusLocal.kt      # 广告开关请求实体
+└── remote/GetThirdAdStatusRemote.kt    # 广告开关响应实体
+
+app/src/main/java/com/net/call/
+├── Api.kt                              # 添加广告开关接口定义
+└── BizService.kt                       # 添加广告开关接口调用方法
+```
+
+#### 接口说明
+- **接口地址**: `apiv6/advertisementinfo/getthridadstatus`
+- **请求方式**: POST
+- **入参**: 无
+- **返回值**: `{ "switch": 1 }` (1-开，2-关)
+
+#### 技术特点
+- **实时控制**: 每次APP启动时检查广告开关状态
+- **自动初始化**: 广告开关打开时自动初始化AdScope SDK
+- **安全优先**: 接口失败时默认关闭广告，确保安全性
+- **状态管理**: 使用单例模式确保全局状态一致性
+- **架构清晰**: 遵循MVVM架构，代码结构清晰
+- **异常处理**: 完善的异常处理机制，确保应用稳定性
+- **SDK状态跟踪**: 实时跟踪SDK初始化状态，支持状态查询
+
+#### 注意事项
+1. 广告开关状态仅在APP启动时获取，运行期间不会自动更新
+2. 接口失败时默认关闭广告，确保不会显示不合适的广告内容
+3. 建议在显示广告前都调用`AdManager.getInstance().isAdEnabled()`和`isSdkInitialized()`进行最终检查
+4. 需要将`AdManager`中的`AMPS_APPID`替换为从AdScope开发者后台获取的实际AppId
+5. SDK初始化是异步的，建议在显示广告前检查`isSdkInitialized()`状态
+
+### AdScope聚合广告SDK接入 (2024年)
+
+#### 功能描述
+成功接入AdScope聚合广告SDK，支持多个广告渠道的聚合展示，包括：
+- **倍孜广告渠道**: 提供开屏、原生、激励视频、插屏、横幅等多种广告形式
+- **广点通（优量汇）**: 腾讯广告平台，支持多种广告类型
+- **快手广告渠道**: 快手广告平台，提供丰富的广告资源
+- **穿山甲/GroMore**: 字节跳动广告平台，支持多种广告形式
+
+#### 技术实现
+1. **依赖配置**: 在`app/build.gradle`中添加了AdScope核心SDK和各个渠道的适配器依赖
+2. **Maven仓库**: 在根目录`build.gradle`中配置了所需的Maven仓库地址
+3. **混淆配置**: 在`proguard-rules.pro`中添加了完整的混淆规则，确保SDK正常工作
+4. **文件管理**: 在`app/libs/`目录下创建了SDK文件说明文档
+
+#### 接入的广告渠道
+- **倍孜 (BZ)**: 支持开屏、原生、激励视频、插屏、横幅广告
+- **广点通 (GDT)**: 支持开屏、原生、激励视频、插屏、横幅广告  
+- **快手 (KS)**: 支持开屏、原生、激励视频、插屏、横幅广告
+- **穿山甲 (CSJ)**: 支持开屏、原生、激励视频、插屏、横幅广告
+- **GroMore (GM)**: 支持开屏、原生、激励视频、插屏、横幅广告
+
+#### 使用方法
+1. **SDK文件准备**: 从AdScope开发者后台下载所需的SDK文件，放置到`app/libs/`目录
+2. **项目同步**: 同步Gradle项目，确保所有依赖正确加载
+3. **初始化SDK**: 在Application中初始化AdScope SDK
+4. **广告展示**: 根据业务需求调用相应的广告展示API
+
+#### 文件结构
+```
+app/
+├── build.gradle                    # 添加了AdScope SDK依赖配置
+├── proguard-rules.pro             # 添加了AdScope混淆规则
+└── libs/
+    ├── README_AdScope_SDK.md      # SDK文件说明文档
+    └── [AdScope SDK文件]          # 需要从后台下载的SDK文件
+```
+
+#### 注意事项
+1. 需要从AdScope开发者后台下载对应的SDK文件
+2. 确保SDK版本与配置中的版本号匹配
+3. 在正式使用前需要完成SDK初始化配置
+4. 建议在测试环境充分测试后再发布到生产环境
+
 ### 变更手机号码页面验证码输入框优化 (2024年)
 
 #### 问题描述
@@ -264,3 +372,97 @@ app/src/main/java/com/ruimeng/things/home/
 
 ## 联系方式
 如有问题或建议，请联系开发团队。
+
+## AMPS 原生广告封装使用说明
+
+依赖：已在 `app/build.gradle` 集成 AdScope 相关 AAR。
+
+封装类：`com.ruimeng.things.ads.AMPSNativeAdLoader`
+
+功能：
+- 传入外部 `Lifecycle` 自动管理 `resume/destroy`
+- 传入容器 `ViewGroup` 自动渲染广告视图
+- 提供监听接口，转发加载、展示、点击、关闭、渲染成功/失败事件
+- 遵循全局广告总开关与 SDK 初始化状态
+
+示例（在 Fragment 中使用）：
+```kotlin
+class ExampleFragment : Fragment(R.layout.fragment_example) {
+    private var adLoader: AMPSNativeAdLoader? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val container = view.findViewById<ViewGroup>(R.id.adContainer)
+        adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
+        adLoader?.loadInto(
+            container = container,
+            spaceId = "15349", // 替换为后台分配的原生广告位ID
+            listener = object : AMPSNativeAdLoader.Listener {
+                override fun onLoadSuccess(infoList: List<AMPSNativeAdExpressInfo>) {
+                    // 可选：拿到广告实例列表
+                }
+                override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                    // 广告已自动添加到容器
+                }
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 展示兜底或隐藏容器
+                }
+            }
+        )
+    }
+}
+```
+
+注意：
+- 需确保 `AdManager.getInstance().isAdEnabled()` 为 true 且 SDK 已初始化。
+- `spaceId` 请替换为 AdScope 后台实际分配的原生广告位 ID。
+- 生命周期请传入 Fragment 的 `viewLifecycleOwner.lifecycle` 以避免内存泄漏。
+
+参考文档：[AdScope 原生(NativeExpress) 文档](https://h-doc.adscope.com.cn/docs/85ljgW)
+
+### 电柜详情页广告集成 (2024年)
+
+#### 功能描述
+在电柜详情页底部集成原生广告位，支持动态高度、自动布局调整和用户关闭功能。
+
+#### 技术实现
+1. **布局集成**: 在 `fgt_net_station_detail_new.xml` 中添加广告容器
+2. **代码集成**: 在 `FgtNetStationDetailNew.kt` 中集成 `AMPSNativeAdLoader`
+3. **样式设计**: 创建圆角背景样式 `bg_ad_container.xml`
+4. **交互逻辑**: 支持广告关闭后自动调整电池列表间距
+
+#### 布局特点
+- **位置**: 页面底部，电池列表下方
+- **间距**: 左距12px，右距12px，上距10px，下距40px
+- **样式**: 圆角10px，白色背景，浅灰色边框
+- **高度**: 动态高度，由SDK根据屏幕宽度和广告内容自动计算
+
+#### 交互逻辑
+- **广告显示**: 加载成功后自动显示，失败时隐藏容器
+- **广告关闭**: 用户点击右上角X按钮后，广告消失，电池列表底部间距恢复为34dp
+- **生命周期**: 自动管理广告的resume/destroy，避免内存泄漏
+
+#### 文件结构
+```
+app/src/main/
+├── java/com/ruimeng/things/
+│   ├── ads/
+│   │   ├── AMPSNativeAdLoader.kt          # 广告加载器封装
+│   │   └── AdUsageExample.kt              # 使用示例
+│   └── net_station/
+│       └── FgtNetStationDetailNew.kt      # 电柜详情页（已集成广告）
+├── res/
+│   ├── drawable/
+│   │   └── bg_ad_container.xml            # 广告容器背景样式
+│   └── layout/
+│       ├── fgt_net_station_detail_new.xml # 电柜详情页布局（已添加广告容器）
+│       └── fragment_ad_example.xml        # 广告使用示例布局
+```
+
+#### 使用方法
+广告会自动在电柜详情页加载，无需额外操作。如需在其他页面使用，参考 `AdUsageExample.kt` 中的实现方式。
+
+#### 注意事项
+1. 确保 `AdManager` 的广告总开关已开启且SDK已初始化
+2. 广告位ID `15349` 需要替换为AdScope后台实际分配的ID
+3. 广告关闭后会自动调整布局，确保用户体验流畅

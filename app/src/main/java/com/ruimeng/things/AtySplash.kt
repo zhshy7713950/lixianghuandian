@@ -7,8 +7,10 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.ruimeng.things.me.activity.AtyWeb2
 import kotlinx.android.synthetic.main.aty_splash.*
@@ -27,6 +29,9 @@ class AtySplash : BaseBackActivity() {
     companion object{
         const val HAS_AGREE_AGREEMENT = "has_agree_agreement"
     }
+    
+    // ViewModel
+    private val splashViewModel: SplashViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,9 @@ class AtySplash : BaseBackActivity() {
 
         setContentView(R.layout.aty_splash)
         setSwipeBackEnable(false)
+
+        // 静默检查广告开关状态，不阻塞启动页跳转
+//        splashViewModel.checkAdStatusSilently()
 
         val hasAgree = Config.getDefault().spUtils.getBoolean(HAS_AGREE_AGREEMENT,false)
         if(!hasAgree){
@@ -87,6 +95,7 @@ class AtySplash : BaseBackActivity() {
             iv_splash.postDelayed({ doJump() }, 1500)
         }
     }
+
 
 
     private fun doJump() {

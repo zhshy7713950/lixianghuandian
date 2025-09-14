@@ -48,3 +48,53 @@
     protected *;
 }
 
+# ========== AdScope聚合广告SDK混淆配置 ==========
+
+# 基础混淆规则
+-keep class android.support.** { *; }
+-keep class android.app.**{*;}
+-keep class **.R$* {*;}
+
+# AdScope聚合混淆
+-dontwarn xyz.adscope.amps.**
+-keep class xyz.adscope.amps.** {*; }
+-dontwarn xyz.adscope.common.**
+-keep class xyz.adscope.common.** {*; }
+
+# AdScope广告渠道适配器混淆
+-dontwarn xyz.adscope.amps.adapter.**
+-keep class  xyz.adscope.amps.adapter.**{*;}
+
+# 倍孜混淆，不接入bz sdk可以不引入
+-dontwarn com.beizi.fusion.**
+-dontwarn com.beizi.ad.**
+-keep class com.beizi.fusion.** {*; }
+-keep class com.beizi.ad.** {*; }
+
+# 广点通混淆，不接入gdt sdk可以不引入
+-keep class com.qq.e.** {
+	public protected *;
+}
+
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+
+-dontwarn  org.apache.**
+
+# 穿山甲-GroMore融合版本广告渠道混淆 不接入csj sdk可以不引入
+-keep class bykvm*.**
+-keep class com.bytedance.msdk.adapter.**{ public *; }
+-keep class com.bytedance.msdk.api.** {
+ public *;
+}
+
+# 快手广告渠道混淆 不接入ks sdk可以不引入
+-keep class org.chromium.** {*;}
+-keep class org.chromium.** { *; }
+-keep class aegon.chrome.** { *; }
+-keep class com.kwai.**{ *; }
+-keep class com.yxcorp.kuaishou.addfp.android.Orange {*;}
+-dontwarn com.kwai.**
+-dontwarn com.kwad.**
+-dontwarn com.ksad.**
+-dontwarn aegon.chrome.**
+

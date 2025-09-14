@@ -159,6 +159,35 @@ dependencies {
     implementation 'com.github.OneZeroYang:PreviewPictureView:1.1.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
+    // ========== AdScope聚合广告SDK依赖 ==========
+    // 接入AdScope聚合必须的aar包
+    implementation(name: 'AMPSSDK-5.1.0.26', ext: 'aar')
+    implementation(name: 'common_5.1.0.26', ext: 'aar')
+
+    // 倍孜适配器包
+    implementation(name: 'AMPSBZAdapter-5.1.490436.2', ext: 'aar')
+    implementation(name: 'beizi_ad_sdk_3.5.0.43', ext: 'aar')
+    // 倍孜广告渠道sdk特有aar包
+    implementation(name: 'beizi_fusion_sdk_4.90.4.43', ext: 'aar')
+
+    // 广点通（优量汇）适配器包
+    implementation(name: 'AMPSGDTAdapter-5.1.46201490.1', ext: 'aar')
+    // 广点通（优量汇）广告渠道sdk特有aar包
+    implementation(name: 'GDTSDK.unionNormal.4.620.1490', ext: 'aar')
+
+    // 快手适配器包
+    implementation(name: 'AMPSKSAdapter-5.1.3374.1', ext: 'aar')
+    // 快手广告渠道SDK特有aar包
+    implementation(name: 'kssdk-ad-3.3.74-publishRelease-46670ffc8e', ext: 'aar')
+
+    // 穿山甲适配器包 穿山甲和GroMore是同一个SDK，集成的时候穿山甲适配器和GroMore适配器二选一
+    implementation(name: 'AMPSCSJAdapter-5.1.6607.1', ext: 'aar')
+    implementation(name: 'open_ad_sdk_6.6.0.7', ext: 'aar')
+
+    // support库依赖，SDK内部依赖如下support，请确保添加  （倍孜 快手 百度 需要添加这个）
+    def support_version = "28.0.0" //建议使用的26以上的support库版本，建议使用28最新的即可。
+    implementation "com.android.support:appcompat-v7:$support_version"
+
 //    //3D地图so及jar
 //    implementation 'com.amap.api:3dmap:latest.integration'
 //    //定位功能

@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.ruimeng.things.R
 import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.home.FgtHome
+import com.ruimeng.things.ads.AMPSNativeAdLoader
 import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
 import com.ruimeng.things.net_station.view.AbsNetStationDetailCtl
 import com.utils.unsafeLazy
@@ -21,6 +22,7 @@ import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
+import kotlinx.android.synthetic.main.fgt_net_station_detail_new.ad_container
 import kotlinx.android.synthetic.main.fgt_net_station_detail_new.net_station_detail_view
 import kotlinx.android.synthetic.main.fgt_net_station_detail_new.rv_battery
 import kotlinx.android.synthetic.main.fgt_net_station_detail_new.station_banner
@@ -39,6 +41,7 @@ class FgtNetStationDetailNew : BaseBackFragment() {
         NetStationDetailCtlImpl()
     }
     private val rvAdapter by lazy { RvAdapter() }
+    private var adLoader: AMPSNativeAdLoader? = null
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_detail_new
 
     companion object {
@@ -58,6 +61,10 @@ class FgtNetStationDetailNew : BaseBackFragment() {
             layoutManager = GridLayoutManager(activity, 2)
             adapter = rvAdapter
         }
+        
+        // 初始化广告加载器
+        initAdLoader()
+        
         getInfo()
     }
 
@@ -107,6 +114,45 @@ class FgtNetStationDetailNew : BaseBackFragment() {
             }
 
         }
+    }
+
+    /**
+     * 初始化广告加载器
+     */
+    private fun initAdLoader() {
+        adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
+        adLoader?.loadInto(
+            container = ad_container,
+            cornerRadius = 10f, // 设置10dp圆角
+            listener = object : AMPSNativeAdLoader.Listener {
+                override fun onLoadSuccess(infoList: List<xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo>) {
+                    // 广告加载成功，显示容器
+                    ad_container.visibility = android.view.View.VISIBLE
+                }
+                
+                override fun onRenderSuccess(view: android.view.View, width: Float, height: Float) {
+                    // 广告渲染成功，保持显示
+                }
+                
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 广告加载失败，隐藏容器
+                    ad_container.visibility = android.view.View.GONE
+                }
+                
+                override fun onAdClosed(view: android.view.View?) {
+                    // 广告被关闭（点击X按钮），隐藏容器
+                    ad_container.visibility = android.view.View.GONE
+                }
+                
+                override fun onAdShow() {
+                    // 广告展示，可以添加埋点
+                }
+                
+                override fun onAdClicked() {
+                    // 广告被点击，可以添加埋点
+                }
+            }
+        )
     }
 
 

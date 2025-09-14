@@ -30,6 +30,8 @@ import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
+import com.ruimeng.things.ads.AMPSNativeAdLoader
+import com.ruimeng.things.ads.AdSdkInitSuccessEvent
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.*
@@ -68,6 +70,7 @@ import wongxd.common.permission.getPermissionsWithTips
 import wongxd.http
 import wongxd.utils.SystemUtils
 import com.utils.WeChatHelper
+import kotlinx.android.synthetic.main.fgt_me.ad_container
 import wongxd.common.loadCircleImg
 
 
@@ -182,6 +185,7 @@ class FgtHome : MainTabFragment() {
     private var restTimes = 0 // 换电剩余次数
     private var isUnlimited = false // 是否无限制次数
     private var hasShowReceiptDialog = false
+    private var adLoader: AMPSNativeAdLoader? = null
 
     override fun getLayoutRes(): Int = R.layout.fgt_home
 
@@ -192,6 +196,7 @@ class FgtHome : MainTabFragment() {
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
         initEvent()
+        vm.checkAdStatusSilently()
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
             ledTextView?.text = Config.getDefault().spUtils.getString("ledString", "")
             ledTextView?.init(activity?.windowManager)
@@ -244,6 +249,44 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
         initTabLayout()
+    }
+
+    /**
+     * 初始化广告加载器
+     */
+    private fun initAdLoader() {
+        adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
+        adLoader?.loadInto(
+            container = ad_container,
+            listener = object : AMPSNativeAdLoader.Listener {
+                override fun onLoadSuccess(infoList: List<xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo>) {
+                    // 广告加载成功，显示容器
+                    ad_container.visibility = View.VISIBLE
+                }
+
+                override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                    // 广告渲染成功，保持显示
+                }
+
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 广告加载失败，隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+
+                override fun onAdClosed(view: View?) {
+                    // 广告被关闭（点击X按钮），隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+
+                override fun onAdShow() {
+                    // 广告展示，可以添加埋点
+                }
+
+                override fun onAdClicked() {
+                    // 广告被点击，可以添加埋点
+                }
+            }
+        )
     }
 
     private fun refreshHomeData() {
@@ -1881,6 +1924,15 @@ class FgtHome : MainTabFragment() {
     fun onUserInfoUpdate(event: UserInfoUpdateEvent) {
         // 更新关注公众号banner的显示状态
         updateFollowWechatBanner(event.userInfo.isBindAccount)
+    }
+
+    /**
+     * 监听广告SDK初始化成功事件
+     */
+    @Subscribe
+    fun onAdSdkInitSuccess(event: AdSdkInitSuccessEvent) {
+        // 当广告SDK初始化成功后，初始化广告加载器
+        initAdLoader()
     }
 
     private fun updateFollowWechatBanner(isBindAccount: Int) {

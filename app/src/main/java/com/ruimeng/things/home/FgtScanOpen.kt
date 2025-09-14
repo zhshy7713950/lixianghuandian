@@ -10,6 +10,8 @@ import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.R
+import com.ruimeng.things.ads.AMPSNativeAdLoader
+import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.home.bean.CheckPaymentBean
 import com.ruimeng.things.home.bean.PaymentOption
 import com.utils.TextUtil
@@ -38,12 +40,17 @@ class FgtScanOpen : BaseBackFragment() {
     val deviceId: String by lazy { arguments?.getString("deviceId") ?: "" }
     val code: String by lazy { arguments?.getString("code") ?: "" }
     var checkPayBean: CheckPaymentBean.Data? = null
+    private var adLoader: AMPSNativeAdLoader? = null
 
 
     override fun getLayoutRes(): Int = R.layout.fgt_scan_open
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, "扫码开门")
+        
+        // 初始化广告加载器
+        initAdLoader()
+        
         checkPayment()
     }
 
@@ -143,5 +150,44 @@ class FgtScanOpen : BaseBackFragment() {
     }
     private fun getTimeShow(time:String):String{
         return if (time.length > 10 ) time.substring(0,10) else time
+    }
+    
+    /**
+     * 初始化广告加载器
+     */
+    private fun initAdLoader() {
+        adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
+        adLoader?.loadInto(
+            container = ad_container,
+            cornerRadius = 10f, // 设置10dp圆角
+            listener = object : AMPSNativeAdLoader.Listener {
+                override fun onLoadSuccess(infoList: List<xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo>) {
+                    // 广告加载成功，显示容器
+                    ad_container.visibility = View.VISIBLE
+                }
+                
+                override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                    // 广告渲染成功，保持显示
+                }
+                
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 广告加载失败，隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+                
+                override fun onAdClosed(view: View?) {
+                    // 广告被关闭（点击X按钮），隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+                
+                override fun onAdShow() {
+                    // 广告展示，可以添加埋点
+                }
+                
+                override fun onAdClicked() {
+                    // 广告被点击，可以添加埋点
+                }
+            }
+        )
     }
 }

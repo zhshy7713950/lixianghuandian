@@ -1,0 +1,171 @@
+package com.ruimeng.things.ads
+
+import android.app.Application
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import com.ruimeng.things.App
+import org.greenrobot.eventbus.EventBus
+import wongxd.Config
+import wongxd.Wongxd
+import xyz.adscope.amps.AMPSSDK
+import xyz.adscope.amps.ad.nativead.AMPSNativeAd
+import xyz.adscope.amps.ad.nativead.AMPSNativeLoadEventListener
+import xyz.adscope.amps.ad.nativead.adapter.AMPSNativeAdExpressListener
+import xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo
+import xyz.adscope.amps.common.AMPSError
+import xyz.adscope.amps.config.AMPSPrivacyConfig
+import xyz.adscope.amps.config.AMPSRequestParameters
+import xyz.adscope.amps.init.AMPSInitConfig
+import xyz.adscope.amps.init.inter.IAMPSInitCallback
+import xyz.adscope.amps.tool.util.AMPSScreenUtil
+
+/**
+ * 广告管理单例类
+ * 
+ * 功能说明：
+ * - 管理全局广告开关状态
+ * - 提供广告显示控制逻辑
+ * - 存储广告相关配置信息
+ * 
+ * 使用方法：
+ * 1. 通过AdManager.getInstance()获取单例实例
+ * 2. 调用setAdEnabled()设置广告开关状态
+ * 3. 调用isAdEnabled()检查广告是否允许显示
+ * 
+ * @author 理想换电开发团队
+ * @version 1.0.0
+ * @since 2024年
+ */
+class AdManager private constructor() {
+    
+    companion object {
+        private const val TAG = "AdManager"
+        
+        @Volatile
+        private var INSTANCE: AdManager? = null
+
+        // AdScope AppId（需要从AdScope开发者后台获取）
+        const val AMPS_APPID = "14657" // 请替换为实际的AppId
+
+        const val NATIVE_SPACE_ID: String = "15349"
+        
+        /**
+         * 获取AdManager单例实例
+         * 
+         * @return AdManager实例
+         */
+        fun getInstance(): AdManager {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: AdManager().also { INSTANCE = it }
+            }
+        }
+    }
+    
+    // 广告开关状态：true-允许显示，false-禁止显示
+    private var isAdEnabled: Boolean = false
+    
+    // 广告开关状态是否已初始化
+    private var isInitialized: Boolean = false
+    
+    // 广告SDK是否已初始化
+    private var isSdkInitialized: Boolean = false
+
+
+
+    /**
+     * 设置广告开关状态
+     * 
+     * @param enabled true表示允许显示广告，false表示禁止显示广告
+     */
+    fun setAdEnabled(enabled: Boolean) {
+        this.isAdEnabled = enabled
+        this.isInitialized = true
+        Log.d(TAG, "广告开关状态已设置: $enabled")
+        
+        // 如果广告开关打开且SDK未初始化，则初始化SDK
+        if (enabled && !isSdkInitialized) {
+            initAdSdk()
+        }
+    }
+    
+    /**
+     * 检查广告是否允许显示
+     * 
+     * @return true表示允许显示广告，false表示禁止显示广告
+     */
+    fun isAdEnabled(): Boolean {
+        if (!isInitialized) {
+            Log.w(TAG, "广告开关状态未初始化，默认禁止显示广告")
+            return false
+        }
+        return isAdEnabled
+    }
+    
+    /**
+     * 检查广告开关是否已初始化
+     * 
+     * @return true表示已初始化，false表示未初始化
+     */
+    fun isInitialized(): Boolean {
+        return isInitialized
+    }
+    
+    /**
+     * 检查广告SDK是否已初始化
+     * 
+     * @return true表示SDK已初始化，false表示SDK未初始化
+     */
+    fun isSdkInitialized(): Boolean {
+        return isSdkInitialized
+    }
+    
+    /**
+     * 初始化广告SDK
+     * 
+     * 当广告开关打开且SDK未初始化时调用
+     */
+    private fun initAdSdk() {
+        try {
+            Log.d(TAG, "开始初始化AdScope广告SDK")
+            
+            val application = Wongxd.instance
+            if (application == null) {
+                Log.e(TAG, "无法获取Application实例，SDK初始化失败")
+                return
+            }
+            
+            // 创建初始化配置
+            val config = AMPSInitConfig.Builder()
+                .setAppId(AMPS_APPID)
+                .setAppName("锂享换电")
+                .setAMPSPrivacyConfig(object : AMPSPrivacyConfig() {
+                    override fun isCanUsePhoneState(): Boolean {
+                        return super.isCanUsePhoneState()
+                    }
+                })
+                .build()
+            
+            // 初始化SDK
+            AMPSSDK.init(application, config, object : IAMPSInitCallback {
+                override fun successCallback() {
+                    isSdkInitialized = true
+                    Log.i(TAG, "AdScope广告SDK初始化成功")
+                    // 发送SDK初始化成功事件
+                    EventBus.getDefault().post(AdSdkInitSuccessEvent())
+                }
+                
+                override fun failCallback(ampsError: AMPSError) {
+                    isSdkInitialized = false
+                    Log.e(TAG, "AdScope广告SDK初始化失败: ${ampsError.toString()}")
+                }
+            })
+            
+        } catch (e: Exception) {
+            isSdkInitialized = false
+            Log.e(TAG, "AdScope广告SDK初始化异常", e)
+        }
+    }
+
+
+}

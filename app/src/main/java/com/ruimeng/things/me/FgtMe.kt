@@ -11,6 +11,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.ruimeng.things.*
+import com.ruimeng.things.ads.AMPSNativeAdLoader
+import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.bean.myVipLevel
 import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
@@ -53,11 +55,15 @@ import wongxd.utils.SystemUtils
 class FgtMe : MainTabFragment() {
 
     private val vmMain: MainViewModel by activityViewModels()
+    private var adLoader: AMPSNativeAdLoader? = null
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
 //        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
         EventBus.getDefault().register(this)
         initEvent()
+        
+        // 初始化广告加载器
+        initAdLoader()
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
 
             myVipLevel(userinfo.online_time)?.let {
@@ -286,20 +292,20 @@ class FgtMe : MainTabFragment() {
     }
 
     private fun initEvent() {
-        lifecycleScope.launchWhenCreated {
-            launch {
-                // 观察 banner 数据
-                vmMain.meBannerData.observe(viewLifecycleOwner) { bannerList ->
-                    setupBanner(bannerList)
-                }
-            }
-        }
+//        lifecycleScope.launchWhenCreated {
+//            launch {
+//                // 观察 banner 数据
+//                vmMain.meBannerData.observe(viewLifecycleOwner) { bannerList ->
+//                    setupBanner(bannerList)
+//                }
+//            }
+//        }
     }
 
     // 设置 Banner
-    private fun setupBanner(bannerList: List<BannerInfo>) {
-        BannerHelper.setupBanner(banner, bannerList, this)
-    }
+//    private fun setupBanner(bannerList: List<BannerInfo>) {
+//        BannerHelper.setupBanner(banner, bannerList, this)
+//    }
 
     private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {
         return if (deviceDeposit.safeToFloat() > 0) {
@@ -334,5 +340,43 @@ class FgtMe : MainTabFragment() {
     @Subscribe
     public fun refreshStation(event: RefreshMe) {
         srl_me?.autoRefresh()
+    }
+    
+    /**
+     * 初始化广告加载器
+     */
+    private fun initAdLoader() {
+        adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
+        adLoader?.loadInto(
+            container = ad_container,
+            listener = object : AMPSNativeAdLoader.Listener {
+                override fun onLoadSuccess(infoList: List<xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo>) {
+                    // 广告加载成功，显示容器
+                    ad_container.visibility = View.VISIBLE
+                }
+                
+                override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                    // 广告渲染成功，保持显示
+                }
+                
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 广告加载失败，隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+                
+                override fun onAdClosed(view: View?) {
+                    // 广告被关闭（点击X按钮），隐藏容器
+                    ad_container.visibility = View.GONE
+                }
+                
+                override fun onAdShow() {
+                    // 广告展示，可以添加埋点
+                }
+                
+                override fun onAdClicked() {
+                    // 广告被点击，可以添加埋点
+                }
+            }
+        )
     }
 }

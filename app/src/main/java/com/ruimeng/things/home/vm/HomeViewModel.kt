@@ -15,13 +15,41 @@ import com.net.getOrElse
 import com.net.isSuccess
 import com.net.whenError
 import com.net.whenSuccess
+import com.ruimeng.things.SplashViewModel
 import com.ruimeng.things.UserInfoLiveData
+import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.MyDevicesBean
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel : BaseViewModel() {
+
+    private val _adStatusLiveData = MutableLiveData<Boolean>()
+    val adStatusLiveData: LiveData<Boolean> = _adStatusLiveData
+
+    /**
+     * 静默检查广告开关状态
+     *
+     * 在APP启动时调用此方法获取广告开关状态，不阻塞UI
+     * @return LiveData<Boolean> 广告开关状态，true表示开启，false表示关闭
+     */
+    fun checkAdStatusSilently(): LiveData<Boolean> {
+        viewModelScope.launch {
+            val response = BizService.getThirdAdStatus()
+            // 处理响应结果
+            response.whenSuccess { data ->
+                val isAdEnabled = data.data.switch == 1
+                AdManager.getInstance().setAdEnabled(isAdEnabled)
+                _adStatusLiveData.value = isAdEnabled
+            }.whenError { _, _ ->
+                // 网络错误时，默认关闭广告
+                AdManager.getInstance().setAdEnabled(false)
+                _adStatusLiveData.value = false
+            }
+        }
+        return adStatusLiveData
+    }
 
     fun getMyDevice(): LiveData<List<MyDevicesBean.Data>>{
         val myDevicesLiveData = MutableLiveData<List<MyDevicesBean.Data>>()

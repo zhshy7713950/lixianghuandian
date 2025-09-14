@@ -177,7 +177,7 @@ class FgtNetStationMap : MainTabFragment() {
 
     private var locations: MutableList<NetStationBean.Data.X> = mutableListOf()
     private fun getNetStationList(name: String = "") {
-        dlgProgress = getSweetDialog(getCurrentAty(), SweetAlertDialog.PROGRESS_TYPE, "请求中...")
+        dlgProgress = getSweetDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE, "请求中...")
         dlgProgress!!.show()
         http {
             url = "apiv3/cgstationnetwork"

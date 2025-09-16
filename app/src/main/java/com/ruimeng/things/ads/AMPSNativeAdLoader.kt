@@ -4,9 +4,11 @@ import android.app.Activity
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import wongxd.common.dp2px
 import xyz.adscope.amps.ad.nativead.AMPSNativeAd
 import xyz.adscope.amps.ad.nativead.AMPSNativeLoadEventListener
 import xyz.adscope.amps.ad.nativead.adapter.AMPSNativeAdExpressListener
@@ -56,9 +58,12 @@ class AMPSNativeAdLoader(
      */
     private fun getDefaultAdWidth(): Int {
         val screenWidth = AMPSScreenUtil.getScreenWidth(activity)
-        val marginDp = 24f // 左右各12dp
-        val marginPx = marginDp * activity.resources.displayMetrics.density
+        val marginPx = 24.dp2px
         return (screenWidth - marginPx).toInt()
+    }
+
+    private fun getDefaultAdHeight(): Int {
+        return 120.dp2px.toInt()
     }
 
     private var nativeAd: AMPSNativeAd? = null
@@ -69,6 +74,38 @@ class AMPSNativeAdLoader(
 
     init {
         lifecycle.addObserver(this)
+    }
+
+    fun commonLoadInto(container: ViewGroup){
+        loadInto(
+            container = container,
+            listener = object : Listener {
+                override fun onLoadSuccess(infoList: List<AMPSNativeAdExpressInfo>) {
+                }
+
+                override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                    // 广告渲染成功，保持显示
+                }
+
+                override fun onLoadFailed(errorCode: Int, message: String?) {
+                    // 广告加载失败，隐藏容器
+                    container.visibility = View.GONE
+                }
+
+                override fun onAdClosed(view: View?) {
+                    // 广告被关闭（点击X按钮），隐藏容器
+                    container.visibility = View.GONE
+                }
+
+                override fun onAdShow() {
+                    // 广告展示，可以添加埋点
+                }
+
+                override fun onAdClicked() {
+                    // 广告被点击，可以添加埋点
+                }
+            }
+        )
     }
 
     /**
@@ -84,19 +121,17 @@ class AMPSNativeAdLoader(
         container: ViewGroup,
         spaceId: String = AdManager.NATIVE_SPACE_ID,
         widthPx: Int = getDefaultAdWidth(),
-        heightPx: Int = 0,
+        heightPx: Int = getDefaultAdHeight(),
         adCount: Int = 1,
         timeoutMs: Int = 5000,
         cornerRadius: Float = 10f, // 添加圆角参数，默认10dp
         listener: Listener? = null
     ) {
         if (!AdManager.getInstance().isAdEnabled()) {
-            Log.w(TAG, "广告总开关关闭，跳过加载")
             listener?.onLoadFailed(-1, "ad switch is off")
             return
         }
         if (!AdManager.getInstance().isSdkInitialized()) {
-            Log.w(TAG, "广告SDK未初始化，跳过加载")
             listener?.onLoadFailed(-2, "sdk not initialized")
             return
         }
@@ -143,7 +178,6 @@ class AMPSNativeAdLoader(
         try {
             nativeAd?.loadAd()
         } catch (e: Exception) {
-            Log.e(TAG, "loadAd exception", e)
             externalListener?.onLoadFailed(-6, e.message)
         }
     }
@@ -151,43 +185,89 @@ class AMPSNativeAdLoader(
     private fun bindExpressListener(info: AMPSNativeAdExpressInfo) {
         info.setAMPSNativeAdExpressListener(object : AMPSNativeAdExpressListener() {
             override fun onAdShow() {
-                Log.d(TAG, "onAdShow")
                 externalListener?.onAdShow()
             }
 
             override fun onAdClicked() {
-                Log.d(TAG, "onAdClicked")
                 externalListener?.onAdClicked()
             }
 
             override fun onAdClosed(view: View) {
-                Log.d(TAG, "onAdClosed")
                 removeFromContainer(view)
                 externalListener?.onAdClosed(view)
             }
 
             override fun onRenderFail(view: View, msg: String, code: Int) {
-                Log.e(TAG, "onRenderFail code=$code msg=$msg")
                 externalListener?.onRenderFail(view, msg, code)
             }
 
             override fun onRenderSuccess(view: View, width: Float, height: Float) {
-                attachToContainer(view)
+                attachToContainer(view, width, height)
                 externalListener?.onRenderSuccess(view, width, height)
             }
         })
     }
 
-    private fun attachToContainer(view: View) {
+    private fun attachToContainer(view: View, width: Float, height: Float) {
         val container = targetContainer ?: return
         safeRemoveFromParent(view)
         container.removeAllViews()
-        
+
         // 设置广告View的圆角
         setViewCornerRadius(view, cornerRadius)
+
+        // 计算最终高度
+        val finalHeight = calculateFinalHeight(width, height)
         
-        container.addView(view)
+        // 如果计算出的高度为0，则不添加view
+        if (finalHeight <= 0) {
+            container.visibility = View.GONE
+            return
+        }
+
+        val vlp = LayoutParams(LayoutParams.MATCH_PARENT, finalHeight)
+        container.addView(view, vlp)
         lastAdView = view
+        // 广告加载成功，显示容器
+        container.visibility = View.VISIBLE
+    }
+    
+    /**
+     * 计算广告View的最终高度
+     * @param width 广告原始宽度
+     * @param height 广告原始高度
+     * @return 计算后的最终高度，如果为0表示不显示广告
+     */
+    private fun calculateFinalHeight(width: Float, height: Float): Int {
+        // 1. 入参高度为0，直接不添加view
+        if (height <= 0) {
+            return 0
+        }
+        
+        val defaultHeight = getDefaultAdHeight()
+        val defaultWidth = getDefaultAdWidth()
+        
+        // 2. 入参高度小于getDefaultAdHeight()，则根据入参宽高比及getDefaultAdWidth()计算出等比例的高度
+        if (height < defaultHeight) {
+            return if (width > 0) {
+                // 计算宽高比
+                val aspectRatio = height / width
+                // 根据默认宽度和宽高比计算等比例高度
+                val calculatedHeight = (defaultWidth * aspectRatio).toInt()
+                calculatedHeight
+            } else {
+                // 如果宽度也为0，使用默认高度
+                defaultHeight
+            }
+        }
+        
+        // 3. 入参高度和getDefaultAdHeight()相同，直接把入参高度给View
+        if (height == defaultHeight.toFloat()) {
+            return height.toInt()
+        }
+        
+        // 4. 入参高度大于默认高度，也直接使用（保持原有逻辑）
+        return height.toInt()
     }
     
     /**
@@ -219,9 +299,7 @@ class AMPSNativeAdLoader(
                 }
             }
             
-            Log.d(TAG, "设置广告View圆角成功，半径: ${radiusPx}px")
         } catch (e: Exception) {
-            Log.e(TAG, "设置View圆角失败", e)
         }
     }
 
@@ -244,7 +322,6 @@ class AMPSNativeAdLoader(
         try {
             nativeAd?.resume()
         } catch (e: Exception) {
-            Log.e(TAG, "resume exception", e)
         }
     }
 

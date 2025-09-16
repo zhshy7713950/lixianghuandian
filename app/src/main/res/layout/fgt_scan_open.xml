@@ -275,7 +275,7 @@
             android:layout_height="50dp"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="100dp" />
+            android:layout_marginBottom="180dp" />
 
     </FrameLayout>
 

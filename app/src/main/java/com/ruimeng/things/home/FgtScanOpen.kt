@@ -157,37 +157,6 @@ class FgtScanOpen : BaseBackFragment() {
      */
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
-        adLoader?.loadInto(
-            container = ad_container,
-            cornerRadius = 10f, // 设置10dp圆角
-            listener = object : AMPSNativeAdLoader.Listener {
-                override fun onLoadSuccess(infoList: List<xyz.adscope.amps.ad.nativead.inter.AMPSNativeAdExpressInfo>) {
-                    // 广告加载成功，显示容器
-                    ad_container.visibility = View.VISIBLE
-                }
-                
-                override fun onRenderSuccess(view: View, width: Float, height: Float) {
-                    // 广告渲染成功，保持显示
-                }
-                
-                override fun onLoadFailed(errorCode: Int, message: String?) {
-                    // 广告加载失败，隐藏容器
-                    ad_container.visibility = View.GONE
-                }
-                
-                override fun onAdClosed(view: View?) {
-                    // 广告被关闭（点击X按钮），隐藏容器
-                    ad_container.visibility = View.GONE
-                }
-                
-                override fun onAdShow() {
-                    // 广告展示，可以添加埋点
-                }
-                
-                override fun onAdClicked() {
-                    // 广告被点击，可以添加埋点
-                }
-            }
-        )
+        adLoader?.commonLoadInto(ad_container)
     }
 }

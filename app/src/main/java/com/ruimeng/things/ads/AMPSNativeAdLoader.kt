@@ -76,9 +76,11 @@ class AMPSNativeAdLoader(
         lifecycle.addObserver(this)
     }
 
-    fun commonLoadInto(container: ViewGroup){
+    fun commonLoadInto(container: ViewGroup,
+                       spaceId: String = AdManager.NATIVE_SPACE_ID_HOME){
         loadInto(
             container = container,
+            spaceId = spaceId,
             listener = object : Listener {
                 override fun onLoadSuccess(infoList: List<AMPSNativeAdExpressInfo>) {
                 }
@@ -119,7 +121,7 @@ class AMPSNativeAdLoader(
      */
     fun loadInto(
         container: ViewGroup,
-        spaceId: String = AdManager.NATIVE_SPACE_ID,
+        spaceId: String = AdManager.NATIVE_SPACE_ID_HOME,
         widthPx: Int = getDefaultAdWidth(),
         heightPx: Int = getDefaultAdHeight(),
         adCount: Int = 1,

@@ -46,10 +46,13 @@ class AdManager private constructor() {
         private var INSTANCE: AdManager? = null
 
         // AdScope AppId（需要从AdScope开发者后台获取）
-        const val AMPS_APPID = "14657" // 请替换为实际的AppId
+        const val AMPS_APPID = "55292" // 请替换为实际的AppId
 
-        const val NATIVE_SPACE_ID: String = "15349"
-        
+        const val NATIVE_SPACE_ID_HOME: String = "122010"
+        const val NATIVE_SPACE_ID_STATION: String = "122012"
+        const val NATIVE_SPACE_ID_ME: String = "122011"
+        const val NATIVE_SPACE_ID_CHANGE: String = "122009"
+
         /**
          * 获取AdManager单例实例
          * 

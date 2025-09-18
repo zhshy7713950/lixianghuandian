@@ -31,6 +31,7 @@ import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.ads.AMPSNativeAdLoader
+import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.ads.AdSdkInitSuccessEvent
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.common.BannerHelper
@@ -256,7 +257,7 @@ class FgtHome : MainTabFragment() {
      */
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
-        adLoader?.commonLoadInto(ad_container)
+        adLoader?.commonLoadInto(ad_container,AdManager.NATIVE_SPACE_ID_HOME)
     }
 
     private fun refreshHomeData() {

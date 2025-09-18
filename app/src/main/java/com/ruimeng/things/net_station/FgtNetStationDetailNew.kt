@@ -15,6 +15,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.adapter.BannerImageCommonAdapter
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.ads.AMPSNativeAdLoader
+import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.net_station.bean.NetStationDetailBeanTwo
 import com.ruimeng.things.net_station.view.AbsNetStationDetailCtl
 import com.utils.unsafeLazy
@@ -121,7 +122,7 @@ class FgtNetStationDetailNew : BaseBackFragment() {
      */
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
-        adLoader?.commonLoadInto(ad_container)
+        adLoader?.commonLoadInto(ad_container,AdManager.NATIVE_SPACE_ID_STATION)
     }
 
 

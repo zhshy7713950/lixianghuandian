@@ -157,6 +157,6 @@ class FgtScanOpen : BaseBackFragment() {
      */
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
-        adLoader?.commonLoadInto(ad_container)
+        adLoader?.commonLoadInto(ad_container,AdManager.NATIVE_SPACE_ID_CHANGE)
     }
 }

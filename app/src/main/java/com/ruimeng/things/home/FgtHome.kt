@@ -1476,6 +1476,9 @@ class FgtHome : MainTabFragment() {
             tv_package_status.visibility = GONE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
+            if(info.rsoc.toFloat() < 30){
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "error-1")
+            }
         }
     }
 
@@ -2015,7 +2018,7 @@ class FgtHome : MainTabFragment() {
             reason = "由于电池或者保护板高温，您的电池即将或者已经断电",
             solution = "请您立即停止行驶，并将电池取出，静置3~5分钟，等待温度恢复正常后，即可重新放电继续使用"
         )
-        
+        VoicePlayerManager.getInstance().playVoice(requireContext(), "error-3")
         warningPopup?.show(rootView)
         isWarningPopupShowing = true
         
@@ -2037,7 +2040,7 @@ class FgtHome : MainTabFragment() {
             reason = "由于套餐逾期，您的电池即将或者已经断电",
             solution = "请您及时续费或者前往就近站点归还电池"
         )
-        
+        VoicePlayerManager.getInstance().playVoice(requireContext(), "error-4")
         warningPopup?.show(rootView)
         isWarningPopupShowing = true
         

@@ -10,7 +10,9 @@ data class DeviceDetailBean(
         var device_base: DeviceBase = DeviceBase(),
         var device_contract: DeviceContract = DeviceContract(),
         var popmsg: PopMsgBean = PopMsgBean(),
-        var device_id: Int = 0 // 1025
+        var device_id: Int = 0, // 1025
+        var isHighTemperature: Int = 0, // 是否存在"高温导致断电的情况"：1-是
+        var isOverdue: Int = 0 // 是否存在"套餐逾期导致断电的情况"：1-是
     ) {
         data class DeviceContract(
             var agent_id: String = "", // 0

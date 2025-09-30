@@ -5,6 +5,95 @@
 
 ## 最近更新
 
+### 通用警告提醒弹窗功能实现 (2024年)
+
+#### 功能描述
+实现了通用警告提醒弹窗功能，可以用于各种需要显示警告信息的场景，如电池高温、设备故障、网络异常等。支持自定义原因说明和处理办法文本。
+
+#### 技术实现
+1. **弹窗组件**: 创建`WarningAlertPopupWindow`类，继承自`PopupWindow`
+2. **UI设计**: 采用ConstraintLayout布局，实现精确的UI定位
+3. **渐变背景**: 使用layer-list实现从上到下的渐变背景效果
+4. **图标复用**: 复用退租弹窗中的感叹号图标`@mipmap/ic_alert`
+5. **参数化设计**: 支持自定义原因说明和处理办法文本
+6. **通用性设计**: 类名和文件名采用通用命名，适用于各种警告场景
+
+#### 核心组件
+- **WarningAlertPopupWindow**: 通用警告提醒弹窗主类
+- **WarningAlertExample**: 使用示例类，展示多种场景下的调用方法
+- **popup_warning_alert.xml**: 弹窗布局文件
+- **bg_warning_alert_popup.xml**: 弹窗背景样式文件
+
+#### 使用方法
+1. **电池高温提醒**: 显示电池高温警告信息
+```kotlin
+val popup = WarningAlertPopupWindow(
+    fgtBase = this,
+    reason = "由于电池或者保护板高温，您的电池即将或者已经断电",
+    solution = "请您立即停止行驶，并将电池取出，静置3~5分钟，等待温度恢复正常后，即可重新放电继续使用"
+)
+popup.show(anchorView)
+```
+
+2. **设备故障提醒**: 显示设备异常警告信息
+```kotlin
+val popup = WarningAlertPopupWindow(
+    fgtBase = this,
+    reason = "检测到设备异常，可能存在安全隐患",
+    solution = "请立即停止使用设备，联系客服进行检修，确保安全后再继续使用"
+)
+popup.show(anchorView)
+```
+
+3. **自定义内容**: 传入自定义的原因说明和处理办法
+```kotlin
+val popup = WarningAlertPopupWindow(
+    fgtBase = this,
+    reason = customReason,
+    solution = customSolution
+)
+popup.show(anchorView)
+```
+
+#### UI特点
+- **背景**: 30%透明度的黑色背景遮罩
+- **主容器**: 左距右距60px，上距180px，圆角20px
+- **感叹号图标**: 60px x 60px，上距150px，复用退租弹窗图标
+- **标题**: "温馨提示"，40px字号，加粗，上距40px
+- **原因说明**: 16px字号，居中对齐，左距右距20px，上距30px
+- **处理办法**: 16px字号，红色字体，居中对齐，左距右距20px，上距10px
+- **按钮**: "好的"按钮，120px x 34px，圆角17px，红色背景，白色字体
+- **渐变背景**: 高度110px，从#ffe556到#FFFFFF的渐变
+
+#### 文件结构
+```
+app/src/main/
+├── java/com/ruimeng/things/home/view/
+│   ├── WarningAlertPopupWindow.kt        # 通用警告提醒弹窗主类
+│   └── WarningAlertExample.kt            # 使用示例类
+├── res/
+│   ├── layout/
+│   │   └── popup_warning_alert.xml       # 弹窗布局文件
+│   └── drawable/
+│       └── bg_warning_alert_popup.xml    # 弹窗背景样式文件
+```
+
+#### 技术特点
+- **通用性设计**: 采用通用命名，适用于各种警告提醒场景
+- **SOLID原则**: 遵循单一职责原则，弹窗类只负责显示和交互
+- **参数化设计**: 支持自定义文本内容，提高复用性
+- **UI精确控制**: 使用dp单位确保UI在不同设备上的一致性
+- **代码质量**: 添加详细注释，遵循命名规范
+- **异常处理**: 包含必要的空值检查和错误处理
+- **用户体验**: 点击按钮或外部区域可关闭弹窗
+- **场景丰富**: 提供多种使用场景示例，便于快速集成
+
+#### 注意事项
+1. 弹窗需要在Activity的windowToken有效时才能显示
+2. 建议在Fragment的onViewCreated中调用弹窗显示方法
+3. 文本内容支持中英文，建议根据实际需求调整字体大小
+4. 弹窗会自动处理生命周期，无需手动管理
+
 ### 全局广告开关功能实现 (2024年)
 
 #### 功能描述

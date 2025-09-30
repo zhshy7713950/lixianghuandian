@@ -42,6 +42,7 @@ import com.ruimeng.things.home.view.PopupHelpEvent
 import com.ruimeng.things.home.view.PopupHelpWindow
 import com.ruimeng.things.home.view.PopupRemindWindow
 import com.ruimeng.things.home.view.ShowCouponPopup
+import com.ruimeng.things.home.view.WarningAlertPopupWindow
 import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtTrueName
@@ -1022,6 +1023,10 @@ class FgtHome : MainTabFragment() {
     private var paymentDetailBean: PaymentDetailBean.Data? = null
     private var paymentCode = 200
     private var deviceCode = 200
+    
+    // 警告弹窗相关变量
+    private var warningPopup: com.ruimeng.things.home.view.WarningAlertPopupWindow? = null
+    private var isWarningPopupShowing = false
 
     private fun onGetBatteryDetailInfo(data: DeviceDetailBean.Data) {
         deviceDetailBean = data
@@ -1032,6 +1037,9 @@ class FgtHome : MainTabFragment() {
         getPaymentInfo()
         updateRequestTime()
         updateBatteryStatus()
+        
+        // 检查是否需要显示警告弹窗
+        checkAndShowWarningPopup()
     }
 
     @SuppressLint("SetTextI18n")
@@ -1930,6 +1938,74 @@ class FgtHome : MainTabFragment() {
                     "/pages/基础/关注公众号/followWechat"
                 )
             }
+        }
+    }
+    
+    /**
+     * 检查并显示警告弹窗
+     * 根据接口返回的isHighTemperature和isOverdue参数决定显示哪种弹窗
+     */
+    private fun checkAndShowWarningPopup() {
+        // 如果弹窗已显示，则不重复显示
+        if (isWarningPopupShowing) {
+            return
+        }
+        
+        val data = deviceDetailBean ?: return
+        val isHighTemperature = data.isHighTemperature == 1
+        val isOverdue = data.isOverdue == 1
+        
+        // 如果同时都=1，只展示isHighTemperature-高温断电
+        if (isHighTemperature && isOverdue) {
+            showHighTemperatureWarning()
+        } else if (isHighTemperature) {
+            showHighTemperatureWarning()
+        } else if (isOverdue) {
+            showOverdueWarning()
+        }
+    }
+    
+    /**
+     * 显示高温断电警告弹窗
+     */
+    private fun showHighTemperatureWarning() {
+        if (isWarningPopupShowing) return
+        
+        warningPopup = WarningAlertPopupWindow(
+            fgtBase = this,
+            reason = "由于电池或者保护板高温，您的电池即将或者已经断电",
+            solution = "请您立即停止行驶，并将电池取出，静置3~5分钟，等待温度恢复正常后，即可重新放电继续使用"
+        )
+        
+        warningPopup?.show(rootView)
+        isWarningPopupShowing = true
+        
+        // 监听弹窗关闭
+        warningPopup?.setOnDismissListener {
+            isWarningPopupShowing = false
+            warningPopup = null
+        }
+    }
+    
+    /**
+     * 显示逾期断电警告弹窗
+     */
+    private fun showOverdueWarning() {
+        if (isWarningPopupShowing) return
+        
+        warningPopup = WarningAlertPopupWindow(
+            fgtBase = this,
+            reason = "由于套餐逾期，您的电池即将或者已经断电",
+            solution = "请您及时续费或者前往就近站点归还电池"
+        )
+        
+        warningPopup?.show(rootView)
+        isWarningPopupShowing = true
+        
+        // 监听弹窗关闭
+        warningPopup?.setOnDismissListener {
+            isWarningPopupShowing = false
+            warningPopup = null
         }
     }
 }

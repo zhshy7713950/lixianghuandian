@@ -30,5 +30,12 @@
         <item name="colorControlActivated">#9A9A9A</item>
     </style>
 
+    <!-- 自定义Switch样式 -->
+    <style name="CustomSwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:thumb">@drawable/switch_thumb_selector</item>
+        <item name="android:track">@drawable/switch_track_selector</item>
+        <item name="android:switchMinWidth">56dp</item>
+        <item name="android:switchPadding">4dp</item>
+    </style>
 
 </resources>

@@ -17,6 +17,7 @@ import com.entity.local.ServerPayResultLocal
 import com.entity.local.UnregisterLocal
 import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
+import com.entity.local.VoiceOpenLocal
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
 import com.entity.remote.GetCityInfoRemote
@@ -122,5 +123,10 @@ object BizService {
     suspend fun getThirdAdStatus() = Server.call<GetThirdAdStatusLocal, GetThirdAdStatusRemote>(
         Api.Get_Third_Ad_Status,
         GetThirdAdStatusLocal()
+    )
+
+    suspend fun voiceOpen(voiceOpenLocal: VoiceOpenLocal) = Server.call<VoiceOpenLocal, Any>(
+        Api.Voice_Open,
+        voiceOpenLocal
     )
 }

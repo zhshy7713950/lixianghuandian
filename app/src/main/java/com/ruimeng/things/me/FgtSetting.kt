@@ -2,12 +2,16 @@ package com.ruimeng.things.me
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.AtyLogin
+import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.R
 import com.ruimeng.things.UserInfoLiveData
 import com.ruimeng.things.me.activity.AtyWeb2
+import com.ruimeng.things.me.vm.SettingViewModel
+import com.ruimeng.things.me.vm.VoiceSwitchEvent
 import kotlinx.android.synthetic.main.fgt_setting.*
 import wongxd.Config
 import wongxd.base.BaseBackFragment
@@ -20,12 +24,21 @@ import wongxd.utils.utilcode.util.SPUtils
  * Created by wongxd on 2018/11/14.
  */
 class FgtSetting : BaseBackFragment() {
+    
+    private val viewModel: SettingViewModel by viewModels()
+
     override fun getLayoutRes(): Int = R.layout.fgt_setting
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
         initTopbar(topbar, "设置")
+        
+        // 初始化语音开关状态
+        initVoiceSwitch()
+        
+        // 观察语音开关事件
+        initEvents()
 
         ll_clean_cache_setting.setOnClickListener {
             CacheUtils.getInstance().clear()
@@ -95,5 +108,61 @@ class FgtSetting : BaseBackFragment() {
         val versionName = packageInfo?.versionName ?: "未知版本"
 
         tv_version_setting.text = "当前版本:v$versionName($versionCode)"
+    }
+
+    /**
+     * 初始化语音开关状态
+     */
+    private fun initVoiceSwitch() {
+        // 获取当前语音开关状态
+        val isVoiceActived = viewModel.getCurrentVoiceSwitchStatus()
+        switch_voice_activated.isChecked = isVoiceActived
+        updateVoiceSwitchText(isVoiceActived)
+
+        // 设置遮罩层点击事件，拦截所有点击
+        switch_mask.setOnClickListener {
+            val targetState = !switch_voice_activated.isChecked
+            // 调用ViewModel更新语音开关状态
+            updateVoiceSwitchStatus(targetState)
+        }
+    }
+
+    /**
+     * 观察语音开关事件
+     */
+    private fun initEvents() {
+        viewModel.voiceSwitchLiveData.observe(this) { event ->
+            when (event) {
+                is VoiceSwitchEvent.Success -> {
+                    switch_voice_activated.isChecked = event.isActivated
+                    updateVoiceSwitchText(event.isActivated)
+                    EasyToast.DEFAULT.show(event.message)
+                }
+                is VoiceSwitchEvent.Error -> {
+                    // 操作失败，保持原状态并显示错误提示
+                    EasyToast.DEFAULT.show(event.message)
+                }
+            }
+        }
+    }
+
+    /**
+     * 更新语音开关文本显示
+     */
+    private fun updateVoiceSwitchText(isActivated: Boolean) {
+        tv_voice_switch_text.text = if (isActivated) "语音提示（已开启）" else "语音提示（已关闭）"
+    }
+
+    /**
+     * 更新语音开关状态到服务器
+     */
+    private fun updateVoiceSwitchStatus(isActivated: Boolean) {
+        val userInfo = InfoViewModel.getDefault().userInfo.value
+        userInfo?.let { user ->
+            viewModel.updateVoiceSwitch(
+                userId = user.id,
+                isVoiceActived = if (isActivated) 1 else 0
+            )
+        }
     }
 }

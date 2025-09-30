@@ -34,4 +34,7 @@ object Api {
     
     // Advertisement
     const val Get_Third_Ad_Status = "apiv6/advertisementinfo/getthridadstatus"
+    
+    // Voice
+    const val Voice_Open = "apiv6/user/voiceopen"
 }

@@ -92,6 +92,66 @@
             android:layout_height="1dp"
             android:background="@drawable/shape_line" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_voice_switch_setting"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/iv_voice_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:src="@drawable/ic_voice_active"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_voice_switch_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="29dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center_vertical"
+                android:text="语音提示（已关闭）"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/iv_voice_icon"
+                app:layout_constraintEnd_toStartOf="@id/switch_voice_activated"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <Switch
+                android:id="@+id/switch_voice_activated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="28dp"
+                android:checked="false"
+                android:thumb="@drawable/switch_thumb_selector"
+                android:track="@drawable/switch_track_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- 透明遮罩层，覆盖整个区域用于拦截点击事件 -->
+            <View
+                android:id="@+id/switch_mask"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/shape_line" />
+
         <LinearLayout
             android:id="@+id/ll_help_center_setting"
             android:layout_width="match_parent"

@@ -37,6 +37,7 @@ data class UserInfoBean(
             var city: String = "",
             var electric: Any? = null,
             var isBindAccount: Int = 0, // 1-已绑定，0-未绑定
+            var isVoiceActived: Int = 0, // 1-启用语音提示，0-关闭语音提示
         ){
             fun getElectric(): Electric?{
                 return getElectricList().firstOrNull()

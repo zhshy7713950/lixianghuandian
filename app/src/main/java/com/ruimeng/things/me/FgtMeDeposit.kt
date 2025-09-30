@@ -23,6 +23,7 @@ import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
 import com.ruimeng.things.me.view.RebackAlertPopup
 import com.ruimeng.things.showConfirmDialog
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -143,6 +144,7 @@ class FgtMeDeposit : BaseBackFragment() {
         } else {
             tv_deposit_return.text = "立即退租"
             tv_deposit_return.setOnClickListener {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                 ToastHelper.shortToast(context, "请扫描电柜二维码")
                 getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                     val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -192,12 +194,16 @@ class FgtMeDeposit : BaseBackFragment() {
             params["code"] = code
             params["device_id"] = deviceId
             onSuccessWithMsg { res, msg ->
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-8")
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
                 EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
                 pop()
             }
 
             onFail { i, msg ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
                 ToastHelper.shortToast(activity, msg)
             }
         }

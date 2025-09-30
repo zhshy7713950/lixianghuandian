@@ -20,6 +20,7 @@ import com.ruimeng.things.CustomDialog
 import com.ruimeng.things.R
 import com.ruimeng.things.home.adapter.CouponAdapter
 import com.ruimeng.things.home.vm.CouponPurchaseViewModel
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.unsafeLazy
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_coupon_purchase.btnPayNow
@@ -154,8 +155,12 @@ class FgtCouponPurchase : BaseBackFragment() {
                     Log.d("LXHDNet", "支付结果===> ${it.isSuccess}")
                     dlgPayProgress.dismiss()
                     if (it.isSuccess) {
+                        // 播放成功语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6")
                         dlgPaySuccess.show()
                     } else {
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
                         dlgPayFailed.show()
                     }
                 }
@@ -218,6 +223,8 @@ class FgtCouponPurchase : BaseBackFragment() {
                     this.contentText = msg
                     show()
                 }
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
         }
     }

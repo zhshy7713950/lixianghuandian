@@ -45,6 +45,7 @@ import wongxd.common.toPOJO
 import wongxd.http
 import me.yokeyword.fragmentation.SupportFragment
 import com.ruimeng.things.home.bean.BannerData
+import com.ruimeng.things.voice.VoicePlayerManager
 
 /**
  * Created by wongxd on 2018/11/13.
@@ -121,6 +122,7 @@ class FgtTicket : MainTabFragment() {
         }
         srl_ticket?.setOnLoadMoreListener { getInfo() }
         ll_scan?.setOnClickListener {
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-5")
             ToastHelper.shortToast(context, "请扫描兑换码")
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 AtyScanQrcode.start(getCurrentAty(), AtyScanQrcode.TYPE_TICKET)
@@ -175,6 +177,7 @@ class FgtTicket : MainTabFragment() {
                     )
                 )
             } else if (info.active_status == "3" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已冻结）
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
                 ToastHelper.shortToast(context, "请先完成解冻操作")
             } else if (info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已过期）
                 FgtMain.instance?.start(

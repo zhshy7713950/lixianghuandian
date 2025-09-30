@@ -19,6 +19,7 @@ import com.ruimeng.things.*
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.fgt_home.*
@@ -367,6 +368,8 @@ class FgtHomeBack : MainTabFragment() {
             params["device_status"] = if (isOpen) "1" else "2"
 
             onSuccess {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-1")
                 //                device_status int  1当前为开 2当前为关
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
@@ -381,6 +384,8 @@ class FgtHomeBack : MainTabFragment() {
             }
 
             onFinish {
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-4")
                 dissmissProgressDialog()
             }
         }

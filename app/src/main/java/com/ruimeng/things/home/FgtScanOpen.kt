@@ -14,6 +14,7 @@ import com.ruimeng.things.ads.AMPSNativeAdLoader
 import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.home.bean.CheckPaymentBean
 import com.ruimeng.things.home.bean.PaymentOption
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import com.utils.safeToInt
@@ -104,6 +105,8 @@ class FgtScanOpen : BaseBackFragment() {
                     params["device_id"] = deviceId
                     params["code"] = code
                     onSuccessWithMsg { res, msg ->
+                        // 播放成功语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-8")
                         ToastHelper.shortToast(activity, msg)
 //                        if (needActiveNew){
 //                            var option =  checkPayBean!!.paymentInfo.userOptions.filter{ it.option_type == "2" && it.active_status != "1"}.first()
@@ -113,6 +116,8 @@ class FgtScanOpen : BaseBackFragment() {
 //                        }
                     }
                     onFail { i, s ->
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
                         ToastHelper.shortToast(activity, s)
                     }
                 }

@@ -32,6 +32,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.ads.AMPSNativeAdLoader
 import com.ruimeng.things.ads.AdManager
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.ruimeng.things.ads.AdSdkInitSuccessEvent
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.common.BannerHelper
@@ -634,6 +635,7 @@ class FgtHome : MainTabFragment() {
                 }
 
                 1 -> {
+                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                     ToastHelper.shortToast(context, "请扫描电柜二维码")
                     tryToScan()
                 }
@@ -662,8 +664,11 @@ class FgtHome : MainTabFragment() {
                 when (it) {
                     is PopupHelpEvent.SelfService -> {
                         if ("3" == activeStatus || virtaul) {
+                            // 播放失败语音
+                            VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
                             EasyToast.DEFAULT.show("没有需要取回的电池")
                         } else {
+                            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                             ToastHelper.shortToast(context, "请扫描电柜二维码")
                             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -726,6 +731,7 @@ class FgtHome : MainTabFragment() {
         cl_rant_info.setOnClickListener {
             if (!hasBatteryInfo()) return@setOnClickListener
             if (activeStatus == "3") {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
                 ToastHelper.shortToast(context, "请先完成解冻操作")
                 return@setOnClickListener
             }
@@ -736,6 +742,7 @@ class FgtHome : MainTabFragment() {
             if (!hasBatteryInfo()) return@setOnClickListener
             if (isUnlimited) return@setOnClickListener
             if (activeStatus == "3") {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
                 ToastHelper.shortToast(context, "请先完成解冻操作")
                 return@setOnClickListener
             }
@@ -974,6 +981,8 @@ class FgtHome : MainTabFragment() {
                 val device_status = data.optInt("device_status")
                 vm.pollDeviceStatus(IS_OPEN, CURRENT_DEVICEID.ifBlank { "0" })
                 showOpenOrCloseLoading()
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-1")
 //                ToastHelper.shortToast(context, "操作成功")
 //                srl_home.postDelayed(Runnable {
 //                    getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
@@ -985,6 +994,10 @@ class FgtHome : MainTabFragment() {
 //                } else {
 //                    openOrCloseBatter(BatteryOpenEvent(false))
 //                }
+            }
+            onFail { code, msg ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-4")
             }
             onFinish {
                 dissmissProgressDialog()
@@ -1298,7 +1311,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun selfService(code: String) {
-        vm.changeError(CURRENT_DEVICEID, code).observe(this) {
+        vm.changeError(requireContext(),CURRENT_DEVICEID, code).observe(this) {
             EasyToast.DEFAULT.show(it)
             autoRefreshImmediately()
         }
@@ -1314,11 +1327,15 @@ class FgtHome : MainTabFragment() {
             params["code"] = code
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, msg)
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-4")
                 srl_home?.autoRefresh()
             }
 
             onFail { i, msg ->
                 ToastHelper.shortToast(activity, msg)
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
         }
     }
@@ -1338,11 +1355,15 @@ class FgtHome : MainTabFragment() {
             params["device_id"] = CURRENT_DEVICEID
             onSuccessWithMsg { res, msg ->
                 ToastHelper.shortToast(activity, "请将电池放入电柜，后台自动审核")
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-8")
                 autoRefresh()
             }
 
             onFail { i, msg ->
                 ToastHelper.shortToast(activity, msg)
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
         }
     }
@@ -1588,9 +1609,11 @@ class FgtHome : MainTabFragment() {
 
     private fun checkStatus(): Boolean {
         if (activeStatus == "3") {
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
             ToastHelper.shortToast(context, "请先完成解冻操作")
             return false
         } else if (virtaul) {
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-3")
             ToastHelper.shortToast(context, "请先完成取电操作")
             return false
         }
@@ -1643,6 +1666,7 @@ class FgtHome : MainTabFragment() {
                                 btnText("确认", "取消")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
+                                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                                     ToastHelper.shortToast(context, "请扫描电柜二维码")
                                     getPermissions(
                                         getCurrentAty(),
@@ -1656,6 +1680,7 @@ class FgtHome : MainTabFragment() {
 
                             }.show()
                     } else {
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                         ToastHelper.shortToast(context, "请扫描电柜二维码")
                         getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                             tryToScan()
@@ -1689,6 +1714,7 @@ class FgtHome : MainTabFragment() {
             }
             // 检查剩余次数
             if (restTimes <= 0) {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-4")
                 ToastHelper.shortToast(
                     context,
                     "您的可用换电次数已为0，无法取电/换电，请购买次数或续期套餐"
@@ -1697,8 +1723,10 @@ class FgtHome : MainTabFragment() {
             }
 
             if (activeStatus == "3") {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
                 ToastHelper.shortToast(context, "请先完成解冻操作")
             } else {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                 ToastHelper.shortToast(context, "请扫描电柜二维码")
 //                if (hasChangePackege){
                 getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
@@ -1744,6 +1772,7 @@ class FgtHome : MainTabFragment() {
 
                         }.show()
                 } else {
+                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                     ToastHelper.shortToast(context, "请扫描电柜二维码")
                     getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                         val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -1775,6 +1804,7 @@ class FgtHome : MainTabFragment() {
     class BatteryRebackEvent;
     @Subscribe
     fun rebackClick(event: BatteryRebackEvent) {
+        VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
         ToastHelper.shortToast(context, "请扫描电柜二维码")
         getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
             val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -1792,6 +1822,8 @@ class FgtHome : MainTabFragment() {
                 params["code"] = code
             }
             onSuccess {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), if(virtaul) "success-1" else "success-5")
                 if (code != "") {
                     ToastHelper.shortToast(context, "请将电池放入电柜，然后刷新页面")
                 } else {
@@ -1799,7 +1831,10 @@ class FgtHome : MainTabFragment() {
                 }
                 autoRefresh()
             }
-            onFail { i, s -> }
+            onFail { i, s ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
+            }
         }
     }
 
@@ -1810,11 +1845,15 @@ class FgtHome : MainTabFragment() {
             params["user_id"] = userId
 
             onSuccess {
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-1")
                 ToastHelper.shortToast(context, "操作成功")
 
                 autoRefresh()
             }
-            onFail { i, s -> }
+            onFail { i, s ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
+            }
         }
     }
 

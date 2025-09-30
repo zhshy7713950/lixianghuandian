@@ -23,6 +23,7 @@ import com.net.NetworkResponse
 import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
 import com.ruimeng.things.home.SmartCustomerServiceFragment
 import com.ruimeng.things.utils.PageNavigationHelper
+import com.ruimeng.things.voice.VoicePlayerManager
 import org.greenrobot.eventbus.Subscribe
 
 /**
@@ -118,6 +119,8 @@ class CustomerServiceFragment : BaseBackFragment() {
         // 获取电池信息，判断条件
         val deviceId = FgtHome.CURRENT_DEVICEID
         if (deviceId.isNullOrEmpty() || deviceId == "0") {
+            // 播放失败语音
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
             ToastHelper.shortToast(activity, "没有需要取回的电池")
             return
         }
@@ -137,10 +140,12 @@ class CustomerServiceFragment : BaseBackFragment() {
                     
                     // 判断条件：电池编号!=空、电池编号!=虚拟号、套餐生效状态!=已过期、套餐生效状态!=已冻结
                     if (isVirtual || activeStatus == "2" || activeStatus == "3") {
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
                         ToastHelper.shortToast(activity, "没有需要取回的电池")
                         return@observe
                     }
-                    
+                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                     // 条件满足，跳转扫码页面
                     ToastHelper.shortToast(activity, "请扫描电柜二维码")
                     getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
@@ -192,7 +197,7 @@ class CustomerServiceFragment : BaseBackFragment() {
         }
         
         // 使用ViewModel调用接口
-        vm.changeError(deviceId, code).observe(this) { msg ->
+        vm.changeError(requireContext(),deviceId, code).observe(this) { msg ->
             ToastHelper.shortToast(activity, msg)
         }
     }

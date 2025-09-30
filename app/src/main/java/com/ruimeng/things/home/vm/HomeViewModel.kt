@@ -1,5 +1,6 @@
 package com.ruimeng.things.home.vm
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,7 @@ import com.ruimeng.things.UserInfoLiveData
 import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.MyDevicesBean
+import com.ruimeng.things.voice.VoicePlayerManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -73,12 +75,16 @@ class HomeViewModel : BaseViewModel() {
         return rentStep1LiveData
     }
 
-    fun changeError(deviceId: String, code: String): LiveData<String> {
+    fun changeError(context: Context,deviceId: String, code: String): LiveData<String> {
         val changeErrorLiveData = MutableLiveData<String>()
         viewModelScope.launch {
             BizService.changeError(ChangeErrorLocal(deviceId, code)).whenSuccess {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(context, "success-8")
                 changeErrorLiveData.value = it.errmsg
             }.whenError { _, msg ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(context, "fail-1")
                 changeErrorLiveData.value = msg
             }
         }

@@ -39,6 +39,7 @@ import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.ruimeng.things.me.contract.FgtMyContractDetail
 import com.ruimeng.things.me.credit.FgtCreditSystem
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.utils.ToastHelper
@@ -654,6 +655,8 @@ class FgtPayRentMoney : BaseBackFragment() {
             } else {
                 dlgPayProgress?.dismiss()
                 dlgPayFailed?.show()
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
         }
 
@@ -679,6 +682,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
                         FgtHome.CURRENT_DEVICEID = deviceId
+                        // 播放成功语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6")
                     }
 
                     0 -> {
@@ -688,6 +693,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                     else -> {
                         dlgPayProgress?.dismiss()
                         dlgPayFailed?.show()
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
                     }
                 }
             }
@@ -1009,6 +1016,8 @@ class FgtPayRentMoney : BaseBackFragment() {
                     this.contentText = msg
                     show()
                 }
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
 
             onSuccessWithMsg { s, msg ->

@@ -5,6 +5,87 @@
 
 ## 最近更新
 
+### 语音播放管理器功能实现 (2024年)
+
+#### 功能描述
+实现了全局语音播放管理器单例，支持网络URL语音播放和语音开关控制。无论哪个页面的播放都通过单例管理，支持播放中断和语音开关状态检查。
+
+#### 技术实现
+1. **单例模式**: 使用线程安全的单例模式确保全局唯一实例
+2. **网络播放**: 支持播放网络URL语音文件
+3. **播放控制**: 支持播放、暂停、停止、中断等功能
+4. **音频焦点**: 自动管理音频焦点，支持与其他音频应用协调
+5. **语音开关**: 每次播放前检查本地语音开关状态
+6. **错误处理**: 完善的错误处理和回调机制
+
+#### 核心组件
+- **VoicePlayerManager**: 语音播放管理器单例类
+- **VoicePlayerExample**: 使用示例和最佳实践
+- **音频焦点管理**: 支持Android 8.0+的AudioFocusRequest
+- **网络播放**: 基于MediaPlayer的网络音频播放
+
+#### 功能特点
+- **全局管理**: 单例模式，任何页面都可以调用
+- **播放中断**: 新播放请求会自动中断当前播放
+- **语音开关**: 自动检查isVoiceActived状态，关闭时不播放
+- **音频焦点**: 智能管理音频焦点，避免与其他应用冲突
+- **错误处理**: 完善的错误处理和用户反馈
+- **资源管理**: 自动释放MediaPlayer资源，避免内存泄漏
+
+#### 使用方法
+1. **基本播放**: 
+   ```kotlin
+   VoicePlayerManager.getInstance().playVoice(context, "fail-1")
+   ```
+
+2. **带回调播放**:
+   ```kotlin
+   VoicePlayerManager.getInstance().playVoice(
+       context = context,
+       voiceId = "fail-1",
+       onPlayComplete = { /* 播放完成 */ },
+       onPlayError = { errorMsg -> /* 错误处理 */ }
+   )
+   ```
+
+3. **停止播放**:
+   ```kotlin
+   VoicePlayerManager.getInstance().stopCurrentPlay()
+   ```
+
+4. **检查状态**:
+   ```kotlin
+   val isPlaying = VoicePlayerManager.getInstance().isPlaying()
+   ```
+
+#### 语音URL规则
+- **基础URL**: `https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/voice/`
+- **文件扩展名**: `.mp3`
+- **完整URL**: `基础URL + voiceId + 扩展名`
+- **示例**: `fail-1` → `https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/voice/fail-1.mp3`
+
+#### 文件结构
+```
+app/src/main/java/com/ruimeng/things/voice/
+├── VoicePlayerManager.kt          # 语音播放管理器单例
+└── VoicePlayerExample.kt          # 使用示例和最佳实践
+```
+
+#### 技术特点
+- **线程安全**: 使用@Volatile和synchronized确保线程安全
+- **资源管理**: 自动释放MediaPlayer和音频焦点资源
+- **兼容性**: 支持Android 8.0+的AudioFocusRequest和旧版本兼容
+- **错误处理**: 完善的异常处理和用户反馈机制
+- **性能优化**: 单例模式避免重复创建，资源复用
+- **用户体验**: 智能音频焦点管理，避免音频冲突
+
+#### 注意事项
+1. 播放前会自动检查语音开关状态，关闭时不会播放
+2. 新的播放请求会自动中断当前播放
+3. 建议在页面销毁时调用stopCurrentPlay()释放资源
+4. 支持网络URL播放，需要网络权限
+5. 音频焦点管理确保与其他音频应用协调工作
+
 ### 语音提示开关功能实现 (2024年)
 
 #### 功能描述

@@ -3,6 +3,7 @@ package com.ruimeng.things.home
 import android.os.Bundle
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import com.ruimeng.things.voice.VoicePlayerManager
 import kotlinx.android.synthetic.main.fgt_control.*
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
@@ -42,6 +43,8 @@ class FgtControl : BaseBackFragment() {
             params["device_status"] = if (isOpen) "1" else "2"
 
             onSuccess {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-1")
                 //                device_status int  1当前为开 2当前为关
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
@@ -56,6 +59,8 @@ class FgtControl : BaseBackFragment() {
             }
 
             onFinish {
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-4")
                 dissmissProgressDialog()
             }
         }

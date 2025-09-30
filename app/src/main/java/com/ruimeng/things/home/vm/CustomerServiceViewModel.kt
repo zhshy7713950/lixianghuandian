@@ -1,5 +1,6 @@
 package com.ruimeng.things.home.vm
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.net.NetworkResponse
 import com.net.call.BizService
 import com.net.whenError
 import com.net.whenSuccess
+import com.ruimeng.things.voice.VoicePlayerManager
 import kotlinx.coroutines.launch
 
 class CustomerServiceViewModel : BaseViewModel() {
@@ -31,11 +33,16 @@ class CustomerServiceViewModel : BaseViewModel() {
     /**
      * 自助开仓接口
      */
-    fun changeError(deviceId: String, code: String): LiveData<String> {
+    fun changeError(context: Context,deviceId: String, code: String): LiveData<String> {
         val changeErrorLiveData = MutableLiveData<String>()
         viewModelScope.launch {
             BizService.changeError(ChangeErrorLocal(deviceId, code)).whenSuccess {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(context, "success-8")
                 changeErrorLiveData.value = it.errmsg
+            }.whenError { i, s ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(context, "fail-1")
             }
         }
         return changeErrorLiveData

@@ -10,6 +10,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.LateFeePayBean
 import com.ruimeng.things.home.bean.UserLateFeeBean
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.TextUtil
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
 import kotlinx.android.synthetic.main.fgt_pay_late_fee.*
@@ -102,6 +103,8 @@ class FgtPayLateFee : BaseBackFragment() {
                     getServerPayResult(orderId, shouldRetry)
                 }, 2000)
             } else {
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
                 dlgPayProgress?.dismiss()
                 dlgPayFailed?.show()
             }
@@ -124,6 +127,8 @@ class FgtPayLateFee : BaseBackFragment() {
                 //order_status itn 0待支付1支付失败 99支付成功 100已退款  客户端判断errcode=200,并且order_status等于99即可跳入下一步
                 when (order_status) {
                     99 -> {
+                        // 播放成功语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6")
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
                     }
@@ -133,6 +138,8 @@ class FgtPayLateFee : BaseBackFragment() {
                     }
 
                     else -> {
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
                         dlgPayProgress?.dismiss()
                         dlgPayFailed?.show()
                     }
@@ -180,6 +187,8 @@ class FgtPayLateFee : BaseBackFragment() {
                     this.contentText = msg
                     show()
                 }
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
 
             onSuccessWithMsg { s, msg ->

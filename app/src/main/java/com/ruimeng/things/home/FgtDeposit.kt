@@ -16,6 +16,7 @@ import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.ruimeng.things.home.vm.DepositViewModel
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.OptionPickerUtil
@@ -448,6 +449,11 @@ class FgtDeposit : BaseBackFragment() {
 
             }
 
+            onFail { i, s ->
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
+            }
+
             onFinish {
                 dissmissProgressDialog()
             }
@@ -470,6 +476,8 @@ class FgtDeposit : BaseBackFragment() {
             } else {
                 dlgPayProgress?.dismiss()
                 dlgPayFailed?.show()
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
             }
         }
 
@@ -493,6 +501,8 @@ class FgtDeposit : BaseBackFragment() {
                     99 -> {
                         dlgPayProgress?.dismiss()
                         dlgPaySuccessed?.show()
+                        // 播放成功语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-7")
                     }
 
                     0 -> {
@@ -502,6 +512,8 @@ class FgtDeposit : BaseBackFragment() {
                     else -> {
                         dlgPayProgress?.dismiss()
                         dlgPayFailed?.show()
+                        // 播放失败语音
+                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
                     }
                 }
             }

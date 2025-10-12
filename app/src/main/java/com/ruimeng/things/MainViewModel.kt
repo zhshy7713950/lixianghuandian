@@ -9,6 +9,9 @@ import com.base.viewmodel.BaseViewModel
 import com.entity.local.GetAdInfoLocal
 import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetMapKeyLocal
+import com.entity.local.GetCustomerServicePhonesLocal
+import com.entity.remote.CustomerServiceContactRemote
+import com.ruimeng.things.utils.CustomerServiceManager
 import com.entity.remote.AdInfoRemote
 import com.net.call.BizService
 import com.net.whenSuccess
@@ -30,6 +33,10 @@ class MainViewModel : BaseViewModel() {
 
     private val _meBannerData = MutableLiveData<List<BannerInfo>>()
     val meBannerData: LiveData<List<BannerInfo>> get() = _meBannerData
+
+    // 区域客服电话（城市客服电话）
+    private val _customerServicePhones = MutableLiveData<List<CustomerServiceContactRemote>>()
+    val customerServicePhones: LiveData<List<CustomerServiceContactRemote>> get() = _customerServicePhones
 
     fun fetchBannerData(context: Context,userId: String,position: String) {
         viewModelScope.launch {
@@ -100,6 +107,21 @@ class MainViewModel : BaseViewModel() {
                 App.province = it.data.province
                 App.city = it.data.city
             }
+        }
+    }
+
+    /**
+     * 获取该用户所在城市的【区域客服】电话
+     * 在APP启动时调用，入参为 userId，返回数组 [电话A，电话B，xxx]
+     */
+    fun fetchCustomerServicePhones(userId: String) {
+        viewModelScope.launch {
+            BizService.getCustomerServicePhones(GetCustomerServicePhonesLocal(userId))
+                .whenSuccess { res ->
+                    val contacts = res.data
+                    _customerServicePhones.value = contacts
+                    CustomerServiceManager.setPhones(contacts)
+                }
         }
     }
 

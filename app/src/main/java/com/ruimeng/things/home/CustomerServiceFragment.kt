@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import com.net.NetworkResponse
 import com.ruimeng.things.home.webview.HelpCenterUrlStrategy
 import com.ruimeng.things.home.SmartCustomerServiceFragment
+import com.ruimeng.things.utils.CustomerServiceManager
 import com.ruimeng.things.utils.PageNavigationHelper
 import com.ruimeng.things.voice.VoicePlayerManager
 import org.greenrobot.eventbus.Subscribe
@@ -203,17 +204,7 @@ class CustomerServiceFragment : BaseBackFragment() {
     }
     
     private fun showCustomerServiceHotlineDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("客服热线")
-            .setMessage("4000283969")
-            .setNegativeButton("取消", null)
-            .setPositiveButton("确认") { _, _ ->
-                // 跳转到拨号界面
-                val intent = Intent(Intent.ACTION_DIAL)
-                intent.data = android.net.Uri.parse("tel:4000283969")
-                startActivity(intent)
-            }
-            .show()
+        CustomerServiceManager.showDialSheet(requireActivity())
     }
     
     private fun startFgt(toFgt: SupportFragment) {

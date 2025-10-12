@@ -48,6 +48,7 @@ import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
+import com.ruimeng.things.utils.CustomerServiceManager
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.activity_balance_withdrawal.*
@@ -684,26 +685,7 @@ class FgtHome : MainTabFragment() {
                     }
 
                     is PopupHelpEvent.OnlineService -> {
-                        val tel = "4000283969"
-                        AnyLayer.with(getCurrentAppAty())
-                            .contentView(R.layout.alert_phone_call_dialog)
-                            .bindData { anyLayer ->
-                                anyLayer.contentView.findViewById<TextView>(R.id.tv_name).text =
-                                    "联系在线客服"
-                                anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).text = tel
-                                anyLayer.contentView.findViewById<View>(R.id.fl_call)
-                                    .setOnClickListener {
-                                        SystemUtils.call(activity, tel)
-                                        anyLayer.dismiss()
-                                    }
-                                anyLayer.contentView.findViewById<ImageView>(R.id.ivClose)
-                                    .setOnClickListener {
-                                        anyLayer.dismiss()
-                                    }
-                            }.backgroundColorInt(Color.parseColor("#85000000"))
-                            .backgroundBlurRadius(10f)
-                            .backgroundBlurScale(10f)
-                            .show()
+                        CustomerServiceManager.showDialSheet(requireActivity())
                     }
                 }
             }.show(tvHelp)

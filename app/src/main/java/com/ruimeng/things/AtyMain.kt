@@ -68,6 +68,10 @@ class AtyMain : BaseBackActivity() {
 
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userInfo ->
             tkLogin(userInfo.username, userInfo.unionid)
+            // APP启动后拉取区域客服电话
+            userInfo.id?.let { uid ->
+                vm.fetchCustomerServicePhones(uid)
+            }
         }
 
 //        dealNotification()

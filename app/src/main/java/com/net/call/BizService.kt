@@ -18,6 +18,8 @@ import com.entity.local.UnregisterLocal
 import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.local.VoiceOpenLocal
+import com.entity.local.GetCustomerServicePhonesLocal
+import com.entity.remote.CustomerServiceContactRemote
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
 import com.entity.remote.GetCityInfoRemote
@@ -128,5 +130,11 @@ object BizService {
     suspend fun voiceOpen(voiceOpenLocal: VoiceOpenLocal) = Server.call<VoiceOpenLocal, Any>(
         Api.Voice_Open,
         voiceOpenLocal
+    )
+
+    // 获取区域客服电话（对象列表：时间段、联系人、号码）
+    suspend fun getCustomerServicePhones(local: GetCustomerServicePhonesLocal) = Server.call<GetCustomerServicePhonesLocal, List<CustomerServiceContactRemote>>(
+        Api.Get_Customer_Service_Phones,
+        local
     )
 }

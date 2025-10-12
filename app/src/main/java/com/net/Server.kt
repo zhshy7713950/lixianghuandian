@@ -39,7 +39,9 @@ object Server {
             }
 
             onSuccess {
-                Log.d(TAG,"=========net response start=========\n$it\n==========net response end============")
+                Log.d(TAG,"=========net response start=========\n" +
+                        "URL:$path\n"+
+                        "$it\n==========net response end============")
                 val type: Type =
                     TypeToken.getParameterized(ResCommon::class.java, object : TypeToken<T>() {}.type).type
                 val resData: ResCommon<T> = gson.fromJson(it, type)

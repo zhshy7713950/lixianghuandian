@@ -37,4 +37,7 @@ object Api {
     
     // Voice
     const val Voice_Open = "apiv6/user/voiceopen"
+
+    // Customer Service
+    const val Get_Customer_Service_Phones = "apiv6/cgstationnetwork/customerservice"
 }

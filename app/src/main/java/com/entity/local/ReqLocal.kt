@@ -85,3 +85,8 @@ data class CheckCaptchaLocal(
     val captcha: String,
     val tag: String? = null
 )
+
+// 客服电话入参
+data class GetCustomerServicePhonesLocal(
+    val userId: String
+)

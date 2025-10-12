@@ -29,6 +29,7 @@ import com.ruimeng.things.me.activity.DistributionCenterActivity
 import com.ruimeng.things.me.activity.WithdrawalAccountActivity
 import com.ruimeng.things.msg.FgtMsg
 import com.ruimeng.things.me.contract.FgtMyContract
+import com.ruimeng.things.utils.CustomerServiceManager
 import com.utils.WeChatHelper
 import com.utils.safeToFloat
 import kotlinx.android.synthetic.main.fgt_me.*
@@ -191,38 +192,23 @@ class FgtMe : MainTabFragment() {
         ll_msg.setOnClickListener { startFgt(FgtMsg()) }
 
         ll_support_me.setOnClickListener {
-            val tel = "4000283969"
-            AnyLayer.with(getCurrentAppAty())
-                .contentView(R.layout.alert_phone_call_dialog)
-                .bindData { anyLayer ->
-                    anyLayer.contentView.findViewById<TextView>(R.id.tvTitle).setText(tel)
-                    anyLayer.contentView.findViewById<View>(R.id.fl_call).setOnClickListener {
-                        SystemUtils.call(activity, tel)
-                        anyLayer.dismiss()
-                    }
-                    anyLayer.contentView.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
-                        anyLayer.dismiss()
-                    }
-                }.backgroundColorInt(Color.parseColor("#85000000"))
-                .backgroundBlurRadius(10f)
-                .backgroundBlurScale(10f)
-                .show()
+            CustomerServiceManager.showDialSheet(requireActivity())
 //            NormalDialog(activity).apply {
-//                style(NormalDialog.STYLE_TWO)
-//                title("售后支持")
-//                titleTextColor(Color.parseColor("#131414"))
-//                content(tel)
-//                contentGravity(Gravity.CENTER)
-//                btnText("取消", "拨打")
-//                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
-//                setOnBtnClickL(OnBtnClickL {
-//                    dismiss()
-//                }, OnBtnClickL {
-//                    SystemUtils.call(activity, tel)
-//                    dismiss()
-//                })
-//                show()
-//            }
+                //                style(NormalDialog.STYLE_TWO)
+                //                title("售后支持")
+                //                titleTextColor(Color.parseColor("#131414"))
+                //                content(tel)
+                //                contentGravity(Gravity.CENTER)
+                //                btnText("取消", "拨打")
+                //                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+                //                setOnBtnClickL(OnBtnClickL {
+                //                    dismiss()
+                //                }, OnBtnClickL {
+                //                    SystemUtils.call(activity, tel)
+                //                    dismiss()
+                //                })
+                //                show()
+                //            }
         }
 
         ll_follow_wechat.setOnClickListener {

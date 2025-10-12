@@ -8,6 +8,9 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
@@ -22,7 +25,7 @@ import com.amap.api.services.geocoder.GeocodeSearch
 import com.amap.api.services.geocoder.GeocodeSearch.OnGeocodeSearchListener
 import com.amap.api.services.geocoder.RegeocodeQuery
 import com.amap.api.services.geocoder.RegeocodeResult
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
+// import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import org.jetbrains.anko.textColor
@@ -38,113 +41,39 @@ import wongxd.navi.LngLat
 import wongxd.navi.NaviUtil
 import wongxd.utils.SystemUtils
 import wongxd.utils.ToastUtils
+import com.utils.CommonUtil
 
 
 /**
  * Created by wongxd on 2018/11/12.
  */
 class FgtFindBattery : BaseBackFragment() {
-    override fun getLayoutRes(): Int = com.ruimeng.things.R.layout.fgt_find_batter
+    override fun getLayoutRes(): Int = R.layout.fgt_find_batter
 
-    private var right: Button? = null
-
-    private val mAnimation by lazy { AnimationUtils.loadAnimation(activity, R.anim.rotate_repeat) }
+    // 移除右上角刷新按钮与动画
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
 
-        initTopbar(topbar, "定位")
-        right = topbar.addRightTextButton("刷新", R.id.right)
-            .apply {
-                setOnClickListener { view ->
-                    clearMarkers()
-                    getBatteryLocation()
-                }
-                textColor = Color.WHITE
-            }
+        initTopbar(topbar, "电池定位")
         mMapView = rootView?.findViewById(R.id.mapView) as MapView
         mMapView?.onCreate(savedInstanceState) // 此方法必须重写
 
         if (aMap == null) {
             aMap = mMapView?.map
-            aMap?.setOnMarkerClickListener { marker ->
-
-
-                val appName = getString(com.ruimeng.things.R.string.app_name)
-                val latA = mCurrentLat
-                val lngA = mCurrentLon
-                val sName = "我的位置"
-
-                val latB = marker.position.latitude
-                val lngB = marker.position.longitude
-                val dName = "车辆位置"
-
-
-                val bs = QMUIBottomSheet.BottomListSheetBuilder(activity)
-                    .setTitle("选择应用进行导航")
-
-
-
-                if (checkPackage(activity!!, "com.autonavi.minimap")) {
-
-                    bs.addItem("高德地图", "gd")
-
-                }
-                if (checkPackage(activity!!, "com.baidu.BaiduMap")) {
-
-                    bs.addItem("百度地图", "bd")
-
-                }
-
-                if (!checkPackage(activity!!, "com.autonavi.minimap")
-                    &&
-                    !checkPackage(activity!!, "com.baidu.BaiduMap")
-                ) {
-                    bs.addItem("请先下载“高德地图” 或 “百度地图”", "no")
-                }
-
-
-                bs.setOnSheetItemClickListener { dialog, itemView, position, tag ->
-                    if (tag == "gd") {
-                        NaviUtil.setUpGaodeAppByLoca(
-                            appName,
-                            latA.toString(), lngA.toString(), sName,
-                            latB.toString(), lngB.toString(), dName
-                        )
-                    } else if (tag == "bd") {
-
-                        val posA = LngLat()
-                        posA.latitude = latA
-                        posA.longitude = lngA
-
-                        val posB = LngLat()
-                        posB.latitude = latB
-                        posB.longitude = lngB
-
-
-                        val bdA = CoodinateCovertor.bd_encrypt(posA)
-                        val bdB = CoodinateCovertor.bd_encrypt(posB)
-
-                        NaviUtil.setUpBaiduAPPByLoca(
-                            bdA.latitude.toString(), bdA.longitude.toString(), sName,
-                            bdB.latitude.toString(), bdB.longitude.toString(), dName,
-                            appName, appName
-                        )
-
-
-                    }
-                    dialog.dismiss()
-
-                }
-
-                bs.build().show()
-
-                true
-            }
+            // 点击地图气球不再展示弹窗
+            aMap?.setOnMarkerClickListener { true }
+            // 关闭右下角缩放控件
+            aMap?.uiSettings?.isZoomControlsEnabled = false
         }
 
         //设置希望展示的地图缩放级别
         aMap?.moveCamera(CameraUpdateFactory.zoomTo(19f))
+
+        // 绑定右下角刷新按钮点击事件，调用页面刷新
+        rootView?.findViewById<View>(R.id.cv_refresh_battery)?.setOnClickListener {
+            getBatteryLocation()
+        }
 
 
 //        aMap?.setOnCameraChangeListener(object : AMap.OnCameraChangeListener {
@@ -162,6 +91,19 @@ class FgtFindBattery : BaseBackFragment() {
 //        })
 
 
+        // 绑定导航按钮点击事件，调用第三方地图导航
+        rootView?.findViewById<View>(R.id.cv_navi_battery)?.setOnClickListener {
+            val lat = batteryLat
+            val lng = batteryLng
+            if (lat != null && lng != null) {
+                val batteryId = FgtHome.CURRENT_DEVICEID
+                val targetName = "电池$batteryId"
+                val title = "导航前往“电池$batteryId”"
+                CommonUtil.naviToLocation(requireActivity(), lat, lng, targetName, title)
+            } else {
+                EasyToast.DEFAULT.show("暂无定位，请先刷新")
+            }
+        }
         showPosInMap()
     }
 
@@ -178,6 +120,9 @@ class FgtFindBattery : BaseBackFragment() {
 
     private var mCurrentLat = 0.0
     private var mCurrentLon = 0.0
+    // 当前电池定位坐标（用于导航）
+    private var batteryLat: Double? = null
+    private var batteryLng: Double? = null
 
 
     /**
@@ -239,7 +184,7 @@ class FgtFindBattery : BaseBackFragment() {
      */
     private fun getBatteryLocation() {
 
-        right?.startAnimation(mAnimation)
+        // 移除右上角刷新按钮相关动画
 
         http {
 
@@ -248,7 +193,7 @@ class FgtFindBattery : BaseBackFragment() {
             params["device_id"] = FgtHome.CURRENT_DEVICEID
 
             onFinish {
-                right?.clearAnimation()
+                // 无刷新按钮动画
             }
 
             onSuccess {
@@ -261,13 +206,20 @@ class FgtFindBattery : BaseBackFragment() {
                 val lat = geo.optDouble("lat")
                 val lng = geo.optDouble("lng")
                 val timeline = geo.optInt("timeline")
-                val address =
-                    geo.optString("province") + geo.getString("city") + geo.getString("area") + geo.getString(
-                        "address"
-                    )
+                val address = ""
+//                    geo.optString("province") + geo.getString("city") + geo.getString("area") + geo.getString(
+//                        "address"
+//                    )
 
 //                val latLng = Converter.gps2gaode(gpsLat, gpsLng)
 
+                // 更新右下角“更新时间”展示
+                rootView?.findViewById<TextView>(R.id.tv_update_time)?.text = "更新时间：${formatTimelineSlash(timeline)}"
+                // 保存电池坐标用于导航
+                batteryLat = lat
+                batteryLng = lng
+
+                aMap?.clear()
                 addBatteryMarkder(lat, lng, timeline, address)
             }
 
@@ -297,25 +249,9 @@ class FgtFindBattery : BaseBackFragment() {
 
         aMap?.moveCamera(CameraUpdateFactory.changeLatLng(LatLng(lat, lng)))
 
-        aMap?.setOnMarkerClickListener { marker ->
-            marker.showInfoWindow()
-            true
-        }
-        aMap?.setInfoWindowAdapter(object : AMap.InfoWindowAdapter {
-            override fun getInfoContents(marker: Marker?): View? {
-                return null
-            }
-
-            override fun getInfoWindow(marker: Marker): View {
-                val v = View.inflate(activity, R.layout.layout_battery_marker, null)
-                val tvTime = v.findViewById<TextView>(R.id.tv_time)
-                val tvLocation = v.findViewById<TextView>(R.id.tv_location)
-                tvLocation.text = address
-                tvTime.text = timeline.toLong().getTime()
-                marker.showInfoWindow()
-                return v
-            }
-        })
+        // 点击标记不展示气泡或弹窗
+        aMap?.setOnMarkerClickListener { true }
+        // 移除信息窗体适配，避免展示气泡
 
         aMap?.addMarker(markerOption)
 
@@ -354,7 +290,17 @@ class FgtFindBattery : BaseBackFragment() {
 //
 //        })
 
+        
     }
 
+    private fun formatTimelineSlash(timeline: Int): String {
+        return try {
+            val millis = timeline.toLong() * 1000L
+            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault())
+            sdf.format(Date(millis))
+        } catch (e: Exception) {
+            "--/--/-- --:--:--"
+        }
+    }
 
 }

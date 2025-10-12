@@ -4,6 +4,8 @@ package com.ruimeng.things
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.graphics.Color
+import android.view.View
 import android.widget.ImageView
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.me.FgtMe
@@ -58,10 +60,13 @@ class FgtMain : FgtBase() {
 
 
 
-        val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        val imageTabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        val containerTabs = arrayOf(R.id.ll_home,R.id.ll_nearby,R.id.ll_contract,R.id.ll_me)
         for (i in 0..3){
-            var tabView = rootView.findViewById(tabs[i]) as ImageView
-            tabView.setOnClickListener { initTab(i,fgts) }
+            val tabImageView = rootView.findViewById(imageTabs[i]) as ImageView
+            tabImageView.setOnClickListener { initTab(i,fgts) }
+            val tabContainer = rootView.findViewById<View>(containerTabs[i])
+            tabContainer.setOnClickListener { initTab(i,fgts) }
         }
 
 //
@@ -105,13 +110,17 @@ class FgtMain : FgtBase() {
         // Tab ID顺序：[iv_home, iv_nearby, iv_contract, iv_me]
         val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_contract,R.mipmap.tab_me)
         val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_contract_se,R.mipmap.tab_me_se)
-        val tabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        val imageTabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
+        val textTabs = arrayOf(R.id.tv_home,R.id.tv_nearby,R.id.tv_contract,R.id.tv_me)
         for (i in 0..3){
-            var tabView = rootView.findViewById(tabs[i]) as ImageView
+            val tabView = rootView.findViewById(imageTabs[i]) as ImageView
+            val tvView = rootView.findViewById(textTabs[i]) as android.widget.TextView
             if (i == index){
                 tabView.setImageResource(tabImgSe[i])
+                tvView.setTextColor(Color.parseColor("#2fe4af"))
             }else{
                 tabView.setImageResource(tabImg[i])
+                tvView.setTextColor(Color.parseColor("#637989"))
             }
         }
         // 显示选中的Fragment，隐藏其他Fragment

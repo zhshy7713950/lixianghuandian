@@ -642,35 +642,52 @@
 						app:layout_constraintTop_toTopOf="parent"
 						tools:text="成都2个月" />
 
-					<TextView
-						android:id="@+id/tv_package_time_name"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="91dp"
-						android:text="有效期至"
-						android:textColor="#ff9eaab3"
-						android:textSize="11sp"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/tv_package_time_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="91dp"
+                        android:text="有效期至"
+                        android:textColor="#ff9eaab3"
+                        android:textSize="11sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-					<com.flyco.roundview.RoundTextView
-						android:id="@+id/tv_exp_remind"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="即将到期，请及时续费"
-						android:textColor="@color/white"
-						android:textSize="8sp"
-						app:layout_constraintLeft_toRightOf="@id/tv_package_time_name"
-						app:layout_constraintTop_toTopOf="@id/tv_package_time_name"
-						app:layout_constraintBottom_toBottomOf="@id/tv_package_time_name"
-						app:rv_backgroundColor="#DE3F4C"
-						app:rv_cornerRadius="2dp"
-						android:paddingLeft="2dp"
-						android:paddingRight="2dp"
-						android:layout_marginLeft="5dp"
-						android:gravity="center_vertical"
-						android:visibility="gone"
-						/>
+                    <TextView
+                        android:id="@+id/tv_unfreeze_delay_package"
+                        android:layout_width="wrap_content"
+                        android:layout_height="13dp"
+                        android:text="解冻后自动延期"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+                        app:layout_constraintLeft_toRightOf="@id/tv_package_time_name"
+                        app:layout_constraintTop_toTopOf="@id/tv_package_time_name"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_package_time_name"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:layout_marginLeft="6dp"
+                        android:gravity="center"
+                        android:background="@drawable/shape_yello"
+                        android:visibility="gone"/>
+
+                    <com.flyco.roundview.RoundTextView
+                        android:id="@+id/tv_exp_remind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="即将到期，请及时续费"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        app:layout_constraintLeft_toRightOf="@id/tv_unfreeze_delay_package"
+                        app:layout_constraintTop_toTopOf="@id/tv_package_time_name"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_package_time_name"
+                        app:rv_backgroundColor="#DE3F4C"
+                        app:rv_cornerRadius="2dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:visibility="gone"
+                        />
 
 					<TextView
 						android:id="@+id/tv_package_time"
@@ -772,14 +789,31 @@
 							android:textSize="11sp"
 							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"
-							app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
-						<TextView
-							android:id="@+id/tv_change_package_time"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="112dp"
-							android:textColor="#ffffffff"
+                    <TextView
+                        android:id="@+id/tv_unfreeze_delay_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="13dp"
+                        android:text="解冻后自动延期"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+                        app:layout_constraintLeft_toRightOf="@id/tv_change_package_time_title"
+                        app:layout_constraintTop_toTopOf="@id/tv_change_package_time_title"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_change_package_time_title"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:layout_marginLeft="6dp"
+                        android:gravity="center"
+                        android:background="@drawable/shape_yello"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tv_change_package_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="112dp"
+                        android:textColor="#ffffffff"
 							android:textSize="10sp"
 							android:layout_marginLeft="10dp"
 							app:layout_constraintLeft_toLeftOf="parent"

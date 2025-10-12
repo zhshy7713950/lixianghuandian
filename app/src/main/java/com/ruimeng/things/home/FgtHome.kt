@@ -292,6 +292,11 @@ class FgtHome : MainTabFragment() {
                     tv_sub_battery_checked.isVisible = true
                     tv_main_battery_checked.isVisible = false
                     tv_sub_battery_unchecked.isVisible = false
+                }else {
+                    tv_main_battery_checked.isVisible = true
+                    tv_sub_battery_unchecked.isVisible = true
+                    tv_main_battery_unchecked.isVisible = false
+                    tv_sub_battery_checked.isVisible = false
                 }
             }
             changeSwitchBtn()
@@ -732,7 +737,7 @@ class FgtHome : MainTabFragment() {
             if (!hasBatteryInfo()) return@setOnClickListener
             if (activeStatus == "3") {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-                ToastHelper.shortToast(context, "请先完成解冻操作")
+                ToastHelper.shortToast(context, "请您先完成解冻操作")
                 return@setOnClickListener
             }
             // 新增二次弹窗逻辑
@@ -743,7 +748,7 @@ class FgtHome : MainTabFragment() {
             if (isUnlimited) return@setOnClickListener
             if (activeStatus == "3") {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-                ToastHelper.shortToast(context, "请先完成解冻操作")
+                ToastHelper.shortToast(context, "请您先完成解冻操作")
                 return@setOnClickListener
             }
             FgtMain.instance?.start(
@@ -1449,6 +1454,8 @@ class FgtHome : MainTabFragment() {
                 tv_package_status.visibility = GONE
                 tv_package_status.text = "生效中"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
+                tv_unfreeze_delay_package.visibility = GONE
+                tv_unfreeze_delay_change.visibility = GONE
             } else if (paymentDetailBean?.active_status == "3") {
                 tvProgress.text = "已冻结"
                 tv_please_change.text = "(请进行\"解冻\"操作)"
@@ -1460,6 +1467,8 @@ class FgtHome : MainTabFragment() {
                 tv_package_status.visibility = VISIBLE
                 tv_package_status.text = "已冻结"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)
+                tv_unfreeze_delay_package.visibility = VISIBLE
+                tv_unfreeze_delay_change.visibility = VISIBLE
             }
 
         } else {
@@ -1476,6 +1485,8 @@ class FgtHome : MainTabFragment() {
             tv_package_status.visibility = GONE
             tv_package_status.text = "生效中"
             tv_package_status.background = context?.getDrawable(R.drawable.shape_green)
+            tv_unfreeze_delay_package.visibility = GONE
+            tv_unfreeze_delay_change.visibility = GONE
             if(info.rsoc.toFloat() < 30){
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "error-1")
             }
@@ -1529,6 +1540,15 @@ class FgtHome : MainTabFragment() {
                 tv_more.visibility = GONE
                 tv_btn_change_package_update.visibility = GONE
                 btn_buy_change_package.isVisible = !isUnlimited
+
+                // 根据冻结状态显示“解冻后自动延期”标签
+                if (activeStatus == "3") {
+                    tv_unfreeze_delay_package.visibility = VISIBLE
+                    tv_unfreeze_delay_change.visibility = VISIBLE
+                } else {
+                    tv_unfreeze_delay_package.visibility = GONE
+                    tv_unfreeze_delay_change.visibility = GONE
+                }
 
 
 //                val options = ArrayList<PaymentOption>()
@@ -1613,11 +1633,11 @@ class FgtHome : MainTabFragment() {
     private fun checkStatus(): Boolean {
         if (activeStatus == "3") {
             VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-            ToastHelper.shortToast(context, "请先完成解冻操作")
+            ToastHelper.shortToast(context, "请您先完成解冻操作")
             return false
         } else if (virtaul) {
             VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-3")
-            ToastHelper.shortToast(context, "请先完成取电操作")
+            ToastHelper.shortToast(context, "请您先完成取电操作")
             return false
         }
         return true
@@ -1727,7 +1747,7 @@ class FgtHome : MainTabFragment() {
 
             if (activeStatus == "3") {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-                ToastHelper.shortToast(context, "请先完成解冻操作")
+                ToastHelper.shortToast(context, "请您先完成解冻操作")
             } else {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                 ToastHelper.shortToast(context, "请扫描电柜二维码")

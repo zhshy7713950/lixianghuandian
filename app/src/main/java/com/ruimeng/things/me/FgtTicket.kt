@@ -178,7 +178,7 @@ class FgtTicket : MainTabFragment() {
                 )
             } else if (info.active_status == "3" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已冻结）
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-                ToastHelper.shortToast(context, "请先完成解冻操作")
+                ToastHelper.shortToast(context, "请您先完成解冻操作")
             } else if (info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已过期）
                 FgtMain.instance?.start(
                     FgtPayRentMoney.newInstance(

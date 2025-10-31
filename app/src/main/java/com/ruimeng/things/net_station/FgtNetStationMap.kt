@@ -182,6 +182,7 @@ class FgtNetStationMap : MainTabFragment() {
         http {
             url = "apiv3/cgstationnetwork"
             params["city_id"] = "000000"
+            params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["name"] = name
 
             onSuccess { res ->

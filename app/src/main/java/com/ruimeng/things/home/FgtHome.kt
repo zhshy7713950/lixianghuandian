@@ -1068,6 +1068,16 @@ class FgtHome : MainTabFragment() {
         getPaymentInfo()
         updateRequestTime()
         updateBatteryStatus()
+        // 根据 exchangebatType.batAh 是否有两个及以上值，控制 MAX 标签显示
+        runCatching {
+            val exchangeType = myDeviceList
+                ?.firstOrNull { it.device_id == CURRENT_DEVICEID }
+                ?.exchangebatType
+            val count = exchangeType?.batAh?.size ?: 0
+            tv_max_label.visibility = if (count >= 2) VISIBLE else GONE
+        }.onFailure {
+            tv_max_label.visibility = GONE
+        }
         
         // 检查是否需要显示警告弹窗
         checkAndShowWarningPopup()

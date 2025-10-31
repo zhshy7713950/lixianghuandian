@@ -145,6 +145,7 @@ class FgtNetStationItem : MainTabFragment() {
             url = "apiv3/cgstationnetwork"
             params["city_id"] = city?.id ?: ""
             params["name"] = et_search_station.text.toString()
+            params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["appType"] = "lxhd"
 
             onFinish { srl_station?.finishRefresh() }

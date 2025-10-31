@@ -28,6 +28,7 @@ import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.App
 import com.ruimeng.things.R
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.net_station.bean.NetStationBean
 import com.utils.BitmapUtil
 import com.utils.CommonUtil
@@ -255,6 +256,7 @@ class FgtNetStationByMap : BaseBackFragment() {
                 }
                 params["city_id"] = ""
                 params["name"] = name
+                params["deviceId"] = FgtHome.CURRENT_DEVICEID
                 params["appType"] = "lxhd"
 
                 onSuccess { res ->

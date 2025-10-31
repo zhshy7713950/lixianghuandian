@@ -26,6 +26,12 @@ data class MyDevicesBean(
         var rent_time: String = "", // 1542165966
         var total_rent_money: String = "", // 100.00
         var user_id: String = "" ,// 2
-        var rsoc: String = ""
+        var rsoc: String = "",
+        var exchangebatType: ExchangeBatType? = null
+    )
+
+    data class ExchangeBatType(
+        var batVol: String = "",
+        var batAh: List<String> = emptyList()
     )
 }

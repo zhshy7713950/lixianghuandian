@@ -161,7 +161,10 @@ class FgtNetStationItem : MainTabFragment() {
                         tv_empty_net_station.visibility =View.GONE
                         currentIndex = 0
                         var list = data[currentIndex].filterSelf(FgtHome.getBatteryV()).list
+                        // 将父级城市ID传递到每个站点项，供视图层使用
+                        val parentCityId = data[currentIndex].city_id
                         list.forEach {
+                            it.cityId = parentCityId
                             it.distance =AMapUtils.calculateLineDistance(LatLng(it.lat, it.lng), LatLng(App.lat, App.lng))
                             it.distanceStr =  if (it.distance >= 1000)
                                 "${String.format("%.2f", (it.distance / 1000))}公里"

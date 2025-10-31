@@ -185,16 +185,18 @@ class FgtNetStationMap : MainTabFragment() {
             params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["name"] = name
 
-            onSuccess { res ->
-                rootView?.let {
-                    val data = res.toPOJO<NetStationBean>().data
-                    aMap?.clear()
-                    locations.clear()
-                    markerMap.clear()
-                    markInfoMap.clear()
+                onSuccess { res ->
+                    rootView?.let {
+                        val data = res.toPOJO<NetStationBean>().data
+                        aMap?.clear()
+                        locations.clear()
+                        markerMap.clear()
+                        markInfoMap.clear()
 
                     data.forEach { item ->
                         item.filterSelf(FgtHome.getBatteryV())
+                        // 将父级城市ID传递到每个站点项，供 NetStationView 特例逻辑使用
+                        item.list.forEach { x -> x.cityId = item.city_id }
                         locations.addAll(item.list)
                     }
                     showMarkList(name.isNotEmpty())

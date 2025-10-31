@@ -109,6 +109,8 @@ class FgtHome : MainTabFragment() {
         var rsoc = ""
         var payType = ""
         var MOBILE_BIND_SKIP = false
+        // 是否仅在 72V 下支持 50Ah（来自首页设备列表的 exchangebatType）
+        var hasOnlyAh50For72: Boolean = false
         fun selectDeviceType() {
 
         }
@@ -1075,8 +1077,13 @@ class FgtHome : MainTabFragment() {
                 ?.exchangebatType
             val count = exchangeType?.batAh?.size ?: 0
             tv_max_label.visibility = if (count >= 2) VISIBLE else GONE
+            // 设置仅 72V 下 50Ah 的布尔标记
+            hasOnlyAh50For72 = (exchangeType?.batVol == "72"
+                    && count == 1
+                    && exchangeType?.batAh?.firstOrNull() == "50")
         }.onFailure {
             tv_max_label.visibility = GONE
+            hasOnlyAh50For72 = false
         }
         
         // 检查是否需要显示警告弹窗

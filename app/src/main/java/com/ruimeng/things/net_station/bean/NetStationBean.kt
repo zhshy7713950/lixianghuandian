@@ -40,6 +40,10 @@ data class NetStationBean(
             var workTime: String = "",
             var cellNum: String = "",
             var siteImages: List<String> = listOf(),
+            // 新增：不同伏数与安数的可换数统计
+            var batTypeCount: @RawValue HashMap<String, HashMap<String, Int>> = hashMapOf(),
+            // 新增：所属城市ID（由父级 Data.city_id 传入）
+            var cityId: Int = 0,
         ): Parcelable
 
         @Parcelize

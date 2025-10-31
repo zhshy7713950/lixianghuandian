@@ -99,6 +99,11 @@ class NetStationView @JvmOverloads constructor(
                     MODEL_72 -> {
                         container.setBackgroundResource(R.drawable.bg_model_72)
                         modelNum = data.available_arr.model_72
+                        // 特例：泸州市且用户仅支持 72V 下 50Ah 时，以 batTypeCount[72][50] 为准
+                        if (data.cityId == 510500 && FgtHome.hasOnlyAh50For72) {
+                            val override = data.batTypeCount[MODEL_72]?.get("50")
+                            if (override != null) modelNum = override
+                        }
                     }
                     MODEL_60 -> {
                         container.setBackgroundResource(R.drawable.bg_model_60)

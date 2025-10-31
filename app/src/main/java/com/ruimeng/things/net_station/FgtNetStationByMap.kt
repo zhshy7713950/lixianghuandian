@@ -263,6 +263,8 @@ class FgtNetStationByMap : BaseBackFragment() {
                     rootView?.let {
                         val data = res.toPOJO<NetStationBean>().data
                         data.forEach { item ->
+                            // 为每个站点项补充所属城市ID，供 NetStationView 特例逻辑使用
+                            item.list.forEach { x -> x.cityId = item.city_id }
                             locations.addAll(item.list)
                         }
                         showMarkList()

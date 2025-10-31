@@ -55,6 +55,7 @@ class FgtNetStationMap : MainTabFragment() {
         DefaultNetStationCtl.create()
     }
     private var savedInstanceState: Bundle? = null
+    private var lastRefreshDeviceId: String? = null
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         this.savedInstanceState = savedInstanceState
@@ -91,19 +92,35 @@ class FgtNetStationMap : MainTabFragment() {
         )
     }
 
-    private fun showHidePermission(){
-        val isAllGranted = isAllGrantedPermissions(activity,PermissionType.COARSE_LOCATION,
-            PermissionType.FINE_LOCATION)
+    private fun showHidePermission() {
+        val isAllGranted = isAllGrantedPermissions(
+            activity, PermissionType.COARSE_LOCATION,
+            PermissionType.FINE_LOCATION
+        )
         iv_permission?.visibility = if (isAllGranted) View.GONE else View.VISIBLE
-        if(isAllGranted){
+        if (isAllGranted) {
             afterGetPermission(savedInstanceState)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if(isAdded && isVisible){
+        if (isAdded && isVisible) {
             showHidePermission()
+        }
+    }
+
+    override fun onSupportVisible() {
+        super.onSupportVisible()
+        refreshForDeviceChangeIfNeeded()
+    }
+
+    private fun refreshForDeviceChangeIfNeeded() {
+        val currentDeviceId = FgtHome.CURRENT_DEVICEID
+        if (lastRefreshDeviceId != null && lastRefreshDeviceId != currentDeviceId) {
+            hideNetStationView()
+            et_search.text.clear()
+            getNetStationList()
         }
     }
 
@@ -142,12 +159,12 @@ class FgtNetStationMap : MainTabFragment() {
         mMapView?.onSaveInstanceState(outState)
     }
 
-    private fun hideNetStationView(){
+    private fun hideNetStationView() {
         net_station_view?.visibility = View.GONE
         iv_close_net_station_view?.visibility = View.GONE
     }
 
-    private fun showNetStationView(data:NetStationBean.Data.X){
+    private fun showNetStationView(data: NetStationBean.Data.X) {
         net_station_view?.bindCtl(netStationCtl)
         net_station_view?.setNewData(data)
         net_station_view?.visibility = View.VISIBLE
@@ -177,6 +194,7 @@ class FgtNetStationMap : MainTabFragment() {
 
     private var locations: MutableList<NetStationBean.Data.X> = mutableListOf()
     private fun getNetStationList(name: String = "") {
+        lastRefreshDeviceId = FgtHome.CURRENT_DEVICEID
         dlgProgress = getSweetDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE, "请求中...")
         dlgProgress!!.show()
         http {
@@ -185,13 +203,13 @@ class FgtNetStationMap : MainTabFragment() {
             params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["name"] = name
 
-                onSuccess { res ->
-                    rootView?.let {
-                        val data = res.toPOJO<NetStationBean>().data
-                        aMap?.clear()
-                        locations.clear()
-                        markerMap.clear()
-                        markInfoMap.clear()
+            onSuccess { res ->
+                rootView?.let {
+                    val data = res.toPOJO<NetStationBean>().data
+                    aMap?.clear()
+                    locations.clear()
+                    markerMap.clear()
+                    markInfoMap.clear()
 
                     data.forEach { item ->
                         item.filterSelf(FgtHome.getBatteryV())
@@ -215,22 +233,22 @@ class FgtNetStationMap : MainTabFragment() {
         locations.forEach { loc ->
             addMarker(loc)
         }
-        if(showFirstLocation){
-            if(locations.size > 0){
+        if (showFirstLocation) {
+            if (locations.size > 0) {
                 EasyToast.DEFAULT.show("已为您找到${locations.size}个站点")
                 locations[0]?.let {
                     aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it?.lat, it?.lng)))
                     aMap?.moveCamera(CameraUpdateFactory.zoomTo(13f))
                 }
-            }else{
+            } else {
                 EasyToast.DEFAULT.show("已为您找到0个站点")
             }
-        }else{
+        } else {
             showPosInMap()
         }
     }
 
-    private fun selectMarker(marker: Marker){
+    private fun selectMarker(marker: Marker) {
         if (marker != null) {
             mCurrentMemMarker?.startAnimation()
             setNotClickedMarkerAnim()
@@ -238,26 +256,26 @@ class FgtNetStationMap : MainTabFragment() {
             marker?.startAnimation()
             setClickedMarkerAnim()
             var agent = markInfoMap[marker.id]
-            aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(agent!!.lat,agent.lng)))
+            aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(agent!!.lat, agent.lng)))
             aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
-            if (agent != null){
+            if (agent != null) {
                 showNetStationView(agent)
             }
         }
     }
 
-    private fun setNotClickedMarkerAnim(){
-        if (mCurrentMemMarker != null){
-            var animation = ScaleAnimation(1.0f,1.6f,1.0f,1.6f)
+    private fun setNotClickedMarkerAnim() {
+        if (mCurrentMemMarker != null) {
+            var animation = ScaleAnimation(1.0f, 1.6f, 1.0f, 1.6f)
             animation.setDuration(0)
             animation.fillMode = 1
             mCurrentMemMarker?.setAnimation(animation)
         }
     }
 
-    private fun setClickedMarkerAnim(){
-        if (mCurrentMemMarker != null){
-            var animation = ScaleAnimation(1.6f,1.0f,1.6f,1.0f)
+    private fun setClickedMarkerAnim() {
+        if (mCurrentMemMarker != null) {
+            var animation = ScaleAnimation(1.6f, 1.0f, 1.6f, 1.0f)
             animation.setDuration(0)
             animation.fillMode = 1
             mCurrentMemMarker?.setAnimation(animation)
@@ -290,15 +308,15 @@ class FgtNetStationMap : MainTabFragment() {
 
     }
 
-    private fun addMarkerInfo(agent: NetStationBean.Data.X,markerBitmap: Bitmap){
+    private fun addMarkerInfo(agent: NetStationBean.Data.X, markerBitmap: Bitmap) {
         var markerOption = MarkerOptions()
 //            .zIndex(10f)
             .position(LatLng(agent.lat, agent.lng))
             .draggable(false)
         markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
         var marker = aMap?.addMarker(markerOption)
-        if (marker != null){
-            var animation = ScaleAnimation(1.0f,1.6f,1.0f,1.6f)
+        if (marker != null) {
+            var animation = ScaleAnimation(1.0f, 1.6f, 1.0f, 1.6f)
             animation.setDuration(0)
             animation.fillMode = 1
             marker.setAnimation(animation)

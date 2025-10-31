@@ -43,6 +43,8 @@ class FgtNetStationDetailNew : BaseBackFragment() {
     }
     private val rvAdapter by lazy { RvAdapter() }
     private var adLoader: AMPSNativeAdLoader? = null
+    // 记录站点所属城市ID，用于泸州（510500）显示安时标签
+    private var cityId: String = ""
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_detail_new
 
     companion object {
@@ -89,6 +91,8 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                     setNewData(bean)
                     bindCtl(netStationDetailCtl)
                 }
+                // 保存城市ID（用于特殊城市的安时标签显示）
+                cityId = bean.city_id
                 rvAdapter.swCabSocControl = bean.swCabSocControl.toIntOrNull() ?: 80
                 if (bean.exchange.isNotEmpty() && bean.exchange[0].device.isNotEmpty()) {
                     rvAdapter.setNewData(bean.exchange[0].device)
@@ -131,6 +135,21 @@ class FgtNetStationDetailNew : BaseBackFragment() {
 
         var swCabSocControl: Int = 80
 
+        private fun mapAhDrawable(ahStr: String?): Int? {
+            if (ahStr.isNullOrBlank()) return null
+            val num = Regex("\\d+").find(ahStr)?.value ?: return null
+            return when (num) {
+                "30" -> R.drawable.ic_ah_30
+                "40" -> R.drawable.ic_ah_40
+                "45" -> R.drawable.ic_ah_45
+                "50" -> R.drawable.ic_ah_50
+                "55" -> R.drawable.ic_ah_55
+                "60" -> R.drawable.ic_ah_60
+                "80" -> R.drawable.ic_ah_80
+                else -> null
+            }
+        }
+
         @SuppressLint("SetTextI18n")
         override fun convert(
             helper: BaseViewHolder,
@@ -140,6 +159,7 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                 //默认状态设置
                 h.setVisible(R.id.tv_battery_level, false)
                 h.setVisible(R.id.iv_battery_type, false)
+                h.setVisible(R.id.iv_ah_tag, false)
                 h.setTextColor(R.id.tv_battery_status, Color.parseColor("#B2C1CE"))
                 h.setAlpha(R.id.cl_container, 0.5f)
                 with(b) {
@@ -206,6 +226,15 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                             else// <=20
                             -> h.setImageResource(R.id.iv_battery, R.drawable.ic_battery_20)
                         }
+
+                        // 泸州市（cityId=510500）显示安时标签在电池图标右下角
+                        if (this@FgtNetStationDetailNew.cityId == "510500") {
+                            mapAhDrawable(device_ah)?.let { resId ->
+                                h.setVisible(R.id.iv_ah_tag, true)
+                                h.setImageResource(R.id.iv_ah_tag, resId)
+                            }
+                        }
+
                         if (!FgtHome.getBatteryV()
                                 .isNullOrEmpty() && !device_type.startsWith(FgtHome.getBatteryV())
                         ) {

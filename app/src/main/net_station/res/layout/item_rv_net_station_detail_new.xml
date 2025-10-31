@@ -52,7 +52,6 @@
 			app:layout_constraintTop_toTopOf="parent"
 			tools:text="90%"
 			android:visibility="gone"/>
-			/>
 
 		<ImageView
 			android:id="@+id/iv_battery"
@@ -63,6 +62,16 @@
 			app:layout_constraintTop_toTopOf="parent"
 			android:layout_marginTop="30dp"
 			tools:src="@drawable/ic_battery_60"/>
+
+		<!-- 安时标签：位于电池图标右下角，仅在泸州市显示 -->
+		<ImageView
+			android:id="@+id/iv_ah_tag"
+			android:layout_width="35dp"
+			android:layout_height="32dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			android:visibility="gone"
+			tools:src="@drawable/ic_ah_50"/>
 
 		<TextView
 			android:id="@+id/tv_battery_status"

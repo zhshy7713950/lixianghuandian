@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="售后支持"
+        android:text="客服热线"
         android:textColor="#ffffffff"
         android:textSize="15sp"
         app:layout_constraintLeft_toLeftOf="parent"

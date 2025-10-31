@@ -184,7 +184,7 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             android:gravity="center"
-            android:background="@drawable/bg_btn_common1_8px"/>
+            android:background="@drawable/bg_btn_common1_8dp"/>
 
     </LinearLayout>
 

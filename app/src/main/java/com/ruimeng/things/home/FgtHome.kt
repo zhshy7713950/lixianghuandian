@@ -44,6 +44,7 @@ import com.ruimeng.things.home.view.PopupHelpWindow
 import com.ruimeng.things.home.view.PopupRemindWindow
 import com.ruimeng.things.home.view.ShowCouponPopup
 import com.ruimeng.things.home.view.WarningAlertPopupWindow
+// 租电型号二次确认弹窗在本类中直接使用NormalDialog实现，不依赖通用Tips方法
 import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
 import com.ruimeng.things.me.FgtTrueName
@@ -392,7 +393,12 @@ class FgtHome : MainTabFragment() {
 
                 OptionPickerUtil.showJsonOptionPicker(
                     activity, "请选择租用的电池型号", data
-                ) { key -> newRent(event, key) }
+                ) { key -> 
+                    // 获取选中的型号名称
+                    val modelName = data?.optString(key) ?: key
+                    // 显示二次确认弹窗
+                    showModelConfirmation(modelName, event, key)
+                }
             }
             onFail { i, s ->
                 ToastHelper.shortToast(context, s)
@@ -425,6 +431,31 @@ class FgtHome : MainTabFragment() {
                 }
             }
         }
+    }
+
+    /**
+     * 显示电池型号二次确认弹窗
+     * @param modelName 选择的电池型号名称
+     * @param event 扫码事件对象
+     * @param modelId 电池型号ID
+     */
+    private fun showModelConfirmation(modelName: String, event: ScanResultEvent, modelId: String) {
+        NormalDialog(activity).apply {
+            style(NormalDialog.STYLE_TWO)
+            btnNum(2)
+            // 不显示标题，仅展示内容
+            content("您已选择【${modelName}】电池，请再次确认型号")
+            // 左边取消，右边确定
+            btnText("取消", "确定")
+            setOnBtnClickL(OnBtnClickL {
+                // 取消，返回型号选择，不做进一步操作
+                dismiss()
+            }, OnBtnClickL {
+                // 确认，继续租电流程
+                dismiss()
+                newRent(event, modelId)
+            })
+        }.show()
     }
 
     private fun rentStep1(deviceId: String?, type: Int = FgtPayRentMoney.PAGE_TYPE_CREATE) {

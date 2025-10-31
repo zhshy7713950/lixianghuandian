@@ -150,7 +150,7 @@
 			android:textColor="@color/black"
 			android:textSize="14sp"
 			android:gravity="center"
-			android:background="@drawable/bg_btn_common1_8px"
+			android:background="@drawable/bg_btn_common1_8dp"
 			/>
 		
 	</LinearLayout>
@@ -263,7 +263,7 @@
 				android:id="@+id/tv_phone3"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="13540338214"
+				android:text="18608286025"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>
@@ -271,7 +271,7 @@
 				android:id="@+id/tv_phone4"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="15821989270"
+				android:text="18113147502"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>

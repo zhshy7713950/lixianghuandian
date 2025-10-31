@@ -90,7 +90,7 @@ object QuickLoginHelper {
             setLoginBtnWidth(ScreenUtils.getScreenWidth().px2Dp().toInt() - 80)
             setLoginBtnHeight(50)
             setLoginBtnTopYOffset(346)
-            setLoginBtnBackgroundDrawable(context.getDrawable(com.ruimeng.things.R.drawable.bg_btn_common1))
+            setLoginBtnBackgroundDrawable(context.getDrawable(com.ruimeng.things.R.drawable.bg_btn_common1_8dp))
 
             setHideNavigation(true)
             setStatusBarColor(android.R.color.transparent)

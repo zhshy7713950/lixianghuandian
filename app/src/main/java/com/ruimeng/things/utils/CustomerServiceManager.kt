@@ -26,7 +26,7 @@ object CustomerServiceManager {
 
         // 区域客服电话项
         contacts.forEach { c ->
-            val display = "区域电话：${c.mobile}"
+            val display = "区域客服：${c.mobile}"
             val dialNum = sanitizeDialNumber(c.mobile)
             builder.addItem(display, "REGION:$dialNum")
         }

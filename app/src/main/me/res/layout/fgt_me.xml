@@ -417,7 +417,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
-                            android:text="售后支持"
+                            android:text="客服热线"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -552,7 +552,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
-                            android:text="售后支持"
+                            android:text="客服热线"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -709,7 +709,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="售后支持"
+                            android:text="客服热线"
                             android:textColor="@color/text_color"
                             android:textSize="12sp" />
                     </LinearLayout>

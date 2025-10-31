@@ -239,6 +239,14 @@ class FgtNetStationDetailNew : BaseBackFragment() {
                                 .isNullOrEmpty() && !device_type.startsWith(FgtHome.getBatteryV())
                         ) {
                             h.setText(R.id.tv_battery_status, "电池型号不匹配")
+                        } else if (
+                            // 泸州市特例：用户首页仅支持 72V 下 50Ah，且当前仓 device_ah 不是 “50安”
+                            this@FgtNetStationDetailNew.cityId == "510500" &&
+                            FgtHome.hasOnlyAh50For72 &&
+                            device_ah.isNotEmpty() &&
+                            device_ah != "50安"
+                        ) {
+                            h.setText(R.id.tv_battery_status, "电池型号不匹配")
                         } else {
                             if (electricityInt != null && electricityInt >= swCabSocControl) {
                                 h.setText(R.id.tv_battery_status, "正常可换")

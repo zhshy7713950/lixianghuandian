@@ -15,7 +15,7 @@ data class NetStationBean(
 ) {
     data class Data(
         var city: String = "", // 上海市
-        var city_id: Int = 0, // 2
+        var city_id: String = "", // 2
         var list: List<X> = listOf()
     ) {
         @Parcelize
@@ -43,7 +43,7 @@ data class NetStationBean(
             // 新增：不同伏数与安数的可换数统计
             var batTypeCount: @RawValue HashMap<String, HashMap<String, Int>> = hashMapOf(),
             // 新增：所属城市ID（由父级 Data.city_id 传入）
-            var cityId: Int = 0,
+            var cityId: String = "",
         ): Parcelable
 
         @Parcelize
@@ -62,7 +62,7 @@ data class NetStationBean(
 }
 
 fun NetStationBean.Data.filterSelf(curV: String):NetStationBean.Data {
-    if(this.city_id == 420500 && (curV == MODEL_48 || curV == MODEL_60)){
+    if(this.city_id == "420500" && (curV == MODEL_48 || curV == MODEL_60)){
         this.list = this.list.filter {
             it.cabinetType != "1"
         }.toList()

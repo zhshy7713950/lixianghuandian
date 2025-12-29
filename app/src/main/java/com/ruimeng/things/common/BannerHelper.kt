@@ -105,6 +105,13 @@ object BannerHelper {
             linkUrl.startsWith("extendedGift://") -> {
                 fgt.start(FgtExtendedGift.newInstance())
             }
+            linkUrl.startsWith("recommendGift://") -> {
+                WeChatHelper.launchWXMiniProgram(
+                    fgt.requireContext(),
+                    fgt.resources.getString(R.string.wx_appid),
+                    "/pages/Tab4-我的/推荐有礼/邀请好友/inviteFriend"
+                )
+            }
             linkUrl.startsWith("https://") -> {
                 AtyWeb2.start(bannerInfo.title,linkUrl)
             }

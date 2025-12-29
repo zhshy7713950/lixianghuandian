@@ -219,6 +219,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="60"
+            android:visibility="gone"
             android:background="@drawable/bg_online_customer_service"
             android:layout_marginEnd="12dp"
             android:orientation="horizontal"
@@ -248,7 +249,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="40"
             android:background="@drawable/bg_customer_service_hotline"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="0dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="12dp">

@@ -2,6 +2,7 @@ package com.ruimeng.things.net_station.bean
 
 import android.os.Parcelable
 import com.amap.api.maps.model.Marker
+import com.ruimeng.things.home.FgtHome
 import com.utils.MODEL_48
 import com.utils.MODEL_60
 import com.utils.MODEL_72
@@ -70,9 +71,16 @@ fun NetStationBean.Data.filterSelf(curV: String):NetStationBean.Data {
     return this
 }
 
-fun NetStationBean.Data.Model.getAvaModelNum(curV: String) = when (curV) {
-    MODEL_72 -> model_72
-    MODEL_60 -> model_60
-    MODEL_48 -> model_48
-    else -> model_72 + model_60 + model_48
+fun NetStationBean.Data.X.getAvaModelNum(curV: String) = when (curV) {
+    MODEL_72 -> {
+        var modelNum =available_arr.model_72
+        if (this.cityId == "510500" && FgtHome.hasOnlyAh50For72) {
+            val override = this.batTypeCount[MODEL_72]?.get("50")
+            if (override != null) modelNum = override
+        }
+        modelNum
+    }
+    MODEL_60 -> available_arr.model_60
+    MODEL_48 -> available_arr.model_48
+    else -> available_arr.model_72 + available_arr.model_60 + available_arr.model_48
 }

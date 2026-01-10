@@ -285,7 +285,7 @@ class FgtNetStationMap : MainTabFragment() {
     private fun addMarker(agent: NetStationBean.Data.X) {
         var imageUrl = "https://downxll.oss-cn-beijing.aliyuncs.com/lxhd/%s"
         imageUrl = if (agent.isOnline == 1) {
-            val ava = agent.available_arr.getAvaModelNum(FgtHome.getBatteryV())
+            val ava = agent.getAvaModelNum(FgtHome.getBatteryV())
             String.format(
                 imageUrl,
                 String.format(

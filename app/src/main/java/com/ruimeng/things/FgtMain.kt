@@ -108,8 +108,8 @@ class FgtMain : FgtBase() {
         // 修复tab图标数组，使其与Fragment数组正确对应
         // Fragment顺序：[FgtHome, FgtNetStationMap, FgtTicket, FgtMe]
         // Tab ID顺序：[iv_home, iv_nearby, iv_contract, iv_me]
-        val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_contract,R.mipmap.tab_me)
-        val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_contract_se,R.mipmap.tab_me_se)
+        val tabImg = arrayOf(R.mipmap.tab_home,R.mipmap.tab_nearby,R.mipmap.tab_ticket,R.mipmap.tab_me)
+        val tabImgSe = arrayOf(R.mipmap.tab_home_se,R.mipmap.tab_nearby_se,R.mipmap.tab_tickey_se,R.mipmap.tab_me_se)
         val imageTabs = arrayOf(R.id.iv_home,R.id.iv_nearby,R.id.iv_contract,R.id.iv_me)
         val textTabs = arrayOf(R.id.tv_home,R.id.tv_nearby,R.id.tv_contract,R.id.tv_me)
         for (i in 0..3){

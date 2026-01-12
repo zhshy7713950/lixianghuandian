@@ -63,7 +63,7 @@ class FgtMe : MainTabFragment() {
 //        initTopbar(mView?.findViewById(R.id.topbar), "我的", false)
         EventBus.getDefault().register(this)
         initEvent()
-        
+
         // 初始化广告加载器
         initAdLoader()
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userinfo ->
@@ -75,7 +75,7 @@ class FgtMe : MainTabFragment() {
                 tvVipState.setTextColor(it.stateColor)
                 tvVipDescription.text = it.description(userinfo.online_time)
                 tvVipDescription.setTextColor(it.descriptionColor)
-            }?: run {
+            } ?: run {
                 llVipState.isVisible = false
             }
 
@@ -115,34 +115,24 @@ class FgtMe : MainTabFragment() {
             }
 
 
-            rtv_bind_wechat_status.apply {
+            rtv_my_referrer_status.apply {
+                isVisible = userinfo.hasRecom != 0
+                if (userinfo.hasRecom != 0) {
+                    text = "我的推荐官"
+                    val iconRes =
+                        if (userinfo.hasRecom == 2) R.drawable.ic_my_referrer_se else R.drawable.ic_my_referrer
+                    val textColorStr = if (userinfo.hasRecom == 2) "#FBC045" else "#B2C1CE"
 
-
-                val isMpFollow = userinfo.mp_follow == 1
-
-                val dra =
-                    resources.getDrawable(if (isMpFollow) R.mipmap.icon_bind_wecaht_me else R.mipmap.icon_not_bind_wecaht_me)
-                        .apply {
-                            setBounds(0, 0, minimumWidth, minimumHeight)
-                        }
-
-                setCompoundDrawables(dra, null, null, null)
-
-                setTextColor(if (isMpFollow) Color.GREEN else Color.WHITE)
-
-                text = if (isMpFollow) "已绑定" else "未绑定"
-
-//                val del = delegate as RoundViewDelegate
-//                del.strokeColor =
-//                    if (isMpFollow) Color.GREEN else Color.WHITE
-
+                    val dra = resources.getDrawable(iconRes).apply {
+                        setBounds(0, 0, minimumWidth, minimumHeight)
+                    }
+                    setCompoundDrawables(dra, null, null, null)
+                    setTextColor(Color.parseColor(textColorStr))
+                }
 
                 setOnClickListener {
-                    if (isMpFollow) {
-                        EasyToast.DEFAULT.show("已关注公众号")
-                    } else {
-                        start(FgtFollowWechatAccount())
-                    }
+                    EasyToast.DEFAULT.show("功能开发中")
+
                 }
             }
 
@@ -152,10 +142,12 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
-            if("成都市" != userinfo.city && tv_ya_money_me.isEnabled){
+            ll_my_referrer.isVisible = "上海市" == userinfo.city
+
+            if ("成都市" != userinfo.city && tv_ya_money_me.isEnabled) {
                 llTerminate.isVisible = true
                 llPlaceHolder5.visibility = View.GONE
-            }else{
+            } else {
                 llTerminate.isVisible = false
                 llPlaceHolder5.visibility = View.INVISIBLE
             }
@@ -194,21 +186,21 @@ class FgtMe : MainTabFragment() {
         ll_support_me.setOnClickListener {
             CustomerServiceManager.showDialSheet(requireActivity())
 //            NormalDialog(activity).apply {
-                //                style(NormalDialog.STYLE_TWO)
-                //                title("售后支持")
-                //                titleTextColor(Color.parseColor("#131414"))
-                //                content(tel)
-                //                contentGravity(Gravity.CENTER)
-                //                btnText("取消", "拨打")
-                //                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
-                //                setOnBtnClickL(OnBtnClickL {
-                //                    dismiss()
-                //                }, OnBtnClickL {
-                //                    SystemUtils.call(activity, tel)
-                //                    dismiss()
-                //                })
-                //                show()
-                //            }
+            //                style(NormalDialog.STYLE_TWO)
+            //                title("售后支持")
+            //                titleTextColor(Color.parseColor("#131414"))
+            //                content(tel)
+            //                contentGravity(Gravity.CENTER)
+            //                btnText("取消", "拨打")
+            //                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
+            //                setOnBtnClickL(OnBtnClickL {
+            //                    dismiss()
+            //                }, OnBtnClickL {
+            //                    SystemUtils.call(activity, tel)
+            //                    dismiss()
+            //                })
+            //                show()
+            //            }
         }
 
         ll_follow_wechat.setOnClickListener {
@@ -217,6 +209,10 @@ class FgtMe : MainTabFragment() {
                 resources.getString(R.string.wx_appid),
                 "/pages/基础/关注公众号/followWechat"
             )
+        }
+
+        ll_my_referrer.setOnClickListener {
+            startFgt(FgtRecommendGift())
         }
 
 
@@ -319,7 +315,7 @@ class FgtMe : MainTabFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        if(!hidden){
+        if (!hidden) {
             srl_me?.autoRefresh()
         }
     }
@@ -328,12 +324,12 @@ class FgtMe : MainTabFragment() {
     public fun refreshStation(event: RefreshMe) {
         srl_me?.autoRefresh()
     }
-    
+
     /**
      * 初始化广告加载器
      */
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
-        adLoader?.commonLoadInto(ad_container,AdManager.NATIVE_SPACE_ID_ME)
+        adLoader?.commonLoadInto(ad_container, AdManager.NATIVE_SPACE_ID_ME)
     }
 }

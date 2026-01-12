@@ -122,18 +122,17 @@
                         android:layout_marginRight="5dp" />
 
                     <TextView
-                        android:id="@+id/rtv_bind_wechat_status"
+                        android:id="@+id/rtv_my_referrer_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_username_me"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="10dp"
                         android:layout_toRightOf="@+id/rtv_truename_status"
-                        android:drawableLeft="@mipmap/icon_not_bind_wecaht_me"
                         android:drawablePadding="5dp"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        tools:text="未绑定微信" />
+                        tools:text="我的推荐官" />
 
                 </RelativeLayout>
 
@@ -533,6 +532,7 @@
 
 
                     <LinearLayout
+                        android:id="@+id/ll_my_referrer"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -545,14 +545,14 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:scaleType="centerInside"
-                            android:src="@mipmap/service_support_me" />
+                            android:src="@mipmap/service_my_referrer" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
-                            android:text="客服热线"
+                            android:text="推荐有礼"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
                     </LinearLayout>

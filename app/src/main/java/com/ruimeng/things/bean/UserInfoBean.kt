@@ -38,6 +38,7 @@ data class UserInfoBean(
             var electric: Any? = null,
             var isBindAccount: Int = 0, // 1-已绑定，0-未绑定
             var isVoiceActived: Int = 0, // 1-启用语音提示，0-关闭语音提示
+            var hasRecom: Int = 0, // 0-不显示，1-未绑定，2-已绑定
         ){
             fun getElectric(): Electric?{
                 return getElectricList().firstOrNull()

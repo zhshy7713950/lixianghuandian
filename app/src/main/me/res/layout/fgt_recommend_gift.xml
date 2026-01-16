@@ -150,9 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingStart="24dp"
                     android:paddingTop="24dp"
-                    android:paddingEnd="24dp"
                     android:paddingBottom="20dp">
 
                     <TextView
@@ -164,126 +162,142 @@
                         android:textColor="#3E3E3E"
                         android:textSize="16sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginEnd="22dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="7">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="32dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_share_invitation_code" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="16dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_recommend_arrow" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="32dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_invite_to_bind" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="16dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_recommend_arrow" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="32dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_friend_pay" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="16dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_recommend_arrow" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="32dp"
-                            android:layout_weight="1"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_reward_credited" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="7">
+                        >
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/iv_share"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_share_invitation_code"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_arrow1"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginLeft="22dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
                             android:gravity="center"
                             android:text="分享邀请码"
                             android:textColor="#3E3E3E"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@+id/iv_share"
+                            app:layout_constraintStart_toStartOf="@+id/iv_share"
+                            app:layout_constraintTop_toBottomOf="@+id/iv_share" />
 
-                        <View
+                        <ImageView
+                            android:id="@+id/iv_arrow1"
                             android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
+                            android:layout_height="16dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_recommend_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_share"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_bind"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_share"
+                            app:layout_constraintTop_toTopOf="@+id/iv_share" />
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/iv_bind"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_invite_to_bind"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_arrow2"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_arrow1"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
                             android:gravity="center"
-                            android:text="邀请好友扫码绑定"
+                            android:text="邀请好友\n扫码绑定"
                             android:textColor="#3E3E3E"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@+id/iv_bind"
+                            app:layout_constraintStart_toStartOf="@+id/iv_bind"
+                            app:layout_constraintTop_toBottomOf="@+id/iv_bind" />
 
-                        <View
+                        <ImageView
+                            android:id="@+id/iv_arrow2"
                             android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
+                            android:layout_height="16dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_recommend_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_bind"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_pay"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_bind"
+                            app:layout_constraintTop_toTopOf="@+id/iv_bind" />
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/iv_pay"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_friend_pay"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_arrow3"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_arrow2"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
                             android:gravity="center"
-                            android:text="好友购买好友续租"
+                            android:text="好友购买\n好友续租"
                             android:textColor="#3E3E3E"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@+id/iv_pay"
+                            app:layout_constraintStart_toStartOf="@+id/iv_pay"
+                            app:layout_constraintTop_toBottomOf="@+id/iv_pay" />
 
-                        <View
+                        <ImageView
+                            android:id="@+id/iv_arrow3"
                             android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
+                            android:layout_height="16dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_recommend_arrow"
+                            app:layout_constraintBottom_toBottomOf="@+id/iv_pay"
+                            app:layout_constraintEnd_toStartOf="@+id/iv_reward"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_pay"
+                            app:layout_constraintTop_toTopOf="@+id/iv_pay" />
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/iv_reward"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_reward_credited"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@+id/iv_arrow3"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginRight="22dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
                             android:gravity="center"
                             android:text="奖励到账"
                             android:textColor="#3E3E3E"
-                            android:textSize="10sp" />
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="@+id/iv_reward"
+                            app:layout_constraintStart_toStartOf="@+id/iv_reward"
+                            app:layout_constraintTop_toBottomOf="@+id/iv_reward" />
 
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
                         android:id="@+id/btn_my_reward"

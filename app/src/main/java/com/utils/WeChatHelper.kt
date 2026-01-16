@@ -91,6 +91,27 @@ object WeChatHelper {
         }
     }
 
+    fun weChatShareImage(context: Context, appId: String, bitmap: Bitmap) {
+        mIWXAPI = WXAPIFactory.createWXAPI(context, appId, true)
+        mIWXAPI?.registerApp(appId)
+        if (mIWXAPI?.isWXAppInstalled == true) {
+            val wXImageObject = WXImageObject(bitmap)
+            val wXMediaMessage = WXMediaMessage(wXImageObject)
+
+            val thumbBmp = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
+            wXMediaMessage.setThumbImage(thumbBmp)
+            thumbBmp.recycle()
+
+            val req = SendMessageToWX.Req()
+            req.transaction = "img"
+            req.message = wXMediaMessage
+            req.scene = SendMessageToWX.Req.WXSceneSession
+            mIWXAPI?.sendReq(req)
+        } else {
+            ToastHelper.shortToast(context, "未发现微信客户端")
+        }
+    }
+
     fun weChatShareApp(context: Context, shareData: ShareData){
         mIWXAPI = WXAPIFactory.createWXAPI(context, shareData.appId, true)
         // 将应用的AppId注册到微信

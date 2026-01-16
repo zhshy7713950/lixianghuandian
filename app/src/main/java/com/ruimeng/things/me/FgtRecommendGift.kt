@@ -75,7 +75,7 @@ class FgtRecommendGift : BaseBackFragment() {
         }
 
         btn_my_reward.setOnClickListener {
-            EasyToast.DEFAULT.show("TODO：我的奖励页面")
+            start(FgtMyReward())
         }
 
         InfoViewModel.getDefault().userInfo.simpleObserver(this) { userInfo ->

@@ -2,4 +2,5 @@
 <resources>
     <!-- 人工客服按钮ID -->
     <item name="action_manual_service" type="id" />
+    <item name="topbar_right_button" type="id" />
 </resources>

@@ -63,12 +63,6 @@ class FgtMyReward : BaseBackFragment() {
         iv_monthly_standard_fixed.setOnClickListener(policyListener)
 
         btn_withdraw.setOnClickListener {
-            // Remove non-numeric characters if any, but backend returns string which might be just number.
-            // UI shows "0元", so likely need to strip "元" or parse directly.
-            // The API returns value, and I appended "元" in updateUI.
-            // So I should parse the raw data if stored, or parse the text.
-            // I'll parse the text for now or better use a stored value.
-            // But for simplicity, I'll parse the text displayed.
             val withdrawableStr = tv_withdrawable_amount.text.toString().replace("元", "").trim()
             val amount = withdrawableStr.toDoubleOrNull() ?: 0.0
             if (amount <= 0.0) {
@@ -78,6 +72,7 @@ class FgtMyReward : BaseBackFragment() {
             } else {
                 start(FgtApplyWithdraw.newInstance(withdrawableStr))
             }
+//            start(FgtApplyWithdraw.newInstance("30"))
         }
 
         ll_total_withdrawn.setOnClickListener {

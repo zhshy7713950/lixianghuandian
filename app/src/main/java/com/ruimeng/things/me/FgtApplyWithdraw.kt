@@ -31,15 +31,16 @@ class FgtApplyWithdraw : BaseBackFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_apply_withdraw
 
-    override fun onResume() {
-        super.onResume()
+    override fun onSupportVisible() {
+        super.onSupportVisible()
         activity?.let { StatusBarUtil.setColor(it, Color.parseColor("#ED5A2E")) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onSupportInvisible() {
+        super.onSupportInvisible()
         activity?.let { StatusBarUtil.setColor(it, resources.getColor(R.color.app_color)) }
     }
+
 
     private var balanceStr = "0.00"
     private var lastAccountName = ""
@@ -103,7 +104,7 @@ class FgtApplyWithdraw : BaseBackFragment() {
         }
 
         btn_history.setOnClickListener {
-            EasyToast.DEFAULT.show("TODO: 提现明细")
+            start(FgtWithdrawList.newInstance())
         }
     }
 

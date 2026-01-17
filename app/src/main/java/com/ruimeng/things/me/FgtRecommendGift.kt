@@ -1,41 +1,43 @@
 package com.ruimeng.things.me
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.R
+import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.bean.ShareQrCodeBean
-import kotlinx.android.synthetic.main.fgt_recommend_gift.*
+import com.utils.StatusBarUtil
+import com.utils.WeChatHelper
+import kotlinx.android.synthetic.main.fgt_recommend_gift.btn_my_reward
+import kotlinx.android.synthetic.main.fgt_recommend_gift.btn_share_invite_code
+import kotlinx.android.synthetic.main.fgt_recommend_gift.iv_invite_qrcode
+import kotlinx.android.synthetic.main.fgt_recommend_gift.tv_invite_code_value
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
-import com.utils.StatusBarUtil
-import com.utils.WeChatHelper
 import wongxd.utils.utilcode.util.SizeUtils
-import wongxd.utils.utilcode.util.ImageUtils
 import java.io.File
 import java.io.FileOutputStream
-import android.content.Intent
-import android.net.Uri
-import android.widget.ImageView
-import android.widget.TextView
-import com.ruimeng.things.bean.UserInfoBean
 
 class FgtRecommendGift : BaseBackFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_recommend_gift
     private var hasRequestedShareQrCode = false
 
-    override fun onResume() {
-        super.onResume()
+    override fun onSupportVisible() {
+        super.onSupportVisible()
         activity?.let { StatusBarUtil.setColor(it, Color.parseColor("#D83D3E")) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onSupportInvisible() {
+        super.onSupportInvisible()
         activity?.let { StatusBarUtil.setColor(it, resources.getColor(R.color.app_color)) }
     }
 

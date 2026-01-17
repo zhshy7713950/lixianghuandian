@@ -90,3 +90,8 @@ data class CheckCaptchaLocal(
 data class GetCustomerServicePhonesLocal(
     val userId: String
 )
+
+data class WithdrawListLocal(
+    val page: String = "1",
+    val pageSize: String = "10000"
+)

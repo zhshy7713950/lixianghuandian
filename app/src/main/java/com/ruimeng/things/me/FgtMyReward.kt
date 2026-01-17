@@ -27,13 +27,13 @@ class FgtMyReward : BaseBackFragment() {
     private var allFriends = listOf<FriendRewardBean>()
     private var currentFilter = "全部"
 
-    override fun onResume() {
-        super.onResume()
+    override fun onSupportVisible() {
+        super.onSupportVisible()
         activity?.let { StatusBarUtil.setColor(it, Color.parseColor("#D83D3E")) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onSupportInvisible() {
+        super.onSupportInvisible()
         activity?.let { StatusBarUtil.setColor(it, resources.getColor(R.color.app_color)) }
     }
 
@@ -76,7 +76,7 @@ class FgtMyReward : BaseBackFragment() {
         }
 
         ll_total_withdrawn.setOnClickListener {
-            EasyToast.DEFAULT.show("TODO: 提现明细")
+            start(FgtWithdrawList.newInstance())
         }
 
         val explanationListener = View.OnClickListener {

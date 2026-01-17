@@ -19,6 +19,7 @@ import com.entity.local.UploadVersionLocal
 import com.entity.local.UserPaymentInfoLocal
 import com.entity.local.VoiceOpenLocal
 import com.entity.local.GetCustomerServicePhonesLocal
+import com.entity.local.WithdrawListLocal
 import com.entity.remote.CustomerServiceContactRemote
 import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
@@ -33,6 +34,7 @@ import com.ruimeng.things.Path
 import com.ruimeng.things.home.bean.DeviceDetailBean
 import com.ruimeng.things.home.bean.GetRentPayBean
 import com.ruimeng.things.home.bean.MyDevicesBean
+import com.ruimeng.things.me.bean.WithdrawListResponse
 
 object BizService {
 
@@ -135,6 +137,11 @@ object BizService {
     // 获取区域客服电话（对象列表：时间段、联系人、号码）
     suspend fun getCustomerServicePhones(local: GetCustomerServicePhonesLocal) = Server.call<GetCustomerServicePhonesLocal, List<CustomerServiceContactRemote>>(
         Api.Get_Customer_Service_Phones,
+        local
+    )
+
+    suspend fun getWithdrawList(local: WithdrawListLocal) = Server.call<WithdrawListLocal, WithdrawListResponse>(
+        Api.Distribute_Withdraw_List,
         local
     )
 }

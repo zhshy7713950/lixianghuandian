@@ -40,4 +40,7 @@ object Api {
 
     // Customer Service
     const val Get_Customer_Service_Phones = "apiv6/cgstationnetwork/customerservice"
+
+    // Withdraw
+    const val Distribute_Withdraw_List = "apiv6/distribute/withdrawlist"
 }

@@ -19,12 +19,19 @@ import org.json.JSONObject
 import wongxd.common.MainLooper
 
 class RebackAlertPopup (private val activity: Activity,
+                        private val hasRecomActivity: Boolean = false,
                         private val listener: OnClickListener
 ) : PopupWindow(activity){
     init {
         contentView = View.inflate(activity, R.layout.popup_reback_alert, null)
         var tv_switch_battery = contentView.findViewById<TextView>(R.id.tv_switch_battery)
         var tv_cancel = contentView.findViewById<TextView>(R.id.tv_cancel)
+        var tv_alert_info = contentView.findViewById<TextView>(R.id.tv_alert_info)
+
+        if (hasRecomActivity) {
+            tv_alert_info.text = "现在正在进行退网操作！接下来需要将电池扫码放入柜内，成功放回电池后合约将失效，剩余天数将清零，且无法退款！押金将原路退回！提现功能将暂停(提现账号保留3个月)！请确认操作！"
+        }
+
         width = ViewGroup.LayoutParams.MATCH_PARENT
         height = ViewGroup.LayoutParams.MATCH_PARENT
         isOutsideTouchable = true

@@ -229,7 +229,8 @@ class AtyLogin : AtyBase() {
             }
         }
 
-        requestPermission()
+//        requestPermission()
+        initQuickLogin()
     }
 
     private fun doOnePassLogin() {

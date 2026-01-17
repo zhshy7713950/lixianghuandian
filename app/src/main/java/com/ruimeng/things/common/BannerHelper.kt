@@ -28,6 +28,7 @@ import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.common.EasyToast
 import com.ruimeng.things.App
+import com.ruimeng.things.me.FgtRecommendGift
 
 object BannerHelper {
     fun initCommonBanner(
@@ -106,11 +107,7 @@ object BannerHelper {
                 fgt.start(FgtExtendedGift.newInstance())
             }
             linkUrl.startsWith("recommendGift://") -> {
-                WeChatHelper.launchWXMiniProgram(
-                    fgt.requireContext(),
-                    fgt.resources.getString(R.string.wx_appid),
-                    "/pages/Tab4-我的/推荐有礼/邀请好友/inviteFriend"
-                )
+                fgt.start(FgtRecommendGift())
             }
             linkUrl.startsWith("https://") -> {
                 AtyWeb2.start(bannerInfo.title,linkUrl)

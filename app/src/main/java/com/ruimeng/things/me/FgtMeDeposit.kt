@@ -13,7 +13,9 @@ import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.flyco.roundview.RoundTextView
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
+import com.ruimeng.things.App
 import com.ruimeng.things.FgtMain
+import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
@@ -169,7 +171,8 @@ class FgtMeDeposit : BaseBackFragment() {
                         val getType = bundle.getString("type")
                         if ("退还" == getType) {
                             if (result != null) {
-                                RebackAlertPopup(getCurrentAty(), object : View.OnClickListener {
+                                val hasRecomActivity = "上海市" == InfoViewModel.getDefault().userInfo.value?.city
+                                RebackAlertPopup(getCurrentAty(), hasRecomActivity, object : View.OnClickListener {
                                     override fun onClick(p0: View?) {
                                         returnBattery(result)
                                     }

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bind_recommend_officer_dialog"
+    android:paddingBottom="30dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="您将添加的推荐官信息如下："
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Card Info -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+        <ImageView
+            android:id="@+id/iv_card_bg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="250dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_recommend_officer_card"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Left Part (50%) -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_card_bg"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/guideline_center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_card_bg" />
+
+        <TextView
+            android:id="@+id/tv_officer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="推荐码"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/iv_qrcode"
+            app:layout_constraintEnd_toEndOf="@id/iv_qrcode"
+            app:layout_constraintStart_toStartOf="@id/iv_qrcode" />
+
+        <TextView
+            android:id="@+id/tv_recm_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="123456"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@id/iv_qrcode"
+            app:layout_constraintStart_toStartOf="@id/iv_qrcode"
+            app:layout_constraintTop_toBottomOf="@id/iv_qrcode" />
+
+        <!-- Right Part -->
+        <TextView
+            android:id="@+id/tv_realname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45" />
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="138****0000"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_realname"
+            app:layout_constraintStart_toStartOf="@id/tv_realname"
+            app:layout_constraintTop_toBottomOf="@id/tv_realname" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Group: Confirm Info -->
+    <TextView
+        android:id="@+id/btn_cancel"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/bg_btn_recommend_officer_change"
+        android:gravity="center"
+        android:text="信息有误，重新填写"
+        android:textColor="#CCCCCC"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_card" />
+
+    <TextView
+        android:id="@+id/btn_confirm"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/bg_btn_recommend_officer_action"
+        android:gravity="center"
+        android:text="信息正确，确认绑定"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_cancel" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="btn_cancel,btn_confirm" />
+
+
+    <!-- Group: Success -->
+    <TextView
+        android:id="@+id/btn_ok"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/bg_btn_recommend_officer_change"
+        android:gravity="center"
+        android:text="好的"
+        android:textColor="#CCCCCC"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_card" />
+
+    <TextView
+        android:id="@+id/btn_become"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/bg_btn_recommend_officer_action"
+        android:gravity="center"
+        android:text="成为推荐官，享更多福利"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_ok" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="btn_ok,btn_become"
+        tools:visibility="gone" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btn_confirm,btn_become,btn_cancel,btn_ok" />
+
+    <!-- Bottom Hint -->
+    <TextView
+        android:id="@+id/tv_bottom_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="温馨提示：\n1.未购买租电套餐的用户，可随时更换推荐官\n2.已购买租电套餐的用户，需退租3天后才可更换推荐官"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_buttons" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

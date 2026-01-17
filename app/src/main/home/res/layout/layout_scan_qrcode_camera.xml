@@ -24,13 +24,4 @@
 		app:inner_corner_color="#20E8AE"
 		app:inner_scan_bitmap="@mipmap/scan_line"
 		/>
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="请扫描电柜二维码"
-		android:textColor="#ffffff"
-		android:textSize="14sp"
-		android:layout_gravity="center_horizontal"
-		android:layout_marginTop="335dp"
-		/>
 </FrameLayout>

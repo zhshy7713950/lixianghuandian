@@ -75,6 +75,9 @@ class ScanQrCodeActivity : AtyBase() {
             tv_input_code.isVisible = false
             v_place_holder.isVisible = false
         }
+        if(getTypeCode() == 8){
+            tv_scan_hint.text = "请扫描二维码"
+        }
     }
 
     private fun getTypeCode(): Int {
@@ -85,6 +88,7 @@ class ScanQrCodeActivity : AtyBase() {
             "退还" -> 5
             "冻结" -> 6
             "自助开仓" -> 7
+            "推荐官" -> 8
             else -> 0
         }
     }

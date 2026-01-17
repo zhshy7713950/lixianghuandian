@@ -131,8 +131,7 @@ class FgtMe : MainTabFragment() {
                 }
 
                 setOnClickListener {
-                    EasyToast.DEFAULT.show("功能开发中")
-
+                    start(FgtMyRecommendOfficer())
                 }
             }
 

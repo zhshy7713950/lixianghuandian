@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2A3340">
+
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#2A3340"
+        app:layout_constraintTop_toTopOf="parent"
+        app:qmui_topbar_title_color="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_recommend_officer_tip"
+        android:padding="10dp"
+        android:text="温馨提示：\n1.未购买租电套餐的用户，可随时更换推荐官\n2.已购买租电套餐的用户，需退租3天后才可更换推荐官"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topbar" />
+
+    <!-- State 1: No Officer -->
+    <ImageView
+        android:id="@+id/iv_no_officer_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/bg_recommend_officer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tip" />
+
+    <TextView
+        android:id="@+id/tv_no_officer_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="您还没有添加推荐官"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_no_officer_placeholder" />
+
+    <TextView
+        android:id="@+id/btn_add_officer"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/bg_btn_recommend_officer_action"
+        android:gravity="center"
+        android:text="添加推荐官"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_no_officer_hint" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_no_officer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="iv_no_officer_placeholder,tv_no_officer_hint,btn_add_officer"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <!-- State 2: Has Officer -->
+    <TextView
+        android:id="@+id/tv_my_officer_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="我的推荐官"
+        android:textColor="#FECE31"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_tip" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="42dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_officer_title">
+
+        <ImageView
+            android:id="@+id/iv_card_bg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="250dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_recommend_officer_card"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"  />
+
+        <!-- Left Part (50%) -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_card_bg"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/guideline_center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_card_bg" />
+
+        <TextView
+            android:id="@+id/tv_officer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="推荐官"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/iv_qrcode"
+            app:layout_constraintEnd_toEndOf="@id/iv_qrcode"
+            app:layout_constraintStart_toStartOf="@id/iv_qrcode" />
+
+        <TextView
+            android:id="@+id/tv_recm_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="123456"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@id/iv_qrcode"
+            app:layout_constraintStart_toStartOf="@id/iv_qrcode"
+            app:layout_constraintTop_toBottomOf="@id/iv_qrcode" />
+
+        <!-- Right Part -->
+        <TextView
+            android:id="@+id/tv_realname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_center"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="138****0000"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_realname"
+            app:layout_constraintStart_toStartOf="@id/tv_realname"
+            app:layout_constraintTop_toBottomOf="@id/tv_realname" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/btn_change_officer"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/bg_btn_recommend_officer_change"
+        android:gravity="center"
+        android:text="更换推荐官"
+        android:textColor="#CCCCCC"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_card" />
+
+    <TextView
+        android:id="@+id/btn_become_officer"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/bg_btn_recommend_officer_action"
+        android:gravity="center"
+        android:text="成为推荐官，享更多福利"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_change_officer" />
+
+    <TextView
+        android:id="@+id/tv_become_officer_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="您也可以成为推荐官，享更多福利"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_become_officer" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_has_officer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_my_officer_title,layout_card,btn_change_officer,btn_become_officer,tv_become_officer_hint"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

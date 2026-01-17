@@ -22,6 +22,9 @@ class AtyInputCode : AtyBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_input_code)
         getType = intent.getIntExtra("type",1)
+        if (getType == 8) {
+            etCode.hint = "请输入编码"
+        }
         initTopbar(topbar,"手动输入编码" )
         etCode.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

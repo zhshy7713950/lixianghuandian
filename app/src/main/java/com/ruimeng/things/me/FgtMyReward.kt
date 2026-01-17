@@ -1,5 +1,6 @@
 package com.ruimeng.things.me
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -9,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.net.Server
 import com.ruimeng.things.R
 import com.ruimeng.things.me.activity.AtyWeb2
+import com.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fgt_my_reward.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
@@ -24,6 +26,16 @@ class FgtMyReward : BaseBackFragment() {
     private val friendAdapter by lazy { FriendAdapter() }
     private var allFriends = listOf<FriendRewardBean>()
     private var currentFilter = "全部"
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let { StatusBarUtil.setColor(it, Color.parseColor("#D83D3E")) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activity?.let { StatusBarUtil.setColor(it, resources.getColor(R.color.app_color)) }
+    }
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
@@ -64,7 +76,7 @@ class FgtMyReward : BaseBackFragment() {
             } else if (amount < 10.0) {
                 EasyToast.DEFAULT.show("可提现金额需大于等于￥10.0")
             } else {
-                EasyToast.DEFAULT.show("TODO: 申请提现")
+                start(FgtApplyWithdraw.newInstance(withdrawableStr))
             }
         }
 

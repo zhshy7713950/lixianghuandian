@@ -141,7 +141,7 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
-            ll_my_referrer.isVisible = "上海市" == userinfo.city
+            ll_my_referrer.visibility = if("上海市" == userinfo.city) View.VISIBLE else View.INVISIBLE
 
             if ("成都市" != userinfo.city && tv_ya_money_me.isEnabled) {
                 llTerminate.isVisible = true

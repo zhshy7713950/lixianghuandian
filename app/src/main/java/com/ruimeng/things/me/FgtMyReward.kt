@@ -16,6 +16,7 @@ import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.toPOJO
 import wongxd.http
+import wongxd.utils.utilcode.util.ScreenUtils
 import java.net.URLEncoder
 import wongxd.utils.utilcode.util.SizeUtils
 
@@ -40,7 +41,7 @@ class FgtMyReward : BaseBackFragment() {
     override fun onLazyInitView(savedInstanceState: Bundle?) {
         super.onLazyInitView(savedInstanceState)
         initTopbar(topbar, "我的奖励")
-        topbar.setTitle("我的奖励").setTextColor(android.graphics.Color.WHITE)
+        topbar.setTitle("我的奖励").setTextColor(Color.WHITE)
         topbar.addRightImageButton(R.drawable.ic_question_white, R.id.topbar_right_button).setOnClickListener {
             AtyWeb2.start("规则说明", "http://xianglilai.scxll.cn/appH5/newClientRewardRule.html")
         }
@@ -123,8 +124,8 @@ class FgtMyReward : BaseBackFragment() {
         // Positioning
         val params = dialog.window?.attributes
         params?.gravity = android.view.Gravity.TOP or android.view.Gravity.CENTER_HORIZONTAL
-        params?.y = SizeUtils.dp2px(250f)
-        params?.width = wongxd.utils.utilcode.util.ScreenUtils.getScreenWidth() - SizeUtils.dp2px(160f)
+        params?.y = SizeUtils.dp2px(120f)
+        params?.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(120f)
         dialog.window?.attributes = params
 
         dialog.findViewById<View>(R.id.btn_i_know).setOnClickListener {
@@ -155,14 +156,27 @@ class FgtMyReward : BaseBackFragment() {
     }
 
     private fun updateUI(data: MyRewardData) {
-        tv_pending_amount.text = "${data.unreachedIncome}元"
-        tv_received_amount.text = "${data.totalIncome}元"
-        tv_withdrawable_amount.text = "${data.withdrawable}元"
+        tv_pending_amount.text = getSpannableAmount("${data.unreachedIncome}元")
+        tv_received_amount.text = getSpannableAmount("${data.totalIncome}元")
+        tv_withdrawable_amount.text = getSpannableAmount("${data.withdrawable}元")
         tv_total_used.text = "您已累计提现${data.usedIncome}元"
         
         allFriends = data.inviteUserList
         tv_invite_count.text = "(共${allFriends.size}位)"
         filterList(currentFilter)
+    }
+
+    private fun getSpannableAmount(amountStr: String): android.text.SpannableString {
+        val spannable = android.text.SpannableString(amountStr)
+        if (amountStr.endsWith("元")) {
+            spannable.setSpan(
+                android.text.style.AbsoluteSizeSpan(16, true),
+                amountStr.length - 1,
+                amountStr.length,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        return spannable
     }
 
     private fun fetchPolicyAndJump() {

@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.fgt_my_recommend_officer.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
 import wongxd.common.loadImg
+import wongxd.common.permission.PermissionType
+import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
 import java.io.Serializable
@@ -44,9 +46,15 @@ class FgtMyRecommendOfficer : BaseBackFragment() {
     }
 
     private fun startScan() {
-        val intent = Intent(activity, ScanQrCodeActivity::class.java)
-        intent.putExtra("type", "推荐官")
-        startActivityForResult(intent, REQUEST_CODE_SCAN)
+        getPermissions(
+            activity,
+            PermissionType.CAMERA,
+            allGranted = {
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                intent.putExtra("type", "推荐官")
+                startActivityForResult(intent, REQUEST_CODE_SCAN)
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -110,7 +118,7 @@ class FgtMyRecommendOfficer : BaseBackFragment() {
             group_has_officer.visibility = View.VISIBLE
 
             tv_recm_code.text = data.recmCode
-            tv_realname.text = data.realname
+            tv_realname.text = if(data.realname.isNullOrEmpty()) "未实名用户" else data.realname
             tv_mobile.text = data.mobile
 
             var qrUrl = data.qrcodeUrl
@@ -123,7 +131,7 @@ class FgtMyRecommendOfficer : BaseBackFragment() {
                 val bgHeight = iv_card_bg.height
                 if (bgHeight > 0) {
                     val params = iv_qrcode.layoutParams
-                    params.height = (bgHeight * 0.45).toInt()
+                    params.height = (bgHeight * 0.60).toInt()
                     params.width = params.height
                     iv_qrcode.layoutParams = params
                 }

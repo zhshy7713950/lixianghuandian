@@ -96,7 +96,7 @@ class DialogBindRecommendOfficer : DialogFragment() {
 
     private fun initUI(data: RecommendOfficerBean.Data) {
         tv_recm_code.text = data.recmCode
-        tv_realname.text = data.realname
+        tv_realname.text = if(data.realname.isNullOrEmpty()) "未实名用户" else data.realname
         tv_mobile.text = data.mobile
 
         val qrUrl = normalizeQrUrl(data.qrcodeUrl)
@@ -106,7 +106,7 @@ class DialogBindRecommendOfficer : DialogFragment() {
             val bgHeight = iv_card_bg.height
             if (bgHeight > 0) {
                 val params = iv_qrcode.layoutParams
-                params.height = (bgHeight * 0.45).toInt()
+                params.height = (bgHeight * 0.6).toInt()
                 params.width = params.height
                 iv_qrcode.layoutParams = params
             }

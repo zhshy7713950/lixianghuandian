@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
         android:text="① 首次购买租电套餐"
         android:textColor="#4A4A4A"
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
         android:text="② 套餐剩余天数"
         android:textColor="#4A4A4A"
@@ -37,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginBottom="30dp"
         android:text="③ 解冻后套餐剩余天数"
         android:textColor="#4A4A4A"
@@ -47,8 +47,8 @@
         android:id="@+id/btn_i_know"
         android:layout_width="match_parent"
         android:layout_height="34dp"
-        android:layout_marginLeft="68dp"
-        android:layout_marginRight="68dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:background="@drawable/shape_btn_red_radius_17"
         android:gravity="center"
         android:text="我知道了"

@@ -119,7 +119,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginRight="15dp"
                 android:background="#BCB9B9"
                 app:layout_constraintTop_toBottomOf="@id/ll_header" />
 

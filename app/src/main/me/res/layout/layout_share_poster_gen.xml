@@ -35,8 +35,8 @@
     <!-- 二维码 -->
     <ImageView
         android:id="@+id/iv_qrcode"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="@+id/iv_bg"
         app:layout_constraintEnd_toEndOf="@+id/iv_bg"
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_bg"
         app:layout_constraintTop_toTopOf="@+id/iv_bg"
         app:layout_constraintBottom_toBottomOf="@+id/iv_bg"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="0.82" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

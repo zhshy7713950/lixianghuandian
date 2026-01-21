@@ -56,7 +56,21 @@ class FgtApplyWithdraw : BaseBackFragment() {
         }
         
         balanceStr = arguments?.getString("balance") ?: "0.00"
-        tv_balance.text = balanceStr
+        val balanceVal = balanceStr.toDoubleOrNull() ?: 0.0
+        tv_balance.text = String.format("%.2f", balanceVal)
+
+        val tip = "目前仅支持提现到支付宝"
+        val spannable = android.text.SpannableString(tip)
+        val index = tip.indexOf("支付宝")
+        if (index >= 0) {
+            spannable.setSpan(
+                android.text.style.ForegroundColorSpan(Color.parseColor("#ED5A2E")),
+                index,
+                index + 3,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        tv_withdraw_tip.text = spannable
 
         fetchHistory()
         initListener()
@@ -64,7 +78,7 @@ class FgtApplyWithdraw : BaseBackFragment() {
 
     private fun initListener() {
         btn_all.setOnClickListener {
-            et_amount.setText(balanceStr)
+            et_amount.setText(tv_balance.text)
             try {
                 et_amount.setSelection(et_amount.text.length)
             } catch (e: Exception) {

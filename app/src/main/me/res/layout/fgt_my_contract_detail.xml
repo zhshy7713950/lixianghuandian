@@ -1,107 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:tools="http://schemas.android.com/tools"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/bg_gray"
-		android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
 
-	<include layout="@layout/layout_topbar" />
+    <include layout="@layout/layout_topbar" />
 
-	<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:orientation="vertical"
-			app:qmui_backgroundColor="@color/app_color"
-			app:qmui_borderColor="@color/app_color"
-			app:qmui_radius="10dp">
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        app:qmui_backgroundColor="@color/app_color"
+        app:qmui_borderColor="@color/app_color"
+        app:qmui_radius="10dp">
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_margin="10dp"
-				android:orientation="vertical">
-
-
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="25dp">
-
-				<TextView
-						android:id="@+id/tv_device_num_my_contract_detail"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/white"
-						android:textSize="12sp"
-						tools:text="编号：1226" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
 
-				<TextView
-						android:id="@+id/tv_rent_long_my_contract_detail"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="left|center_vertical"
-						android:textColor="@color/white"
-						android:textSize="12sp"
-						tools:text="租期：9个月" />
-
-				<TextView
-					android:id="@+id/tv_device_model_my_contract_detail"
-					android:layout_width="0dp"
-					android:layout_height="match_parent"
-					android:layout_weight="1"
-					android:gravity="center"
-					android:textColor="@color/white"
-					android:textSize="12sp"
-					tools:text="型号：60V  40ah"
-					android:visibility="invisible"/>
-			</LinearLayout>
+                <TextView
+                    android:id="@+id/tv_device_num_my_contract_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="编号：1226" />
 
 
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="25dp">
+                <TextView
+                    android:id="@+id/tv_rent_long_my_contract_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="租期：9个月" />
 
-				<TextView
-						android:id="@+id/tv_deposit_my_contract_detail"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="center_vertical"
-						android:textColor="@color/white"
-						android:textSize="12sp"
-						tools:text="押金：￥800.00" />
-
-				<TextView
-						android:id="@+id/tv_rent_money_my_contract_detail"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="left|center_vertical"
-						android:textColor="@color/white"
-						android:textSize="12sp"
-						tools:text="租金：￥120.00" />
-
-				<View
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_weight="1"
-						android:gravity="center_vertical|right" />
-			</LinearLayout>
+                <TextView
+                    android:id="@+id/tv_device_model_my_contract_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    tools:text="型号：60V  40ah" />
+            </LinearLayout>
 
 
-		</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
 
-	</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+                <TextView
+                    android:id="@+id/tv_deposit_my_contract_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="押金：￥800.00" />
 
-	<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/rv_my_contract_detail"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/tv_rent_money_my_contract_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="租金：￥120.00" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="10dp" />
 </LinearLayout>

@@ -157,8 +157,7 @@ class FgtDeposit : BaseBackFragment() {
         }
 
         tv_view_rant_protocol_account_ya.setOnClickListener {
-            val dlg = DialogFragmentRentProtocol()
-            dlg.show(childFragmentManager, "protocol")
+            start(FgtRentalProtocol.newInstance(deviceId))
         }
 
 

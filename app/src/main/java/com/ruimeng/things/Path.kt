@@ -354,4 +354,9 @@ object Path {
      * */
     const val GET_CAPTCHA = "apiv6/user/getcapcha"
 
+    /**
+     * 获取租赁协议
+     */
+    const val GET_PROTOCOL_V6 = "apiv6/user/getprotocol"
+
 }

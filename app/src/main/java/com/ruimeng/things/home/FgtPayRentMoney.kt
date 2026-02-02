@@ -445,8 +445,7 @@ class FgtPayRentMoney : BaseBackFragment() {
 
 
         tv_view_rant_protocol_pay_rent_money.setOnClickListener {
-            val dlg = DialogFragmentRentProtocol()
-            dlg.show(childFragmentManager, "protocol")
+            start(FgtRentalProtocol.newInstance(deviceId))
         }
 
 

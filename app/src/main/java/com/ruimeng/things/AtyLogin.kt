@@ -88,7 +88,7 @@ class AtyLogin : AtyBase() {
             isAgree = b
         }
 
-        val str = "我已认真阅读并同意接受享锂来的\n《用户协议》" +
+        val str = "我已认真阅读并同意接受享锂来租赁的\n《用户协议》" +
                 "以及《隐私政策》"
         val ssb = SpannableStringBuilder()
         ssb.append(str)

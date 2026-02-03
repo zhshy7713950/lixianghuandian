@@ -82,6 +82,14 @@ class PopupAdWindow (private val fgtBase: FgtBase,
             linkUrl.startsWith("extendedGift://") -> {
                 fgt.start(FgtExtendedGift.newInstance())
             }
+            linkUrl.startsWith("annualReport://") -> {
+                val path = "/pages/基础/年度报告/annualReport"
+                WeChatHelper.launchWXMiniProgram(
+                    fgt.requireContext(),
+                    fgt.resources.getString(R.string.wx_appid),
+                    path
+                )
+            }
             else -> {
                 // 打开内部网页
                 AtyWeb2.start(title,linkUrl)

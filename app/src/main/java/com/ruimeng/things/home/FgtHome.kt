@@ -4,9 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -442,11 +447,17 @@ class FgtHome : MainTabFragment() {
      * @param modelId 电池型号ID
      */
     private fun showModelConfirmation(modelName: String, event: ScanResultEvent, modelId: String) {
+        val city = UserInfoLiveData.getInstance().value?.city
+        val content = if (city == "宜昌市") {
+            "您已选择【${modelName}】电池，请再次确认型号与尺寸。如不清楚请联系客服15971658796"
+        } else {
+            "您已选择【${modelName}】电池，请再次确认型号"
+        }
         NormalDialog(activity).apply {
             style(NormalDialog.STYLE_TWO)
             btnNum(2)
             // 不显示标题，仅展示内容
-            content("您已选择【${modelName}】电池，请再次确认型号")
+            content(content)
             // 左边取消，右边确定
             btnText("取消", "确定")
             setOnBtnClickL(OnBtnClickL {
@@ -1426,6 +1437,29 @@ class FgtHome : MainTabFragment() {
         showPopMsg(item.popmsg)
         showDeviceInfo(item.device_base)
         showBatteryInfo(item.device_base)
+
+        if (!TextUtils.isEmpty(item.device_contract.auto_resume_time)) {
+            tvFreezeTips.visibility = VISIBLE
+            val timeStr = item.device_contract.auto_resume_time
+            val formattedTime = try {
+                TextUtil.formatTime16(timeStr)
+            } catch (e: Exception) {
+                timeStr
+            }
+            val text = " 柜外冻结至 $formattedTime "
+            val spannableString = SpannableString(text)
+            val startIndex = text.indexOf(formattedTime)
+            if (startIndex >= 0) {
+                val endIndex = startIndex + formattedTime.length
+                spannableString.setSpan(AbsoluteSizeSpan(12, true), 0, startIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableString.setSpan(AbsoluteSizeSpan(14, true), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableString.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            tvFreezeTips.text = spannableString
+        } else {
+            tvFreezeTips.visibility = GONE
+        }
+
         if (!virtaul) {
             tv_remark_num.text = item.device_contract.remark
         }
@@ -1661,7 +1695,7 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun checkStatus(): Boolean {
-        if (activeStatus == "3") {
+        if (activeStatus == "3" && virtaul) {
             VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
             ToastHelper.shortToast(context, "请您先完成解冻操作")
             return false

@@ -364,6 +364,11 @@ class AtyLogin : AtyBase() {
     private fun doOneKeyLogin(YDToken: String?, accessToken: String?) {
         vm.oneKeyLogin(OneKeyLoginLocal(YDToken ?: "", accessToken ?: "")).observeForever {
             it.whenSuccess { resCommon ->
+                if (resCommon.data.userinfo?.roleType == "jd") {
+                    QuickLoginHelper.getQuickLoginInstance().quitActivity()
+                    EasyToast.DEFAULT.show("登录失败，京东专属用户请使用微信小程序")
+                    return@whenSuccess
+                }
                 QuickLoginHelper.getQuickLoginInstance().quitActivity()
                 UserInfoLiveData.setToString(resCommon.data.userinfo!!)
                 Config.getDefault().token = resCommon.data.token
@@ -398,6 +403,12 @@ class AtyLogin : AtyBase() {
                 if (pageType == 0) {
                     SPUtils.getInstance().put(TAG_LAST_LOGIN_PHONE, phone)
                     val loginBean = s.toPOJO<LoginBean>()
+
+                    if (loginBean.data.userinfo.roleType == "jd") {
+                        EasyToast.DEFAULT.show("登录失败，京东专属用户请使用微信小程序")
+                        return@onSuccessWithMsg
+                    }
+
                     UserInfoLiveData.setToString(loginBean.data.userinfo)
                     Config.getDefault().token = loginBean.data.token
                     startAty<AtyMain>()

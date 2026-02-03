@@ -128,7 +128,7 @@ class DialogBindRecommendOfficer : DialogFragment() {
             url = "/apiv6/distribute/bindrecom"
             params["recmCode"] = recmCode
             onSuccess {
-                EasyToast.DEFAULT.show("提交成功，请稍后查看提现结果")
+                EasyToast.DEFAULT.show("绑定成功")
                 showSuccessState()
             }
             onFail { _, msg ->

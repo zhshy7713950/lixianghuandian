@@ -34,7 +34,8 @@ data class DeviceDetailBean(
             var user_id: String = "", // 2
             var contract_mode: Int = 1 ,//合约类型，1正常合约，2可绑定其他设备
             var is_sign: String = "",
-            var contract_cg_mode: String = ""
+            var contract_cg_mode: String = "",
+            var auto_resume_time: String = "" // 柜外冻结自动恢复时间
         )
 
         data class DeviceBase(

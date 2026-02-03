@@ -100,6 +100,14 @@ object BannerHelper {
                     fgt.resources.getString(R.string.wx_appid)
                 )
             }
+            linkUrl.startsWith("annualReport://") -> {
+                val path = "/pages/基础/年度报告/annualReport"
+                WeChatHelper.launchWXMiniProgram(
+                    fgt.requireContext(),
+                    fgt.resources.getString(R.string.wx_appid),
+                    path
+                )
+            }
             linkUrl.startsWith("official://") -> {
                 fgt.start(FgtShare.newInstance())
             }

@@ -30,7 +30,10 @@ class FgtMyReward : BaseBackFragment() {
 
     override fun onSupportVisible() {
         super.onSupportVisible()
-        activity?.let { StatusBarUtil.setColor(it, Color.parseColor("#D83D3E")) }
+        activity?.let {
+            StatusBarUtil.setColor(it, Color.parseColor("#D83D3E"))
+            fetchData()
+        }
     }
 
     override fun onSupportInvisible() {
@@ -49,7 +52,6 @@ class FgtMyReward : BaseBackFragment() {
 
         initView()
         initListener()
-        fetchData()
     }
 
     private fun initView() {

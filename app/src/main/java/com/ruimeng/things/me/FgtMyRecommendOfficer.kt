@@ -6,8 +6,6 @@ import android.view.View
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
 import com.uuzuche.lib_zxing.activity.CodeUtils
-import kotlinx.android.synthetic.main.fgt_bind_recommend_officer.iv_card_bg
-import kotlinx.android.synthetic.main.fgt_bind_recommend_officer.iv_qrcode
 import kotlinx.android.synthetic.main.fgt_my_recommend_officer.*
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast

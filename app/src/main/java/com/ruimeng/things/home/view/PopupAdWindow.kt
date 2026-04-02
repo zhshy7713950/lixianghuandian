@@ -25,55 +25,87 @@ class PopupAdWindow (private val activity: Activity,
         val ivClose = contentView.findViewById<ImageView>(R.id.ivClose)
         val ivContent = contentView.findViewById<ImageView>(R.id.ivContent)
         with(promotions){
+            val isForceAd = operationTitle == "202604-呼市APP更换"
+
+            if (isForceAd) {
+                ivClose.isClickable = false
+            } else {
+                ivClose.setOnClickListener {
+                    dismiss()
+                }
+            }
+
             when(mediaType){
                 "1" ->{
                     ivContent.visibility = View.VISIBLE
                     Glide.with(activity).load(mediaURL).into(ivContent)
-                    ivContent.setOnClickListener {
-                        when(operationType){
-                            "0" ->{
-                            }
-                            "1" -> {
-                                //优惠券购买
-                                when(operationData?.type){
-                                    "couponPurchase" -> {
-                                        FgtMain.instance?.start(FgtCouponPurchase.newInstance(operationData.data))
-                                    }
-                                    else -> {
 
+                    if (isForceAd) {
+                        ivContent.isClickable = false
+                    }else {
+                        ivContent.setOnClickListener {
+                            when(operationType){
+                                "0" ->{
+                                }
+                                "1" -> {
+                                    //优惠券购买
+                                    when(operationData?.type){
+                                        "couponPurchase" -> {
+                                            FgtMain.instance?.start(FgtCouponPurchase.newInstance(operationData.data))
+                                        }
+                                        else -> {
+
+                                        }
                                     }
                                 }
+                                "2" -> {//app内网页
+                                    AtyWeb.start(operationTitle,operationURL)
+                                }
+                                "3" -> {//外部浏览器
+                                    AtyWeb.startBrowser(activity,operationURL)
+                                }
                             }
-                            "2" -> {//app内网页
-                                AtyWeb.start(operationTitle,operationURL)
-                            }
-                            "3" -> {//外部浏览器
-                                AtyWeb.startBrowser(activity,operationURL)
-                            }
+                            dismiss()
                         }
-                        dismiss()
                     }
                 }
                 else ->{
 
                 }
             }
+            
+            setBackgroundDrawable(ColorDrawable(Color.parseColor("#4A000000")))
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            height = ViewGroup.LayoutParams.MATCH_PARENT
+            
+            if (isForceAd) {
+                isOutsideTouchable = false
+                isFocusable = true
+                
+                // 拦截背景点击，防止穿透
+                contentView.setOnClickListener { }
+                contentView.setTag(R.id.ivContent, true)
+            } else {
+                isOutsideTouchable = true
+                isFocusable = true
+            }
+            isClippingEnabled = false
         }
-        ivClose.setOnClickListener {
-            dismiss()
-        }
-        setBackgroundDrawable(ColorDrawable(Color.parseColor("#4A000000")))
-        width = ViewGroup.LayoutParams.MATCH_PARENT
-        height = ViewGroup.LayoutParams.MATCH_PARENT
-        isOutsideTouchable = true
-        isFocusable = true
-        isClippingEnabled = false
     }
 
     fun show(view: View) {
         if (activity.window.decorView.windowToken != null) {
             showAtLocation(view, Gravity.CENTER, 0, 0)
         }
+    }
+
+    override fun dismiss() {
+        val isForceAd = (contentView?.getTag(R.id.ivContent) as? Boolean) ?: false
+        if (isForceAd) {
+            // 强制广告禁止关闭
+            return
+        }
+        super.dismiss()
     }
 }
 

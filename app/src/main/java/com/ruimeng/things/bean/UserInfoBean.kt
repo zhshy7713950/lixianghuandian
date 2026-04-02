@@ -87,6 +87,18 @@ data class UserInfoBean(
     }
 }
 
+fun UserInfoBean.Data.UserInfo.isSH(): Boolean {//是否为上海
+    return "上海市" == city
+}
+
+fun UserInfoBean.Data.UserInfo.isGA(): Boolean {//是否为广安市
+    return "广安市" == city
+}
+
+fun UserInfoBean.Data.UserInfo.isCD(): Boolean {//是否为成都市
+    return "成都市" == city
+}
+
 fun UserInfoBean.Data.UserInfo.showName(): String{
     return if(0 == realname_auth){
         "未实名$mobile"

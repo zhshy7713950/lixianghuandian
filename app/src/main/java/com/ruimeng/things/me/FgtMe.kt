@@ -18,6 +18,9 @@ import com.ruimeng.things.bean.NoReadBean
 import com.ruimeng.things.bean.UserInfoBean
 import com.ruimeng.things.bean.bgImage
 import com.ruimeng.things.bean.description
+import com.ruimeng.things.bean.isCD
+import com.ruimeng.things.bean.isGA
+import com.ruimeng.things.bean.isSH
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.bean.stateImage
 import com.ruimeng.things.common.BannerHelper
@@ -141,9 +144,9 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
-            ll_my_referrer.visibility = if("上海市" == userinfo.city) View.VISIBLE else View.INVISIBLE
+            ll_my_referrer.visibility = if(userinfo.isSH() || userinfo.isGA()) View.VISIBLE else View.INVISIBLE
 
-            if ("成都市" != userinfo.city && tv_ya_money_me.isEnabled) {
+            if (!userinfo.isCD() && tv_ya_money_me.isEnabled) {
                 llTerminate.isVisible = true
                 llPlaceHolder5.visibility = View.GONE
             } else {

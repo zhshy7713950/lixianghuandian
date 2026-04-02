@@ -19,6 +19,7 @@ import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.PathV3
 import com.ruimeng.things.R
 import com.ruimeng.things.ScanQrCodeActivity
+import com.ruimeng.things.bean.isSH
 import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.bean.ChangeRentBatteryBean
 import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
@@ -171,13 +172,10 @@ class FgtMeDeposit : BaseBackFragment() {
                         val getType = bundle.getString("type")
                         if ("退还" == getType) {
                             if (result != null) {
-                                val hasRecomActivity = "上海市" == InfoViewModel.getDefault().userInfo.value?.city
-                                RebackAlertPopup(getCurrentAty(), hasRecomActivity, object : View.OnClickListener {
-                                    override fun onClick(p0: View?) {
-                                        returnBattery(result)
-                                    }
-
-                                }).show(rootView)
+                                val hasRecomActivity =
+                                    InfoViewModel.getDefault().userInfo.value?.isSH() ?: false
+                                RebackAlertPopup(getCurrentAty(), hasRecomActivity,
+                                    View.OnClickListener { returnBattery(result) }).show(rootView)
 
                             }
                         }

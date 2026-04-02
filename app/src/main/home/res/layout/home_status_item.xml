@@ -294,7 +294,7 @@
 			app:qmui_radius="10dp">
 			<TextView
 				android:id="@+id/tvFindLocation"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_location"
@@ -305,7 +305,7 @@
 				android:textSize="13sp"/>
 			<TextView
 				android:id="@+id/tvWay"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_way"
@@ -317,7 +317,7 @@
 				android:visibility="gone"/>
 			<TextView
 				android:id="@+id/tvSwitch"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_switch"
@@ -330,7 +330,7 @@
 
 			<TextView
 				android:id="@+id/tvStop"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:visibility="gone"
@@ -343,7 +343,7 @@
 
 			<TextView
 				android:id="@+id/tv_scan_box"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_switch"
@@ -354,7 +354,7 @@
 				android:textSize="13sp"/>
 			<TextView
 				android:id="@+id/tv_ice"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_stop_contract"
@@ -366,7 +366,7 @@
 
 			<TextView
 				android:id="@+id/tvReback"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:drawableTop="@mipmap/ic_home_back"

@@ -1456,6 +1456,9 @@ class FgtHome : MainTabFragment() {
                 spannableString.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             tvFreezeTips.text = spannableString
+            tv_package_status.visibility = VISIBLE
+            tv_package_status.text = "已冻结"
+            tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)
         } else {
             tvFreezeTips.visibility = GONE
         }

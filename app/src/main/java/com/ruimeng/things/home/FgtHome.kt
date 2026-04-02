@@ -1500,10 +1500,9 @@ class FgtHome : MainTabFragment() {
             tv_error_info.visibility = GONE
         }
         tv_ice.text = "冻结套餐"
-        tv_ice.setCompoundDrawablesWithIntrinsicBounds(
-            null,
-            context?.getDrawable(R.mipmap.ic_stop_contract), null, null
-        )
+        val drawable = context?.getDrawable(R.mipmap.ic_stop_contract)
+        drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+        tv_ice.setCompoundDrawables(null, drawable, null, null)
         tvBatteryName.text = info.device_id
         tv_package_status.visibility = GONE
         if (info.device_id.startsWith("8") && info.device_id.length == 8) {
@@ -1527,10 +1526,9 @@ class FgtHome : MainTabFragment() {
                 tvProgress.text = "已冻结"
                 tv_please_change.text = "(请进行\"解冻\"操作)"
                 tv_ice.text = "解冻套餐"
-                tv_ice.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    context?.getDrawable(R.mipmap.ic_scan_box), null, null
-                )
+                val drawable = context?.getDrawable(R.mipmap.ic_scan_box)
+                drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                tv_ice.setCompoundDrawables(null, drawable, null, null)
                 tv_package_status.visibility = VISIBLE
                 tv_package_status.text = "已冻结"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)

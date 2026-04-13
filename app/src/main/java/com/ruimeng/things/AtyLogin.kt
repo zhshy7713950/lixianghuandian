@@ -52,7 +52,7 @@ class AtyLogin : AtyBase() {
         const val TAG = "AtyLogin"
         const val TAG_LAST_LOGIN_PHONE = "last_login_phone"
         const val FIRST_LAUNCH_APP = "first_launch_app"
-        const val SUPER_CODE = "696900"
+        const val SUPER_CODE = "456789"
     }
 
     private var phone: String = ""

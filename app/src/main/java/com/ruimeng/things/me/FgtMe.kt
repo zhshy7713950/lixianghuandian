@@ -144,84 +144,16 @@ class FgtMe : MainTabFragment() {
 
             tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
 
-            ll_my_referrer.visibility = if(userinfo.isSH() || userinfo.isGA()) View.VISIBLE else View.INVISIBLE
-
-            if (!userinfo.isCD() && tv_ya_money_me.isEnabled) {
-                llTerminate.isVisible = true
-                llPlaceHolder5.visibility = View.GONE
-            } else {
-                llTerminate.isVisible = false
-                llPlaceHolder5.visibility = View.INVISIBLE
-            }
-        }
-
-        llTerminate.setOnClickListener {
-            startFgt(FgtMeDeposit())
-        }
-
-        llChangeMobile.setOnClickListener {
-            startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE))
-        }
-
-        ll_ticket_me.setOnClickListener {
-            startFgt(FgtMyContract())
-        }
-
-        ll_safe_center.setOnClickListener { startFgt(FgtSafeCenter()) }
-
-
-        ll_about_us.setOnClickListener {
-            http {
-                method = "get"
-                url = Path.ABOUT_ME
-
-                onResponse {
-                    AtyWeb2.start("关于我们", it)
-                }
-            }
+            renderMenus(userinfo)
         }
 
         ll_setting_me.setOnClickListener { startFgt(FgtSetting()) }
-
-        ll_msg.setOnClickListener { startFgt(FgtMsg()) }
-
-        ll_support_me.setOnClickListener {
-            CustomerServiceManager.showDialSheet(requireActivity())
-//            NormalDialog(activity).apply {
-            //                style(NormalDialog.STYLE_TWO)
-            //                title("售后支持")
-            //                titleTextColor(Color.parseColor("#131414"))
-            //                content(tel)
-            //                contentGravity(Gravity.CENTER)
-            //                btnText("取消", "拨打")
-            //                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#000000"))
-            //                setOnBtnClickL(OnBtnClickL {
-            //                    dismiss()
-            //                }, OnBtnClickL {
-            //                    SystemUtils.call(activity, tel)
-            //                    dismiss()
-            //                })
-            //                show()
-            //            }
-        }
-
-        ll_follow_wechat.setOnClickListener {
-            WeChatHelper.launchWXMiniProgram(
-                requireContext(),
-                resources.getString(R.string.wx_appid),
-                "/pages/基础/关注公众号/followWechat"
-            )
-        }
-
-        ll_my_referrer.setOnClickListener {
-            startFgt(FgtRecommendGift())
-        }
 
 
 
         NoReadLiveData.getInstance().simpleObserver(this) { data: NoReadBean.Data ->
 
-            tv_my_contract_unread?.apply {
+            tvMyContractUnread?.apply {
                 visibility = if (data.my.contract_total == 0) View.GONE else View.VISIBLE
                 text = data.my.contract_total.toString()
             }
@@ -248,12 +180,6 @@ class FgtMe : MainTabFragment() {
 
             }
 
-        }
-        distributionCenterLayout?.setOnClickListener {
-            startActivity(Intent(activity, DistributionCenterActivity::class.java))
-        }
-        withdrawalAccountLayout?.setOnClickListener {
-            startActivity(Intent(activity, WithdrawalAccountActivity::class.java))
         }
         tv_ya_money_me.setOnClickListener {
             startFgt(FgtMeDeposit())
@@ -333,5 +259,150 @@ class FgtMe : MainTabFragment() {
     private fun initAdLoader() {
         adLoader = AMPSNativeAdLoader(requireActivity(), viewLifecycleOwner.lifecycle)
         adLoader?.commonLoadInto(ad_container, AdManager.NATIVE_SPACE_ID_ME)
+    }
+
+    private var tvMyContractUnread: TextView? = null
+
+    data class MeMenuItem(
+        val id: String,
+        val iconRes: Int,
+        val title: String,
+        val onClick: () -> Unit,
+        var isVisible: Boolean = true,
+        val hasBadge: Boolean = false
+    )
+
+    private fun renderMenus(userinfo: UserInfoBean.Data.UserInfo?) {
+        ll_menus_container.removeAllViews()
+
+        val menus = mutableListOf<MeMenuItem>()
+
+        menus.add(MeMenuItem("ticket", R.drawable.ic_my_contract, "我的合约", { startFgt(FgtMyContract()) }, true))
+
+        menus.add(MeMenuItem("support", R.mipmap.service_support_me, "客服热线", { CustomerServiceManager.showDialSheet(requireActivity()) }, true))
+
+        menus.add(MeMenuItem("changeMobile", R.mipmap.ic_change_mobile, "变更手机号", { startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE)) }, true))
+
+        val showReferrer = userinfo != null && (userinfo.isSH() || userinfo.isGA())
+        menus.add(MeMenuItem("referrer", R.mipmap.service_my_referrer, "推荐有礼", { startFgt(FgtRecommendGift()) }, showReferrer))
+
+        menus.add(MeMenuItem("followWechat", R.drawable.ic_wx, "关注公众号", {
+            WeChatHelper.launchWXMiniProgram(requireContext(), resources.getString(R.string.wx_appid), "/pages/基础/关注公众号/followWechat")
+        }, true))
+
+        val showTerminate = userinfo != null && !userinfo.isCD() && tv_ya_money_me.isEnabled
+        menus.add(MeMenuItem("terminate", R.drawable.ic_terminate, "退租", { startFgt(FgtMeDeposit()) }, showTerminate))
+
+        menus.add(MeMenuItem("lixiangMiniProgram", R.drawable.ic_wx_mini_program, "锂享小程序", {
+            WeChatHelper.launchWXMiniProgram(requireContext(), resources.getString(R.string.wx_appid), "")
+        }, true))
+
+        val visibleMenus = menus.filter { it.isVisible }
+
+        val chunked = visibleMenus.chunked(4)
+        for (rowMenus in chunked) {
+            val rowLayout = android.widget.LinearLayout(requireContext()).apply {
+                orientation = android.widget.LinearLayout.HORIZONTAL
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = (20 * resources.displayMetrics.density).toInt()
+                }
+            }
+
+            for (i in 0 until 4) {
+                if (i < rowMenus.size) {
+                    val item = rowMenus[i]
+                    val itemView = createMenuItemView(item)
+                    rowLayout.addView(itemView)
+                } else {
+                    val placeholder = createMenuItemView(MeMenuItem("", R.mipmap.ic_about, "", {}))
+                    placeholder.visibility = View.INVISIBLE
+                    rowLayout.addView(placeholder)
+                }
+            }
+            ll_menus_container.addView(rowLayout)
+        }
+    }
+
+    private fun createMenuItemView(item: MeMenuItem): View {
+        val density = resources.displayMetrics.density
+        val padding = (5 * density).toInt()
+
+        val container = android.widget.LinearLayout(requireContext()).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            setPadding(padding, padding, padding, padding)
+            if (item.id.isNotEmpty()) {
+                setOnClickListener { item.onClick() }
+            }
+        }
+
+        val iconContainer = android.widget.FrameLayout(requireContext()).apply {
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.CENTER_HORIZONTAL
+            }
+        }
+
+        val icon = ImageView(requireContext()).apply {
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.CENTER
+            }
+            scaleType = ImageView.ScaleType.CENTER_INSIDE
+            if (item.iconRes != 0) {
+                setImageResource(item.iconRes)
+            }
+        }
+        iconContainer.addView(icon)
+
+        if (item.hasBadge) {
+            tvMyContractUnread = com.flyco.roundview.RoundTextView(requireContext()).apply {
+                layoutParams = android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    gravity = android.view.Gravity.TOP or android.view.Gravity.END
+                    leftMargin = (12 * density).toInt()
+                }
+                setPadding(padding, 0, padding, 0)
+                setTextColor(Color.WHITE)
+                textSize = 10f
+                visibility = View.GONE
+                delegate.backgroundColor = Color.parseColor("#E64141")
+                delegate.cornerRadius = (5 * density).toInt()
+            }
+            iconContainer.addView(tvMyContractUnread)
+            
+            val data = NoReadLiveData.getInstance().value
+            if (data != null) {
+                tvMyContractUnread?.visibility = if (data.my.contract_total == 0) View.GONE else View.VISIBLE
+                tvMyContractUnread?.text = data.my.contract_total.toString()
+            }
+        }
+
+        container.addView(iconContainer)
+
+        val title = TextView(requireContext()).apply {
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                topMargin = (8 * density).toInt()
+            }
+            gravity = android.view.Gravity.CENTER
+            text = item.title
+            setTextColor(Color.WHITE)
+            textSize = 12f
+        }
+        container.addView(title)
+
+        return container
     }
 }

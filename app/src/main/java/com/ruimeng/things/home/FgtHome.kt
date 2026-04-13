@@ -81,6 +81,7 @@ import wongxd.http
 import wongxd.utils.SystemUtils
 import com.utils.WeChatHelper
 import kotlinx.android.synthetic.main.fgt_me.ad_container
+import wongxd.base.AppManager
 import wongxd.common.loadCircleImg
 
 
@@ -129,7 +130,7 @@ class FgtHome : MainTabFragment() {
             val userInfo = InfoViewModel.getDefault().userInfo.value
             userInfo?.let {
                 if (it.realname_auth == 1) {
-                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                    getPermissions(AppManager.getAppManager().currentActivity() as? androidx.fragment.app.FragmentActivity, PermissionType.CAMERA, allGranted = {
                         AtyScanQrcode.start(getCurrentAty(), prefix, oldContractId, isHost)
                     })
                 } else {
@@ -1730,7 +1731,7 @@ class FgtHome : MainTabFragment() {
         }
         tvSwitch.setOnClickListener {
 
-            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+            getPermissions(activity, PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
                 intent.putExtra("type", "换电")
                 intent.putExtra("contract_id", item.device_contract.contract_id)
@@ -1757,7 +1758,7 @@ class FgtHome : MainTabFragment() {
                                     VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                                     ToastHelper.shortToast(context, "请扫描电柜二维码")
                                     getPermissions(
-                                        getCurrentAty(),
+                                        activity,
                                         PermissionType.CAMERA,
                                         allGranted = {
                                             tryToScan()
@@ -1770,7 +1771,7 @@ class FgtHome : MainTabFragment() {
                     } else {
                         VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                         ToastHelper.shortToast(context, "请扫描电柜二维码")
-                        getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                        getPermissions(activity, PermissionType.CAMERA, allGranted = {
                             tryToScan()
                         })
                     }
@@ -1817,7 +1818,7 @@ class FgtHome : MainTabFragment() {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                 ToastHelper.shortToast(context, "请扫描电柜二维码")
 //                if (hasChangePackege){
-                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                getPermissions(activity, PermissionType.CAMERA, allGranted = {
                     val intent = Intent(activity, ScanQrCodeActivity::class.java)
                     intent.putExtra("type", if (virtaul) "租电" else "换电开门")
                     startActivityForResult(intent, 1)
@@ -1862,7 +1863,7 @@ class FgtHome : MainTabFragment() {
                 } else {
                     VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
                     ToastHelper.shortToast(context, "请扫描电柜二维码")
-                    getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                    getPermissions(activity, PermissionType.CAMERA, allGranted = {
                         val intent = Intent(activity, ScanQrCodeActivity::class.java)
                         intent.putExtra("type", "冻结")
                         startActivityForResult(intent, 1)
@@ -1894,11 +1895,12 @@ class FgtHome : MainTabFragment() {
     fun rebackClick(event: BatteryRebackEvent) {
         VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
         ToastHelper.shortToast(context, "请扫描电柜二维码")
-        getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+        getPermissions(activity, PermissionType.CAMERA, allGranted = {
             val intent = Intent(activity, ScanQrCodeActivity::class.java)
             intent.putExtra("type", "退还")
             startActivityForResult(intent, 1)
         })
+
     }
 
     private fun frozen(code: String) {

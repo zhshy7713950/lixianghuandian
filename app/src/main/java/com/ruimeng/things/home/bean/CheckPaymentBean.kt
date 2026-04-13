@@ -29,8 +29,16 @@ data class CheckPaymentBean(
         val user_id: String,
         val singleChangeInfo:PaymentOption,
         val open_check: Int,
-    ){
+        // 新增：站点电池信息相关字段
+        val cabinet: Cabinet? = null
+    )
+    data class Cabinet(
+        val siteName: String = "",
+        val cellNum: String = "",
+        val fullExchange: String = "1",
+        val isOnline: Boolean = true
+    )
 
-    }
+
 }
 

@@ -70,6 +70,17 @@ class FgtScanOpen : BaseBackFragment() {
     private fun showView(){
         var textColors = arrayOf("#929FAB","#FFFFFF")
         if (checkPayBean != null){
+            // 站点名称
+            tv_site_name.text = checkPayBean!!.cabinet?.siteName ?: ""
+            // 电柜编号
+            tv_cabinet_code.text = checkPayBean!!.code
+            // 几仓柜
+            tv_cabinet_num.text = "${checkPayBean!!.cabinet?.cellNum ?: ""}仓柜"
+            // 满仓换电
+            tv_full_exchange.isVisible = checkPayBean!!.cabinet?.fullExchange == "2"
+            // 已离线
+            tv_offline.isVisible = checkPayBean!!.cabinet?.isOnline == false
+
             tv_battery_num_pay_rent_money.text = checkPayBean!!.device_id
             tv_battery_model_pay_rent_money.text = checkPayBean!!.modelName
             tv_base_package_name.text = checkPayBean!!.paymentInfo.pname

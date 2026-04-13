@@ -25,6 +25,7 @@ import com.utils.MapUtils
 import com.utils.curDateByFormat
 import kotlinx.android.synthetic.main.view_net_station_detail.view.tv_cabinet_id
 import kotlinx.android.synthetic.main.view_net_station_detail.view.tv_cabinet_num
+import kotlinx.android.synthetic.main.view_net_station_detail.view.tv_full_exchange
 import kotlinx.android.synthetic.main.view_net_station_detail.view.ll_container
 import kotlinx.android.synthetic.main.view_net_station_detail.view.ll_model_container_1
 import kotlinx.android.synthetic.main.view_net_station_detail.view.ll_model_container_2
@@ -143,6 +144,8 @@ class NetStationDetailView @JvmOverloads constructor(
         tv_cabinet_id.text = data.code
         //几仓柜
         tv_cabinet_num.text = "${if(!data.exchange.isNullOrEmpty()) data.exchange[0].device.size else ""}仓柜"
+        //满仓换电
+        tv_full_exchange.isVisible = data.fullExchange == 2
         //已离线
         tv_offline.isVisible = data.isOnline == 0
         //营业时间

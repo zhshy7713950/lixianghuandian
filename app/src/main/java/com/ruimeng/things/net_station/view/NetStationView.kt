@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.view_net_station_item.view.ll_net_station_
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_address
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_business_hours
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_cabinet_num
+import kotlinx.android.synthetic.main.view_net_station_item.view.tv_full_exchange
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_model_num_1
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_model_num_2
 import kotlinx.android.synthetic.main.view_net_station_item.view.tv_model_num_3
@@ -136,6 +137,8 @@ class NetStationView @JvmOverloads constructor(
         tv_net_station_name.text = data.site_name
         //几仓柜
         tv_cabinet_num.text = "${data.cellNum}仓柜"
+        //满仓换电
+        tv_full_exchange.isVisible = data.fullExchange == 2
         //已离线
         tv_offline.isVisible = data.isOnline == 0
         //营业时间

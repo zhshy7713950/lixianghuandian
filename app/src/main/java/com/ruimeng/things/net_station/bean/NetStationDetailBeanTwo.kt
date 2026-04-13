@@ -31,6 +31,8 @@ data class NetStationDetailBeanTwo(
         var batTypeCount: @RawValue HashMap<String, HashMap<String, Int>> = hashMapOf(),
         // 新增：所属城市ID（由父级 Data.city_id 传入）
         var city_id: String = "",
+        // 新增：满仓换电 (1-不支持 2-支持)
+        var fullExchange: Int = 1,
     ) {
         data class ExchangeBean(
             var name: String = "",

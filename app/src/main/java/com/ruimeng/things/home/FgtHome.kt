@@ -604,7 +604,10 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    private var isCheckingLateFee = false
+
     private fun handleOverduePayments() {
+        isCheckingLateFee = true
         http {
             url = Path.GET_USER_LATE_FEE
             params["userId"] = userId
@@ -642,6 +645,9 @@ class FgtHome : MainTabFragment() {
 
                         }.show()
                 }
+            }
+            onFinish {
+                isCheckingLateFee = false
             }
         }
     }
@@ -692,7 +698,13 @@ class FgtHome : MainTabFragment() {
                 }
 
                 2 -> rentStep1(NO_PAY_DEVICEID)
-                3 -> rentStep1(NO_PAY_DEVICEID) //已过期
+                3 -> {
+                    if (!isCheckingLateFee) {
+                        handleOverduePayments()
+                    }else {
+                        ToastHelper.shortToast(context, "正在查询逾期费用，请稍后重试")
+                    }
+                } //已过期
             }
         }
         btnReturn.setOnClickListener {

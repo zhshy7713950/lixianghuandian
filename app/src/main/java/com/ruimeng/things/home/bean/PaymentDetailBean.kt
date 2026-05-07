@@ -50,8 +50,13 @@ data class Data(
     val exp_remind_msg:String,
     val singleChangeInfo:PaymentOption,
     val battery : BatteryInfo,
-    val receiptInfo: List<ReceiptInfo>?
+    val receiptInfo: List<ReceiptInfo>?,
+    val agentCityName: String? = null,
+    val nextMonthPayment: NextMonthPayment? = null
 )
 
+data class NextMonthPayment(
+    val discountPrice: Double? = 0.0
+)
 
 }

@@ -379,6 +379,52 @@
 
 		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
 
+		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+			android:id="@+id/ll_renew_discount"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:layout_marginLeft="12dp"
+			android:layout_marginRight="12dp"
+			android:layout_marginTop="15dp"
+			app:qmui_backgroundColor="#404E59"
+			app:qmui_radius="10dp"
+			android:visibility="gone"
+			tools:visibility="visible"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+
+			<com.flyco.roundview.RoundTextView
+				android:layout_width="30dp"
+				android:layout_height="18dp"
+				android:layout_marginLeft="10dp"
+				app:rv_backgroundColor="#EF4444"
+				app:rv_cornerRadius="5dp"
+				android:text="福利"
+				android:textColor="#FFFFFF"
+				android:textSize="10sp"
+				android:gravity="center"/>
+
+			<WebView
+				android:id="@+id/wv_renew_discount"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:background="@android:color/transparent" />
+
+			<com.flyco.roundview.RoundTextView
+				android:layout_width="80dp"
+				android:layout_height="30dp"
+				android:layout_marginRight="10dp"
+				app:rv_backgroundColor="#F1C16C"
+				app:rv_cornerRadius="15dp"
+				android:text="立即续费"
+				android:textColor="#333333"
+				android:textSize="15sp"
+				android:textStyle="bold"
+				android:gravity="center"/>
+
+		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
 		<com.youth.banner.Banner
 			android:id="@+id/banner"
 			android:layout_width="match_parent"

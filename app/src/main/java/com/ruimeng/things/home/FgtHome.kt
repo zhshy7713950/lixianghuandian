@@ -1691,6 +1691,29 @@ class FgtHome : MainTabFragment() {
 //                }
             }
 
+            val discountPrice = paymentDetailBean?.nextMonthPayment?.discountPrice ?: 0.0
+            val agentCityName = paymentDetailBean?.agentCityName ?: ""
+            if ((agentCityName == "上海市" || agentCityName == "成都市") && discountPrice > 0) {
+                ll_renew_discount.visibility = VISIBLE
+                wv_renew_discount.setBackgroundColor(Color.TRANSPARENT)
+                wv_renew_discount.settings.javaScriptEnabled = true
+                wv_renew_discount.loadUrl("http://xianglilai.scxll.cn/appH5/RenewBenifit.html?value=$discountPrice")
+                ll_renew_discount.setOnClickListener {
+                    if (activeStatus == "3") {
+                        ToastHelper.shortToast(context, "请您先完成解冻操作")
+                    } else {
+                        FgtMain.instance?.start(
+                            FgtPayRentMoney.newInstance(
+                                CURRENT_DEVICEID,
+                                FgtPayRentMoney.PAGE_TYPE_UPDATE
+                            )
+                        )
+                    }
+                }
+            } else {
+                ll_renew_discount.visibility = GONE
+            }
+
         }
     }
 

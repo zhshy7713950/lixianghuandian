@@ -53,73 +53,12 @@ class FgtTicket : MainTabFragment() {
         rv_activities.layoutManager = LinearLayoutManager(activity)
         rv_activities.isNestedScrollingEnabled = false
 
-        // Fetch data
-        fetchCouponPackages()
-        fetchActivities()
+        // Initialize observers
+        initObservers()
+        // Data fetching is now handled in onSupportVisible() to refresh every time the user enters the page
     }
 
-    private fun fetchCouponPackages() {
-        http {
-            url = "/apiv6/advertisementinfo/getadvertisement"
-            params["userId"] = FgtHome.userId
-            params["position"] = "1"
-            params["lat"] = App.lat.toString()
-            params["lng"] = App.lng.toString()
-
-            onSuccess { res ->
-                val adInfo = res.toPOJO<BannerHelper.AdvertisementData>().data
-                val couponPurchaseAd = adInfo.promotions?.find { ad ->
-                    ad.operationData?.type == "couponPurchase"
-                }
-
-                if (couponPurchaseAd != null) {
-                    hasCouponPackages = true
-                    cachedCouponData = couponPurchaseAd.operationData?.data
-                    // Show list
-                    val adapter = CouponPackageAdapter(listOf(couponPurchaseAd))
-                    adapter.setOnItemClickListener { _, _, position ->
-                        startFgt(FgtCouponPurchase.newInstance(adapter.data[position].operationData?.data))
-                    }
-                    rv_coupon_packages.adapter = adapter
-                    rv_coupon_packages.visibility = View.VISIBLE
-                    
-                    // Show count hint
-                    val innerDataList = couponPurchaseAd.operationData?.data
-                    val count = innerDataList?.size ?: 0
-                    if (count > 0) {
-                        tv_coupon_count_hint.visibility = View.VISIBLE
-                        val countStr = count.toString()
-                        val hintStr = "已为您找到${countStr}份可购超值券包"
-                        val ssb = SpannableStringBuilder(hintStr)
-                        val start = hintStr.indexOf(countStr)
-                        if (start != -1) {
-                            ssb.setSpan(
-                                AbsoluteSizeSpan(25, true),
-                                start,
-                                start + countStr.length,
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                            )
-                        }
-                        tv_coupon_count_hint.text = ssb
-                    } else {
-                        tv_coupon_count_hint.visibility = View.GONE
-                    }
-                } else {
-                    hasCouponPackages = false
-                    rv_coupon_packages.visibility = View.GONE
-                    tv_coupon_count_hint.visibility = View.GONE
-                }
-            }
-
-            onFail { _, _ ->
-                hasCouponPackages = false
-                rv_coupon_packages.visibility = View.GONE
-                tv_coupon_count_hint.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun fetchActivities() {
+    private fun initObservers() {
         vm.bannerData.observe(this) { bannerList ->
             if (bannerList.isEmpty()) {
                 rv_activities.visibility = View.GONE
@@ -144,6 +83,72 @@ class FgtTicket : MainTabFragment() {
                 rv_activities.adapter = adapter
             }
         }
+    }
+
+    private fun fetchCouponPackages() {
+        http {
+            url = "/apiv6/advertisementinfo/getadvertisement"
+            params["userId"] = FgtHome.userId
+            params["position"] = "1"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
+
+            onSuccess { res ->
+                val adInfo = res.toPOJO<BannerHelper.AdvertisementData>().data
+                val couponPurchaseAd = adInfo.promotions?.find { ad ->
+                    ad.operationData?.type == "couponPurchase"
+                }
+
+                if (couponPurchaseAd != null) {
+                    hasCouponPackages = true
+                    cachedCouponData = couponPurchaseAd.operationData?.data
+                    // Show list
+                    val adapter = CouponPackageAdapter(cachedCouponData ?: emptyList())
+                    adapter.setOnItemClickListener { _, _, position ->
+                        startFgt(FgtCouponPurchase.newInstance(listOf(adapter.data[position])))
+                    }
+                    rv_coupon_packages.adapter = adapter
+                    rv_coupon_packages.visibility = View.VISIBLE
+                    
+                    // Show count hint
+                    val innerDataList = cachedCouponData
+                    val count = innerDataList?.size ?: 0
+                    if (count > 0) {
+                        tv_coupon_count_hint.visibility = View.VISIBLE
+                        val countStr = count.toString()
+                        val hintStr = "已为您找到${countStr}份可购超值券包"
+                        val ssb = SpannableStringBuilder(hintStr)
+                        val start = hintStr.indexOf(countStr)
+                        if (start != -1) {
+                            ssb.setSpan(
+                                AbsoluteSizeSpan(25, true),
+                                start,
+                                start + countStr.length,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                        }
+                        tv_coupon_count_hint.text = ssb
+                    } else {
+                        tv_coupon_count_hint.visibility = View.GONE
+                    }
+                } else {
+                    ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                    hasCouponPackages = false
+                    rv_coupon_packages.visibility = View.GONE
+                    tv_coupon_count_hint.visibility = View.GONE
+                }
+            }
+
+            onFail { _, msg ->
+                ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                hasCouponPackages = false
+                rv_coupon_packages.visibility = View.GONE
+                tv_coupon_count_hint.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun fetchActivities() {
         vm.fetchBannerData(requireContext(), FgtHome.userId)
     }
 
@@ -185,10 +190,10 @@ class FgtTicket : MainTabFragment() {
         (parentFragment as FgtMain).start(toFgt)
     }
 
-    inner class CouponPackageAdapter(data: List<com.entity.remote.Promotions>) : 
-        BaseQuickAdapter<com.entity.remote.Promotions, BaseViewHolder>(R.layout.item_coupon_package, data) {
+    inner class CouponPackageAdapter(data: List<com.entity.remote.OperationInnerData>) : 
+        BaseQuickAdapter<com.entity.remote.OperationInnerData, BaseViewHolder>(R.layout.item_coupon_package, data) {
         
-        override fun convert(helper: BaseViewHolder, item: com.entity.remote.Promotions) {
+        override fun convert(helper: BaseViewHolder, item: com.entity.remote.OperationInnerData) {
             val ivBg = helper.getView<ImageView>(R.id.iv_bg)
             val tvPrice = helper.getView<TextView>(R.id.tv_price)
             val tvDesc = helper.getView<TextView>(R.id.tv_desc)
@@ -206,14 +211,25 @@ class FgtTicket : MainTabFragment() {
             lp.topMargin = (imageHeight * (20f / 106f)).toInt() // Assuming design height is 106dp
             tvPrice.layoutParams = lp
 
-            val innerDataList = item.operationData?.data
-            if (!innerDataList.isNullOrEmpty()) {
-                val firstData = innerDataList[0]
-                val price = firstData.price ?: ""
-                val description = firstData.description ?: ""
-                helper.setText(R.id.tv_price, price)
-                helper.setText(R.id.tv_desc, description)
-            }
+            val price = item.price ?: ""
+            val description = item.description ?: ""
+            helper.setText(R.id.tv_price, price)
+            helper.setText(R.id.tv_desc, description)
+        }
+    }
+
+    override fun onSupportVisible() {
+        super.onSupportVisible()
+        activity?.let {
+            fetchCouponPackages()
+            fetchActivities()
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+
         }
     }
 

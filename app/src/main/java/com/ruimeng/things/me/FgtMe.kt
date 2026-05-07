@@ -24,6 +24,7 @@ import com.ruimeng.things.bean.isSH
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.bean.stateImage
 import com.ruimeng.things.common.BannerHelper
+import com.ruimeng.things.home.CustomerServiceFragment
 import com.ruimeng.things.home.FgtChangeMobile
 import com.ruimeng.things.home.FgtFollowWechatAccount
 import com.ruimeng.things.home.bean.BannerInfo
@@ -279,9 +280,13 @@ class FgtMe : MainTabFragment() {
 
         menus.add(MeMenuItem("ticket", R.drawable.ic_my_contract, "我的合约", { startFgt(FgtMyContract()) }, true))
 
+        menus.add(MeMenuItem("customerService", R.mipmap.ic_service_center, "客服中心", { startFgt(CustomerServiceFragment.newInstance()) }, true))
+
         menus.add(MeMenuItem("support", R.mipmap.service_support_me, "客服热线", { CustomerServiceManager.showDialSheet(requireActivity()) }, true))
 
         menus.add(MeMenuItem("changeMobile", R.mipmap.ic_change_mobile, "变更手机号", { startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE)) }, true))
+
+        menus.add(MeMenuItem("myCoupon", R.mipmap.ic_my_coupon, "我的优惠券", { startFgt(FgtMyCoupon.newInstance()) }, true))
 
         val showReferrer = userinfo != null && (userinfo.isSH() || userinfo.isGA())
         menus.add(MeMenuItem("referrer", R.mipmap.service_my_referrer, "推荐有礼", { startFgt(FgtRecommendGift()) }, showReferrer))

@@ -11,7 +11,6 @@ import com.ruimeng.things.me.bean.MyInComeBean
 import com.utils.TextUtil
 import com.utils.ToastHelper
 import kotlinx.android.synthetic.main.activity_my_profit.*
-import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
 import wongxd.base.AtyBase
 import wongxd.common.toPOJO
 import wongxd.http

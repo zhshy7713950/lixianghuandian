@@ -4,322 +4,235 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseQuickAdapter.OnItemChildClickListener
-import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.chad.library.adapter.base.BaseViewHolder
-import com.qmuiteam.qmui.widget.QMUITabSegment
 import com.ruimeng.things.FgtMain
-import com.ruimeng.things.Path
 import com.ruimeng.things.R
-import com.ruimeng.things.common.BannerHelper
-import com.ruimeng.things.home.AtyScanQrcode
-import com.ruimeng.things.home.FgtDeposit
 import com.ruimeng.things.home.FgtHome
-import com.ruimeng.things.home.FgtPayRentMoney
 import com.ruimeng.things.home.bean.BannerInfo
-import com.ruimeng.things.home.bean.ScanResult
-import com.ruimeng.things.home.bean.ScanResultEvent
-import com.ruimeng.things.me.bean.MyCouponBean
 import com.ruimeng.things.me.vm.TicketViewModel
-import com.ruimeng.things.showTipDialog
-import com.utils.OptionPickerUtil
-import com.utils.TextUtil
 import com.utils.ToastHelper
-import kotlinx.android.synthetic.main.activity_my_team.recyclerView
-import kotlinx.android.synthetic.main.aty_order.view.refresh
 import kotlinx.android.synthetic.main.fgt_ticket.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.json.JSONObject
 import wongxd.base.MainTabFragment
-import wongxd.common.EasyToast
-import wongxd.common.bothNotNull
-import wongxd.common.getCurrentAppAty
-import wongxd.common.getCurrentAty
-import wongxd.common.permission.PermissionType
-import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
 import me.yokeyword.fragmentation.SupportFragment
-import com.ruimeng.things.home.bean.BannerData
-import com.ruimeng.things.voice.VoicePlayerManager
+import wongxd.utils.utilcode.util.ScreenUtils
+import com.bumptech.glide.Glide
+import com.ruimeng.things.App
+import com.ruimeng.things.common.BannerHelper
+import com.ruimeng.things.home.FgtCouponPurchase
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import wongxd.utils.utilcode.util.SizeUtils
 
-/**
- * Created by wongxd on 2018/11/13.
- */
 class FgtTicket : MainTabFragment() {
     private val vm: TicketViewModel by viewModels()
+    private var hasCouponPackages = false
+
     override fun getLayoutRes(): Int = R.layout.fgt_ticket
 
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-        EventBus.getDefault().register(this)
-
-        // 设置刷新按钮点击事件
-        tv_refresh.setOnClickListener {
-            srl_ticket.autoRefresh()
+        // Init Coupon Area background click listener
+        iv_my_coupon.setOnClickListener {
+            startFgt(FgtMyCoupon.newInstance())
         }
 
-        // 初始化轮播广告
-        initBanner()
+        // Initialize RecyclerViews
+        rv_coupon_packages.layoutManager = LinearLayoutManager(activity)
+        rv_coupon_packages.isNestedScrollingEnabled = false
+        
+        rv_activities.layoutManager = LinearLayoutManager(activity)
+        rv_activities.isNestedScrollingEnabled = false
 
-        tab_ticket.addTab(QMUITabSegment.Tab("待使用"))
-            .addTab(QMUITabSegment.Tab("已使用"))
-            .addTab(QMUITabSegment.Tab("已过期"))
-            .setDefaultNormalColor(Color.parseColor("#929FAB"))
-        tab_ticket.setDefaultSelectedColor(Color.parseColor("#29EBB6"))
+        // Fetch data
+        fetchCouponPackages()
+        fetchActivities()
+    }
 
-        tab_ticket.addOnTabSelectedListener(object : QMUITabSegment.OnTabSelectedListener {
-            override fun onTabReselected(index: Int) {
-            }
+    private fun fetchCouponPackages() {
+        http {
+            url = "/apiv6/advertisementinfo/getadvertisement"
+            params["userId"] = FgtHome.userId
+            params["position"] = "1"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
 
-            override fun onTabUnselected(index: Int) {
-            }
+            onSuccess { res ->
+                val adInfo = res.toPOJO<BannerHelper.AdvertisementData>().data
+                val couponPurchaseAd = adInfo.promotions?.find { ad ->
+                    ad.operationData?.type == "couponPurchase"
+                }
 
-            override fun onTabSelected(index: Int) {
-                isUsed = index
-                page = 1
-                getInfo()
-            }
-
-            override fun onDoubleTap(index: Int) {
-            }
-        })
-
-        tab_ticket.selectTab(0)
-
-        rv_ticket.layoutManager = LinearLayoutManager(activity)
-        rv_ticket.adapter = adapter
-        adapter!!.setEmptyView(R.layout.layout_empty, rv_ticket)
-        adapter.onItemChildClickListener =
-            OnItemChildClickListener { p0, p1, p2 ->
-                if (p1 != null) {
-                    if (p1.id == R.id.tv_use) {
-                        //                        if (isUsed == 0 ){
-                        //                            if (FgtHome.CURRENT_DEVICEID.isNullOrEmpty() && FgtHome.NO_PAY_DEVICEID.isNullOrEmpty()){
-                        //                                ToastHelper.shortToast(context, "请先完成押金支付")
-                        //                                return
-                        //                            }
-                        //                            vm.getUserPaymentInfo(FgtHome.userId,FgtHome.CURRENT_DEVICEID)
-                        //                        }
+                if (couponPurchaseAd != null) {
+                    hasCouponPackages = true
+                    cachedCouponData = couponPurchaseAd.operationData?.data
+                    // Show list
+                    val adapter = CouponPackageAdapter(listOf(couponPurchaseAd))
+                    adapter.setOnItemClickListener { _, _, position ->
+                        startFgt(FgtCouponPurchase.newInstance(adapter.data[position].operationData?.data))
+                    }
+                    rv_coupon_packages.adapter = adapter
+                    rv_coupon_packages.visibility = View.VISIBLE
+                    
+                    // Show count hint
+                    val innerDataList = couponPurchaseAd.operationData?.data
+                    val count = innerDataList?.size ?: 0
+                    if (count > 0) {
+                        tv_coupon_count_hint.visibility = View.VISIBLE
+                        val countStr = count.toString()
+                        val hintStr = "已为您找到${countStr}份可购超值券包"
+                        val ssb = SpannableStringBuilder(hintStr)
+                        val start = hintStr.indexOf(countStr)
+                        if (start != -1) {
+                            ssb.setSpan(
+                                AbsoluteSizeSpan(25, true),
+                                start,
+                                start + countStr.length,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                        }
+                        tv_coupon_count_hint.text = ssb
                     } else {
-                        if (isUsed == 0) {
-                            val data = adapter.data[p2]
-                            data.expond = !data.expond
-                            adapter.notifyDataSetChanged()
-                        }
+                        tv_coupon_count_hint.visibility = View.GONE
                     }
-                }
-            }
-
-
-        srl_ticket?.setOnRefreshListener {
-            page = 1;getInfo()
-            // 获取轮播广告数据
-            vm.fetchBannerData(requireContext(), FgtHome.userId)
-        }
-        srl_ticket?.setOnLoadMoreListener { getInfo() }
-        ll_scan?.setOnClickListener {
-            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-5")
-            ToastHelper.shortToast(context, "请扫描兑换码")
-            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                AtyScanQrcode.start(getCurrentAty(), AtyScanQrcode.TYPE_TICKET)
-            })
-        }
-        initEvent()
-    }
-
-    @Subscribe
-    fun dealScanResult(event: ScanResult) {
-        http {
-            url = "apiv6/couponcheck/checkcode"
-            params["couponCode"] = event.result
-            onSuccess {
-                bindCoupon(event.result)
-            }
-            onFail { _, s ->
-                ToastHelper.shortToast(context, s)
-            }
-        }
-    }
-
-    private fun bindCoupon(couponCode: String){
-        http {
-            url = "apiv6/couponcheck/bindcoupon"
-            params["couponCode"] = couponCode
-            onSuccess {
-                ToastHelper.shortToast(context, "兑换成功，已添加到待使用列表")
-                ll_scan?.postDelayed({
-                    tab_ticket.selectTab(0)
-                    srl_ticket.autoRefresh()
-                },1500)
-            }
-            onFail { _, s ->
-                ToastHelper.shortToast(context, s)
-            }
-        }
-    }
-
-    private fun initEvent() {
-        vm.userPaymentInfo.observe(this@FgtTicket, Observer { info ->
-            if (info.deposit_status != "1" && info.rent_status != "1") {//无押金、无租金
-                ToastHelper.shortToast(context, "请先完成押金支付")
-            } else if (info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "0") {//有押金、无租金、未租
-                //扫码后跳转
-                FgtHome.tryToScan(AtyScanQrcode.TYPE_PAY_RENT)
-            } else if (info.active_status == "1" && info.deposit_status == "1" && info.rent_status == "1") {//有押金、有租金、待取电/已取电，跳续期升级
-                FgtMain.instance?.start(
-                    FgtPayRentMoney.newInstance(
-                        FgtHome.CURRENT_DEVICEID,
-                        FgtPayRentMoney.PAGE_TYPE_UPDATE
-                    )
-                )
-            } else if (info.active_status == "3" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已冻结）
-                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
-                ToastHelper.shortToast(context, "请您先完成解冻操作")
-            } else if (info.active_status == "2" && info.deposit_status == "1" && info.rent_status == "1") {//有押金 + 有租金（已过期）
-                FgtMain.instance?.start(
-                    FgtPayRentMoney.newInstance(
-                        FgtHome.CURRENT_DEVICEID,
-                        FgtPayRentMoney.PAGE_TYPE_CREATE
-                    )
-                )
-            }
-        })
-    }
-
-    private var isUsed = 0
-    private val adapter: RvTicketAdapter by lazy { RvTicketAdapter() }
-    private var pageSize = 20
-    private var page = 1
-    private fun getInfo() {
-
-        http {
-            url = Path.GET_MY_COUPON
-            params["used"] = isUsed.toString()
-            params["page"] = page.toString()
-            params["pagesize"] = pageSize.toString()
-
-            onSuccess {
-                val result = it.toPOJO<MyCouponBean>().data
-
-                if (page == 1) {
-                    adapter.setNewData(result)
                 } else {
-                    adapter.addData(result)
+                    hasCouponPackages = false
+                    rv_coupon_packages.visibility = View.GONE
+                    tv_coupon_count_hint.visibility = View.GONE
                 }
-                adapter.isUsed = isUsed
-
-                page++
             }
 
-            onFinish {
-                srl_ticket?.finishRefresh()
-                srl_ticket?.finishLoadMore()
+            onFail { _, _ ->
+                hasCouponPackages = false
+                rv_coupon_packages.visibility = View.GONE
+                tv_coupon_count_hint.visibility = View.GONE
             }
-
         }
-
-
     }
 
-
-    class RvTicketAdapter :
-        BaseQuickAdapter<MyCouponBean.Data, BaseViewHolder>(R.layout.item_rv_ticket) {
-        var isUsed = 0
-        override fun convert(helper: BaseViewHolder, item: MyCouponBean.Data?) {
-            bothNotNull(helper, item) { a, b ->
-                a.setText(R.id.tv_money, b.coupon_price)
-                    .setText(R.id.tv_limit, "${b.act_time}~${b.exp_time}")
-                    .setText(R.id.tv_use, b.is_use)
-                if (item != null) {
-                    when (isUsed) {
-                        0 -> {
-                            a.setTextColor(R.id.tvRmb, Color.parseColor("#F9BB6C"))
-                                .setTextColor(R.id.tv_money, Color.parseColor("#F9BB6C"))
-                                .setTextColor(R.id.tv_coupon_name, Color.parseColor("#F9BB6C"))
-                                .setTextColor(R.id.tv_limit, Color.parseColor("#FFFFFF"))
-                                .setText(R.id.tv_use, "待使用")
-                                .setTextColor(R.id.tv_use, Color.parseColor("#f9bb6c"))
-                                .setBackgroundRes(
-                                    R.id.cl_coupon,
-                                    if (b.expond) R.drawable.bg_ticket_me else R.drawable.bg_ticket_unuse
-                                )
+    private fun fetchActivities() {
+        vm.bannerData.observe(this) { bannerList ->
+            if (bannerList.isEmpty()) {
+                rv_activities.visibility = View.GONE
+            } else {
+                rv_activities.visibility = View.VISIBLE
+                val adapter = ActivityBannerAdapter(bannerList)
+                adapter.setOnItemClickListener { _, _, position ->
+                    val bannerInfo = bannerList[position]
+                    val linkUrl = bannerInfo.linkUrl
+                    if (bannerInfo.opType == 1 && linkUrl.startsWith("couponPurchase://")) {
+                        if (hasCouponPackages) {
+                            // Since we already fetched the coupon packages, we should find it and pass its data.
+                            openCouponPurchaseIfAvailable()
+                        } else {
+                            ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
                         }
-
-                        1 -> {
-                            a.setTextColor(R.id.tvRmb, Color.parseColor("#C3B199"))
-                                .setTextColor(R.id.tv_money, Color.parseColor("#C3B199"))
-                                .setTextColor(R.id.tv_coupon_name, Color.parseColor("#C3B199"))
-                                .setTextColor(R.id.tv_limit, Color.parseColor("#D7D7D7"))
-                                .setText(R.id.tv_use, "已使用")
-                                .setTextColor(R.id.tv_use, Color.parseColor("#C4CAD0"))
-                                .setBackgroundRes(R.id.cl_coupon, R.drawable.bg_ticket_used)
-                        }
-
-                        else -> {
-                            a.setTextColor(R.id.tvRmb, Color.parseColor("#706D65"))
-                                .setTextColor(R.id.tv_money, Color.parseColor("#706D65"))
-                                .setTextColor(R.id.tv_coupon_name, Color.parseColor("#706D65"))
-                                .setTextColor(R.id.tv_limit, Color.parseColor("#797F83"))
-                                .setText(R.id.tv_use, "已过期")
-                                .setTextColor(R.id.tv_use, Color.parseColor("#798289"))
-                                .setBackgroundRes(R.id.cl_coupon, R.drawable.bg_ticket_expire)
-                        }
+                    } else {
+                        // Reuse BannerHelper logic for other types
+                        BannerHelper.handleBannerClick(bannerInfo, this@FgtTicket)
                     }
-                    a.setText(R.id.tv_coupon_name, "${b.coupon_category}")
-                        .setText(R.id.tv_coupon_type, "优惠类型：${b.coupon_type}")
-                        .setText(R.id.tv_app_type, "适用品牌：${b.app_type}")
-                        .setText(R.id.tv_limit_city, "适用城市：${b.limit_city}")
-                        .setText(R.id.tv_limit_voltage, "适用伏数：${b.limit_voltage}")
-                        .setText(R.id.tv_limit_day_desc, "适用天数：${b.limit_day_desc}")
-                        .setText(R.id.tv_act_time, "生效时间：${b.act_time}")
-                        .setText(R.id.tv_exp_time, "过期时间：${b.exp_time}")
-                        .setGone(R.id.cl_time, b.expond)
-                        .addOnClickListener(R.id.cl_coupon_info)
+                }
+                rv_activities.adapter = adapter
+            }
+        }
+        vm.fetchBannerData(requireContext(), FgtHome.userId)
+    }
+
+    private var cachedCouponData: List<com.entity.remote.OperationInnerData>? = null
+
+    private fun openCouponPurchaseIfAvailable() {
+        if (cachedCouponData != null) {
+            startFgt(FgtCouponPurchase.newInstance(cachedCouponData))
+        } else {
+            // Fetch if not cached but has packages (fallback)
+            fetchCouponPackagesForClick()
+        }
+    }
+    
+    private fun fetchCouponPackagesForClick() {
+        http {
+            url = "/apiv6/advertisementinfo/getadvertisement"
+            params["userId"] = FgtHome.userId
+            params["position"] = "1"
+            params["lat"] = App.lat.toString()
+            params["lng"] = App.lng.toString()
+
+            onSuccess { res ->
+                val adInfo = res.toPOJO<BannerHelper.AdvertisementData>().data
+                val couponPurchaseAd = adInfo.promotions?.find { ad ->
+                    ad.operationData?.type == "couponPurchase"
+                }
+
+                if (couponPurchaseAd != null) {
+                    startFgt(FgtCouponPurchase.newInstance(couponPurchaseAd.operationData?.data))
+                } else {
+                    ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
                 }
             }
         }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            if(srl_ticket != null){
-                srl_ticket.autoRefresh()
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        EventBus.getDefault().unregister(this)
-        super.onDestroyView()
     }
 
     fun startFgt(toFgt: SupportFragment) {
         (parentFragment as FgtMain).start(toFgt)
     }
 
-    // 初始化轮播广告
-    private fun initBanner() {
-        // 观察轮播广告数据变化
-        vm.bannerData.observe(this) { bannerList ->
-            setupBanner(bannerList)
-        }
+    inner class CouponPackageAdapter(data: List<com.entity.remote.Promotions>) : 
+        BaseQuickAdapter<com.entity.remote.Promotions, BaseViewHolder>(R.layout.item_coupon_package, data) {
         
-        // 获取轮播广告数据
-        vm.fetchBannerData(requireContext(), FgtHome.userId)
+        override fun convert(helper: BaseViewHolder, item: com.entity.remote.Promotions) {
+            val ivBg = helper.getView<ImageView>(R.id.iv_bg)
+            val tvPrice = helper.getView<TextView>(R.id.tv_price)
+            val tvDesc = helper.getView<TextView>(R.id.tv_desc)
+            
+            // Dynamic margins based on screen width
+            val screenWidth = ScreenUtils.getScreenWidth()
+            // Assume the image width is screenWidth - 24dp (12dp margin on each side)
+            val imageWidth = screenWidth - SizeUtils.dp2px(24f)
+            // The original image aspect ratio might be around 351:106
+            val imageHeight = imageWidth * (106f / 351f)
+            
+            // 价格：上距30（动态），左距30（动态）
+            val lp = tvPrice.layoutParams as ConstraintLayout.LayoutParams
+            lp.leftMargin = (imageWidth * (30f / 351f)).toInt() // Assuming design width is 351dp
+            lp.topMargin = (imageHeight * (20f / 106f)).toInt() // Assuming design height is 106dp
+            tvPrice.layoutParams = lp
+
+            val innerDataList = item.operationData?.data
+            if (!innerDataList.isNullOrEmpty()) {
+                val firstData = innerDataList[0]
+                val price = firstData.price ?: ""
+                val description = firstData.description ?: ""
+                helper.setText(R.id.tv_price, price)
+                helper.setText(R.id.tv_desc, description)
+            }
+        }
     }
 
-    // 设置轮播广告
-    private fun setupBanner(bannerList: List<BannerInfo>) {
-        if (bannerList.isEmpty()) {
-            banner.visibility = View.GONE
-            return
-        }
+    inner class ActivityBannerAdapter(data: List<BannerInfo>) : 
+        BaseQuickAdapter<BannerInfo, BaseViewHolder>(R.layout.item_activity_banner, data) {
+        
+        override fun convert(helper: BaseViewHolder, item: BannerInfo) {
+            val ivBanner = helper.getView<ImageView>(R.id.iv_banner)
+            val layoutParams = ivBanner.layoutParams
+            layoutParams.height = (ScreenUtils.getScreenWidth() * 0.22f).toInt()
+            ivBanner.layoutParams = layoutParams
 
-        BannerHelper.setupBanner(banner, bannerList, this)
+            Glide.with(mContext)
+                .load(item.imgSrc)
+                .apply(RequestOptions().transform(
+                    CenterCrop(),
+                    RoundedCorners(SizeUtils.dp2px(10f))
+                ))
+                .into(ivBanner)
+        }
     }
 }

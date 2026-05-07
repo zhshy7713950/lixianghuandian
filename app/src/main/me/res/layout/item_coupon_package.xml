@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+
+    <!-- The background image -->
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_coupon_unused_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="19.90"
+        android:textColor="#F9BB6C"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/iv_bg"
+        app:layout_constraintTop_toTopOf="@id/iv_bg" />
+
+    <!-- ￥超值价 -->
+    <TextView
+        android:id="@+id/tv_super_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="4dp"
+        android:text="￥超值价"
+        android:textColor="#F9BB6C"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_price"
+        app:layout_constraintLeft_toRightOf="@id/tv_price" />
+
+    <!-- 包含xxx张优惠券 -->
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="限48V-包含6张69优惠券"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_price"
+        app:layout_constraintTop_toBottomOf="@id/tv_price" />
+
+    <!-- 立即购买 -->
+    <TextView
+        android:id="@+id/tv_buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="1"
+        android:text="立即购买"
+        android:textColor="#F9BB6C"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_bg"
+        app:layout_constraintEnd_toEndOf="@id/iv_bg"
+        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintStart_toStartOf="@id/iv_bg"
+        app:layout_constraintTop_toTopOf="@id/iv_bg" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

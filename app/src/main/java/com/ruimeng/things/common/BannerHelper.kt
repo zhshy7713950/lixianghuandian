@@ -76,14 +76,18 @@ object BannerHelper {
                 .setAdapter(BannerImageCommonAdapter(dataList).apply {
                     this.setOnBannerListener { data, position ->
                         val bannerInfo = bannerList[position]
-                        when (bannerInfo.opType) {
-                            1 -> handleInternalLink(bannerInfo, fgt)
-                            2 -> openExternalWebPage(bannerInfo.linkUrl, fgt.requireContext())
-                        }
+                        handleBannerClick(bannerInfo, fgt)
                     }
                 }, true)
                 .addBannerLifecycleObserver(fgt)
                 .indicator = CircleIndicator(context)
+        }
+    }
+
+    fun handleBannerClick(bannerInfo: BannerInfo, fgt: FgtBase) {
+        when (bannerInfo.opType) {
+            1 -> handleInternalLink(bannerInfo, fgt)
+            2 -> openExternalWebPage(bannerInfo.linkUrl, fgt.requireContext())
         }
     }
 

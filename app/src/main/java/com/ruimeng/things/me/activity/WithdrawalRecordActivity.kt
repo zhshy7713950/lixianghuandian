@@ -6,7 +6,6 @@ import com.ruimeng.things.R
 import com.ruimeng.things.me.adapter.WithdrawalRecordAdapter
 import com.ruimeng.things.me.bean.DistrCashLogBean
 import kotlinx.android.synthetic.main.activity_withdrawal_record.*
-import kotlinx.android.synthetic.main.fgt_ticket.rv_ticket
 import wongxd.base.AtyBase
 import wongxd.common.toPOJO
 import wongxd.http

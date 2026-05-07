@@ -1,104 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray">
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- 标题栏 -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <!-- 标题栏 -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="#404E58">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="优惠活动"
-                android:layout_gravity="center"
-                android:textColor="#ffffffff"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/tv_refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="刷新"
-                android:layout_marginRight="12dp"
-                android:textColor="@color/white"
-                android:layout_gravity="right|center_vertical" />
-
-        </FrameLayout>
-
-        <!-- 轮播广告 -->
-        <com.youth.banner.Banner
-            android:id="@+id/banner"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="10dp"
-            app:banner_loop_time="5000"
-            app:banner_radius="10dp" />
-
-        <com.qmuiteam.qmui.widget.QMUITabSegment
-            android:id="@+id/tab_ticket"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:qmui_tab_has_indicator="true"
-            app:qmui_tab_indicator_height="3dp"
-            app:qmui_tab_mode="fixed" />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/srl_ticket"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.scwang.smartrefresh.header.MaterialHeader
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_ticket"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_scan"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/bg_ticket_scan"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="17dp"
-            android:src="@drawable/ic_ticket_scan" />
+        android:layout_height="45dp"
+        android:background="#404E58">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="兑换"
-            android:textColor="@color/black" />
+            android:layout_gravity="center"
+            android:text="优惠活动"
+            android:textColor="#ffffffff"
+            android:textSize="17sp" />
+    </FrameLayout>
 
-    </LinearLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="30dp">
+
+            <!-- 优惠券专区 标题 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/bg_coupon_area_indicator" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_coupon_area_title" />
+            </LinearLayout>
+
+            <!-- 标题下方图片 -->
+            <ImageView
+                android:id="@+id/iv_my_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="12dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_coupon_area_bg" />
+
+            <!-- 可购券包列表 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_coupon_packages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12dp"
+                android:overScrollMode="never" />
+
+            <TextView
+                android:id="@+id/tv_coupon_count_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center_horizontal"
+                android:textColor="#FFD101"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!-- 活动专区 标题 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/bg_coupon_area_indicator" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_activity_area_title" />
+            </LinearLayout>
+
+            <!-- 活动专区列表 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_activities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="12dp"
+                android:overScrollMode="never" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

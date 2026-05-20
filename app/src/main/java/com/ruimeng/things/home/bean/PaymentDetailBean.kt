@@ -1,5 +1,8 @@
 package com.ruimeng.things.home.bean
 
+import com.google.gson.annotations.JsonAdapter
+import com.utils.EmptyArrayAsNullTypeAdapterFactory
+
 data class PaymentDetailBean(
     var `data`: Data ,
     var errcode: Int = 0, // 200
@@ -52,6 +55,7 @@ data class Data(
     val battery : BatteryInfo,
     val receiptInfo: List<ReceiptInfo>?,
     val agentCityName: String? = null,
+    @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
     val nextMonthPayment: NextMonthPayment? = null
 )
 

@@ -17,6 +17,7 @@ import com.net.call.BizService
 import com.net.whenSuccess
 import com.ruimeng.things.home.bean.BannerData
 import com.ruimeng.things.home.bean.BannerInfo
+import com.ruimeng.things.home.bean.LuckyWheelLotteryBean
 import com.ruimeng.things.net_station.LocationUtil
 import com.utils.MapUtils
 import kotlinx.coroutines.launch
@@ -38,6 +39,9 @@ class MainViewModel : BaseViewModel() {
     private val _customerServicePhones = MutableLiveData<List<CustomerServiceContactRemote>>()
     val customerServicePhones: LiveData<List<CustomerServiceContactRemote>> get() = _customerServicePhones
 
+    private val _luckyWheelLottery = MutableLiveData<LuckyWheelLotteryBean>()
+    val luckyWheelLottery: LiveData<LuckyWheelLotteryBean> get() = _luckyWheelLottery
+
     fun fetchBannerData(context: Context,userId: String,position: String) {
         viewModelScope.launch {
             val mapLocation = requestLocation(context)
@@ -55,6 +59,28 @@ class MainViewModel : BaseViewModel() {
                     }else{
                         _meBannerData.value = bannerList
                     }
+                }
+            }
+        }
+    }
+
+    fun fetchLuckyWheelLottery(onResult: ((LuckyWheelLotteryBean) -> Unit)? = null) {
+        viewModelScope.launch {
+            http {
+                IS_SHOW_MSG = false
+                url = "/apiv6/luckywheel/getlottery"
+                onSuccess { res ->
+                    try {
+                        val bean = res.toPOJO<LuckyWheelLotteryBean>()
+                        _luckyWheelLottery.value = bean
+                        onResult?.invoke(bean)
+                    } catch (_: Exception) {
+                    }
+                }
+                onFail { code, msg ->
+                    val bean = LuckyWheelLotteryBean(errcode = code, errmsg = msg)
+                    _luckyWheelLottery.value = bean
+                    onResult?.invoke(bean)
                 }
             }
         }

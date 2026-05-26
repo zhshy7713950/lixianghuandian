@@ -95,6 +95,10 @@ fun UserInfoBean.Data.UserInfo.isGA(): Boolean {//是否为广安市
     return "广安市" == city
 }
 
+fun UserInfoBean.Data.UserInfo.isNC(): Boolean {//是否为南充市
+    return "南充市" == city
+}
+
 fun UserInfoBean.Data.UserInfo.isCD(): Boolean {//是否为成都市
     return "成都市" == city
 }

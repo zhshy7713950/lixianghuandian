@@ -249,6 +249,34 @@
 			android:layout_marginEnd="24dp"
 			android:layout_marginBottom="100dp" />
 
+		<!-- 幸运福利悬浮按钮 -->
+		<FrameLayout
+			android:id="@+id/fl_lucky_welfare"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
+			android:layout_marginEnd="24dp"
+			android:layout_marginBottom="20dp"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent">
+
+			<ImageView
+				android:id="@+id/iv_lucky_welfare_bg"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:src="@drawable/ic_lottery_back" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="15dp"
+				android:layout_gravity="bottom"
+				android:background="@drawable/bg_lucky_welfare_tag"
+				android:gravity="center"
+				android:text="幸运福利"
+				android:textColor="#FFFFFF"
+				android:textSize="10sp" />
+		</FrameLayout>
+
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 

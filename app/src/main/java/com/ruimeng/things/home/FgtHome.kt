@@ -37,6 +37,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.ruimeng.things.*
 import com.ruimeng.things.ads.AMPSNativeAdLoader
 import com.ruimeng.things.ads.AdManager
+import com.entity.remote.Promotions
 import com.ruimeng.things.voice.VoicePlayerManager
 import com.ruimeng.things.ads.AdSdkInitSuccessEvent
 import com.ruimeng.things.bean.showName
@@ -44,6 +45,7 @@ import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
+import com.ruimeng.things.home.view.PopupAdWindow
 import com.ruimeng.things.home.view.PopupHelpEvent
 import com.ruimeng.things.home.view.PopupHelpWindow
 import com.ruimeng.things.home.view.PopupRemindWindow
@@ -117,6 +119,8 @@ class FgtHome : MainTabFragment() {
         var MOBILE_BIND_SKIP = false
         // 是否仅在 72V 下支持 50Ah（来自首页设备列表的 exchangebatType）
         var hasOnlyAh50For72: Boolean = false
+        // 抽奖弹窗本次开机期间是否显示过
+        var hasShownLotteryPopup = false
         fun selectDeviceType() {
 
         }
@@ -262,6 +266,37 @@ class FgtHome : MainTabFragment() {
         srl_home.autoRefresh()
 
         initTabLayout()
+        initLuckyWelfareButton()
+    }
+
+    private fun initLuckyWelfareButton() {
+        val rotateAnim = RotateAnimation(
+            0f, 360f,
+            Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF, 0.5f
+        ).apply {
+            duration = 1500 // 1.5s per circle
+            repeatCount = Animation.INFINITE
+            interpolator = LinearInterpolator()
+        }
+        view?.findViewById<ImageView>(R.id.iv_lucky_welfare_bg)?.startAnimation(rotateAnim)
+
+        view?.findViewById<View>(R.id.fl_lucky_welfare)?.setOnClickListener {
+            // 点击右下角幸运福利按钮，复用 MainViewModel 请求
+            vmMain.fetchLuckyWheelLottery { bean ->
+                if (bean.errcode == 200) {
+                    val grant = bean.data?.sendCouponPrice
+                    val own = bean.data?.selfCouponPrice
+                    val ownId = bean.data?.selfCouponId
+                    val price = bean.data?.paymentPrice
+                    val code = bean.data?.lotteryReqNum
+                    FgtMain.instance?.start(FgtLotteryCoupon.newInstance(grant, own, ownId, price, code))
+                } else {
+                    val nextLotteryTime = bean.data?.nextLotteryTime
+                    ToastHelper.shortToast(context, "继续在网${nextLotteryTime}天，可获得幸运抽奖资格")
+                }
+            }
+        }
     }
 
     /**
@@ -337,6 +372,23 @@ class FgtHome : MainTabFragment() {
             launch {
                 vm.userInfo.simpleObserver(this@FgtHome) {
                     tv_title.text = it.showName()
+                }
+            }
+            launch {
+                vmMain.luckyWheelLottery.observe(viewLifecycleOwner) { bean ->
+                    if (bean.errcode == 200 && !hasShownLotteryPopup) {
+                        hasShownLotteryPopup = true
+                        val promotion = Promotions(
+                            operationTitle = "",
+                            promotionType = "1",
+                            mediaType = "1",
+                            mediaURL = "https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/images/lotteryBack.png",
+                            operationType = "A",
+                            operationData = null,
+                            operationURL = ""
+                        )
+                        PopupAdWindow(this@FgtHome, promotion, bean.data).show(rootView)
+                    }
                 }
             }
             launch {
@@ -1231,6 +1283,15 @@ class FgtHome : MainTabFragment() {
                     showHomePageInfo()
                 }
 
+                val agentCityName = paymentDetailBean?.agentCityName ?: ""
+                if (agentCityName == "成都市" && modelName.startsWith("72")) {
+                    // 显示右下按钮
+                    view?.findViewById<View>(R.id.fl_lucky_welfare)?.visibility = VISIBLE
+                    // 调用getlottery接口
+                    vmMain.fetchLuckyWheelLottery()
+                } else {
+                    view?.findViewById<View>(R.id.fl_lucky_welfare)?.visibility = GONE
+                }
 
             }
             onFail { i, s ->
@@ -1697,6 +1758,10 @@ class FgtHome : MainTabFragment() {
                 ll_renew_discount.visibility = VISIBLE
                 wv_renew_discount.setBackgroundColor(Color.TRANSPARENT)
                 wv_renew_discount.settings.javaScriptEnabled = true
+                wv_renew_discount.setOnTouchListener { _, event ->
+                    ll_renew_discount.onTouchEvent(event)
+                    true
+                }
                 wv_renew_discount.loadUrl("http://xianglilai.scxll.cn/appH5/RenewBenifit.html?value=$discountPrice")
                 ll_renew_discount.setOnClickListener {
                     if (activeStatus == "3") {
@@ -2087,7 +2152,7 @@ class FgtHome : MainTabFragment() {
             v_bottom_padding.visibility = GONE
         } else {
             // 未绑定，显示banner
-            ll_follow_wechat_banner.visibility = VISIBLE
+            ll_follow_wechat_banner.visibility = GONE//先屏蔽，有需要再放开
             v_bottom_padding.layoutParams.height = 80.dp2px().toInt()
             v_bottom_padding.visibility = VISIBLE
             

@@ -20,6 +20,7 @@ import com.ruimeng.things.bean.bgImage
 import com.ruimeng.things.bean.description
 import com.ruimeng.things.bean.isCD
 import com.ruimeng.things.bean.isGA
+import com.ruimeng.things.bean.isNC
 import com.ruimeng.things.bean.isSH
 import com.ruimeng.things.bean.showName
 import com.ruimeng.things.bean.stateImage
@@ -288,7 +289,7 @@ class FgtMe : MainTabFragment() {
 
         menus.add(MeMenuItem("myCoupon", R.mipmap.ic_my_coupon, "我的优惠券", { startFgt(FgtMyCoupon.newInstance()) }, true))
 
-        val showReferrer = userinfo != null && (userinfo.isSH() || userinfo.isGA())
+        val showReferrer = userinfo != null && (userinfo.isSH() || userinfo.isGA() || userinfo.isNC())
         menus.add(MeMenuItem("referrer", R.mipmap.service_my_referrer, "推荐有礼", { startFgt(FgtRecommendGift()) }, showReferrer))
 
         menus.add(MeMenuItem("followWechat", R.drawable.ic_wx, "关注公众号", {

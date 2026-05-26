@@ -15,14 +15,17 @@ import com.ruimeng.things.FgtMain
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtCouponPurchase
 import com.ruimeng.things.home.FgtExtendedGift
+import com.ruimeng.things.home.FgtLotteryCoupon
 import com.ruimeng.things.home.bean.BannerInfo
+import com.ruimeng.things.home.bean.LuckyWheelLotteryBean
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.share.FgtShare
 import com.utils.WeChatHelper
 import wongxd.base.FgtBase
 
 class PopupAdWindow (private val fgtBase: FgtBase,
-                     private val promotions: Promotions
+                     private val promotions: Promotions,
+                     private val extraData: Any? = null
 ) : PopupWindow(fgtBase.requireActivity()) {
 
     init {
@@ -55,6 +58,25 @@ class PopupAdWindow (private val fgtBase: FgtBase,
                             }
                             "3" -> {//外部浏览器
                                 AtyWeb2.startBrowser(context,operationURL)
+                            }
+                            "A" -> {
+                                // 跳转抽奖福利页面
+                                val grant = extraData?.let { 
+                                    if (it is LuckyWheelLotteryBean.Data) it.sendCouponPrice else "0"
+                                } ?: "0"
+                                val own = extraData?.let { 
+                                    if (it is LuckyWheelLotteryBean.Data) it.selfCouponPrice else "0"
+                                } ?: "0"
+                                val ownId = extraData?.let { 
+                                    if (it is LuckyWheelLotteryBean.Data) it.selfCouponId else ""
+                                } ?: ""
+                                val price = extraData?.let { 
+                                    if (it is LuckyWheelLotteryBean.Data) it.paymentPrice else "0"
+                                } ?: "0"
+                                val code = extraData?.let { 
+                                    if (it is LuckyWheelLotteryBean.Data) it.lotteryReqNum else ""
+                                } ?: ""
+                                FgtMain.instance?.start(FgtLotteryCoupon.newInstance(grant, own, ownId, price, code))
                             }
                         }
                         dismiss()

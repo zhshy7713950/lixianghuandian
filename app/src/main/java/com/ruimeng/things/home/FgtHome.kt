@@ -275,7 +275,7 @@ class FgtHome : MainTabFragment() {
             Animation.RELATIVE_TO_SELF, 0.5f,
             Animation.RELATIVE_TO_SELF, 0.5f
         ).apply {
-            duration = 1500 // 1.5s per circle
+            duration = 3000 // 3s per circle
             repeatCount = Animation.INFINITE
             interpolator = LinearInterpolator()
         }

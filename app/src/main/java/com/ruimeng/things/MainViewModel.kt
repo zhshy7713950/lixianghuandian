@@ -42,7 +42,7 @@ class MainViewModel : BaseViewModel() {
     private val _luckyWheelLottery = MutableLiveData<LuckyWheelLotteryBean>()
     val luckyWheelLottery: LiveData<LuckyWheelLotteryBean> get() = _luckyWheelLottery
 
-    fun fetchBannerData(context: Context,userId: String,position: String) {
+    fun fetchBannerData(context: Context, userId: String, position: String) {
         viewModelScope.launch {
             val mapLocation = requestLocation(context)
             http {
@@ -54,9 +54,9 @@ class MainViewModel : BaseViewModel() {
 
                 onSuccess { res ->
                     val bannerList = res.toPOJO<BannerData>().data
-                    if("1" == position){
+                    if ("1" == position) {
                         _homeBannerData.value = bannerList
-                    }else{
+                    } else {
                         _meBannerData.value = bannerList
                     }
                 }
@@ -77,8 +77,8 @@ class MainViewModel : BaseViewModel() {
                     } catch (_: Exception) {
                     }
                 }
-                onFail { code, msg ->
-                    val bean = LuckyWheelLotteryBean(errcode = code, errmsg = msg)
+                onFailWithData { code, msg, res ->
+                    val bean = res.toPOJO<LuckyWheelLotteryBean>()
                     _luckyWheelLottery.value = bean
                     onResult?.invoke(bean)
                 }

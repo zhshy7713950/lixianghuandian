@@ -21,7 +21,7 @@ class FgtLotteryCoupon : BaseBackFragment() {
             // 暂时加载本地 H5 方便测试
 //            val url = "file:///android_asset/LotteryCoupon.html?grant=$grant&own=$own&ownId=$ownId&price=$price&code=$code"
             // 原先的线上地址:
-            val url = "http://xianglilai.scxll.cn/appH5/LotteryCoupon.html?grant=$grant&own=$own&ownId=$ownId&price=$price&code=$code"
+            val url = "https://xianglilai.scxll.cn/appH5/LotteryCouponAndroid.html?grant=$grant&own=$own&ownId=$ownId&price=$price&code=$code"
             args.putString("url", url)
             args.putString("ownId", ownId)
             args.putString("grant", grant)
@@ -78,23 +78,9 @@ class FgtLotteryCoupon : BaseBackFragment() {
                             params["sendCouponPrice"] = grant
                             params["lotteryReqNum"] = code
 
-                            IS_SHOW_MSG = false
-
-                            onResponse { res ->
-                                try {
-                                    val jsonObj = JSONObject(res as String)
-                                    val errcode = jsonObj.optInt("errcode")
-                                    val errmsg = jsonObj.optString("errmsg", "发奖失败")
-                                    if (errcode == 200) {
-                                        // Call JS function
-                                        webView.evaluateJavascript("javascript:displayWheel()", null)
-                                    } else {
-                                        ToastHelper.shortToast(context, errmsg)
-                                    }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    ToastHelper.shortToast(context, "响应解析失败")
-                                }
+                            onSuccess { res ->
+                                // Call JS function
+                                webView.evaluateJavascript("javascript:displayWheel()", null)
                             }
                         }
                     }

@@ -351,6 +351,7 @@ object BaseOkhttpHelper {
                                             wrap._tokenLost.invoke(errMsg)
 
                                         } else
+                                            wrap._failWithData.invoke(errcode,errMsg,res)
                                             wrap._fail.invoke(errcode, errMsg)
                                     } else {
                                        try {

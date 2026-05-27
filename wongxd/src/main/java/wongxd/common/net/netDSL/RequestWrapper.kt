@@ -73,6 +73,7 @@ class RequestWrapper {
     internal var _success: (String) -> Unit = { response -> }
     internal var _successWithMsg: (String, String) -> Unit = { response, msg -> }
     internal var _fail: (Int, String) -> Unit = { errCode, errMsg -> }
+    internal var _failWithData: (Int, String,String) -> Unit = { errCode, errMsg,data -> }
     internal var _finish: () -> Unit = {}
     var _tokenLost: (String) -> Unit = {}
     internal var _downloadFile: (Int, Long, File?) -> Unit = { progress, total, file -> }
@@ -117,6 +118,14 @@ class RequestWrapper {
     fun onFail(onError: (Int, String) -> Unit) {
         try {
             _fail = onError
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun onFailWithData(onError: (Int, String,String) -> Unit) {
+        try {
+            _failWithData = onError
         } catch (e: Exception) {
             e.printStackTrace()
         }

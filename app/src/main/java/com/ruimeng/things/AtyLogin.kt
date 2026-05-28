@@ -100,8 +100,8 @@ class AtyLogin : AtyBase() {
         tv_change_captcha.setOnClickListener {
             refreshCaptcha()
         }
-        isAgree = !SPUtils.getInstance().getBoolean(FIRST_LAUNCH_APP,true)
-        SPUtils.getInstance().put(FIRST_LAUNCH_APP,false)
+        val cachedPhone = SPUtils.getInstance().getString(TAG_LAST_LOGIN_PHONE)
+        isAgree = !cachedPhone.isNullOrBlank()
         cb_login.isChecked = isAgree
         cb_login.setOnCheckedChangeListener { compoundButton, b ->
             isAgree = b

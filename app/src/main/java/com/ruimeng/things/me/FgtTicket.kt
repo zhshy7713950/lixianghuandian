@@ -73,7 +73,7 @@ class FgtTicket : MainTabFragment() {
                             // Since we already fetched the coupon packages, we should find it and pass its data.
                             openCouponPurchaseIfAvailable()
                         } else {
-                            ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                            ToastHelper.shortToast(context, "暂无可购优惠券包信息")
                         }
                     } else {
                         // Reuse BannerHelper logic for other types
@@ -132,7 +132,7 @@ class FgtTicket : MainTabFragment() {
                         tv_coupon_count_hint.visibility = View.GONE
                     }
                 } else {
-                    ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                    ToastHelper.shortToast(context, "暂无可购优惠券包信息")
                     hasCouponPackages = false
                     rv_coupon_packages.visibility = View.GONE
                     tv_coupon_count_hint.visibility = View.GONE
@@ -140,7 +140,7 @@ class FgtTicket : MainTabFragment() {
             }
 
             onFail { _, msg ->
-                ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                ToastHelper.shortToast(context, "暂无可购优惠券包信息")
                 hasCouponPackages = false
                 rv_coupon_packages.visibility = View.GONE
                 tv_coupon_count_hint.visibility = View.GONE
@@ -180,7 +180,7 @@ class FgtTicket : MainTabFragment() {
                 if (couponPurchaseAd != null) {
                     startFgt(FgtCouponPurchase.newInstance(couponPurchaseAd.operationData?.data))
                 } else {
-                    ToastHelper.shortToast(context, "暂未查询到优惠券包信息")
+                    ToastHelper.shortToast(context, "暂无可购优惠券包信息")
                 }
             }
         }

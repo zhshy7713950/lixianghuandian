@@ -151,12 +151,12 @@ object BannerHelper {
                     fgt.start(FgtCouponPurchase.newInstance(couponPurchaseAd.operationData?.data))
                 } else {
                     // 没有找到优惠券购买广告
-                    EasyToast.DEFAULT.show("暂未查询到优惠券包信息")
+                    EasyToast.DEFAULT.show("暂无可购优惠券包信息")
                 }
             }
 
             onFail { _, s ->
-                EasyToast.DEFAULT.show("暂未查询到优惠券包信息")
+                EasyToast.DEFAULT.show("暂无可购优惠券包信息")
             }
         }
     }

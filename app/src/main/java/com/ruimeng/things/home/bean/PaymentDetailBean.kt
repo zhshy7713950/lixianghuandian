@@ -60,7 +60,9 @@ data class Data(
 )
 
 data class NextMonthPayment(
-    val discountPrice: Double? = 0.0
+    val discountPrice: Double? = 0.0,
+    val originPrice: Double? = 0.0,
+    val couponPrice: Double? = 0.0
 )
 
 }

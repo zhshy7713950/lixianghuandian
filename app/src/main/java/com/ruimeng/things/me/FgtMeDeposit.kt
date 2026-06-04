@@ -24,6 +24,7 @@ import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.bean.ChangeRentBatteryBean
 import com.ruimeng.things.home.bean.ChangeRentBatteryPayInfoBean
 import com.ruimeng.things.home.bean.PaymentDetailBean
+import com.ruimeng.things.me.view.QuitAllowancePopup
 import com.ruimeng.things.me.view.RebackAlertPopup
 import com.ruimeng.things.showConfirmDialog
 import com.ruimeng.things.voice.VoicePlayerManager
@@ -76,12 +77,32 @@ class FgtMeDeposit : BaseBackFragment() {
 
     var virtaul = false
     var deviceId = ""
+    private var originPrice: Double = 0.0
+    private var couponPrice: Double = 0.0
+    
     private fun getInfo() {
         deviceId =
             if (FgtHome.CURRENT_DEVICEID == "0") FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
         if (deviceId.startsWith("8") && deviceId.length == 8) {
             virtaul = true
         }
+        
+        http {
+            url = "/apiv6/payment/getuserpaymentinfo"
+            params["user_id"] = FgtHome.userId
+            params["device_id"] = deviceId
+            IS_SHOW_MSG = false
+            onSuccess { res ->
+                try {
+                    val data = res.toPOJO<PaymentDetailBean>().data
+                    originPrice = data.nextMonthPayment?.originPrice ?: 0.0
+                    couponPrice = data.nextMonthPayment?.couponPrice ?: 0.0
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        
         tv_battery_num.text = "电池编号：" + deviceId
         var textColors = arrayOf("#929FAB", "#FFFFFF")
         var type = when (FgtHome.payType) {
@@ -111,53 +132,108 @@ class FgtMeDeposit : BaseBackFragment() {
                 tv_remark.text = "退还押金申请通过后，1-2个工作日到账"
                 tv_deposit_return.text = "申请退还押金"
             }
+            tv_deposit_return.setOnClickListener {
+                checkReturnSubsidy()
+            }
+        } else {
+            tv_deposit_return.text = "立即退租"
+            tv_deposit_return.setOnClickListener {
+                checkReturnSubsidy()
+            }
+        }
+
+
+    }
+
+    private fun doOldFlowReturnDeposit() {
+        if (virtaul) {
             var dialogTitle =
                 if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "免押解绑结束后，剩余套餐将清零，请确认操作！"
                 else "押金退还结束后，剩余套餐将清零，请确认操作！"
             var dialogDesc =
                 if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "请确认是否解绑免押" else "请确认是否退还押金"
-            tv_deposit_return.setOnClickListener {
-                NormalDialog(activity)
-                    .apply {
-                        style(NormalDialog.STYLE_TWO)
-                        btnNum(2)
-                        title(dialogTitle)
-                        content(dialogDesc)
-                        btnText("确认", "取消")
-                        setOnBtnClickL(OnBtnClickL {
-                            dismiss()
-                            http {
-                                url = "/apiv6/payment/getuserpaymentinfo"
-                                params["user_id"] = FgtHome.userId
-                                params["device_id"] = deviceId
-                                IS_SHOW_MSG = false
-                                onSuccess { res ->
-                                    var paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
-                                    tryReturnDeposit(paymentDetailBean.contract_id)
-                                }
+            NormalDialog(activity)
+                .apply {
+                    style(NormalDialog.STYLE_TWO)
+                    btnNum(2)
+                    title(dialogTitle)
+                    content(dialogDesc)
+                    btnText("确认", "取消")
+                    setOnBtnClickL(OnBtnClickL {
+                        dismiss()
+                        http {
+                            url = "/apiv6/payment/getuserpaymentinfo"
+                            params["user_id"] = FgtHome.userId
+                            params["device_id"] = deviceId
+                            IS_SHOW_MSG = false
+                            onSuccess { res ->
+                                var paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
+                                tryReturnDeposit(paymentDetailBean.contract_id)
                             }
-                        }, OnBtnClickL {
-                            dismiss()
-                        })
+                        }
+                    }, OnBtnClickL {
+                        dismiss()
+                    })
 
-                    }.show()
-
-
-            }
+                }.show()
         } else {
-            tv_deposit_return.text = "立即退租"
-            tv_deposit_return.setOnClickListener {
-                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                ToastHelper.shortToast(context, "请扫描电柜二维码")
-                getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                    intent.putExtra("type", "退还")
-                    startActivityForResult(intent, 1)
-                })
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
+            ToastHelper.shortToast(context, "请扫描电柜二维码")
+            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                intent.putExtra("type", "退还")
+                startActivityForResult(intent, 1)
+            })
+        }
+    }
+
+    private fun checkReturnSubsidy() {
+        http {
+            url = "/apiv6/user/returnsubsidy"
+            params["user_id"] = FgtHome.userId
+            params["device_id"] = deviceId
+            IS_SHOW_MSG = false
+            
+            onSuccess { res ->
+                try {
+                    val obj = org.json.JSONObject(res)
+                    val data = obj.optJSONObject("data")
+                    val sendCouponPrice = data?.optDouble("sendCouponPrice", 0.0) ?: 0.0
+                    if (sendCouponPrice > 0) {
+                        val grant = if (sendCouponPrice % 1 == 0.0) {
+                            sendCouponPrice.toInt().toString()
+                        } else {
+                            String.format("%.2f", sendCouponPrice)
+                        }
+                        
+                        val maxPrice = Math.max(couponPrice, sendCouponPrice)
+                        var finalPrice = originPrice - maxPrice
+                        if (finalPrice < 0.0) finalPrice = 0.0
+                        
+                        val priceStr = if (finalPrice % 1 == 0.0) {
+                            finalPrice.toInt().toString()
+                        } else {
+                            String.format("%.2f", finalPrice)
+                        }
+
+                        QuitAllowancePopup(
+                            requireActivity(),
+                            grant,
+                            priceStr
+                        ) {
+                            pop()
+                        }.show(topbar)
+                    } else {
+                        doOldFlowReturnDeposit()
+                    }
+                } catch (e: Exception) {
+                    doOldFlowReturnDeposit()
+                }
+            }
+            onFail { _, _ ->
+                doOldFlowReturnDeposit()
             }
         }
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

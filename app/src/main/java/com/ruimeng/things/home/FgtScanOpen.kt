@@ -82,7 +82,7 @@ class FgtScanOpen : BaseBackFragment() {
             tv_offline.isVisible = checkPayBean!!.cabinet?.isOnline == false
 
             tv_battery_num_pay_rent_money.text = checkPayBean!!.device_id
-            tv_battery_model_pay_rent_money.text = checkPayBean!!.modelName
+            tv_battery_model_pay_rent_money.text = checkPayBean!!.paymentInfo?.modelName
             tv_base_package_name.text = checkPayBean!!.paymentInfo.pname
             tv_base_package_time.text = TextUtil.formatTime(checkPayBean!!.begin_time,checkPayBean!!.exp_time)
             val options = checkPayBean!!.paymentInfo.userOptions.filter { it.option_type == "2" && it.active_status == "1"}

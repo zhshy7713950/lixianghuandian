@@ -1042,6 +1042,8 @@ class FgtHome : MainTabFragment() {
                 Color.parseColor("#1CFFE6")
             )
             tvProgress.setTextColor(Color.parseColor("#29EBB6"))
+            tvBatteryStatus.text = "已通电"
+            tvBatteryStatus.textColor = Color.parseColor("#2fe19c")
         } else {
             tvOpenClose.text = "开启电源"
             tvOpenClose.textColor = Color.parseColor("#29EBB6")
@@ -1057,6 +1059,8 @@ class FgtHome : MainTabFragment() {
                 Color.parseColor("#DEF0E9")
             )
             tvProgress.setTextColor(Color.parseColor("#DEF0E9"))
+            tvBatteryStatus.text = "已断电"
+            tvBatteryStatus.textColor = Color.parseColor("#def0e9")
         }
         pvBattery.refreshView()
 
@@ -1074,19 +1078,22 @@ class FgtHome : MainTabFragment() {
                 //                device_status int  1当前为开 2当前为关
                 val json = JSONObject(it)
                 val data = json.optJSONObject("data")
-                val device_status = data.optInt("device_status")
-                vm.pollDeviceStatus(IS_OPEN, CURRENT_DEVICEID.ifBlank { "0" })
-                showOpenOrCloseLoading()
+                var device_status = if (!isOpen) 1 else 2
+                if (data != null && data.has("device_status")) {
+                    device_status = data.optInt("device_status")
+                }
+                
+                // 取消蒙版和轮询代码，保留注释以备后用
+                // vm.pollDeviceStatus(IS_OPEN, CURRENT_DEVICEID.ifBlank { "0" })
+                // showOpenOrCloseLoading()
+                
                 // 播放成功语音
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "success-1")
-//                ToastHelper.shortToast(context, "操作成功")
-//                srl_home.postDelayed(Runnable {
-//                    getBatteryDetailInfo(if (CURRENT_DEVICEID.isBlank()) "0" else CURRENT_DEVICEID)
-//                    IS_OPEN = !IS_OPEN
-//                }, 6000)
-
+                ToastHelper.shortToast(context, "操作成功")
+                
+                // 立即切换电源的开关状态
 //                if (device_status == 1) {
-//                    openOrCloseBatter(BatteryOpenEvent(true))
+                    openOrCloseBatter(BatteryOpenEvent(!isOpen))
 //                } else {
 //                    openOrCloseBatter(BatteryOpenEvent(false))
 //                }

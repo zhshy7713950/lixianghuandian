@@ -350,9 +350,10 @@ object BaseOkhttpHelper {
                                             //token失效
                                             wrap._tokenLost.invoke(errMsg)
 
-                                        } else
+                                        } else {
                                             wrap._failWithData.invoke(errcode,errMsg,res)
                                             wrap._fail.invoke(errcode, errMsg)
+                                        }
                                     } else {
                                        try {
                                            wrap._success.invoke(res)
@@ -369,7 +370,9 @@ object BaseOkhttpHelper {
                                 }
                             }
                         } else {
-                            wrap._fail.invoke(-1, "服务器响应异常")
+                            MainLooper.runOnUiThread {
+                                wrap._fail.invoke(-1, "服务器响应异常")
+                            }
                         }
                     }
                 }

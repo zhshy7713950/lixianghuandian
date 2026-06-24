@@ -79,6 +79,7 @@ class FgtMeDeposit : BaseBackFragment() {
     var deviceId = ""
     private var originPrice: Double = 0.0
     private var couponPrice: Double = 0.0
+    private var paymentDetailBean: PaymentDetailBean.Data? = null
     
     private fun getInfo() {
         deviceId =
@@ -87,6 +88,12 @@ class FgtMeDeposit : BaseBackFragment() {
             virtaul = true
         }
         
+        // 默认显示：按钮“立即退租”，隐藏备注
+        tv_deposit_return.text = "立即退租"
+        tv_remark.visibility = View.GONE
+
+        tv_battery_num.text = "电池编号：" + deviceId
+
         http {
             url = "/apiv6/payment/getuserpaymentinfo"
             params["user_id"] = FgtHome.userId
@@ -95,63 +102,95 @@ class FgtMeDeposit : BaseBackFragment() {
             onSuccess { res ->
                 try {
                     val data = res.toPOJO<PaymentDetailBean>().data
+                    paymentDetailBean = data
                     originPrice = data.nextMonthPayment?.originPrice ?: 0.0
                     couponPrice = data.nextMonthPayment?.couponPrice ?: 0.0
+
+                    updateUIByPaymentDetail(data)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
         
-        tv_battery_num.text = "电池编号：" + deviceId
-        var textColors = arrayOf("#929FAB", "#FFFFFF")
-        var type = when (FgtHome.payType) {
-            "1" -> "微信支付"
-            "2" -> "支付宝支付"
-            "101" -> "芝麻信用(免押)"
-            "99" -> "线下免押"
-            "102" -> "集团支付"
-            else -> ""
+        tv_deposit_return.setOnClickListener {
+            checkReturnSubsidy()
         }
-        var deposit = when (FgtHome.payType) {
-            "1" -> FgtHome.deposit.toString()
-            "2" -> FgtHome.deposit.toString()
-            "101", "99", "102" -> "已免押"
-            else -> ""
-        }
+    }
 
+    private fun updateUIByPaymentDetail(data: PaymentDetailBean.Data) {
+        val textColors = arrayOf("#929FAB", "#FFFFFF")
+        var typeStr = ""
+        var depositStr = ""
 
-        tv_battery_status.text = TextUtil.getSpannableString(arrayOf("支付渠道：", type), textColors)
-        tv_battery_hole.text =
-            TextUtil.getSpannableString(arrayOf("电池押金：", deposit), textColors)
-        if (virtaul) {
-            if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") {
-                tv_remark.text = "解绑免押申请通过后，将自动解除免押绑定"
-                tv_deposit_return.text = "申请解绑免押"
-            } else {
-                tv_remark.text = "退还押金申请通过后，1-2个工作日到账"
-                tv_deposit_return.text = "申请退还押金"
-            }
-            tv_deposit_return.setOnClickListener {
-                checkReturnSubsidy()
+        if (data.buyFreeDeposit != null) {
+            typeStr = if (data.pay_type == "1") "微信支付" else "支付宝支付"
+            depositStr = "免押权益"
+
+            if (virtaul) {
+                tv_deposit_return.text = "关闭免押权益"
+                tv_remark.visibility = View.VISIBLE
+                tv_remark.text = "权益关闭后，免押服务将自动失效"
             }
         } else {
-            tv_deposit_return.text = "立即退租"
-            tv_deposit_return.setOnClickListener {
-                checkReturnSubsidy()
+            if (data.pay_type == "1" || data.pay_type == "2") {
+                typeStr = if (data.pay_type == "1") "微信支付" else "支付宝支付"
+                depositStr = data.deposit.toString()
+
+                if (virtaul) {
+                    tv_deposit_return.text = "申请退还押金"
+                    tv_remark.visibility = View.VISIBLE
+                    tv_remark.text = "退还押金申请通过后，1-2个工作日到账"
+                }
+            } else if (data.pay_type == "99" || data.pay_type == "101" || data.pay_type == "102") {
+                when (data.pay_type) {
+                    "99" -> {
+                        typeStr = "线下免押"
+                        depositStr = "线下免押"
+                    }
+                    "101" -> {
+                        typeStr = "芝麻信用(免押)"
+                        depositStr = "芝麻免押"
+                    }
+                    "102" -> {
+                        typeStr = "集团支付"
+                        depositStr = "集团免押"
+                    }
+                }
+
+                if (virtaul) {
+                    tv_deposit_return.text = "申请解绑免押"
+                    tv_remark.visibility = View.VISIBLE
+                    tv_remark.text = "解绑免押申请通过后，将自动解除免押绑定"
+                }
             }
         }
 
-
+        tv_battery_status.text = TextUtil.getSpannableString(arrayOf("支付渠道：", typeStr), textColors)
+        tv_battery_hole.text = TextUtil.getSpannableString(arrayOf("电池押金：", depositStr), textColors)
     }
 
     private fun doOldFlowReturnDeposit() {
         if (virtaul) {
-            var dialogTitle =
-                if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "免押解绑结束后，剩余套餐将清零，请确认操作！"
-                else "押金退还结束后，剩余套餐将清零，请确认操作！"
-            var dialogDesc =
-                if (FgtHome.payType == "101" || FgtHome.payType == "99" || FgtHome.payType == "102") "请确认是否解绑免押" else "请确认是否退还押金"
+            val payType = paymentDetailBean?.pay_type ?: ""
+            val hasBuyFreeDeposit = paymentDetailBean?.buyFreeDeposit != null
+            
+            var dialogTitle = ""
+            var dialogDesc = "请确认是否继续操作？"
+            
+            if (hasBuyFreeDeposit) {
+                dialogTitle = "免押权益关闭后，剩余套餐将清零，请确认操作！"
+            } else {
+                if (payType == "1" || payType == "2") {
+                    dialogTitle = "押金退还完成后，剩余套餐将清零，请确认操作！"
+                } else if (payType == "99" || payType == "101" || payType == "102") {
+                    dialogTitle = "免押解绑完成后，剩余套餐将清零，请确认操作！"
+                } else {
+                    // Fallback just in case
+                    dialogTitle = "免押解绑/押金退还结束后，剩余套餐将清零，请确认操作！"
+                }
+            }
+            
             NormalDialog(activity)
                 .apply {
                     style(NormalDialog.STYLE_TWO)
@@ -287,62 +326,35 @@ class FgtMeDeposit : BaseBackFragment() {
     }
 
     private fun tryReturnDeposit(contractId: String) {
+        http {
+            url = PathV3.RETURN_DEPOIST
+            params["contract_id"] = contractId
 
-        fun doNetReq() {
-            http {
-
-                url = PathV3.RETURN_DEPOIST
-                params["contract_id"] = contractId
-
-                onSuccessWithMsg { res, msg ->
-                    if (null != activity) {
-                        deviceId = ""
-                        NormalDialog(activity)
-                            .apply {
-                                style(NormalDialog.STYLE_TWO)
-                                btnNum(1)
-                                title("提示")
-                                content(msg)
-                                btnText("确认")
-                                setOnBtnClickL(OnBtnClickL {
-                                    dismiss()
-//                                    EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
-//                                    EventBus.getDefault().post(FgtMe.RefreshMe())
-                                    EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
-                                    pop()
-                                })
-
-                            }.show()
-                    } else {
-                        EasyToast.DEFAULT.show(msg)
-                    }
-
+            onSuccessWithMsg { res, msg ->
+                if (null != activity) {
+                    deviceId = ""
+                    NormalDialog(activity)
+                        .apply {
+                            style(NormalDialog.STYLE_TWO)
+                            btnNum(1)
+                            title("提示")
+                            content("操作成功")
+                            btnText("确认")
+                            setOnBtnClickL(OnBtnClickL {
+                                dismiss()
+                                EventBus.getDefault().post(FgtMain.SwitchPageEvent(0))
+                                pop()
+                            })
+                        }.show()
+                } else {
+                    EasyToast.DEFAULT.show("操作成功")
                 }
+            }
 
-
-                onFail { code, msg ->
-                    EasyToast.DEFAULT.show(msg)
-                }
-
+            onFail { code, msg ->
+                EasyToast.DEFAULT.show("操作失败，请稍后重试")
             }
         }
-
-        NormalDialog(activity)
-            .apply {
-                style(NormalDialog.STYLE_TWO)
-                btnNum(2)
-                title("押金退还结束后，剩余套餐将清零，请确认操作！")
-                content("是否确认退还押金？")
-                btnText("确认", "取消")
-                setOnBtnClickL(OnBtnClickL {
-                    dismiss()
-                    doNetReq()
-                }, OnBtnClickL {
-                    dismiss()
-                })
-
-            }.show()
-
     }
 
 }

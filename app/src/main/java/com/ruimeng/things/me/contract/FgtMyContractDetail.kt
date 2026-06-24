@@ -182,10 +182,16 @@ class FgtMyContractDetail : BaseBackFragment() {
                     getProtocol("${bean.device_id}")
                     tv_device_model_my_contract_detail.text = "${bean.model_str}"
                     tv_rent_long_my_contract_detail.text = "${bean.renttime_str}"
-                    tv_deposit_my_contract_detail.text = if ("0" == bean.deposit_status) {
-                        "0元"
-                    } else if (bean.pay_type == "101" || bean.pay_type == "99" || bean.pay_type == "102") {
-                        "已免押"
+                    tv_deposit_my_contract_detail.text = if (bean.deposit == "已免押") {
+                        if (bean.pay_type == "99") {
+                            "线下免押"
+                        } else if (bean.pay_type == "101") {
+                            "芝麻免押"
+                        } else if (bean.pay_type == "102") {
+                            "集团免押"
+                        } else {
+                            "免押权益"
+                        }
                     } else {
                         "${bean.deposit}元"
                     }

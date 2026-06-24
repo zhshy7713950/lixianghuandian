@@ -56,7 +56,17 @@ data class Data(
     val receiptInfo: List<ReceiptInfo>?,
     val agentCityName: String? = null,
     @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
+    val buyFreeDeposit: BuyFreeDeposit? = null,
+    @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
     val nextMonthPayment: NextMonthPayment? = null
+)
+
+data class BuyFreeDeposit(
+    val amount: String? = null,
+    val user_id: String? = null,
+    val order_id: String? = null,
+    val start_time: String? = null,
+    val end_time: String? = null
 )
 
 data class NextMonthPayment(

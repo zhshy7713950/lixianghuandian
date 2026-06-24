@@ -145,7 +145,7 @@ class FgtMyContractItem : MainTabFragment() {
    fun refresh(){
        srl_my_contract?.autoRefresh()
    }
-    private fun tryReturnDeposit(contractId: String) {
+    private fun tryReturnDeposit(contractId: String, b: MyContractListBean.Data) {
 
         fun doNetReq() {
             http {
@@ -153,14 +153,14 @@ class FgtMyContractItem : MainTabFragment() {
                 url = PathV3.RETURN_DEPOIST
                 params["contract_id"] = contractId
 
-                onSuccessWithMsg { res, msg ->
+                val handleSuccess = {
                     if (null != activity) {
                         NormalDialog(activity)
                             .apply {
                                 style(NormalDialog.STYLE_TWO)
                                 btnNum(1)
                                 title("提示")
-                                content(msg)
+                                content("操作成功")
                                 btnText("确认")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
@@ -171,31 +171,47 @@ class FgtMyContractItem : MainTabFragment() {
 
                             }.show()
                     } else {
-                        EasyToast.DEFAULT.show(msg)
+                        EasyToast.DEFAULT.show("操作成功")
                         FgtHome.CURRENT_DEVICEID = ""
                         EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
                         refresh()
                     }
+                }
 
+                onSuccess { res ->
+                    handleSuccess()
                 }
 
 
                 onFail { code, msg ->
-                    refresh()
-                    EasyToast.DEFAULT.show(msg)
+                    if (code == 200 || code == 202) {
+                        handleSuccess()
+                    } else {
+                        refresh()
+                        EasyToast.DEFAULT.show("操作失败，请稍后重试")
+                    }
                 }
 
             }
         }
 
 
+        val titleText = if (b.buyFreeDeposit == 1) {
+            "免押权益关闭后，剩余套餐将清零，请确认操作！"
+        } else {
+            if (b.depositPayType == 1 || b.depositPayType == 2) {
+                "押金退还完成后，剩余套餐将清零，请确认操作！"
+            } else {
+                "免押解绑完成后，剩余套餐将清零，请确认操作"
+            }
+        }
 
         NormalDialog(activity)
             .apply {
                 style(NormalDialog.STYLE_TWO)
                 btnNum(2)
-                title("押金退还结束后，剩余套餐将清零，请确认操作!")
-                content("是否确认退还押金？")
+                title(titleText)
+                content("请确认是否继续操作？")
                 btnText("确认", "取消")
                 setOnBtnClickL(OnBtnClickL {
                     dismiss()
@@ -243,7 +259,18 @@ class FgtMyContractItem : MainTabFragment() {
 
                 a.getView<FrameLayout>(R.id.qrf_return).apply {
                     visibility = if (b.btn_return == 1) View.VISIBLE else View.GONE
-                    setOnClickListener { tryReturnDeposit(b.contract_id) }
+                    setOnClickListener { tryReturnDeposit(b.contract_id, b) }
+                }
+
+                val tvReturn = a.getView<TextView>(R.id.tv_return_deposit)
+                if (b.buyFreeDeposit == 1) {
+                    tvReturn.text = "关闭免押权益"
+                } else {
+                    if (b.depositPayType == 1 || b.depositPayType == 2) {
+                        tvReturn.text = "申请退还押金"
+                    } else {
+                        tvReturn.text = "申请解绑免押"
+                    }
                 }
 
                 a.setGone(R.id.layout_btn,b.btn_return == 1)

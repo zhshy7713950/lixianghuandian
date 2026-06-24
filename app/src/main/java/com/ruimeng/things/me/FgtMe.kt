@@ -28,6 +28,7 @@ import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.CustomerServiceFragment
 import com.ruimeng.things.home.FgtChangeMobile
 import com.ruimeng.things.home.FgtFollowWechatAccount
+import com.ruimeng.things.home.FgtHome
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.me.activity.AtyWeb2
 import com.ruimeng.things.me.activity.DistributionCenterActivity
@@ -144,7 +145,7 @@ class FgtMe : MainTabFragment() {
 
             tv_money_me.text = "" + userinfo.devicenumber
 
-            tv_ya_money_me.text = showDeposit(userinfo.freeMark, userinfo.devicedeposit)
+            updateDepositUI(userinfo)
 
             renderMenus(userinfo)
         }
@@ -220,19 +221,31 @@ class FgtMe : MainTabFragment() {
 //        BannerHelper.setupBanner(banner, bannerList, this)
 //    }
 
-    private fun showDeposit(freeMark: String?, deviceDeposit: String?): String {
-        return if (deviceDeposit.safeToFloat() > 0) {
-            tv_ya_money_me.isEnabled = true
-            tv_ya_money_me_title.isEnabled = true
-            return deviceDeposit ?: "0.00"
-        } else if (freeMark == "1") {//存在免押
-            tv_ya_money_me.isEnabled = true
-            tv_ya_money_me_title.isEnabled = true
-            "已免押"
-        } else {
-            tv_ya_money_me.isEnabled = false
-            tv_ya_money_me_title.isEnabled = false
-            deviceDeposit ?: "0.00"
+    private fun updateDepositUI(userinfo: UserInfoBean.Data.UserInfo) {
+        if (view == null) return
+        tv_ya_money_me?.text = "无"
+        tv_ya_money_me?.isEnabled = false
+        tv_ya_money_me_title?.isEnabled = false
+
+        val currentDeviceId = FgtHome.CURRENT_DEVICEID
+        val depositInfoArr = userinfo.depositInfoArr
+
+        if (!depositInfoArr.isNullOrEmpty() && currentDeviceId.isNotEmpty()) {
+            val matchedDepositInfo = depositInfoArr.find { it.deviceId == currentDeviceId }
+            if (matchedDepositInfo != null) {
+                tv_ya_money_me?.isEnabled = true
+                tv_ya_money_me_title?.isEnabled = true
+                if (matchedDepositInfo.freeMark == 0) {
+                    tv_ya_money_me?.text = matchedDepositInfo.amount
+                } else {
+                    tv_ya_money_me?.text = when (matchedDepositInfo.payType) {
+                        99 -> "线下免押"
+                        101 -> "芝麻免押"
+                        102 -> "集团免押"
+                        else -> "免押权益"
+                    }
+                }
+            }
         }
     }
 
@@ -247,6 +260,12 @@ class FgtMe : MainTabFragment() {
         super.onHiddenChanged(hidden)
         if (!hidden) {
             srl_me?.autoRefresh()
+            
+            // 每次页面重新显示时，刷新押金UI，以防首页切换了电池
+            val userInfo = UserInfoLiveData.getInstance().value
+            if (userInfo != null && view != null) {
+                updateDepositUI(userInfo)
+            }
         }
     }
 

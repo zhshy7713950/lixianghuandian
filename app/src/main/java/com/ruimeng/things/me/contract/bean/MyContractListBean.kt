@@ -17,5 +17,7 @@ data class MyContractListBean(
         var paymentName: String = "", // 8 个月
     var userOptions : List<PaymentOption>,
         var open_check: Int = 0,
+        var buyFreeDeposit: Int = 0,
+        var depositPayType: Int = 0
     )
 }

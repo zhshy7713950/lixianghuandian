@@ -712,6 +712,14 @@ class FgtHome : MainTabFragment() {
                 iv_add_device.visibility = GONE
                 btnReturnInfo.visibility = GONE
                 tvLateFeeInfo.visibility = GONE
+                
+                val buyFreeDeposit = paymentDetailBean?.buyFreeDeposit
+                if (buyFreeDeposit != null && !buyFreeDeposit.end_time.isNullOrEmpty()) {
+                    tv_buy_free_deposit_end_time.visibility = VISIBLE
+                    tv_buy_free_deposit_end_time.text = "免押权益过期时间：${buyFreeDeposit.end_time}"
+                } else {
+                    tv_buy_free_deposit_end_time.visibility = GONE
+                }
             }
 
             3 -> {
@@ -722,6 +730,7 @@ class FgtHome : MainTabFragment() {
                 root_has_item.visibility = GONE
                 root_no_item.visibility = VISIBLE
                 btnReturnInfo.visibility = VISIBLE
+                tv_buy_free_deposit_end_time.visibility = GONE
                 handleOverduePayments()
             }
 
@@ -731,6 +740,7 @@ class FgtHome : MainTabFragment() {
                 iv_add_device.visibility = VISIBLE
                 btnReturnInfo.visibility = GONE
                 tvLateFeeInfo.visibility = GONE
+                tv_buy_free_deposit_end_time.visibility = GONE
             }
         }
 

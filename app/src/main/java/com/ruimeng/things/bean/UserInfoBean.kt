@@ -39,7 +39,8 @@ data class UserInfoBean(
             var isBindAccount: Int = 0, // 1-已绑定，0-未绑定
             var isVoiceActived: Int = 0, // 1-启用语音提示，0-关闭语音提示
             var hasRecom: Int = 0, // 0-不显示，1-未绑定，2-已绑定
-            var roleType: String = ""
+            var roleType: String = "",
+            var depositInfoArr: List<DepositInfo>? = null
         ){
             fun getElectric(): Electric?{
                 return getElectricList().firstOrNull()
@@ -81,6 +82,13 @@ data class UserInfoBean(
             var cityName: String = "",
             var days: String = "",
             var perDayElectric: String = "",
+        )
+
+        data class DepositInfo(
+            var deviceId: String = "",
+            var freeMark: Int = 0,
+            var payType: Int = 0,
+            var amount: String = ""
         )
 
 

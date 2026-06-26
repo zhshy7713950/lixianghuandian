@@ -227,7 +227,7 @@ class FgtMe : MainTabFragment() {
         tv_ya_money_me?.isEnabled = false
         tv_ya_money_me_title?.isEnabled = false
 
-        val currentDeviceId = FgtHome.CURRENT_DEVICEID
+        val currentDeviceId = if (FgtHome.CURRENT_DEVICEID == "0") FgtHome.NO_PAY_DEVICEID else FgtHome.CURRENT_DEVICEID
         val depositInfoArr = userinfo.depositInfoArr
 
         if (!depositInfoArr.isNullOrEmpty() && currentDeviceId.isNotEmpty()) {

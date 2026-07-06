@@ -1,6 +1,7 @@
 package com.ruimeng.things.home
 
 import android.annotation.SuppressLint
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import com.flyco.dialog.widget.NormalDialog
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
+import com.ruimeng.things.InfoViewModel
 import com.ruimeng.things.home.bean.GetDepositBean
 import com.ruimeng.things.home.bean.GetPayByDepositBean
 import com.ruimeng.things.voice.VoicePlayerManager
@@ -29,6 +31,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.json.JSONObject
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
+import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.*
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
@@ -51,6 +54,7 @@ class FgtDeposit : BaseBackFragment() {
             FQ(""),//分期
             XX(""), //线下
             GROUPPAP(""), //集团支付
+            DEPOSIT_FREE(""), //免押权益
         }
         var deviceId =""
         var deviceModel =""
@@ -74,6 +78,8 @@ class FgtDeposit : BaseBackFragment() {
 
     private var IS_CHECKED_PROTOCOL = false
     private var agentMap : JSONObject? = null;
+    private var getDepositData: GetDepositBean.Data? = null
+    private var hasShownDepositFreePopup = false
 
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
@@ -105,6 +111,7 @@ class FgtDeposit : BaseBackFragment() {
     @SuppressLint("SetTextI18n")
     private fun initAfterData(data: GetDepositBean.Data) {
 
+        getDepositData = data
         WaitViewController.from(scroll_account_deposit) { removeChilds() }
         FgtDeposit.deviceId = deviceId
         FgtDeposit.deviceModel = data.device.device_model
@@ -163,6 +170,17 @@ class FgtDeposit : BaseBackFragment() {
 
             if (PAY_WAY_TAG == PayWay.NULL) {
                 EasyToast.DEFAULT.show("请选择支付方式")
+                return@setOnClickListener
+            }
+            
+            if (PAY_WAY_TAG == PayWay.DEPOSIT_FREE) {
+                val buyFreeAmount = getDepositData?.buyFreeAmount ?: "30.00"
+                val buyFreeExpire = getDepositData?.buyFreeExpire ?: "90"
+                val originalDeposit = batteryCombinationBean?.let {
+                    if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+                } ?: "500.00"
+                
+                start(FgtBuyDepositFree.newInstance(buyFreeAmount, buyFreeExpire, originalDeposit))
                 return@setOnClickListener
             }
 //            if (tv_account_deposit.text.toString() == "请选择"){
@@ -254,10 +272,14 @@ class FgtDeposit : BaseBackFragment() {
     }
 
     private  fun showTotalMoney(){
-
+            
             if (PAY_WAY_TAG == PayWay.ZM){
                 showZMInfo()
+            }else if (PAY_WAY_TAG == PayWay.DEPOSIT_FREE) {
+                showDepositFreeInfo()
             }else{
+                tv_zm_desc.paintFlags = tv_zm_desc.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                tv_zm_desc1.paintFlags = tv_zm_desc1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 tv_zm_desc1.visibility = View.GONE
                 tv_zm_desc.visibility = View.GONE
                 btn_pay_now_account_deposit.text = "立即支付"
@@ -274,10 +296,41 @@ class FgtDeposit : BaseBackFragment() {
 
     private fun showZMInfo(){
         tv_money_account_deposit.text = TextUtil.getMoneyText("0.00")
-        tv_zm_desc1.visibility = View.VISIBLE
+        
+        tv_zm_desc.paintFlags = tv_zm_desc.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        tv_zm_desc.text = "（芝麻信用免押）"
+        tv_zm_desc.setTextColor(android.graphics.Color.parseColor("#ffffffff"))
         tv_zm_desc.visibility = View.VISIBLE
+        
+        tv_zm_desc1.paintFlags = tv_zm_desc1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        tv_zm_desc1.text = "（芝麻信用免押）"
+        tv_zm_desc1.setTextColor(android.graphics.Color.parseColor("#ffffffff"))
+        tv_zm_desc1.visibility = View.VISIBLE
+        
         tv_total.text = tv_money_account_deposit.text
         btn_pay_now_account_deposit.text = "申请免押"
+    }
+    
+    private fun showDepositFreeInfo() {
+        val buyFreeAmount = getDepositData?.buyFreeAmount ?: "30.00"
+        tv_money_account_deposit.text = TextUtil.getMoneyText(buyFreeAmount)
+        
+        batteryCombinationBean?.let {
+            val originalDeposit = if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
+            
+            tv_zm_desc.text = "￥${originalDeposit}"
+            tv_zm_desc.paintFlags = tv_zm_desc.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            tv_zm_desc.setTextColor(android.graphics.Color.parseColor("#ffb2c1ce"))
+            tv_zm_desc.visibility = View.VISIBLE
+            
+            tv_zm_desc1.text = "￥${originalDeposit}"
+            tv_zm_desc1.paintFlags = tv_zm_desc1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            tv_zm_desc1.setTextColor(android.graphics.Color.parseColor("#ffb2c1ce"))
+            tv_zm_desc1.visibility = View.VISIBLE
+        }
+        
+        tv_total.text = tv_money_account_deposit.text
+        btn_pay_now_account_deposit.text = "查看权益"
     }
     private var PAY_WAY_TAG = PayWay.WX
 
@@ -287,6 +340,7 @@ class FgtDeposit : BaseBackFragment() {
                 R.id.rbWx -> PAY_WAY_TAG =PayWay.WX
                 R.id.rbAlipay -> PAY_WAY_TAG = PayWay.AL
                 R.id.rbOffline -> PAY_WAY_TAG = PayWay.ZM
+                R.id.rbDepositFree -> PAY_WAY_TAG = PayWay.DEPOSIT_FREE
             }
             showTotalMoney()
         }
@@ -426,6 +480,15 @@ class FgtDeposit : BaseBackFragment() {
                 } else if (PAY_WAY_TAG == PayWay.AL || PAY_WAY_TAG == PayWay.ZM) {
 
                     BaseAlipay.tryPay(result.alipay.paystr) { resultInfo, resultStatus, isLocalSuccessed ->
+                        if (PAY_WAY_TAG == PayWay.ZM && resultStatus == "6001") {
+                            val city = InfoViewModel.getDefault().userInfo.value?.city
+                            if (city == "上海市" || city == "成都市") {
+                                activity?.runOnUiThread {
+                                    handleDepositFreeOption()
+                                }
+                                return@tryPay
+                            }
+                        }
                         getServerPayResult(result.orderid, isLocalSuccessed)
                     }
 
@@ -522,5 +585,25 @@ class FgtDeposit : BaseBackFragment() {
                 dealShouldRetry()
             }
         }
+    }
+
+    private fun handleDepositFreeOption() {
+        dlgPayProgress?.dismiss()
+        
+        rbDepositFree?.visibility = View.VISIBLE
+        rgDeposit?.check(R.id.rbDepositFree)
+        
+        if (!hasShownDepositFreePopup) {
+            hasShownDepositFreePopup = true
+            showDepositFreePopup()
+        }
+    }
+
+    private fun showDepositFreePopup() {
+        AnyLayer.with(requireContext())
+            .contentView(R.layout.dialog_deposit_free)
+            .backgroundColorInt(android.graphics.Color.parseColor("#99000000"))
+            .onClickToDismiss(R.id.iv_bg)
+            .show()
     }
 }

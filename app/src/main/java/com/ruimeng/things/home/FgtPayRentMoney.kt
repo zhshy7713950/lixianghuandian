@@ -419,7 +419,34 @@ class FgtPayRentMoney : BaseBackFragment() {
                 EasyToast.DEFAULT.show("请选择支付方式")
                 return@setOnClickListener
             }
-            computeAmount(true)
+
+            val params = getSubmitParam()
+            val options = params["options"] as? ArrayList<PaymentOption>
+            var isMonthly = false
+            if (!options.isNullOrEmpty()) {
+                val firstOption = options[0]
+                if (firstOption.change_times == "999") {
+                    isMonthly = true
+                }
+            }
+
+            if (pageType == PAGE_TYPE_CREATE && !isMonthly) {
+                NormalDialog(activity)
+                    .apply {
+                        style(NormalDialog.STYLE_TWO)
+                        title("提示")
+                        content("该套餐为次数套餐（非包月），按次数换电，请确认是否购买")
+                        btnText("取消", "确认")
+                        setOnBtnClickL(OnBtnClickL {
+                            dismiss()
+                        }, OnBtnClickL {
+                            dismiss()
+                            computeAmount(true)
+                        })
+                    }.show()
+            } else {
+                computeAmount(true)
+            }
         }
 
 

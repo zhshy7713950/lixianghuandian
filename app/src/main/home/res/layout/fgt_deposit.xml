@@ -301,7 +301,9 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="14dp"
-					android:layout_marginLeft="14dp">
+					android:layout_marginLeft="14dp"
+					android:paddingTop="14dp"
+					android:paddingBottom="14dp">
 					<RadioButton
 						android:id="@+id/rbWx"
 						android:layout_width="match_parent"
@@ -314,7 +316,6 @@
 						android:layout_marginLeft="14dp"
 						android:layout_marginRight="14dp"
 						android:drawablePadding="12dp"
-						android:layout_marginTop="14dp"
 						android:drawableLeft="@mipmap/ic_withdrawal_wx"
 						android:drawableRight="@drawable/radio_select"
 						android:button="@null">
@@ -348,9 +349,26 @@
 						android:layout_marginRight="14dp"
 						android:drawablePadding="12dp"
 						android:layout_marginTop="14dp"
-						android:layout_marginBottom="20dp"
 						android:drawableLeft="@mipmap/ic_pay_zhima"
 						android:drawableRight="@drawable/radio_select"
+						android:button="@null">
+					</RadioButton>
+					
+					<RadioButton
+						android:id="@+id/rbDepositFree"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layoutDirection="rtl"
+						android:text="免押权益"
+						android:textColor="@color/white"
+						android:textSize="14sp"
+						android:layout_marginLeft="14dp"
+						android:layout_marginRight="14dp"
+						android:drawablePadding="12dp"
+						android:layout_marginTop="14dp"
+						android:drawableLeft="@mipmap/ic_deposit_free"
+						android:drawableRight="@drawable/radio_select"
+						android:visibility="gone"
 						android:button="@null">
 					</RadioButton>
 				</RadioGroup>

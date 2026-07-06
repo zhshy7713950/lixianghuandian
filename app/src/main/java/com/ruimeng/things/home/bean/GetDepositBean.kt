@@ -14,6 +14,8 @@ data class GetDepositBean(
         var deposit: String = "",
         var deposit_host: String = "",
         var deposit_option: List<DepositOption> = listOf(),
+        var buyFreeAmount: String = "",
+        var buyFreeExpire: String = "",
         var device: Device = Device(),
         @SerializedName("package")
         var packageList: List<Package> = listOf(),

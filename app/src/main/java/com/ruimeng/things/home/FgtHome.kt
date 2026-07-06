@@ -299,6 +299,12 @@ class FgtHome : MainTabFragment() {
         }
     }
 
+    private val luckyWelfareSupportedCityNames = setOf("成都市", "资阳市")
+
+    private fun isLuckyWelfareSupportedCity(cityName: String): Boolean {
+        return cityName in luckyWelfareSupportedCityNames
+    }
+
     /**
      * 初始化广告加载器
      */
@@ -1301,7 +1307,7 @@ class FgtHome : MainTabFragment() {
                 }
 
                 val agentCityName = paymentDetailBean?.agentCityName ?: ""
-                if (agentCityName == "成都市" && modelName.startsWith("72")) {
+                if (modelName.startsWith("72") && isLuckyWelfareSupportedCity(agentCityName)) {
                     // 显示右下按钮
                     view?.findViewById<View>(R.id.fl_lucky_welfare)?.visibility = VISIBLE
                     // 调用getlottery接口

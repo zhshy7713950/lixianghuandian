@@ -14,6 +14,7 @@ import com.ruimeng.things.FgtMain
 import com.ruimeng.things.Path
 import com.ruimeng.things.R
 import com.ruimeng.things.home.bean.LateFeePayBean
+import com.ruimeng.things.utils.PageNavigationHelper
 import com.ruimeng.things.voice.VoicePlayerManager
 import com.utils.TextUtil
 import com.xianglilai.lixianghuandian.wxapi.WXEntryActivity
@@ -34,9 +35,10 @@ class FgtBuyDepositFree : BaseBackFragment() {
 
     companion object {
         const val TAG = "FgtBuyDepositFreeTag"
-        fun newInstance(buyFreeAmount: String, buyFreeExpire: String, originalDeposit: String): FgtBuyDepositFree {
+        fun newInstance(deviceId: String, buyFreeAmount: String, buyFreeExpire: String, originalDeposit: String): FgtBuyDepositFree {
             val fgt = FgtBuyDepositFree()
             val bundle = Bundle()
+            bundle.putString("deviceId", deviceId)
             bundle.putString("buyFreeAmount", buyFreeAmount)
             bundle.putString("buyFreeExpire", buyFreeExpire)
             bundle.putString("originalDeposit", originalDeposit)
@@ -45,6 +47,7 @@ class FgtBuyDepositFree : BaseBackFragment() {
         }
     }
 
+    private var deviceId = ""
     private var buyFreeAmount = "30.00"
     private var buyFreeExpire = "90"
     private var originalDeposit = "300.00"
@@ -55,6 +58,7 @@ class FgtBuyDepositFree : BaseBackFragment() {
         super.onLazyInitView(savedInstanceState)
         
         arguments?.let {
+            deviceId = it.getString("deviceId", "")
             buyFreeAmount = it.getString("buyFreeAmount", "30.00")
             buyFreeExpire = it.getString("buyFreeExpire", "90")
             originalDeposit = it.getString("originalDeposit", "300.00")
@@ -175,12 +179,13 @@ class FgtBuyDepositFree : BaseBackFragment() {
         dlgPayProgress?.dismiss()
         EasyToast.DEFAULT.show("支付成功")
         VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6") // "success-6" typically success sound
-        
+
+        FgtHome.CURRENT_DEVICEID = deviceId
+        PageNavigationHelper.backToMainAndSwitchTab(0,this)
+        EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
         btnPayNow?.postDelayed({
-            EventBus.getDefault().post(FgtMain.Companion.SwitchTabEvent(0))
-            EventBus.getDefault().post(FgtHome.RefreshMyDeviceList())
-            popTo(FgtHome::class.java, false)
-        }, 1500)
+            FgtHome.tryToScan(prefix = AtyScanQrcode.TYPE_PAY_RENT)
+        },1500)
     }
     
     private fun payFailed() {
@@ -198,7 +203,7 @@ class FgtBuyDepositFree : BaseBackFragment() {
         http {
             url = "apiv6/payment/buyfreedeposit"
             params["userId"] = FgtHome.userId
-            params["deviceId"] = FgtHome.CURRENT_DEVICEID
+            params["deviceId"] = deviceId
             //支付方式 1微信支付2支付宝支付
             params["payType"] = if (PAY_WAY_TAG == FgtDeposit.Companion.PayWay.WX) "1" else "2"
 

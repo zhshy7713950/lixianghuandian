@@ -180,7 +180,7 @@ class FgtDeposit : BaseBackFragment() {
                     if (FgtHome.IsWholeBikeRent) it.deposit_host else it.deposit
                 } ?: "500.00"
                 
-                start(FgtBuyDepositFree.newInstance(buyFreeAmount, buyFreeExpire, originalDeposit))
+                start(FgtBuyDepositFree.newInstance(deviceId, buyFreeAmount, buyFreeExpire, originalDeposit))
                 return@setOnClickListener
             }
 //            if (tv_account_deposit.text.toString() == "请选择"){

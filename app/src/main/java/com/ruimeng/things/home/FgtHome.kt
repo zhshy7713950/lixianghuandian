@@ -1264,15 +1264,15 @@ class FgtHome : MainTabFragment() {
                     paymentDetailBean?.paymentInfo?.userOptions?.let { options ->
                         if (options.isNotEmpty()) {
                             restTimes = options[0].change_times.safeToInt()
+                            // 如果剩余次数小于4次,弹窗提示
+                            if (restTimes < 4) {
+                                showLowTimesDialog()
+                            }
                         }
                     }
                 }
                 if (restTimes >= 999) {
                     isUnlimited = true
-                }
-                // 如果剩余次数小于4次,弹窗提示
-                if (restTimes < 4) {
-                    showLowTimesDialog()
                 }
 
                 NO_PAY_DEVICEID = paymentDetailBean!!.device_id

@@ -9,6 +9,8 @@ import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.ruimeng.things.FgtMain
 import com.ruimeng.things.Path
@@ -94,7 +96,7 @@ class FgtBuyDepositFree : BaseBackFragment() {
         tv_desc4.text = getHighlightText(
             "4.免押权益为虚拟权益，有效期内仅能使用1次，购买后不支持退款。",
             "1次",
-            "不支持退换"
+            "不支持退款"
         )
 
         // Prices
@@ -103,8 +105,23 @@ class FgtBuyDepositFree : BaseBackFragment() {
         tv_original_price.paintFlags = tv_original_price.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
         btnPayNow.setOnClickListener {
-            countPay()
+            showBuyConfirmDialog()
         }
+    }
+
+    private fun showBuyConfirmDialog() {
+        NormalDialog(activity).apply {
+            style(NormalDialog.STYLE_TWO)
+            btnNum(2)
+            content("该免押权益为虚拟权益，购买后不支持退款，请确认后再行购买。感谢您的理解与配合！")
+            btnText("取消", "确定")
+            setOnBtnClickL(OnBtnClickL {
+                dismiss()
+            }, OnBtnClickL {
+                dismiss()
+                countPay()
+            })
+        }.show()
     }
 
     private fun getHighlightText(fullText: String, vararg highlights: String): SpannableStringBuilder {

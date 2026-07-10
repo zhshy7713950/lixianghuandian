@@ -92,7 +92,7 @@ class FgtBuyDepositFree : BaseBackFragment() {
         
         // Text 4
         tv_desc4.text = getHighlightText(
-            "4.免押权益为虚拟权益，有效期内仅能使用1次，购买后不支持退换。",
+            "4.免押权益为虚拟权益，有效期内仅能使用1次，购买后不支持退款。",
             "1次",
             "不支持退换"
         )

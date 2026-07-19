@@ -23,10 +23,11 @@ import com.ruimeng.things.FgtMain
 import com.ruimeng.things.MainViewModel
 import com.ruimeng.things.R
 import com.ruimeng.things.home.FgtHome
-import com.ruimeng.things.net_station.bean.NetStationBean
-import com.ruimeng.things.net_station.bean.filterSelf
-import com.ruimeng.things.net_station.bean.getAvaModelNum
+import com.ruimeng.things.net_station.bean.NetStationGroupParser
+import com.ruimeng.things.net_station.bean.StationGroup
+import com.ruimeng.things.net_station.bean.filterGroupCabinets
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
+import com.utils.DensityUtil
 import com.utils.GlideHelper
 import com.utils.unsafeLazy
 import kotlinx.android.synthetic.main.fgt_net_station_map.*
@@ -37,7 +38,6 @@ import wongxd.common.getSweetDialog
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.permission.isAllGrantedPermissions
-import wongxd.common.toPOJO
 import wongxd.http
 
 class FgtNetStationMap : MainTabFragment() {
@@ -47,9 +47,10 @@ class FgtNetStationMap : MainTabFragment() {
     private var aMap: AMap? = null
     private var mMapView: MapView? = null
     private var location: Location? = null
-    private val markInfoMap: MutableMap<String, NetStationBean.Data.X> = mutableMapOf()
+    private val markGroupMap: MutableMap<String, StationGroup> = mutableMapOf()
     private val markerMap: MutableMap<String, Marker> = mutableMapOf()
     private var mCurrentMemMarker: Marker? = null
+    private var currentGroup: StationGroup? = null
     private var dlgProgress: SweetAlertDialog? = null
     private val netStationCtl by unsafeLazy {
         DefaultNetStationCtl.create()
@@ -162,13 +163,34 @@ class FgtNetStationMap : MainTabFragment() {
     private fun hideNetStationView() {
         net_station_view?.visibility = View.GONE
         iv_close_net_station_view?.visibility = View.GONE
+        station_tab_bar?.visibility = View.GONE
     }
 
-    private fun showNetStationView(data: NetStationBean.Data.X) {
+    /**
+     * 弹出聚合站点简介卡片，并根据电柜个数构建 Tab 栏。
+     */
+    private fun showNetStationView(group: StationGroup) {
+        currentGroup = group
         net_station_view?.bindCtl(netStationCtl)
-        net_station_view?.setNewData(data)
+        // 地图模式：顶部直角 + 地址固定两行，避免圆角缺口与切换时高度跳动
+        net_station_view?.setMapMode(true)
+        // 默认展示第一个电柜
+        showCabinet(group, 0)
         net_station_view?.visibility = View.VISIBLE
         iv_close_net_station_view?.visibility = View.VISIBLE
+
+        // "简介"整体宽度 = 屏幕宽度 - 卡片左右各 10dp 边距
+        val cardWidthPx = DensityUtil.getScreenWidth(requireContext()) -
+                DensityUtil.dip2px(20f, requireContext())
+        station_tab_bar?.setTabs(group.cabinets.size, 0, cardWidthPx) { index ->
+            showCabinet(group, index)
+        }
+        station_tab_bar?.visibility = View.VISIBLE
+    }
+
+    private fun showCabinet(group: StationGroup, index: Int) {
+        val cabinet = group.cabinets.getOrNull(index) ?: return
+        net_station_view?.setNewData(cabinet)
     }
 
     /**
@@ -192,30 +214,37 @@ class FgtNetStationMap : MainTabFragment() {
         }
     }
 
-    private var locations: MutableList<NetStationBean.Data.X> = mutableListOf()
+    private var groups: MutableList<StationGroup> = mutableListOf()
     private fun getNetStationList(name: String = "") {
         lastRefreshDeviceId = FgtHome.CURRENT_DEVICEID
         dlgProgress = getSweetDialog(requireContext(), SweetAlertDialog.PROGRESS_TYPE, "请求中...")
         dlgProgress!!.show()
         http {
-            url = "apiv3/cgstationnetwork"
+            url = "apiv6/cgstationnetwork/list"
             params["city_id"] = "000000"
             params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["name"] = name
 
             onSuccess { res ->
                 rootView?.let {
-                    val data = res.toPOJO<NetStationBean>().data
+                    val bean = NetStationGroupParser.parse(res)
                     aMap?.clear()
-                    locations.clear()
+                    groups.clear()
                     markerMap.clear()
-                    markInfoMap.clear()
+                    markGroupMap.clear()
 
-                    data.forEach { item ->
-                        item.filterSelf(FgtHome.getBatteryV())
-                        // 将父级城市ID传递到每个站点项，供 NetStationView 特例逻辑使用
-                        item.list.forEach { x -> x.cityId = item.city_id }
-                        locations.addAll(item.list)
+                    val curV = FgtHome.getBatteryV()
+                    bean.data.forEach { item ->
+                        item.list.forEach { group ->
+                            val cabinets = group.values.toList()
+                            // 将父级城市ID传递到每个电柜，供 NetStationView 特例逻辑使用
+                            cabinets.forEach { x -> x.cityId = item.city_id }
+                            // 宜昌等特殊过滤，规则与之前一致
+                            val filtered = filterGroupCabinets(item.city_id, cabinets, curV)
+                            if (filtered.isNotEmpty()) {
+                                groups.add(StationGroup(filtered))
+                            }
+                        }
                     }
                     showMarkList(name.isNotEmpty())
                 }
@@ -230,14 +259,14 @@ class FgtNetStationMap : MainTabFragment() {
     }
 
     private fun showMarkList(showFirstLocation: Boolean = false) {
-        locations.forEach { loc ->
-            addMarker(loc)
+        groups.forEach { group ->
+            addMarker(group)
         }
         if (showFirstLocation) {
-            if (locations.size > 0) {
-                EasyToast.DEFAULT.show("已为您找到${locations.size}个站点")
-                locations[0]?.let {
-                    aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it?.lat, it?.lng)))
+            if (groups.size > 0) {
+                EasyToast.DEFAULT.show("已为您找到${groups.size}个站点")
+                groups[0].let {
+                    aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.lat, it.lng)))
                     aMap?.moveCamera(CameraUpdateFactory.zoomTo(13f))
                 }
             } else {
@@ -255,12 +284,10 @@ class FgtNetStationMap : MainTabFragment() {
             mCurrentMemMarker = marker
             marker?.startAnimation()
             setClickedMarkerAnim()
-            var agent = markInfoMap[marker.id]
-            aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(agent!!.lat, agent.lng)))
+            val group = markGroupMap[marker.id] ?: return
+            aMap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(group.lat, group.lng)))
             aMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
-            if (agent != null) {
-                showNetStationView(agent)
-            }
+            showNetStationView(group)
         }
     }
 
@@ -282,10 +309,11 @@ class FgtNetStationMap : MainTabFragment() {
         }
     }
 
-    private fun addMarker(agent: NetStationBean.Data.X) {
+    private fun addMarker(group: StationGroup) {
         var imageUrl = "https://downxll.oss-cn-beijing.aliyuncs.com/lxhd/%s"
-        imageUrl = if (agent.isOnline == 1) {
-            val ava = agent.getAvaModelNum(FgtHome.getBatteryV())
+        imageUrl = if (group.isOnline == 1) {
+            // 聚合可换电池数：按规则累加各电柜
+            val ava = group.getAvaModelNum(FgtHome.getBatteryV())
             String.format(
                 imageUrl,
                 String.format(
@@ -301,17 +329,17 @@ class FgtNetStationMap : MainTabFragment() {
         context?.let {
             GlideHelper.loadImageAsBitmap(it, imageUrl) { bitmap ->
                 if (bitmap != null) {
-                    addMarkerInfo(agent, bitmap)
+                    addMarkerInfo(group, bitmap)
                 }
             }
         }
 
     }
 
-    private fun addMarkerInfo(agent: NetStationBean.Data.X, markerBitmap: Bitmap) {
+    private fun addMarkerInfo(group: StationGroup, markerBitmap: Bitmap) {
         var markerOption = MarkerOptions()
 //            .zIndex(10f)
-            .position(LatLng(agent.lat, agent.lng))
+            .position(LatLng(group.lat, group.lng))
             .draggable(false)
         markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
         var marker = aMap?.addMarker(markerOption)
@@ -321,8 +349,8 @@ class FgtNetStationMap : MainTabFragment() {
             animation.fillMode = 1
             marker.setAnimation(animation)
             marker.isClickable = true
-            agent.markerId = marker.id
-            markInfoMap[marker.id] = agent
+            group.markerId = marker.id
+            markGroupMap[marker.id] = group
             markerMap[marker.id] = marker
         }
     }

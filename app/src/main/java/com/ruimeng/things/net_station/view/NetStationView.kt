@@ -166,4 +166,22 @@ class NetStationView @JvmOverloads constructor(
         this.ctl = ctl
     }
 
+    /**
+     * 地图模式（网点页气泡卡片）：
+     * 1. 顶部去掉圆角，配合上方 Tab 栏，避免圆角处出现缺口。
+     * 2. 地址固定为两行，避免切换电柜（地址有单行/多行差异）时卡片高度忽大忽小。
+     *
+     * 列表页不调用此方法，保持原有圆角与自适应高度。
+     */
+    fun setMapMode(enabled: Boolean) {
+        if (enabled) {
+            ll_container.setBackgroundResource(R.drawable.bg_net_station_item_flat_top)
+            tv_address.setLines(2)
+        } else {
+            ll_container.setBackgroundResource(R.drawable.bg_net_station_item)
+            tv_address.minLines = 0
+            tv_address.maxLines = 2
+        }
+    }
+
 }

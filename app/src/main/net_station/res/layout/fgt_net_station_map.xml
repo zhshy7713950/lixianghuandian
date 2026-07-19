@@ -131,9 +131,17 @@
             android:id="@+id/iv_close_net_station_view"
             android:layout_width="match_parent"
             android:layout_height="25dp"
-            android:layout_marginTop="-30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/ic_net_station_close"
+            android:visibility="gone" />
+
+        <!-- 聚合站点 Tab 栏：距离"简介"0dp（紧贴卡片顶部），左对齐卡片左边 -->
+        <com.ruimeng.things.net_station.view.StationTabBar
+            android:id="@+id/station_tab_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
             android:visibility="gone" />
 
         <com.ruimeng.things.net_station.view.NetStationView

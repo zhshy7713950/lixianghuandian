@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 网点地图卡片背景：顶部为直角（配合上方 Tab 栏，避免圆角缺口），底部保留 10dp 圆角 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <solid android:color="#37454E" />
+
+    <corners
+        android:topLeftRadius="0dp"
+        android:topRightRadius="10dp"
+        android:bottomLeftRadius="10dp"
+        android:bottomRightRadius="10dp" />
+
+</shape>

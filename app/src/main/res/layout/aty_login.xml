@@ -263,7 +263,7 @@
 				android:id="@+id/tv_phone3"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="18608286025"
+				android:text="13550160005"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>
@@ -271,7 +271,7 @@
 				android:id="@+id/tv_phone4"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="18113147502"
+				android:text="15821989270"
 				android:textColor="@color/white"
 				android:layout_marginLeft="20dp"
 				/>

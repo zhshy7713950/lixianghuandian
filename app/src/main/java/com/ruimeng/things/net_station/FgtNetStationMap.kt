@@ -1,7 +1,9 @@
 package com.ruimeng.things.net_station
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +29,7 @@ import com.ruimeng.things.net_station.bean.NetStationGroupParser
 import com.ruimeng.things.net_station.bean.StationGroup
 import com.ruimeng.things.net_station.bean.filterGroupCabinets
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
+import com.utils.BitmapUtil
 import com.utils.DensityUtil
 import com.utils.GlideHelper
 import com.utils.unsafeLazy
@@ -310,30 +313,52 @@ class FgtNetStationMap : MainTabFragment() {
     }
 
     private fun addMarker(group: StationGroup) {
-        var imageUrl = "https://downxll.oss-cn-beijing.aliyuncs.com/lxhd/%s"
-        imageUrl = if (group.isOnline == 1) {
-            // 聚合可换电池数：按规则累加各电柜
-            val ava = group.getAvaModelNum(FgtHome.getBatteryV())
-            String.format(
-                imageUrl,
-                String.format(
-                    "mapballoon-change-%s-%s-%s@3x.png",
-                    "small",
-                    if (ava > 0) "green" else "yellow",
-                    ava
-                )
-            )
-        } else {
-            String.format(imageUrl, "mapballoon-change-small-offline@3x.png")
+        val online = group.isOnline == 1
+        // 聚合可换电池数：按规则累加各电柜
+        val ava = group.getAvaModelNum(FgtHome.getBatteryV())
+        // 气球图 URL 拼接规则：
+        // 离线 -> offline；在线 0 个 -> yellow；在线 1~99 个 -> green-{数量}；在线 >99 个 -> green-100
+        val suffix = when {
+            !online -> "offline"
+            ava <= 0 -> "yellow"
+            ava > 99 -> "green-100"
+            else -> "green-$ava"
         }
-        context?.let {
-            GlideHelper.loadImageAsBitmap(it, imageUrl) { bitmap ->
-                if (bitmap != null) {
-                    addMarkerInfo(group, bitmap)
+        val imageUrl = String.format(
+            "https://downxll.oss-cn-beijing.aliyuncs.com/lxhd/mapballoon-large-%s.png",
+            suffix
+        )
+        context?.let { ctx ->
+            GlideHelper.loadImageAsBitmap(ctx, imageUrl) { bitmap ->
+                // 聚合后可换数可能较大，服务器可能没有对应数字的预渲染气球图，
+                // 加载失败时用本地底图 + 数字兜底，保证气球一定会显示。
+                val markerBitmap = bitmap ?: createFallbackMarker(ctx, online, ava)
+                if (markerBitmap != null) {
+                    addMarkerInfo(group, markerBitmap)
                 }
             }
         }
 
+    }
+
+    /**
+     * 本地生成气球图（兜底）：在基础底图上绘制可换数字。
+     */
+    private fun createFallbackMarker(ctx: Context, online: Boolean, ava: Int): Bitmap? {
+        return try {
+            if (!online) {
+                BitmapFactory.decodeResource(ctx.resources, R.mipmap.ic_map_marker_off_line)
+            } else {
+                val baseRes =
+                    if (ava > 0) R.mipmap.ic_map_marker_small_2 else R.mipmap.ic_map_marker_small_1
+                val textColor =
+                    if (ava > 0) Color.parseColor("#29EBB6") else Color.parseColor("#FEB41E")
+                BitmapUtil().overlayTextOnImage(ctx, baseRes, ava.toString(), textColor)
+            }
+        } catch (e: Exception) {
+            Log.e("FgtNetStationMap", "createFallbackMarker error", e)
+            null
+        }
     }
 
     private fun addMarkerInfo(group: StationGroup, markerBitmap: Bitmap) {
@@ -341,7 +366,9 @@ class FgtNetStationMap : MainTabFragment() {
 //            .zIndex(10f)
             .position(LatLng(group.lat, group.lng))
             .draggable(false)
-        markerOption?.icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
+        // large 气球原图较大，统一缩放到 48*52 dp 展示
+        val scaledBitmap = scaleMarkerBitmap(markerBitmap, 48f, 52f)
+        markerOption?.icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap))
         var marker = aMap?.addMarker(markerOption)
         if (marker != null) {
             var animation = ScaleAnimation(1.0f, 1.6f, 1.0f, 1.6f)
@@ -353,6 +380,17 @@ class FgtNetStationMap : MainTabFragment() {
             markGroupMap[marker.id] = group
             markerMap[marker.id] = marker
         }
+    }
+
+    /**
+     * 将气球图缩放到指定 dp 尺寸（保证不同分辨率下显示大小一致）。
+     */
+    private fun scaleMarkerBitmap(src: Bitmap, widthDp: Float, heightDp: Float): Bitmap {
+        val density = resources.displayMetrics.density
+        val widthPx = (widthDp * density).toInt().coerceAtLeast(1)
+        val heightPx = (heightDp * density).toInt().coerceAtLeast(1)
+        if (src.width == widthPx && src.height == heightPx) return src
+        return Bitmap.createScaledBitmap(src, widthPx, heightPx, true)
     }
 
     private fun moveLocation() {

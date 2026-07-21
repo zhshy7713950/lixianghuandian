@@ -41,6 +41,11 @@ object GlideHelper {
                    callback(resource)
                 }
 
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    // 图片加载失败（例如服务器没有该数字对应的预渲染图）时，回调 null，交由调用方兜底
+                    callback(null)
+                }
+
                 override fun onLoadCleared(placeholder: Drawable?) {
 
                 }

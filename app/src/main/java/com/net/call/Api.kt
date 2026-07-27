@@ -34,6 +34,8 @@ object Api {
     
     // Advertisement
     const val Get_Third_Ad_Status = "apiv6/advertisementinfo/getthridadstatus"
+    /** 获取后管平台当前上架版本号（用于判断应用商店审核中） */
+    const val Get_New_App_Ver = "apiv6/message/getnewappver"
     
     // Voice
     const val Voice_Open = "apiv6/user/voiceopen"

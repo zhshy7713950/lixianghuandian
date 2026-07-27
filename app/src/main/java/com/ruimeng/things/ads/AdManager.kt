@@ -74,6 +74,12 @@ class AdManager private constructor() {
     // 广告SDK是否已初始化
     private var isSdkInitialized: Boolean = false
 
+    /**
+     * 应用商店审核中状态：
+     * APP 版本号高于后管平台版本号时为 true，此时强制隐藏三方广告 Banner
+     */
+    private var isUnderReview: Boolean = false
+
 
 
     /**
@@ -84,13 +90,32 @@ class AdManager private constructor() {
     fun setAdEnabled(enabled: Boolean) {
         this.isAdEnabled = enabled
         this.isInitialized = true
-        Log.d(TAG, "广告开关状态已设置: $enabled")
+        Log.d(TAG, "广告开关状态已设置: $enabled, 审核中=$isUnderReview")
         
-        // 如果广告开关打开且SDK未初始化，则初始化SDK
-        if (enabled && !isSdkInitialized) {
+        // 如果广告开关打开且SDK未初始化，则初始化SDK（审核中不初始化）
+        if (enabled && !isUnderReview && !isSdkInitialized) {
             initAdSdk()
         }
     }
+
+    /**
+     * 设置是否处于应用商店审核中
+     *
+     * @param underReview true=审核中（隐藏广告），false=已上线（可显示广告）
+     */
+    fun setUnderReview(underReview: Boolean) {
+        this.isUnderReview = underReview
+        Log.d(TAG, "应用商店审核状态已设置: underReview=$underReview")
+        // 若已判定可展示广告且 SDK 未初始化，补一次初始化
+        if (!underReview && isAdEnabled && !isSdkInitialized) {
+            initAdSdk()
+        }
+    }
+
+    /**
+     * 当前是否处于应用商店审核中
+     */
+    fun isUnderReview(): Boolean = isUnderReview
     
     /**
      * 检查广告是否允许显示
@@ -102,7 +127,29 @@ class AdManager private constructor() {
             Log.w(TAG, "广告开关状态未初始化，默认禁止显示广告")
             return false
         }
+        if (isUnderReview) {
+            Log.d(TAG, "应用商店审核中，隐藏广告 Banner")
+            return false
+        }
         return isAdEnabled
+    }
+
+    /**
+     * 比较版本号：appVer > platformVer 返回正数
+     * 例：1.0.43 vs 1.0.42 → 1（审核中）
+     */
+    fun compareVersion(appVer: String, platformVer: String): Int {
+        val appParts = appVer.trim().removePrefix("v").removePrefix("V")
+            .split(".").map { it.toIntOrNull() ?: 0 }
+        val platformParts = platformVer.trim().removePrefix("v").removePrefix("V")
+            .split(".").map { it.toIntOrNull() ?: 0 }
+        val len = maxOf(appParts.size, platformParts.size)
+        for (i in 0 until len) {
+            val a = appParts.getOrElse(i) { 0 }
+            val b = platformParts.getOrElse(i) { 0 }
+            if (a != b) return a.compareTo(b)
+        }
+        return 0
     }
     
     /**

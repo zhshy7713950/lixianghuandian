@@ -130,10 +130,12 @@ class AMPSNativeAdLoader(
         listener: Listener? = null
     ) {
         if (!AdManager.getInstance().isAdEnabled()) {
-            listener?.onLoadFailed(-1, "ad switch is off")
+            container.visibility = View.GONE
+            listener?.onLoadFailed(-1, "ad switch is off or under review")
             return
         }
         if (!AdManager.getInstance().isSdkInitialized()) {
+            container.visibility = View.GONE
             listener?.onLoadFailed(-2, "sdk not initialized")
             return
         }

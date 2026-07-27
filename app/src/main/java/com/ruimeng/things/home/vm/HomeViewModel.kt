@@ -1,11 +1,13 @@
 package com.ruimeng.things.home.vm
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.base.viewmodel.BaseViewModel
 import com.entity.local.ChangeErrorLocal
+import com.entity.local.GetNewAppVerLocal
 import com.entity.local.OneDeviceLocal
 import com.entity.local.RentStep1Local
 import com.entity.remote.RentStep1Remote
@@ -16,7 +18,6 @@ import com.net.getOrElse
 import com.net.isSuccess
 import com.net.whenError
 import com.net.whenSuccess
-import com.ruimeng.things.SplashViewModel
 import com.ruimeng.things.UserInfoLiveData
 import com.ruimeng.things.ads.AdManager
 import com.ruimeng.things.home.bean.DeviceDetailBean
@@ -24,24 +25,35 @@ import com.ruimeng.things.home.bean.MyDevicesBean
 import com.ruimeng.things.voice.VoicePlayerManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wongxd.Config
 
 class HomeViewModel : BaseViewModel() {
+
+    companion object {
+        private const val TAG = "HomeViewModel"
+    }
 
     private val _adStatusLiveData = MutableLiveData<Boolean>()
     val adStatusLiveData: LiveData<Boolean> = _adStatusLiveData
 
     /**
-     * 静默检查广告开关状态
+     * 静默检查广告开关状态 + 应用商店审核状态
      *
-     * 在APP启动时调用此方法获取广告开关状态，不阻塞UI
-     * @return LiveData<Boolean> 广告开关状态，true表示开启，false表示关闭
+     * 在APP启动时调用：
+     * 1. 请求 getnewappver，若 APP 版本号 > 平台版本号 → 审核中 → 隐藏广告
+     * 2. 请求 getthridadstatus，结合审核状态决定是否开启广告
      */
     fun checkAdStatusSilently(): LiveData<Boolean> {
         viewModelScope.launch {
+            // 1）审核中判断：APP版本 > 平台版本 → 审核中
+            val underReview = resolveUnderReviewStatus()
+            AdManager.getInstance().setUnderReview(underReview)
+
+            // 2）广告总开关
             val response = BizService.getThirdAdStatus()
-            // 处理响应结果
             response.whenSuccess { data ->
-                val isAdEnabled = data.data.switch == 1
+                val switchOn = data.data.switch == 1
+                val isAdEnabled = switchOn && !underReview
                 AdManager.getInstance().setAdEnabled(isAdEnabled)
                 _adStatusLiveData.value = isAdEnabled
             }.whenError { _, _ ->
@@ -51,6 +63,32 @@ class HomeViewModel : BaseViewModel() {
             }
         }
         return adStatusLiveData
+    }
+
+    /**
+     * 请求后管平台版本号，并与本地 APP 版本比较
+     * @return true 表示审核中（应隐藏广告）
+     */
+    private suspend fun resolveUnderReviewStatus(): Boolean {
+        return try {
+            when (val response = BizService.getNewAppVer(GetNewAppVerLocal())) {
+                is NetworkResponse.Success -> {
+                    val platformVer = response.data.data.updateVer.orEmpty()
+                    val appVer = Config.getDefault().versionName
+                    if (platformVer.isBlank() || appVer.isBlank()) {
+                        false
+                    } else {
+                        val underReview = AdManager.getInstance().compareVersion(appVer, platformVer) > 0
+                        Log.d(TAG, "版本比较 app=$appVer platform=$platformVer underReview=$underReview")
+                        underReview
+                    }
+                }
+                else -> false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "getnewappver 失败", e)
+            false
+        }
     }
 
     fun getMyDevice(): LiveData<List<MyDevicesBean.Data>>{

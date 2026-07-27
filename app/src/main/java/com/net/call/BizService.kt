@@ -10,6 +10,7 @@ import com.entity.local.GetCityInfoLocal
 import com.entity.local.GetCodeLocal
 import com.entity.local.GetMapKeyLocal
 import com.entity.local.GetThirdAdStatusLocal
+import com.entity.local.GetNewAppVerLocal
 import com.entity.local.OneDeviceLocal
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.RentStep1Local
@@ -25,6 +26,7 @@ import com.entity.remote.AdInfoRemote
 import com.entity.remote.AgentInfoRemote
 import com.entity.remote.GetCityInfoRemote
 import com.entity.remote.GetThirdAdStatusRemote
+import com.entity.remote.GetNewAppVerRemote
 import com.entity.remote.LoginRemote
 import com.entity.remote.RentStep1Remote
 import com.entity.remote.ServerPayResultRemote
@@ -128,6 +130,16 @@ object BizService {
         Api.Get_Third_Ad_Status,
         GetThirdAdStatusLocal()
     )
+
+    /**
+     * 获取后管平台当前上架版本号（用于判断应用商店审核中）
+     */
+    suspend fun getNewAppVer(local: GetNewAppVerLocal = GetNewAppVerLocal()) =
+        Server.call<GetNewAppVerLocal, GetNewAppVerRemote>(
+            Api.Get_New_App_Ver,
+            local,
+            isShowMsg = false
+        )
 
     suspend fun voiceOpen(voiceOpenLocal: VoiceOpenLocal) = Server.call<VoiceOpenLocal, Any>(
         Api.Voice_Open,

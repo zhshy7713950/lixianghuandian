@@ -5,6 +5,34 @@
 
 ## 最近更新
 
+### VIVO 审核中隐藏三方广告 Banner（2026年）
+
+#### 功能描述
+应对 VIVO 应用商店审核对三方广告「诱导付费」的拦截：当本地 APP 版本高于后管平台版本时，判定为「审核中」，全局隐藏三方广告 Banner；已上线则正常显示。
+
+#### 判断规则
+| APP 版本 | 平台版本 | 状态 | 广告 |
+| --- | --- | --- | --- |
+| 1.0.43 | 1.0.42 | 审核中 | 隐藏 |
+| 1.0.43 | 1.0.43 | 已上线 | 显示 |
+| 1.0.43 | 1.0.44 | 已上线 | 显示 |
+
+#### 接口
+- 路径：`/apiv6/message/getnewappver`
+- 参数：`package_name`、`os`、`appType`（不传 ver）
+- 平台版本字段：`updateVer`（如 `"1.0.42"`）
+
+#### 实现要点
+- APP 启动时在 `HomeViewModel.checkAdStatusSilently()` 拉取一次平台版本并缓存到 `AdManager`
+- 各广告位加载前统一走 `AdManager.isAdEnabled()`（审核中强制 false）
+- 审核中不初始化 AdScope SDK
+
+#### 相关文件
+- `AdManager.kt`：审核状态门禁
+- `HomeViewModel.kt`：启动时拉取并比较版本
+- `AMPSNativeAdLoader.kt`：关闭时隐藏容器
+- `Api.kt` / `BizService.kt` / `GetNewAppVerLocal/Remote`
+
 ### 首页无套餐增加「查看电池型号与尺寸」（2026年）
 
 #### 功能描述

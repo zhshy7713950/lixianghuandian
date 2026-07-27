@@ -95,3 +95,15 @@ data class WithdrawListLocal(
     val page: String = "1",
     val pageSize: String = "10000"
 )
+
+/**
+ * 获取后管平台当前上架版本号
+ * @param package_name 应用包名
+ * @param os 系统类型
+ * @param appType 应用类型
+ */
+data class GetNewAppVerLocal(
+    val package_name: String = Config.getDefault().packageName,
+    val os: String = "android",
+    val appType: String = "lxhd"
+)

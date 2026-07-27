@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:textStyle="bold"
                 android:textSize="13sp"
                 android:textColor="#29EBB6"
@@ -60,6 +60,21 @@
                 android:drawablePadding="3dp"
                 android:layout_gravity="center_horizontal"
                 android:drawableLeft="@mipmap/ic_rant_long_pay_rent_money"/>
+
+            <TextView
+                android:id="@+id/tvBatterySpecInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="#f4de67"
+                android:text="查看电池型号与尺寸"
+                android:gravity="center"
+                android:drawablePadding="3dp"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@mipmap/ic_question_yellow"/>
 
 
             <FrameLayout

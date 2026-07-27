@@ -105,6 +105,9 @@ class FgtHome : MainTabFragment() {
         /** 首页无套餐占位：没有电池（套餐逾期） */
         private const val URL_HOME_NO_BATTERY =
             "https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/images/%E9%A6%96%E9%A1%B5-%E6%B2%A1%E6%9C%89%E7%94%B5%E6%B1%A0.png"
+        /** 电池型号与尺寸 H5 */
+        private const val URL_BATTERY_SPEC_PAGE =
+            "https://xllbackup.scxll.cn/appH5/SC-DCDGGHCC.html"
 
         var CURRENT_DEVICEID = ""
         var AGENT_CODE = ""
@@ -760,6 +763,8 @@ class FgtHome : MainTabFragment() {
         }
         // 未实名 / 未交押金 / 未交租金：新人指南；套餐逾期：保留「没有电池」图
         updateNoItemGuideImage(deviceStatus == 3)
+        // 未实名 / 无押金 / 无租金：展示「查看电池型号与尺寸」；已逾期不展示
+        updateBatterySpecEntry(deviceStatus != 3)
 
         val llNoItem = root_no_item
         val addDeviceBtn = llNoItem.findViewById<FrameLayout>(R.id.addDeviceBtn)
@@ -790,6 +795,39 @@ class FgtHome : MainTabFragment() {
             startFgt(FgtReturn.newInstance(NO_PAY_DEVICEID))
         }
 
+    }
+
+    /**
+     * 无套餐页「查看电池型号与尺寸」入口：仅未实名 / 无押金 / 无租金展示
+     */
+    private fun updateBatterySpecEntry(show: Boolean) {
+        val tv = tvBatterySpecInfo ?: return
+        if (!show) {
+            tv.visibility = GONE
+            tv.setOnClickListener(null)
+            return
+        }
+        tv.visibility = VISIBLE
+        tv.setOnClickListener {
+            openBatterySpecWebPage()
+        }
+    }
+
+    /**
+     * 打开电池型号与尺寸 H5（同帮助中心二级网页打开方式）
+     * city 取当前用户城市名；未传或无定位时，H5 默认展示上海市尺寸
+     */
+    private fun openBatterySpecWebPage() {
+        val city = InfoViewModel.getDefault().userInfo.value?.city.orEmpty()
+        val url = if (city.isNotEmpty()) {
+            val encodedCity = java.net.URLEncoder.encode(city, "UTF-8")
+            "$URL_BATTERY_SPEC_PAGE?city=$encodedCity"
+        } else {
+            URL_BATTERY_SPEC_PAGE
+        }
+        FgtMain.instance?.start(
+            HelpCenterWebFragment.newInstance(url, "查看电池型号与尺寸")
+        )
     }
 
     /**
@@ -1750,11 +1788,7 @@ class FgtHome : MainTabFragment() {
                     // 换电次数：有效期至 → 剩余天数（surplus_days），系统黄色
                     tv_change_package_time_title.text = "剩余天数"
                     val surplusDays = paymentDetailBean!!.surplus_days?.toString()?.trim().orEmpty()
-                    tv_change_package_time.text = when {
-                        surplusDays.isEmpty() -> "无"
-                        surplusDays.endsWith("天") -> surplusDays
-                        else -> "${surplusDays}天"
-                    }
+                    tv_change_package_time.text = "${surplusDays}"
                     tv_change_package_time.setTextColor(Color.parseColor("#FFE58B"))
                 } else {
                     tv_unfreeze_delay_package.visibility = GONE

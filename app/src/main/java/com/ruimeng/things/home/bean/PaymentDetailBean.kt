@@ -58,7 +58,11 @@ data class Data(
     @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
     val buyFreeDeposit: BuyFreeDeposit? = null,
     @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
-    val nextMonthPayment: NextMonthPayment? = null
+    val nextMonthPayment: NextMonthPayment? = null,
+    /** 冻结时间，仅套餐已冻结时返回 */
+    val stop_time: String? = null,
+    /** 剩余天数，仅套餐已冻结时返回（兼容数字/字符串） */
+    val surplus_days: Any? = null
 )
 
 data class BuyFreeDeposit(

@@ -1721,7 +1721,6 @@ class FgtHome : MainTabFragment() {
             if (paymentDetailBean!!.paymentInfo != null) {
                 modelName = paymentDetailBean!!.paymentInfo.modelName
                 tv_package_name.text = paymentDetailBean!!.paymentInfo.pname
-                tv_package_time.text = TextUtil.formatTime16(paymentDetailBean!!.exp_time)
                 if (paymentDetailBean!!.exp_remind == 1 && !TextUtils.isEmpty(paymentDetailBean!!.exp_remind_msg)) {
                     tv_exp_remind.visibility = VISIBLE
                     tv_exp_remind.text = paymentDetailBean!!.exp_remind_msg
@@ -1734,20 +1733,39 @@ class FgtHome : MainTabFragment() {
                 }
                 tv_change_package_type.text = timesStr
                 tv_change_package_left_times.visibility = GONE
-                tv_change_package_time.text = tv_package_time.text
                 tv_no_package.visibility = GONE
                 tv_btn_change_package.visibility = GONE
                 tv_more.visibility = GONE
                 tv_btn_change_package_update.visibility = GONE
                 btn_buy_change_package.isVisible = !isUnlimited
 
-                // 根据冻结状态显示“解冻后自动延期”标签
+                // 根据冻结状态显示“解冻后自动延期”标签，并切换有效期文案
                 if (activeStatus == "3") {
                     tv_unfreeze_delay_package.visibility = VISIBLE
                     tv_unfreeze_delay_change.visibility = VISIBLE
+                    // 租电套餐：有效期至 → 冻结时间（stop_time），系统黄色
+                    tv_package_time_name.text = "冻结时间"
+                    tv_package_time.text = TextUtil.formatTime16(paymentDetailBean!!.stop_time)
+                    tv_package_time.setTextColor(Color.parseColor("#FFE58B"))
+                    // 换电次数：有效期至 → 剩余天数（surplus_days），系统黄色
+                    tv_change_package_time_title.text = "剩余天数"
+                    val surplusDays = paymentDetailBean!!.surplus_days?.toString()?.trim().orEmpty()
+                    tv_change_package_time.text = when {
+                        surplusDays.isEmpty() -> "无"
+                        surplusDays.endsWith("天") -> surplusDays
+                        else -> "${surplusDays}天"
+                    }
+                    tv_change_package_time.setTextColor(Color.parseColor("#FFE58B"))
                 } else {
                     tv_unfreeze_delay_package.visibility = GONE
                     tv_unfreeze_delay_change.visibility = GONE
+                    // 生效中：保持「有效期至」+ exp_time
+                    tv_package_time_name.text = "有效期至"
+                    tv_package_time.text = TextUtil.formatTime16(paymentDetailBean!!.exp_time)
+                    tv_package_time.setTextColor(Color.parseColor("#ffffffff"))
+                    tv_change_package_time_title.text = "有效期至"
+                    tv_change_package_time.text = tv_package_time.text
+                    tv_change_package_time.setTextColor(Color.parseColor("#ffffffff"))
                 }
 
 

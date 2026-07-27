@@ -21,6 +21,7 @@ import android.view.View.VISIBLE
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -30,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.qmuiteam.qmui.widget.QMUITabSegment
@@ -96,6 +98,13 @@ class FgtHome : MainTabFragment() {
         const val TAG = "FgtHomeTag"
         const val REQUEST_ZXING_CODE = 1025
         const val KEY_LAST_DEVICE_ID = "lastDeviceId"
+
+        /** 首页无套餐占位：新人指南（未实名 / 未交押金 / 未交租金） */
+        private const val URL_HOME_NEW_USER_GUIDE =
+            "https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/images/%E9%A6%96%E9%A1%B5-%E6%96%B0%E4%BA%BA%E6%8C%87%E5%8D%97.png"
+        /** 首页无套餐占位：没有电池（套餐逾期） */
+        private const val URL_HOME_NO_BATTERY =
+            "https://downxll.oss-cn-beijing.aliyuncs.com/wxmin/images/%E9%A6%96%E9%A1%B5-%E6%B2%A1%E6%9C%89%E7%94%B5%E6%B1%A0.png"
 
         var CURRENT_DEVICEID = ""
         var AGENT_CODE = ""
@@ -749,6 +758,8 @@ class FgtHome : MainTabFragment() {
                 tv_buy_free_deposit_end_time.visibility = GONE
             }
         }
+        // 未实名 / 未交押金 / 未交租金：新人指南；套餐逾期：保留「没有电池」图
+        updateNoItemGuideImage(deviceStatus == 3)
 
         val llNoItem = root_no_item
         val addDeviceBtn = llNoItem.findViewById<FrameLayout>(R.id.addDeviceBtn)
@@ -779,6 +790,33 @@ class FgtHome : MainTabFragment() {
             startFgt(FgtReturn.newInstance(NO_PAY_DEVICEID))
         }
 
+    }
+
+    /**
+     * 无套餐占位图：
+     * - 新人指南：宽=屏宽80%，高度按比例适配（未实名/未交押金/未交租金）
+     * - 没有电池：宽270dp、高170dp（套餐逾期）
+     */
+    private fun updateNoItemGuideImage(isOverdue: Boolean) {
+        val iv = iv_no_item_guide ?: return
+        val lp = iv.layoutParams ?: FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        if (isOverdue) {
+            lp.width = 270.dp2px().toInt()
+            lp.height = 170.dp2px().toInt()
+            iv.layoutParams = lp
+            iv.adjustViewBounds = false
+            Glide.with(this).load(URL_HOME_NO_BATTERY).into(iv)
+        } else {
+            val screenWidth = resources.displayMetrics.widthPixels
+            lp.width = (screenWidth * 0.8f).toInt()
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            iv.layoutParams = lp
+            iv.adjustViewBounds = true
+            Glide.with(this).load(URL_HOME_NEW_USER_GUIDE).into(iv)
+        }
     }
 
     private fun hasBatteryInfo() = deviceCode == 200

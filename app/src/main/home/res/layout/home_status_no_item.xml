@@ -20,15 +20,18 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/gradiant_bg_home">
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradiant_bg_home"
+                android:paddingTop="110dp">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_gravity="bottom"
+                    android:id="@+id/iv_no_item_guide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="40dp"
-                    android:src="@mipmap/home_bg" />
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
             </FrameLayout>
 
 

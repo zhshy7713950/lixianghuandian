@@ -482,7 +482,7 @@ class FgtDeposit : BaseBackFragment() {
                     BaseAlipay.tryPay(result.alipay.paystr) { resultInfo, resultStatus, isLocalSuccessed ->
                         if (PAY_WAY_TAG == PayWay.ZM && resultStatus == "6001") {
                             val city = InfoViewModel.getDefault().userInfo.value?.city
-                            if (city == "上海市" || city == "成都市") {
+                            if (city == "上海市" || city == "成都市" || city == "资阳市") {
                                 activity?.runOnUiThread {
                                     handleDepositFreeOption()
                                 }

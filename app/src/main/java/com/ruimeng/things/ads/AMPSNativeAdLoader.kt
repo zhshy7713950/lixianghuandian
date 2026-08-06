@@ -231,9 +231,26 @@ class AMPSNativeAdLoader(
 
         val vlp = LayoutParams(LayoutParams.MATCH_PARENT, finalHeight)
         container.addView(view, vlp)
+        disableAdInteraction(container, view)
         lastAdView = view
         // 广告加载成功，显示容器
         container.visibility = View.VISIBLE
+    }
+
+    /**
+     * 广告保持正常渲染，但不响应用户触摸。
+     *
+     * 仅设置广告根 View 的 enabled 状态无法保证 SDK 内部子 View 不接收点击，
+     * 因此额外在最上层放置一个透明 View 来消费所有触摸事件。
+     */
+    private fun disableAdInteraction(container: ViewGroup, adView: View) {
+        adView.isEnabled = false
+        View(activity).apply {
+            isClickable = true
+            isFocusable = true
+            setOnTouchListener { _, _ -> true }
+            container.addView(this, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        }
     }
     
     /**

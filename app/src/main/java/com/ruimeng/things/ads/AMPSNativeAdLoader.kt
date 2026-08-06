@@ -129,6 +129,7 @@ class AMPSNativeAdLoader(
         cornerRadius: Float = 10f, // 添加圆角参数，默认10dp
         listener: Listener? = null
     ) {
+        (container as? TouchBlockingFrameLayout)?.setTouchBlocked(false)
         if (!AdManager.getInstance().isAdEnabled()) {
             container.visibility = View.GONE
             listener?.onLoadFailed(-1, "ad switch is off or under review")
@@ -240,17 +241,11 @@ class AMPSNativeAdLoader(
     /**
      * 广告保持正常渲染，但不响应用户触摸。
      *
-     * 仅设置广告根 View 的 enabled 状态无法保证 SDK 内部子 View 不接收点击，
-     * 因此额外在最上层放置一个透明 View 来消费所有触摸事件。
+     * 由容器在事件分发前拦截触摸，不新增 View，避免影响广告容器的测量与布局位置。
      */
     private fun disableAdInteraction(container: ViewGroup, adView: View) {
         adView.isEnabled = false
-        View(activity).apply {
-            isClickable = true
-            isFocusable = true
-            setOnTouchListener { _, _ -> true }
-            container.addView(this, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-        }
+        (container as? TouchBlockingFrameLayout)?.setTouchBlocked(true)
     }
     
     /**

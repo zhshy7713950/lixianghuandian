@@ -267,7 +267,7 @@
                 <!--                app:banner_radius="10dp" />-->
 
                 <!-- 广告容器 -->
-                <FrameLayout
+                <com.ruimeng.things.ads.TouchBlockingFrameLayout
                     android:id="@+id/ad_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

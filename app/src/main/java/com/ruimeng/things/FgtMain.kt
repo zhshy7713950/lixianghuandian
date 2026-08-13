@@ -28,6 +28,8 @@ import wongxd.common.EasyToast
 class FgtMain : FgtBase() {
 
     companion object {
+        private const val KEY_CURRENT_INDEX = "fgt_main_current_index"
+
         @SuppressLint("StaticFieldLeak")
         var instance: FgtMain? = null
 
@@ -42,7 +44,9 @@ class FgtMain : FgtBase() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        fgts[currentIndex].onHiddenChanged(hidden)
+        if (::fgts.isInitialized) {
+            fgts[currentIndex].onHiddenChanged(hidden)
+        }
     }
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
@@ -50,13 +54,26 @@ class FgtMain : FgtBase() {
 
         EventBus.getDefault().register(this)
         instance = this
-        fgts = arrayOf(
-            FgtHome(),
-//            FgtNetStation(),
-            FgtNetStationMap(),
-            FgtTicket(),
-            FgtMe()
-        )
+        currentIndex = savedInstanceState
+            ?.getInt(KEY_CURRENT_INDEX, 0)
+            ?.coerceIn(0, 3)
+            ?: 0
+        fgts = if (savedInstanceState == null) {
+            arrayOf(
+                FgtHome(),
+//                FgtNetStation(),
+                FgtNetStationMap(),
+                FgtTicket(),
+                FgtMe()
+            )
+        } else {
+            arrayOf(
+                requireNotNull(findChildFragment(FgtHome::class.java)),
+                requireNotNull(findChildFragment(FgtNetStationMap::class.java)),
+                requireNotNull(findChildFragment(FgtTicket::class.java)),
+                requireNotNull(findChildFragment(FgtMe::class.java))
+            )
+        }
 
 
 
@@ -85,7 +102,10 @@ class FgtMain : FgtBase() {
 //            NoReadLiveData.refresh { }
 //        }
 
-        loadMultipleRootFragment(R.id.fl_fgt_main, 0, *fgts)
+        if (savedInstanceState == null) {
+            loadMultipleRootFragment(R.id.fl_fgt_main, currentIndex, *fgts)
+        }
+        renderTab(currentIndex)
 
 
 //        NoReadLiveData.getInstance().simpleObserver(this) { data: NoReadBean.Data ->
@@ -105,6 +125,12 @@ class FgtMain : FgtBase() {
 
     private fun initTab(index:Int,fgts:Array< MainTabFragment>){
         this.currentIndex = index
+        renderTab(index)
+        // 显示选中的Fragment，隐藏其他Fragment
+        showHideFragment(fgts[index])
+    }
+
+    private fun renderTab(index: Int) {
         // 修复tab图标数组，使其与Fragment数组正确对应
         // Fragment顺序：[FgtHome, FgtNetStationMap, FgtTicket, FgtMe]
         // Tab ID顺序：[iv_home, iv_nearby, iv_contract, iv_me]
@@ -123,8 +149,11 @@ class FgtMain : FgtBase() {
                 tvView.setTextColor(Color.parseColor("#637989"))
             }
         }
-        // 显示选中的Fragment，隐藏其他Fragment
-        showHideFragment(fgts[index])
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_CURRENT_INDEX, currentIndex)
     }
 
     /**

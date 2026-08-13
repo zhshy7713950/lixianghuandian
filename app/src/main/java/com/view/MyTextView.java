@@ -129,13 +129,10 @@ public class MyTextView extends TextView implements OnClickListener {
 
         private SavedState(Parcel in) {
             super(in);
-           try {
-               boolean[] b = null;
-               in.readBooleanArray(b);
-               step = in.readFloat();
-           }catch (Exception e){
-               e.printStackTrace();
-           }
+            boolean[] values = new boolean[1];
+            in.readBooleanArray(values);
+            isStarting = values[0];
+            step = in.readFloat();
         }
     }
 
@@ -185,4 +182,3 @@ public class MyTextView extends TextView implements OnClickListener {
     }
 
 }
-

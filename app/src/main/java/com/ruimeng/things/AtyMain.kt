@@ -55,7 +55,9 @@ class AtyMain : BaseBackActivity() {
 
         setSwipeBackEnable(false)
 
-        loadRootFragment(R.id.fl_aty_main, FgtMain())
+        if (savedInstanceState == null) {
+            loadRootFragment(R.id.fl_aty_main, FgtMain())
+        }
 
         getPermissions(
             this,

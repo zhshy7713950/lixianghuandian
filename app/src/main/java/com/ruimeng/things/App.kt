@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.netease.nis.quicklogin.ui.YDQuickLoginActivity
 import com.ruimeng.things.shop.TkHttp
 import com.ruimeng.things.shop.tkLogin
+import com.ruimeng.things.voice.AppForegroundTracker
+import com.ruimeng.things.voice.VoicePlayerManager
 import com.tencent.bugly.crashreport.CrashReport
 import wongxd.Http
 import wongxd.Wongxd
@@ -42,6 +44,9 @@ class App : Wongxd() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AppForegroundTracker.initialize(this)
+        VoicePlayerManager.getInstance().initialize()
 
         CaocConfig.Builder()
             .apply()

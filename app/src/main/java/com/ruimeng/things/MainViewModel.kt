@@ -1,7 +1,6 @@
 package com.ruimeng.things
 
 import android.content.Context
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,14 +17,14 @@ import com.net.whenSuccess
 import com.ruimeng.things.home.bean.BannerData
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.home.bean.LuckyWheelLotteryBean
+import com.ruimeng.things.net_station.Coordinates
+import com.ruimeng.things.net_station.LocationSource
 import com.ruimeng.things.net_station.LocationUtil
 import com.utils.MapUtils
 import kotlinx.coroutines.launch
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.utilcode.util.SPUtils
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel : BaseViewModel() {
 
@@ -42,23 +41,30 @@ class MainViewModel : BaseViewModel() {
     private val _luckyWheelLottery = MutableLiveData<LuckyWheelLotteryBean>()
     val luckyWheelLottery: LiveData<LuckyWheelLotteryBean> get() = _luckyWheelLottery
 
-    fun fetchBannerData(context: Context, userId: String, position: String) {
+    /** 首页广告相关接口共用同一次定位，避免同时创建多个系统定位监听。 */
+    fun loadHomeAdContent(context: Context, userId: String) {
         viewModelScope.launch {
-            val mapLocation = requestLocation(context)
-            http {
-                url = "/apiv6/advertisementinfo/getbanner"
-                params["userId"] = userId
-                params["position"] = position // 首页
-                params["lat"] = mapLocation.latitude.toString()
-                params["lng"] = mapLocation.longitude.toString()
+            val coordinates = LocationUtil.resolveLocation(context).coordinates
+            launch { fetchAdInfo(userId, coordinates) }
+            launch { fetchBannerData(userId, "1", coordinates) }
+            launch { fetchBannerData(userId, "2", coordinates) }
+        }
+    }
 
-                onSuccess { res ->
-                    val bannerList = res.toPOJO<BannerData>().data
-                    if ("1" == position) {
-                        _homeBannerData.value = bannerList
-                    } else {
-                        _meBannerData.value = bannerList
-                    }
+    private fun fetchBannerData(userId: String, position: String, coordinates: Coordinates) {
+        http {
+            url = "/apiv6/advertisementinfo/getbanner"
+            params["userId"] = userId
+            params["position"] = position // 首页
+            params["lat"] = coordinates.latitude.toString()
+            params["lng"] = coordinates.longitude.toString()
+
+            onSuccess { res ->
+                val bannerList = res.toPOJO<BannerData>().data
+                if ("1" == position) {
+                    _homeBannerData.value = bannerList
+                } else {
+                    _meBannerData.value = bannerList
                 }
             }
         }
@@ -104,29 +110,28 @@ class MainViewModel : BaseViewModel() {
     private val _adInfoLiveData = MutableLiveData<AdInfoRemote>()
     val adInfoLiveData: LiveData<AdInfoRemote> = _adInfoLiveData
 
-    fun getAdInfo(context: Context, userId: String) {
-        viewModelScope.launch {
-            val mapLocation = requestLocation(context)
-            BizService.getAdInfo(
-                GetAdInfoLocal(
-                    userId,
-                    mapLocation.latitude.toString(),
-                    mapLocation.longitude.toString()
-                )
+    private suspend fun fetchAdInfo(userId: String, coordinates: Coordinates) {
+        BizService.getAdInfo(
+            GetAdInfoLocal(
+                userId,
+                coordinates.latitude.toString(),
+                coordinates.longitude.toString()
             )
-                .whenSuccess {
-                    _adInfoLiveData.value = it.data
-                }
+        ).whenSuccess {
+            _adInfoLiveData.value = it.data
         }
     }
 
     fun requestCityInfo(context: Context) {
         viewModelScope.launch {
-            val mapLocation = requestLocation(context)
+            val locationResult = LocationUtil.resolveLocation(context)
+            if (locationResult.source == LocationSource.DEFAULT_ZERO) return@launch
+
+            val coordinates = locationResult.coordinates
             val cityInfo = BizService.getCityInfo(
                 GetCityInfoLocal(
-                    mapLocation.latitude.toString(),
-                    mapLocation.longitude.toString()
+                    coordinates.latitude.toString(),
+                    coordinates.longitude.toString()
                 )
             )
             cityInfo.whenSuccess {
@@ -149,20 +154,6 @@ class MainViewModel : BaseViewModel() {
                     CustomerServiceManager.setPhones(contacts)
                 }
         }
-    }
-
-    private suspend fun requestLocation(context: Context) = suspendCoroutine<Location> { con ->
-        LocationUtil.getLocation(context, object : LocationUtil.Companion.LocationCallback {
-            override fun onLocationReceived(location: Location) {
-                App.lat = location.latitude
-                App.lng = location.longitude
-                con.resume(location)
-            }
-
-            override fun onLocationFailed(errorMessage: String) {
-            }
-
-        })
     }
 
 //    private val adInfoLiveData = MutableLiveData<>()

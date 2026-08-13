@@ -437,15 +437,23 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun getAdInfo() {
+        val loadAdContent = {
+            context?.let { context ->
+                vmMain.loadHomeAdContent(context, userId)
+            }
+            Unit
+        }
         getPermissionsWithTips(activity,
             PermissionType.COARSE_LOCATION,
             PermissionType.FINE_LOCATION,
             contentText = "为了能向您提供更好的站点服务及优惠信息，请允许使用定位权限",
+            result = { _, _ ->
+                loadAdContent()
+            },
             allGranted = {
-                vmMain.getAdInfo(requireActivity(), userId)
-                vmMain.fetchBannerData(requireActivity(), userId, "1")
-                vmMain.fetchBannerData(requireActivity(), userId, "2")
-            }
+                loadAdContent()
+            },
+            onCancel = loadAdContent
         )
     }
 

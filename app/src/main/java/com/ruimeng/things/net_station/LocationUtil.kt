@@ -1,99 +1,236 @@
 package com.ruimeng.things.net_station
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
+import com.ruimeng.things.App
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.resume
 
-class LocationUtil {
+data class Coordinates(
+    val latitude: Double,
+    val longitude: Double
+)
 
-    companion object {
-        private const val MIN_TIME = 1000L // 最小更新时间间隔（单位：毫秒）
-        private const val MIN_DISTANCE = 1f // 最小更新距离间隔（单位：米）
+enum class LocationSource {
+    LIVE,
+    MEMORY_CACHE,
+    DEFAULT_ZERO
+}
 
-        // 定义回调接口
-        interface LocationCallback {
-            fun onLocationReceived(location: Location)
-            fun onLocationFailed(errorMessage: String)
+enum class LocationFailure {
+    PERMISSION_DENIED,
+    PROVIDER_DISABLED,
+    MANAGER_UNAVAILABLE,
+    SECURITY_EXCEPTION,
+    TIMEOUT
+}
+
+data class LocationResult(
+    val coordinates: Coordinates,
+    val source: LocationSource,
+    val failure: LocationFailure? = null
+)
+
+/**
+ * 线程安全的一次性完成门闩。定位成功、失败和协程取消只能有一个分支获胜，
+ * 从而避免 GPS 与网络定位同时回调时重复恢复同一个协程。
+ */
+internal class SingleShotCompletion(private val cleanup: () -> Unit) {
+    private val completed = AtomicBoolean(false)
+
+    val isCompleted: Boolean
+        get() = completed.get()
+
+    fun tryComplete(action: () -> Unit): Boolean {
+        if (!completed.compareAndSet(false, true)) return false
+        cleanup()
+        action()
+        return true
+    }
+
+    fun cancel() {
+        tryComplete { }
+    }
+}
+
+/** 当前进程内的最后一次有效坐标缓存，不写入磁盘，避免下次启动复用过期位置。 */
+internal class LocationMemoryCache {
+    @Volatile
+    private var lastSuccessfulCoordinates: Coordinates? = null
+
+    fun live(coordinates: Coordinates): LocationResult {
+        lastSuccessfulCoordinates = coordinates
+        return LocationResult(coordinates, LocationSource.LIVE)
+    }
+
+    fun fallback(failure: LocationFailure): LocationResult {
+        val cached = lastSuccessfulCoordinates
+        return if (cached != null) {
+            LocationResult(cached, LocationSource.MEMORY_CACHE, failure)
+        } else {
+            LocationResult(Coordinates(0.0, 0.0), LocationSource.DEFAULT_ZERO, failure)
         }
+    }
+}
 
-        fun getLocation(context: Context, callback: LocationCallback) {
-            val locationManager =
-                context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-                    ?: run {
-                        callback.onLocationFailed("LocationManager is null")
-                        return
-                    }
+object LocationUtil {
+    private const val TAG = "LocationUtil"
+    private const val DEFAULT_TIMEOUT_MILLIS = 10_000L
+    private const val MIN_TIME = 1000L
+    private const val MIN_DISTANCE = 1f
 
-            // 检查权限
+    private val memoryCache = LocationMemoryCache()
+
+    /**
+     * 获取一次位置。GPS 和网络定位可以同时请求，但只接受第一个结果。
+     * 定位失败时依次降级为本进程缓存坐标和 0,0，调用方不会被永久挂起。
+     */
+    suspend fun resolveLocation(
+        context: Context,
+        timeoutMillis: Long = DEFAULT_TIMEOUT_MILLIS
+    ): LocationResult {
+        require(timeoutMillis > 0) { "timeoutMillis must be greater than 0" }
+
+        val liveResult = withTimeoutOrNull(timeoutMillis) {
+            awaitLiveLocation(context.applicationContext)
+        } ?: LiveLocationResult.Failure(LocationFailure.TIMEOUT)
+
+        return when (liveResult) {
+            is LiveLocationResult.Success -> {
+                val result = memoryCache.live(liveResult.coordinates)
+                // 兼容项目中仍直接读取 App 经纬度的旧业务。
+                App.lat = result.coordinates.latitude
+                App.lng = result.coordinates.longitude
+                result
+            }
+            is LiveLocationResult.Failure -> {
+                memoryCache.fallback(liveResult.reason).also { result ->
+                    Log.w(
+                        TAG,
+                        "Live location failed: ${liveResult.reason}; fallback=${result.source}"
+                    )
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun awaitLiveLocation(context: Context): LiveLocationResult =
+        suspendCancellableCoroutine { continuation ->
+            var locationManager: LocationManager? = null
+            var locationListener: LocationListener? = null
+
+            fun stopLocationUpdates() {
+                val manager = locationManager ?: return
+                val listener = locationListener ?: return
+                try {
+                    manager.removeUpdates(listener)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to remove location updates", e)
+                }
+            }
+
+            val completion = SingleShotCompletion(::stopLocationUpdates)
+
+            fun complete(result: LiveLocationResult) {
+                completion.tryComplete {
+                    continuation.resume(result)
+                }
+            }
+
+            continuation.invokeOnCancellation {
+                completion.cancel()
+            }
+
+            val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+            if (manager == null) {
+                complete(LiveLocationResult.Failure(LocationFailure.MANAGER_UNAVAILABLE))
+                return@suspendCancellableCoroutine
+            }
+            locationManager = manager
+
             val hasFineLocationPermission = ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
             val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
             if (!hasFineLocationPermission && !hasCoarseLocationPermission) {
-                callback.onLocationFailed("Location permissions not granted")
-                return
-            }
-
-            val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-            val isNetworkEnabled =
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-            if (!isGpsEnabled && !isNetworkEnabled) {
-                callback.onLocationFailed("GPS and Network providers are not enabled")
-                return
-            }
-
-            val locationListener = object : LocationListener {
-                override fun onLocationChanged(location: Location) {
-                    stopLocationUpdates(locationManager, this)
-                    callback.onLocationReceived(location)
-                }
-
-                override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-
-                override fun onProviderEnabled(provider: String) {}
-
-                override fun onProviderDisabled(provider: String) {}
+                complete(LiveLocationResult.Failure(LocationFailure.PERMISSION_DENIED))
+                return@suspendCancellableCoroutine
             }
 
             try {
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER,
-                        MIN_TIME,
-                        MIN_DISTANCE,
-                        locationListener
-                    )
+                // GPS_PROVIDER 需要精确定位权限；仅授予大致位置时仍可使用网络定位。
+                val canUseGps = hasFineLocationPermission &&
+                    manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val canUseNetwork = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                if (!canUseGps && !canUseNetwork) {
+                    complete(LiveLocationResult.Failure(LocationFailure.PROVIDER_DISABLED))
+                    return@suspendCancellableCoroutine
                 }
-                if (isGpsEnabled) {
-                    locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
+
+                val listener = object : LocationListener {
+                    override fun onLocationChanged(location: Location) {
+                        complete(
+                            LiveLocationResult.Success(
+                                Coordinates(location.latitude, location.longitude)
+                            )
+                        )
+                    }
+
+                    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+                    override fun onProviderEnabled(provider: String) {}
+
+                    override fun onProviderDisabled(provider: String) {}
+                }
+                locationListener = listener
+
+                fun requestUpdates(provider: String) {
+                    if (completion.isCompleted) return
+                    manager.requestLocationUpdates(
+                        provider,
                         MIN_TIME,
                         MIN_DISTANCE,
-                        locationListener
+                        listener,
+                        Looper.getMainLooper()
                     )
+                    // 处理“取消发生在完成检查与注册之间”的竞争，避免监听残留。
+                    if (completion.isCompleted) {
+                        stopLocationUpdates()
+                    }
+                }
+
+                if (canUseNetwork) {
+                    requestUpdates(LocationManager.NETWORK_PROVIDER)
+                }
+                if (canUseGps) {
+                    requestUpdates(LocationManager.GPS_PROVIDER)
                 }
             } catch (e: SecurityException) {
-                callback.onLocationFailed("Security exception: ${e.message}")
+                Log.w(TAG, "Location request failed with SecurityException", e)
+                complete(LiveLocationResult.Failure(LocationFailure.SECURITY_EXCEPTION))
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "LocationManager is unavailable", e)
+                complete(LiveLocationResult.Failure(LocationFailure.MANAGER_UNAVAILABLE))
             }
         }
 
-        private fun stopLocationUpdates(
-            locationManager: LocationManager,
-            locationListener: LocationListener
-        ) {
-            try {
-                locationManager.removeUpdates(locationListener)
-            } catch (e: SecurityException) {
-                // 可以在这里添加日志记录异常情况
-            }
-        }
+    private sealed class LiveLocationResult {
+        data class Success(val coordinates: Coordinates) : LiveLocationResult()
+        data class Failure(val reason: LocationFailure) : LiveLocationResult()
     }
 }

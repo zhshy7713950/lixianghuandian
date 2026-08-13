@@ -1,7 +1,6 @@
 package com.ruimeng.things.me.vm
 
 import android.content.Context
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,15 +9,12 @@ import com.entity.local.UserPaymentInfoLocal
 import com.entity.remote.UserPaymentInfoRemote
 import com.net.call.BizService
 import com.net.whenSuccess
-import com.ruimeng.things.App
 import com.ruimeng.things.home.bean.BannerData
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.net_station.LocationUtil
 import kotlinx.coroutines.launch
 import wongxd.common.toPOJO
 import wongxd.http
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class TicketViewModel : BaseViewModel() {
 
@@ -38,13 +34,13 @@ class TicketViewModel : BaseViewModel() {
 
     fun fetchBannerData(context: Context, userId: String) {
         viewModelScope.launch {
-            val mapLocation = requestLocation(context)
+            val coordinates = LocationUtil.resolveLocation(context).coordinates
             http {
                 url = "/apiv6/advertisementinfo/getbanner"
                 params["userId"] = userId
                 params["position"] = "1" // 优惠券页面
-                params["lat"] = mapLocation.latitude.toString()
-                params["lng"] = mapLocation.longitude.toString()
+                params["lat"] = coordinates.latitude.toString()
+                params["lng"] = coordinates.longitude.toString()
 
                 onSuccess { res ->
                     val bannerList = res.toPOJO<BannerData>().data
@@ -52,18 +48,5 @@ class TicketViewModel : BaseViewModel() {
                 }
             }
         }
-    }
-
-    private suspend fun requestLocation(context: Context) = suspendCoroutine<Location> { con ->
-        LocationUtil.getLocation(context, object : LocationUtil.Companion.LocationCallback {
-            override fun onLocationReceived(location: Location) {
-                App.lat = location.latitude
-                App.lng = location.longitude
-                con.resume(location)
-            }
-
-            override fun onLocationFailed(errorMessage: String) {
-            }
-        })
     }
 }

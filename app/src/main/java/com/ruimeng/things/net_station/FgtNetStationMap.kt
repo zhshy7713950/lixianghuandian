@@ -147,15 +147,6 @@ class FgtNetStationMap : MainTabFragment() {
 
     private fun initLocationData() {
         mainViewModel.requestCityInfo(requireContext())
-//        LocationUtil.getLocation(requireContext(),object : LocationUtil.Companion.LocationCallback {
-//            override fun onLocationReceived(location: Location) {
-//                App.lat = location.latitude
-//                App.lng = location.longitude
-//            }
-//
-//            override fun onLocationFailed(errorMessage: String) {
-//            }
-//        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -5,6 +5,26 @@
 
 ## 最近更新
 
+### 定位协程重复恢复崩溃修复（2026年）
+
+#### 问题说明
+系统 GPS 与网络定位可能几乎同时返回结果。旧实现会用两个结果重复恢复同一个协程，导致 `IllegalStateException: Already resumed` 并使 APP 崩溃；权限缺失或定位服务关闭时还可能让协程永久等待。
+
+#### 修复方案
+- `LocationUtil.resolveLocation(context, timeoutMillis)` 使用可取消协程获取一次定位，GPS 与网络定位只接受最先到达的结果。
+- 页面或 ViewModel 销毁、定位成功、失败及 10 秒超时时都会注销系统监听，避免重复回调和监听泄漏。
+- 实时定位失败时优先使用本进程上一次成功坐标，没有缓存时返回 `0,0`；结果中的 `LocationSource` 和 `LocationFailure` 可用于区分来源与失败原因。
+- 首页广告信息和两个 Banner 共用一次定位；广告、优惠券和网点列表可以使用降级坐标继续加载，城市反查不会使用 `0,0`。
+- 网点页在定位权限拒绝、服务关闭或超时时仍会关闭“定位中”弹窗并展示列表。
+
+#### 返回结果
+```kotlin
+val result = LocationUtil.resolveLocation(context)
+result.coordinates // latitude、longitude
+result.source      // LIVE、MEMORY_CACHE、DEFAULT_ZERO
+result.failure     // 成功时为 null，失败降级时说明原因
+```
+
 ### VIVO 审核中隐藏三方广告 Banner（2026年）
 
 #### 功能描述

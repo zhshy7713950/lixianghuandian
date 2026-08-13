@@ -120,11 +120,10 @@ enum class PermissionType(val permission: String, val permissionName: String) {
 }
 
 fun isAllGrantedPermissions(aty: FragmentActivity?, vararg per: PermissionType): Boolean {
-    var isAllGranted = false
-    per.forEach {
-        isAllGranted = aty?.checkSelfPermission(it.permission) == PackageManager.PERMISSION_GRANTED
+    if (aty == null) return false
+    return per.all {
+        aty.checkSelfPermission(it.permission) == PackageManager.PERMISSION_GRANTED
     }
-    return isAllGranted
 }
 
 fun getPermissionsWithTips(aty: FragmentActivity?,
@@ -132,8 +131,9 @@ fun getPermissionsWithTips(aty: FragmentActivity?,
                            contentText: String,
                            result: (Boolean, List<PermissionActivityResult.Permission>) -> Unit = { isAllGranted, perList -> },
                            allGranted: () -> Unit = {},
+                           onCancel: () -> Unit = {},
                            isGoSetting: Boolean = false){
-    var isAllGranted = isAllGrantedPermissions(aty, *per)
+    val isAllGranted = isAllGrantedPermissions(aty, *per)
     if(isAllGranted){
         allGranted.invoke()
         return
@@ -145,6 +145,13 @@ fun getPermissionsWithTips(aty: FragmentActivity?,
             it.confirmText = "允许权限"
             it.cancelText = "暂不授权"
         }
+    var cancelHandled = false
+    val notifyCancel = {
+        if (!cancelHandled) {
+            cancelHandled = true
+            onCancel.invoke()
+        }
+    }
     with(dlg){
         setConfirmClickListener {
             getPermissions(aty, *per, result = result,allGranted = allGranted,isGoSetting = isGoSetting)
@@ -152,7 +159,9 @@ fun getPermissionsWithTips(aty: FragmentActivity?,
         }
         setCancelClickListener {
             it.dismiss()
+            notifyCancel()
         }
+        setOnCancelListener { notifyCancel() }
         setCancelable(true)
         show()
     }
@@ -444,6 +453,4 @@ class PermissionActivityResult {
  *
  */
 private typealias  PermissionResultCallback = (Boolean, List<PermissionActivityResult.Permission>) -> Unit
-
-
 

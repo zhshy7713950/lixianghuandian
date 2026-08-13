@@ -20,6 +20,7 @@ import com.ruimeng.things.*
 import com.ruimeng.things.home.ContractCheckEvent
 import com.ruimeng.things.me.widget.signature_view.SignatureView
 import com.ruimeng.things.shop.PostGlideEngine
+import com.utils.FileHelper
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -141,13 +142,13 @@ class FgtContractSignStep2 : BaseBackFragment() {
 //    }
 
     private fun getPic() {
-        getPermissions(getCurrentAty(), PermissionType.CAMERA,PermissionType.WRITE_EXTERNAL_STORAGE, allGranted = {
+        getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
             Matisse.from(this)
                 .choose(MimeType.ofAll())
                 .capture(true)
                 .captureStrategy(
                     CaptureStrategy(
-                        true,
+                        false,
                         activity?.packageName + ".fileprovider"
                     )
                 )
@@ -229,12 +230,7 @@ class FgtContractSignStep2 : BaseBackFragment() {
             val arraylist = ArrayList<String>()
             Matisse.obtainResult(data).forEach { uri ->
                 //                Logger.e(uri.toString())
-                arraylist.add(
-                    PostGlideEngine.getAbsoluteImagePath(mContext, uri).replace(
-                        "/my_images/",
-                        "/storage/emulated/0/"
-                    )
-                )
+                FileHelper.getFileAbsolutePath(mContext, uri)?.let { arraylist.add(it) }
             }
             if (arraylist.isNotEmpty()) {
                 zipImg(App.getMainAty(), arraylist[0]) {

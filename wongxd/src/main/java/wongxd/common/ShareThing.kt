@@ -4,8 +4,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
 import androidx.core.content.FileProvider
 import java.io.*
 import java.net.URL
@@ -63,9 +61,10 @@ object ShareThing {
 
     private fun saveBitmap(bm: Bitmap, picName: String): Uri? {
         try {
-            val dir: String =
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/renji/" + picName + ".jpg";
-            val f = File(dir)
+            val activity = getCurrentAty()
+            val dir = File(activity.externalCacheDir ?: activity.cacheDir, "shared_images")
+            if (!dir.exists()) dir.mkdirs()
+            val f = File(dir, "$picName.jpg")
             if (!f.exists()) {
                 f.getParentFile().mkdirs()
                 f.createNewFile()
@@ -77,17 +76,11 @@ object ShareThing {
             out.close()
 
 
-            val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                //版本是否在7.0以上
-                FileProvider.getUriForFile(
-                    getCurrentAty(),
-                    getCurrentAty().application.packageName + ".fileprovider",
-                    f
-                )
-            } else {
-                Uri.fromFile(f)
-            }
-            return uri
+            return FileProvider.getUriForFile(
+                activity,
+                activity.application.packageName + ".fileprovider",
+                f
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -100,11 +93,14 @@ object ShareThing {
         val share_intent = Intent()
         share_intent.action = Intent.ACTION_SEND//设置分享行为
         share_intent.setType("image/*")  //设置分享内容的类型
-        share_intent.putExtra(Intent.EXTRA_STREAM, saveBitmap(bmp, "img"))
+        val activity = getCurrentAty()
+        val uri = saveBitmap(bmp, "img") ?: return
+        share_intent.putExtra(Intent.EXTRA_STREAM, uri)
+        UriGrantCompat.grantRead(activity, share_intent, uri)
         //创建分享的Dialog
         val realIntent = Intent.createChooser(share_intent, title)
 
-        getCurrentAty().startActivity(realIntent)
+        activity.startActivity(realIntent)
     }
 
 

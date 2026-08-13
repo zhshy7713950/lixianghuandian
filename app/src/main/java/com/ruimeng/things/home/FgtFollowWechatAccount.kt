@@ -4,9 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import com.flyco.dialog.listener.OnBtnClickL
 import com.flyco.dialog.widget.NormalDialog
 import com.ruimeng.things.R
@@ -16,10 +14,8 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
+import wongxd.common.GallerySaver
 import wongxd.utils.SystemUtils
-import wongxd.utils.utilcode.util.FileUtils
-import java.io.File
-import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -61,57 +57,18 @@ class FgtFollowWechatAccount : BaseBackFragment() {
 
     private fun doSavePng(pngs: List<String>) {
 
-        val rootDir by lazy {
-            Environment.getExternalStorageDirectory().absolutePath + File.separator + "${getString(R.string.app_name)}"
-        }
-
-        val thisContractDir by lazy {
-            rootDir + File.separator + "wecaht"
-        }
-
-
         /**
          * 保存位图到本地
          * @param bitmap
          * @param path 本地路径
          * @return void
          */
-        fun saveImage(bitmap: Bitmap, path: String) {
-            val file = File(path)
-            var fileOutputStream: FileOutputStream? = null
-            //文件夹不存在，则创建它
-            if (file.exists()) {
-                file.delete()
-            }
+        fun saveImage(bitmap: Bitmap, displayName: String) {
             try {
-                fileOutputStream = FileOutputStream(path)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-                fileOutputStream.close()
+                GallerySaver.savePng(requireContext(), bitmap, displayName, getString(R.string.app_name))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
-
-//            // 其次把文件插入到系统图库
-//            try {
-//                MediaStore.Images.Media.insertImage(
-//                    context?.contentResolver,
-//                    file.absolutePath,
-//                    file.name,
-//                    null
-//                )
-//            } catch (e: FileNotFoundException) {
-//                e.printStackTrace()
-//            }
-            // 最后通知图库更新
-            context?.sendBroadcast(
-                Intent(
-                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.parse("file://" + file.absoluteFile)
-                )
-            )
-
-
         }
 
 
@@ -126,7 +83,7 @@ class FgtFollowWechatAccount : BaseBackFragment() {
                 e.printStackTrace()
             }
 
-            bitmap?.let { saveImage(it, "$thisContractDir/$index.png") }
+            bitmap?.let { saveImage(it, "$index.png") }
         }
 
         /**
@@ -153,12 +110,11 @@ class FgtFollowWechatAccount : BaseBackFragment() {
             }
 
 
-            bitmap?.let { saveImage(it, "$thisContractDir/$index.png") }
+            bitmap?.let { saveImage(it, "$index.png") }
         }
 
         if (pngs.isEmpty()) return
 
-        FileUtils.createOrExistsDir(thisContractDir)
         val mSaveDialog = ProgressDialog.show(context, "保存图片", "图片正在保存中，请稍等...", true)
 
         doAsync {
@@ -172,7 +128,7 @@ class FgtFollowWechatAccount : BaseBackFragment() {
                     .apply {
                         style(NormalDialog.STYLE_TWO)
                         title("保存成功")
-                        content("保存到了【${thisContractDir}】目录中。")
+                        content("图片已保存到系统相册。")
                         btnNum(1)
                         btnText("确定")
                         setOnBtnClickL(OnBtnClickL {

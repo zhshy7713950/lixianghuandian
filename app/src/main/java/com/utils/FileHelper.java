@@ -207,12 +207,24 @@ public class FileHelper {
             //把文件复制到沙盒目录
             ContentResolver contentResolver = context.getContentResolver();
             Cursor cursor = contentResolver.query(uri, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                String displayName = nameIndex >= 0 ? cursor.getString(nameIndex) : "picked_file";
                 try {
                     InputStream is = contentResolver.openInputStream(uri);
-                    File cache = new File(context.getExternalCacheDir().getAbsolutePath(), Math.round((Math.random() + 1) * 1000) + displayName);
+                    File cacheRoot = context.getExternalCacheDir();
+                    if (cacheRoot == null) {
+                        cacheRoot = context.getCacheDir();
+                    }
+                    File directory = new File(cacheRoot, "picked_files");
+                    directory.mkdirs();
+                    File cache = new File(directory, Math.round((Math.random() + 1) * 1000) + displayName);
                     FileOutputStream fos = new FileOutputStream(cache);
+                    if (is == null) {
+                        fos.close();
+                        cursor.close();
+                        return null;
+                    }
                     FileUtils.copy(is, fos);
                     file = cache;
                     fos.close();
@@ -220,8 +232,9 @@ public class FileHelper {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                cursor.close();
             }
         }
-        return file.getAbsolutePath();
+        return file == null ? null : file.getAbsolutePath();
     }
 }

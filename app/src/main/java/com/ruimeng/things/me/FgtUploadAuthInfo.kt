@@ -11,6 +11,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.me.credit.FgtCreditContract
 import com.ruimeng.things.shop.PostGlideEngine
 import com.ruimeng.things.zipImg
+import com.utils.FileHelper
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -142,7 +143,7 @@ class FgtUploadAuthInfo : BaseBackFragment() {
             .capture(true)
             .captureStrategy(
                 CaptureStrategy(
-                    true,
+                    false,
                     activity?.packageName + ".fileprovider"
                 )
             )
@@ -161,12 +162,8 @@ class FgtUploadAuthInfo : BaseBackFragment() {
             val arrayList = ArrayList<String>()
             Matisse.obtainResult(data).forEach { uri ->
                 //                Logger.e(uri.toString())
-                arrayList.add(
-                    PostGlideEngine.getAbsoluteImagePath(NotificationHelper.mContext, uri).replace(
-                        "/my_images/",
-                        "/storage/emulated/0/"
-                    )
-                )
+                FileHelper.getFileAbsolutePath(NotificationHelper.mContext, uri)
+                    ?.let { arrayList.add(it) }
             }
             if (arrayList.isNotEmpty()) {
                 zipImg(App.getMainAty(), arrayList[0]) {

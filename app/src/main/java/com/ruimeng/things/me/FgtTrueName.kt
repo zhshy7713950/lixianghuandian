@@ -140,9 +140,7 @@ class FgtTrueName : BaseBackFragment() {
     private fun getPic() {
         getPermissions(
             listOf(
-                PermissionType.CAMERA,
-                PermissionType.WRITE_EXTERNAL_STORAGE,
-                PermissionType.READ_EXTERNAL_STORAGE
+                PermissionType.CAMERA
             )
         ){
             PictureSelectorHelper.openGallery(requireActivity())
@@ -214,29 +212,6 @@ class FgtTrueName : BaseBackFragment() {
                     1 -> setFrontImg(imgUrl)
                     2 -> setBackImg(imgUrl)
                     else -> setHandCardImg(imgUrl)
-                }
-            }
-        }
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE && resultCode == Activity.RESULT_OK && data != null) {//从相册选择完图片
-
-            val arraylist = ArrayList<String>()
-            Matisse.obtainResult(data).forEach { uri ->
-                //                Logger.e(uri.toString())
-                arraylist.add(
-                    PostGlideEngine.getAbsoluteImagePath(mContext, uri).replace(
-                        "/my_images/",
-                        "/storage/emulated/0/"
-                    )
-                )
-            }
-            if (arraylist.isNotEmpty()) {
-                zipImg(App.getMainAty(), arraylist[0]) {
-                    uploadPng(it)
                 }
             }
         }

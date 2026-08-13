@@ -1,6 +1,5 @@
 package com.ruimeng.things.shop;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,12 +14,10 @@ import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import com.ruimeng.things.R;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.utils.FileHelper;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
@@ -219,50 +216,23 @@ public class FeedBackActivity extends BaseBackActivity implements View.OnClickLi
     }
 
     private void chooseImage() {
-        RxPermissions rxPermissions = new RxPermissions(context);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            try {
-
-                                Matisse.from(context)
-                                        .choose(MimeType.ofAll())
-                                        .capture(true)
-                                        .captureStrategy(
-                                                new CaptureStrategy(true,
-                                                        "fileprovider"))
-                                        .countable(true)
-                                        .maxSelectable(1)
-                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                                        .thumbnailScale(0.85f)
-                                        .imageEngine(new PostGlideEngine())
-                                        .forResult(REQUEST_CODE_CHOOSE);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            EasyToast.Companion.getDEFAULT().show("未能获取到访问存储的权限");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        try {
+            Matisse.from(context)
+                    .choose(MimeType.ofAll())
+                    .capture(true)
+                    .captureStrategy(new CaptureStrategy(
+                            false,
+                            getPackageName() + ".fileprovider"
+                    ))
+                    .countable(true)
+                    .maxSelectable(1)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(new PostGlideEngine())
+                    .forResult(REQUEST_CODE_CHOOSE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -325,12 +295,16 @@ public class FeedBackActivity extends BaseBackActivity implements View.OnClickLi
             List<Uri> uris = Matisse.obtainResult(data);
 
             for (Uri uri : uris) {
-                mPaths.add(PostGlideEngine.getAbsoluteImagePath(context, uri).replace("/my_images/",
-                        "/storage/emulated/0/"));
+                String path = FileHelper.getFileAbsolutePath(context, uri);
+                if (path != null && !path.isEmpty()) {
+                    mPaths.add(path);
+                }
             }
 
-
-
+            if (mPaths.isEmpty()) {
+                EasyToast.Companion.getDEFAULT().show("未能读取所选图片");
+                return;
+            }
             String filePaths = mPaths.get(0).toString();
             Bitmap sBitmap = getSmallBitmap(filePaths, 200, 200);
             File file = new File(filePaths);//将要保存图片的路径

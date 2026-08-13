@@ -1,8 +1,6 @@
 package com.ruimeng.things.me
 
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,12 +17,11 @@ import kotlinx.android.synthetic.main.fgt_recommend_gift.iv_invite_qrcode
 import kotlinx.android.synthetic.main.fgt_recommend_gift.tv_invite_code_value
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
+import wongxd.common.GallerySaver
 import wongxd.common.loadImg
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.utilcode.util.SizeUtils
-import java.io.File
-import java.io.FileOutputStream
 
 class FgtRecommendGift : BaseBackFragment() {
 
@@ -255,22 +252,9 @@ class FgtRecommendGift : BaseBackFragment() {
     private fun saveToAlbum(bitmap: android.graphics.Bitmap) {
         val context = context ?: return
         val fileName = "lixianghuandian_${System.currentTimeMillis()}.png"
-        val path = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DCIM).absolutePath + File.separator + fileName
 
         try {
-            val file = File(path)
-            val fos = FileOutputStream(file)
-            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, fos)
-            fos.flush()
-            fos.close()
-
-            // Notify MediaScanner
-            context.sendBroadcast(
-                Intent(
-                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.fromFile(file)
-                )
-            )
+            GallerySaver.savePng(context, bitmap, fileName, getString(R.string.app_name))
             EasyToast.DEFAULT.show("已保存到相册")
         } catch (e: Exception) {
             e.printStackTrace()

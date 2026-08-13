@@ -5,10 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.webkit.WebViewClient
@@ -31,12 +29,12 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.base.BaseBackFragment
 import wongxd.common.EasyToast
+import wongxd.common.GallerySaver
 import wongxd.common.toPOJO
 import wongxd.http
 import wongxd.utils.OpenFileThing
 import wongxd.utils.utilcode.util.FileUtils
 import java.io.File
-import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -66,11 +64,12 @@ class FgtMyContractDetail : BaseBackFragment() {
 
 
     val rootDir by lazy {
-        Environment.getExternalStorageDirectory().absolutePath + File.separator + "${getString(com.ruimeng.things.R.string.app_name)}合约"
+        val context = requireContext()
+        File(context.getExternalFilesDir(null) ?: context.filesDir, "contracts").absolutePath
     }
 
     val thisContractDir by lazy {
-        rootDir + "编号:$deviceId"
+        rootDir + File.separator + "编号:$deviceId"
     }
 
     override fun onLazyInitView(savedInstanceState: Bundle?) {
@@ -327,52 +326,15 @@ class FgtMyContractDetail : BaseBackFragment() {
         }
 
 
-        bitmap?.let { saveImage(it, "$thisContractDir/编号:${deviceId}-$index.png") }
-    }
-
-
-    /**
-     * 保存位图到本地
-     * @param bitmap
-     * @param path 本地路径
-     * @return void
-     */
-    private fun saveImage(bitmap: Bitmap, path: String) {
-        val file = File(path)
-        var fileOutputStream: FileOutputStream? = null
-        //文件夹不存在，则创建它
-        if (file.exists()) {
-            file.delete()
-        }
-        try {
-            fileOutputStream = FileOutputStream(path)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-            fileOutputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-
-        // 其次把文件插入到系统图库
-//        try {
-//            MediaStore.Images.Media.insertImage(
-//                context?.contentResolver,
-//                file.absolutePath,
-//                file.name,
-//                null
-//            )
-//        } catch (e: FileNotFoundException) {
-//            e.printStackTrace()
-//        }
-        // 最后通知图库更新
-        context?.sendBroadcast(
-            Intent(
-                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.parse("file://" + file.absoluteFile)
+        bitmap?.let {
+            GallerySaver.savePng(
+                requireContext(),
+                it,
+                "contract_${deviceId}_$index.png",
+                getString(com.ruimeng.things.R.string.app_name)
             )
-        )
-
-
+        }
     }
+
 
 }

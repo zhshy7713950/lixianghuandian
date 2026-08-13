@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.database.Cursor;
 import android.graphics.*;
 import android.graphics.Bitmap.CompressFormat;
@@ -129,12 +130,7 @@ public class ImageUtils {
      * 让Gallery上能马上看到该图片
      */
     private static void scanPhoto(Context ctx, String imgFileName) {
-        Intent mediaScanIntent = new Intent(
-                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File file = new File(imgFileName);
-        Uri contentUri = Uri.fromFile(file);
-        mediaScanIntent.setData(contentUri);
-        ctx.sendBroadcast(mediaScanIntent);
+        MediaScannerConnection.scanFile(ctx, new String[]{imgFileName}, null, null);
     }
 
     /**

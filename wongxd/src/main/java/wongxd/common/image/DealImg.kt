@@ -10,13 +10,13 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import wongxd.common.UriGrantCompat
 import java.io.*
 
 
@@ -112,8 +112,10 @@ class DealImg(val ctx: Context) {
     private var aspectY: Float = 0.1f
 
 
-    val dirPath: String = Environment.getExternalStorageDirectory().absolutePath + File.separator +
-            ctx.applicationContext.packageName
+    val dirPath: String = File(
+        ctx.externalCacheDir ?: ctx.cacheDir,
+        "captured_images"
+    ).absolutePath
 
     fun setCropScale(scale: Boolean): DealImg {
         this.scale = scale
@@ -159,21 +161,11 @@ class DealImg(val ctx: Context) {
 
         // 指定调用相机拍照后照片的储存路径
         val imgFile = File(takePhotoImgPath)
-        var imgUri: Uri? = null
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (Build.VERSION.SDK_INT >= 24) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            //如果是7.0或以上，使用getUriForFile()获取文件的Uri
-            imgUri = FileProvider.getUriForFile(
-                ctx,
-                ctx.applicationContext.packageName + ".fileprovider",
-                imgFile
-            )
-        } else {
-            imgUri = Uri.fromFile(imgFile)
-        }
+        val imgUri = getUriFromFile(ctx, imgFile)
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri)
+        UriGrantCompat.grantReadWrite(ctx, intent, imgUri)
         mDealImgFgt?.req(REQ_TAKE_PHOTO, intent) { requestCode, resultCode, data ->
             if (resultCode == Activity.RESULT_OK) {
                 Log.d(TAG, "takePhoto:$takePhotoImgPath")
@@ -188,14 +180,17 @@ class DealImg(val ctx: Context) {
     }
 
     fun pickPhoto(isCrop: Boolean = true, callback: (String) -> Unit) {
-        val intent = Intent(Intent.ACTION_PICK, null)
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
         mDealImgFgt?.req(REQ_ALBUM, intent) { requestCode, resultCode, data ->
             if (resultCode == Activity.RESULT_OK) {
 
                 if (data != null) {
                     val sourceUri = data.data
-                    val img_url = getFilePathFromUri(ctx, sourceUri)//这是本机的图片路径
+                    val img_url = sourceUri?.let { copyUriToCache(it)?.absolutePath }
                     Log.d(TAG, "pickPhoto:$img_url")
                     img_url?.let {
                         if (isCrop) {
@@ -245,11 +240,9 @@ class DealImg(val ctx: Context) {
 
         val intent = Intent("com.android.camera.action.CROP")
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) //添加这一句表示对目标应用临时授权该Uri所代表的文件
-        }
-
-        intent.setDataAndType(getUriFromFile(ctx, srcFile), "image/*")
+        val sourceUri = getUriFromFile(ctx, srcFile)
+        val outputUri = getUriFromFile(ctx, cropFile)
+        intent.setDataAndType(sourceUri, "image/*")
 
         // crop为true是设置在开启的intent中设置显示的view可以剪裁
         intent.putExtra("crop", "true")
@@ -272,14 +265,15 @@ class DealImg(val ctx: Context) {
         intent.putExtra("outputY", outputY)
 
         intent.putExtra("return-data", false)// true:不返回uri，false：返回uri
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cropFile)) //这里不能使用  FileProvider.getUriForFile
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri)
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+        UriGrantCompat.grantReadWrite(ctx, intent, listOf(sourceUri, outputUri))
 
 
 
         mDealImgFgt?.req(REQ_ZOOM, intent) { reqCode, resultCode, data ->
             if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
+                if (cropFile.exists() && cropFile.length() > 0) {
                     Log.d(TAG, "cropPhoto:$cropImgPath")
                     //bm可以用于显示在对应的ImageView中，scaleImgPath是剪裁并压缩后的图片的路径，可以用于上传操作
                     //实现自己的业务逻辑
@@ -294,11 +288,25 @@ class DealImg(val ctx: Context) {
 
 
     fun getUriFromFile(ctx: Context, file: File): Uri {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Intent.FLAG_GRANT_READ_URI_PERMISSION
-            FileProvider.getUriForFile(ctx, ctx.applicationContext.packageName + ".fileprovider", file)
-        } else {
-            Uri.fromFile(file)
+        return FileProvider.getUriForFile(
+            ctx,
+            ctx.applicationContext.packageName + ".fileprovider",
+            file
+        )
+    }
+
+    private fun copyUriToCache(uri: Uri): File? {
+        val dir = File(dirPath)
+        if (!dir.exists() && !dir.mkdirs()) return null
+        val file = File(dir, "picked_${System.currentTimeMillis()}.jpg")
+        return try {
+            ctx.contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(file).use { output -> input.copyTo(output) }
+            } ?: return null
+            file
+        } catch (e: IOException) {
+            Log.e(TAG, "copyUriToCache failed", e)
+            null
         }
     }
 
@@ -504,7 +512,6 @@ class DealImg(val ctx: Context) {
  *
  */
 private typealias  DealImgActivityResultCallback = (Int, Int, Intent?) -> Unit
-
 
 
 

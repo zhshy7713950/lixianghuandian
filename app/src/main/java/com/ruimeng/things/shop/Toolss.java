@@ -60,7 +60,14 @@ public class Toolss {
     public static File createStableImageFile(Context context) throws IOException {
         i++;
         String imageFileName =IMAGE_NAME + i+ ".jpg";
-        File storageDir = context.getExternalCacheDir();
+        File cacheDir = context.getExternalCacheDir();
+        if (cacheDir == null) {
+            cacheDir = context.getCacheDir();
+        }
+        File storageDir = new File(cacheDir, "shared_images");
+        if (!storageDir.exists() && !storageDir.mkdirs()) {
+            throw new IOException("Unable to create shared image cache");
+        }
         File image = new File(storageDir, imageFileName);
         return image;
     }

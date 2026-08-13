@@ -38,6 +38,7 @@ import com.ruimeng.things.home.checkImgs.*
 import com.ruimeng.things.me.contract.FgtContractSignStep1
 import com.utils.CommonDialogCallBackHelper
 import com.utils.CommonPromptDialogHelper
+import com.utils.FileHelper
 import com.utils.OptionPickerUtil
 import com.utils.TextUtil
 import com.view.YesNoBottomSheetDialog
@@ -105,7 +106,7 @@ class FgtReturn : BaseBackFragment() {
 
 
         initPicView()
-        getPermissions(activity, PermissionType.WRITE_EXTERNAL_STORAGE, PermissionType.CAMERA, allGranted = {
+        getPermissions(activity, PermissionType.CAMERA, allGranted = {
             initPicData()
             initRv()
         })
@@ -314,7 +315,7 @@ class FgtReturn : BaseBackFragment() {
      */
     private fun resetStatus() {
         imgUploadedMap.clear()
-        getPermissions(activity, PermissionType.WRITE_EXTERNAL_STORAGE, PermissionType.CAMERA, allGranted = {
+        getPermissions(activity, PermissionType.CAMERA, allGranted = {
             initPicData()
             initRv()
         })
@@ -378,7 +379,10 @@ class FgtReturn : BaseBackFragment() {
     }
 
     companion object {
-        val FILE_DIR_NAME = Wongxd.instance.packageName//应用缓存地址
+        val FILE_DIR_NAME = File(
+            Wongxd.instance.externalCacheDir ?: Wongxd.instance.cacheDir,
+            "return_images"
+        ).absolutePath
         val FILE_IMG_NAME = "images"//放置图片缓存
         val REQUEST_IMAGE = 1002
         fun  newInstance(deviceId: String) : FgtReturn{
@@ -427,7 +431,7 @@ class FgtReturn : BaseBackFragment() {
                         .capture(true)
                         .captureStrategy(
                             CaptureStrategy(
-                                true,
+                                false,
                                 Wongxd.instance.packageName + ".fileprovider"
                             )
                         )
@@ -507,12 +511,7 @@ class FgtReturn : BaseBackFragment() {
             val arrylist = ArrayList<String>()
             Matisse.obtainResult(data).forEach { uri ->
                 //                Logger.e(uri.toString())
-                arrylist.add(
-                    PostGlideEngine.getAbsoluteImagePath(mContext, uri).replace(
-                        "/my_images/",
-                        "/storage/emulated/0/"
-                    )
-                )
+                FileHelper.getFileAbsolutePath(mContext, uri)?.let { arrylist.add(it) }
             }
             //压缩图片
             Thread(MyRunnable(arrylist, originImages, dragImages, myHandler, true)).start()
@@ -536,7 +535,6 @@ class FgtReturn : BaseBackFragment() {
     ) : Runnable {
 
         override fun run() {
-            val sdcardUtils = SdcardUtils()
             var filePath: String
             var newBitmap: Bitmap? = null
             var addIndex = originImages.size - 1
@@ -551,7 +549,7 @@ class FgtReturn : BaseBackFragment() {
                     ScreenUtils.getScreenHeight()
                 )
                 //文件地址
-                filePath = (sdcardUtils.sdpath + FILE_DIR_NAME + "/"
+                filePath = (FILE_DIR_NAME + "/"
                         + FILE_IMG_NAME + "/" + String.format("img_%d.jpg", System.currentTimeMillis()))
                 //保存图片
                 ImageUtils.save(newBitmap, filePath, Bitmap.CompressFormat.JPEG, true)

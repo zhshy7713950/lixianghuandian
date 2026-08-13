@@ -22,7 +22,6 @@ object BaseAlipay {
         getPermissions(
             getCurrentAty(),
             PermissionType.READ_PHONE_STATE,
-            PermissionType.WRITE_EXTERNAL_STORAGE,
             allGranted = {
                 get.invoke()
             })

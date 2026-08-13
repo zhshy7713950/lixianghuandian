@@ -115,7 +115,7 @@ class CameraActivity : Activity(), View.OnClickListener {
                         ((bottom - top) * bitmap.height.toFloat()).toInt()
                     )
 
-                    CustomCameraPreview.saveBitmap(resBitmap)
+                    customCameraPreview?.saveBitmap(resBitmap)
 
                     if (!bitmap.isRecycled) {
                         bitmap.recycle()
@@ -155,9 +155,7 @@ class CameraActivity : Activity(), View.OnClickListener {
 
             getPermissions(
                 listOf(
-                    PermissionType.CAMERA,
-                    PermissionType.WRITE_EXTERNAL_STORAGE,
-                    PermissionType.READ_EXTERNAL_STORAGE
+                    PermissionType.CAMERA
                 )
             ) {
 

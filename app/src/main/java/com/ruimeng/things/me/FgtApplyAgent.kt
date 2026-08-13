@@ -17,6 +17,7 @@ import com.ruimeng.things.R
 import com.ruimeng.things.me.bean.JsonBean
 import com.ruimeng.things.shop.PostGlideEngine
 import com.ruimeng.things.zipImg
+import com.utils.FileHelper
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import com.zhihu.matisse.internal.entity.CaptureStrategy
@@ -139,7 +140,7 @@ class FgtApplyAgent : BaseBackFragment() {
             .capture(true)
             .captureStrategy(
                 CaptureStrategy(
-                    true,
+                    false,
                     activity?.packageName + ".fileprovider"
                 )
             )
@@ -205,12 +206,8 @@ class FgtApplyAgent : BaseBackFragment() {
             val arrylist = ArrayList<String>()
             Matisse.obtainResult(data).forEach { uri ->
                 //                Logger.e(uri.toString())
-                arrylist.add(
-                    PostGlideEngine.getAbsoluteImagePath(NotificationHelper.mContext, uri).replace(
-                        "/my_images/",
-                        "/storage/emulated/0/"
-                    )
-                )
+                FileHelper.getFileAbsolutePath(NotificationHelper.mContext, uri)
+                    ?.let { arrylist.add(it) }
             }
 
             if (arrylist.isNotEmpty()) {

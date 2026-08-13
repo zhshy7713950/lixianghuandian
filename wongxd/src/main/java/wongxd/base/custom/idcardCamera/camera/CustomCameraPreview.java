@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -61,7 +60,6 @@ public class CustomCameraPreview extends SurfaceView implements SurfaceHolder.Ca
     private Camera mCamera;
 
 
-    private static final File parentPath = Environment.getExternalStorageDirectory();
     private static String storagePath = "";
     private static final String DST_FOLDER_NAME = "IdCard";
     private static String imgPath;
@@ -71,12 +69,16 @@ public class CustomCameraPreview extends SurfaceView implements SurfaceHolder.Ca
      *
      * @return
      */
-    private static String initPath() {
+    private static String initPath(Context context) {
         if (storagePath.equals("")) {
-            storagePath = parentPath.getAbsolutePath() + "/" + DST_FOLDER_NAME;
+            File parentPath = context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
+            if (parentPath == null) {
+                parentPath = context.getFilesDir();
+            }
+            storagePath = new File(parentPath, DST_FOLDER_NAME).getAbsolutePath();
             File f = new File(storagePath);
             if (!f.exists()) {
-                f.mkdir();
+                f.mkdirs();
             }
         }
         return storagePath;
@@ -87,8 +89,8 @@ public class CustomCameraPreview extends SurfaceView implements SurfaceHolder.Ca
      *
      * @param b 得到的图片
      */
-    public static boolean saveBitmap(Bitmap b) {
-        String path = initPath();
+    public boolean saveBitmap(Bitmap b) {
+        String path = initPath(getContext());
         long dataTake = System.currentTimeMillis();
         imgPath = path + "/" + dataTake + ".jpg";
         try {

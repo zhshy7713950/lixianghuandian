@@ -1,7 +1,8 @@
 package wongxd.common.net.netDSL
 
-import android.os.Environment
 import android.util.Log
+import android.os.Environment
+import wongxd.Wongxd
 import java.io.File
 
 /**
@@ -38,7 +39,11 @@ class RequestWrapper {
 
     var readTimeout: Long = 60 * 1000
 
-    var downloadPath: String = Environment.getExternalStorageDirectory().path + "/wongxd/"
+    var downloadPath: String = File(
+        Wongxd.instance.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            ?: Wongxd.instance.filesDir,
+        "downloads"
+    ).absolutePath
 
     var downloadFileName: String = ""
 

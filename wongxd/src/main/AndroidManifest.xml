@@ -26,22 +26,6 @@
 					android:resource="@xml/accessibility_config" />
 		</service>
 
-		<provider
-				android:name="androidx.core.content.FileProvider"
-				android:authorities="${applicationId}.fileprovider"
-				android:exported="false"
-				android:grantUriPermissions="true">
-			<!--元数据-->
-			<meta-data
-					android:name="android.support.FILE_PROVIDER_PATHS"
-					android:resource="@xml/file_paths" />
-			<!--配置中的authorities按照江湖规矩一般加上包名,${applicationId}是获取当前项目的包名，-->
-			<!--前提是defaultConfig｛｝闭包中要有applicationId属性。-->
-			<!--defaultConfig {-->
-			<!--applicationId "com.xx.xx"-->
-			<!--}-->
-		</provider>
-
 		<activity android:name="wongxd.base.crash.DefaultErrorActivity" />
 
 		<activity

@@ -3,24 +3,19 @@ package com.ruimeng.things.me.contract;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.UUID;
+import wongxd.common.GallerySaver;
 
 public class DonwloadSaveImg {
 
@@ -80,21 +75,6 @@ public class DonwloadSaveImg {
      * @throws IOException
      */
     public static void saveFile(Bitmap bm) throws IOException {
-        File dirFile = new File(Environment.getExternalStorageDirectory().getPath());
-        if (!dirFile.exists()) {
-            dirFile.mkdir();
-        }
-        String fileName = UUID.randomUUID().toString() + ".jpg";
-        File myCaptureFile = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/Camera/" + fileName);
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-        bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
-        bos.flush();
-        bos.close();
-        //把图片保存后声明这个广播事件通知系统相册有新图片到来
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = Uri.fromFile(myCaptureFile);
-        intent.setData(uri);
-        context.sendBroadcast(intent);
+        GallerySaver.savePng(context, bm, UUID.randomUUID().toString() + ".png", "理想换电");
     }
 }
-

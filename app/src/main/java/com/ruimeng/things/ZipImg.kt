@@ -12,8 +12,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import wongxd.common.EasyToast
 import wongxd.common.getSweetDialog
-import wongxd.common.permission.PermissionType
-import wongxd.common.permission.getPermissions
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -37,19 +35,13 @@ fun zipImg(
         getSweetDialog(appCompatActivity, SweetAlertDialog.PROGRESS_TYPE, "压缩图片中")
     dlgProgress.setCancelable(true)
     dlgProgress.show()
-    getPermissions(
-        appCompatActivity,
-        PermissionType.WRITE_EXTERNAL_STORAGE,
-        PermissionType.READ_EXTERNAL_STORAGE,
-        allGranted = {
-            realZipImg(appCompatActivity, imgPath, {
-                dlgProgress.dismissWithAnimation()
-                failed()
-            }, {
-                dlgProgress.dismissWithAnimation()
-                success(it)
-            }, maxSize)
-        })
+    realZipImg(appCompatActivity, imgPath, {
+        dlgProgress.dismissWithAnimation()
+        failed()
+    }, {
+        dlgProgress.dismissWithAnimation()
+        success(it)
+    }, maxSize)
 
 }
 
@@ -65,10 +57,10 @@ private fun realZipImg(
 ) {
 
 
-    val fileDirName =
-        appCompatActivity.application?.externalCacheDir?.absolutePath + File.separator + "zip_images"//应用缓存地址
-
-    val dirFile = File(fileDirName)
+    val dirFile = File(
+        appCompatActivity.externalCacheDir ?: appCompatActivity.cacheDir,
+        "zip_images"
+    )
     if (!dirFile.exists()) {
         dirFile.mkdirs()
     }

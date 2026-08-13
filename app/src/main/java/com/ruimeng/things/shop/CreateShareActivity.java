@@ -1,6 +1,5 @@
 package com.ruimeng.things.shop;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -15,14 +14,13 @@ import android.view.View;
 import android.widget.*;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import com.ruimeng.things.R;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import androidx.core.content.FileProvider;
 import com.ruimeng.things.shop.bean.GetShareBean;
 import com.ruimeng.things.shop.view.CustomDialog;
 import wongxd.base.BaseBackActivity;
 import wongxd.common.AnyKt;
 import wongxd.common.EasyToast;
+import wongxd.common.UriGrantCompat;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,8 +47,6 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
     private Map<Integer, Boolean> checkMap = new HashMap<>();
     private List<File> files = new ArrayList<>();
     private int checkItem = 0;
-    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-
     private GetShareBean getShareBean;
 
     private CustomDialog promptDialog;
@@ -175,33 +171,7 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
             Toast.makeText(mContext, "请稍后", Toast.LENGTH_SHORT).show();
 
 
-            RxPermissions rxPermissions = new RxPermissions(context);
-            rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .subscribe(new Observer<Boolean>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Boolean aBoolean) {
-                            if (aBoolean) {
-                                shareImage(1);
-                            } else {
-                                Toast.makeText(mContext, "请开启SD卡读写权限", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            shareImage(1);
 
 
         }
@@ -214,33 +184,7 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
 
             Toast.makeText(mContext, "请稍后", Toast.LENGTH_SHORT).show();
 
-            RxPermissions rxPermissions = new RxPermissions(context);
-            rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .subscribe(new Observer<Boolean>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Boolean aBoolean) {
-                            if (aBoolean) {
-                                shareImage(0);
-                            } else {
-                                Toast.makeText(mContext, "请开启SD卡读写权限", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            shareImage(0);
 
         }
 
@@ -281,7 +225,9 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
                             } else {
                                 file = Toolss.saveImageToSdCard(context, getShareBean.getPics().get(key));
                             }
-                            files.add(file);
+                            if (file != null) {
+                                files.add(file);
+                            }
                         }
                         Intent intent = new Intent();
                         ComponentName comp;
@@ -298,11 +244,20 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
 
                         ArrayList<Uri> imageUris = new ArrayList<Uri>();
                         for (File f : files) {
-                            imageUris.add(Uri.fromFile(f));
+                            imageUris.add(FileProvider.getUriForFile(
+                                    context,
+                                    getPackageName() + ".fileprovider",
+                                    f
+                            ));
                         }
 
+                        if (imageUris.isEmpty()) {
+                            runOnUiThread(() -> Toast.makeText(context, "图片下载失败", Toast.LENGTH_SHORT).show());
+                            return;
+                        }
                         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-                        startActivityForResult(intent, 1001);
+                        UriGrantCompat.grantRead(context, intent, imageUris);
+                        runOnUiThread(() -> startActivityForResult(intent, 1001));
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.i("info", "====e====" + e.toString());

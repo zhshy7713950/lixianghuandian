@@ -59,11 +59,7 @@ class AtyMain : BaseBackActivity() {
             loadRootFragment(R.id.fl_aty_main, FgtMain())
         }
 
-        getPermissions(
-            this,
-            PermissionType.WRITE_EXTERNAL_STORAGE,
-            PermissionType.READ_EXTERNAL_STORAGE,
-            allGranted = { configUpgrade() })
+        configUpgrade()
 
         getAppConfig()
 
@@ -107,7 +103,7 @@ class AtyMain : BaseBackActivity() {
 
     private fun configUpgrade() {
         //下载路径
-        val path = externalCacheDir?.absolutePath
+        val path = File(externalCacheDir ?: cacheDir, "updates").apply { mkdirs() }.absolutePath
         //自定义参数
         val params = HashMap<String, String>()
 

@@ -8,10 +8,9 @@ import android.os.Build
 import android.provider.MediaStore
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
+import wongxd.common.UriGrantCompat
 import wongxd.common.permission.PermissionType
 import wongxd.common.permission.getPermissions
 import wongxd.common.simpleForResult.SimpleOnActivityResult
@@ -62,7 +61,7 @@ class DefaultFileChooserStrategy(
                     checkCameraPermissionAndOpen()
                 } else {
                     currentRequestType = REQUEST_PICK_IMAGE
-                    checkStoragePermissionAndOpen()
+                    openFilePicker()
                 }
                 true
             }
@@ -72,14 +71,14 @@ class DefaultFileChooserStrategy(
                     checkCameraPermissionAndOpen()
                 } else {
                     currentRequestType = REQUEST_PICK_VIDEO
-                    checkStoragePermissionAndOpen()
+                    openFilePicker()
                 }
                 true
             }
             else -> {
                 // 默认打开图片选择器
                 currentRequestType = REQUEST_PICK_IMAGE
-                checkStoragePermissionAndOpen()
+                openFilePicker()
                 true
             }
         }
@@ -102,49 +101,12 @@ class DefaultFileChooserStrategy(
     }
     
     /**
-     * 检查存储权限并打开文件选择器
-     */
-    private fun checkStoragePermissionAndOpen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                openFilePicker()
-            } else {
-                // 使用项目现有的权限框架请求存储权限
-                requestStoragePermission()
-            }
-        } else {
-            openFilePicker()
-        }
-    }
-    
-    /**
      * 请求相机权限
      */
     private fun requestCameraPermission() {
         getPermissions(
             activity as androidx.fragment.app.FragmentActivity,
             PermissionType.CAMERA,
-            result = { isAllGranted, perList ->
-                if (isAllGranted) {
-                    openCurrentRequest()
-                } else {
-                    // 权限被拒绝，通知用户取消选择
-                    fileChooserCallback?.invoke(emptyArray())
-                }
-            },
-            allGranted = {
-                openCurrentRequest()
-            }
-        )
-    }
-    
-    /**
-     * 请求存储权限
-     */
-    private fun requestStoragePermission() {
-        getPermissions(
-            activity as androidx.fragment.app.FragmentActivity,
-            PermissionType.READ_EXTERNAL_STORAGE,
             result = { isAllGranted, perList ->
                 if (isAllGranted) {
                     openCurrentRequest()
@@ -282,6 +244,7 @@ class DefaultFileChooserStrategy(
             tempImageUri = FileProvider.getUriForFile(activity, authority, photoFile)
             android.util.Log.d("DefaultFileChooserStrategy", "Created temp image URI: $tempImageUri")
             intent.putExtra(MediaStore.EXTRA_OUTPUT, tempImageUri)
+            tempImageUri?.let { UriGrantCompat.grantReadWrite(activity, intent, it) }
             
             // 使用项目现有的SimpleOnActivityResult框架
             SimpleOnActivityResult.SimpleForResult(activity)
@@ -306,6 +269,7 @@ class DefaultFileChooserStrategy(
             tempVideoUri = FileProvider.getUriForFile(activity, authority, videoFile)
             android.util.Log.d("DefaultFileChooserStrategy", "Created temp video URI: $tempVideoUri")
             intent.putExtra(MediaStore.EXTRA_OUTPUT, tempVideoUri)
+            tempVideoUri?.let { UriGrantCompat.grantReadWrite(activity, intent, it) }
             
             // 使用项目现有的SimpleOnActivityResult框架
             SimpleOnActivityResult.SimpleForResult(activity)
@@ -324,8 +288,11 @@ class DefaultFileChooserStrategy(
      */
     private fun openImagePicker() {
         android.util.Log.d("DefaultFileChooserStrategy", "Opening image picker")
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "image/*"
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
         
         // 使用项目现有的SimpleOnActivityResult框架
         SimpleOnActivityResult.SimpleForResult(activity)
@@ -340,8 +307,11 @@ class DefaultFileChooserStrategy(
      */
     private fun openVideoPicker() {
         android.util.Log.d("DefaultFileChooserStrategy", "Opening video picker")
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "video/*"
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "video/*"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
         
         // 使用项目现有的SimpleOnActivityResult框架
         SimpleOnActivityResult.SimpleForResult(activity)
@@ -358,7 +328,10 @@ class DefaultFileChooserStrategy(
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "IMG_$timeStamp"
-        val storageDir = activity.getExternalFilesDir("Images")
+        val storageDir = File(activity.externalCacheDir ?: activity.cacheDir, "web_uploads")
+        if (!storageDir.exists() && !storageDir.mkdirs()) {
+            throw IOException("Unable to create web upload cache")
+        }
         return File.createTempFile(imageFileName, ".jpg", storageDir)
     }
     
@@ -369,7 +342,10 @@ class DefaultFileChooserStrategy(
     private fun createVideoFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val videoFileName = "VID_$timeStamp"
-        val storageDir = activity.getExternalFilesDir("Videos")
+        val storageDir = File(activity.externalCacheDir ?: activity.cacheDir, "web_uploads")
+        if (!storageDir.exists() && !storageDir.mkdirs()) {
+            throw IOException("Unable to create web upload cache")
+        }
         return File.createTempFile(videoFileName, ".mp4", storageDir)
     }
 }

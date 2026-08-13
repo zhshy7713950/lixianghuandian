@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
+import wongxd.common.UriGrantCompat;
 
 import java.io.File;
 
@@ -70,13 +71,9 @@ public final class IntentUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data;
         String type = "application/vnd.android.package-archive";
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            data = Uri.fromFile(file);
-        } else {
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            data = FileProvider.getUriForFile(Utils.getApp(), authority, file);
-        }
+        data = FileProvider.getUriForFile(Utils.getApp(), authority, file);
         intent.setDataAndType(data, type);
+        UriGrantCompat.grantRead(Utils.getApp(), intent, data);
         return getIntent(intent, isNewTask);
     }
 
@@ -223,8 +220,13 @@ public final class IntentUtils {
     public static Intent getShareImageIntent(final String content,
                                              final File image,
                                              final boolean isNewTask) {
-        if (image != null && image.isFile()) return null;
-        return getShareImageIntent(content, Uri.fromFile(image), isNewTask);
+        if (image == null || !image.isFile()) return null;
+        Uri uri = FileProvider.getUriForFile(
+                Utils.getApp(),
+                Utils.getApp().getPackageName() + ".fileprovider",
+                image
+        );
+        return getShareImageIntent(content, uri, isNewTask);
     }
 
     /**
@@ -253,6 +255,7 @@ public final class IntentUtils {
         intent.putExtra(Intent.EXTRA_TEXT, content);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("image/*");
+        UriGrantCompat.grantRead(Utils.getApp(), intent, uri);
         return getIntent(intent, isNewTask);
     }
 
@@ -431,7 +434,7 @@ public final class IntentUtils {
     public static Intent getCaptureIntent(final Uri outUri, final boolean isNewTask) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outUri);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        UriGrantCompat.grantReadWrite(Utils.getApp(), intent, outUri);
         return getIntent(intent, isNewTask);
     }
 

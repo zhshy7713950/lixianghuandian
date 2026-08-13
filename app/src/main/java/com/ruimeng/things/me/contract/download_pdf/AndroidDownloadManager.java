@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by HyFun on 2019/05/27.
@@ -62,12 +63,23 @@ public class AndroidDownloadManager {
 
         //设置下载的路径
 //        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), name);
-        File parnetFIle = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"lxhd");
+        File downloadsDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        if (downloadsDir == null) {
+            if (listener != null) {
+                listener.onFailed(new IOException("外部下载目录不可用"));
+            }
+            return;
+        }
+        File parnetFIle = new File(downloadsDir, "contracts");
         if(!parnetFIle.exists()){
             parnetFIle.mkdirs();
         }
         File file = new File(parnetFIle,name);
-        request.setDestinationUri(Uri.fromFile(file));
+        request.setDestinationInExternalFilesDir(
+                context,
+                Environment.DIRECTORY_DOWNLOADS,
+                "contracts/" + name
+        );
         path = file.getAbsolutePath();
 
         //获取DownloadManager

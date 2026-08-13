@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import com.wongxd.R;
+import wongxd.common.UriGrantCompat;
 
 /**
  * 安装相关工具
@@ -69,15 +70,9 @@ public class InstallUtil {
         AccessibilityUtil.wakeUpScreen(cxt); //唤醒屏幕,以便辅助功能模拟用户点击"安装"
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                // Android 7.0以上不允许Uri包含File实际路径，需要借助FileProvider生成Uri（或者调低targetSdkVersion小于Android 7.0欺骗系统）
-                uri = FileProvider.getUriForFile(cxt, cxt.getPackageName() + ".fileProvider", apkFile);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            } else {
-                uri = Uri.fromFile(apkFile);
-            }
+            Uri uri = FileProvider.getUriForFile(cxt, cxt.getPackageName() + ".fileprovider", apkFile);
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            UriGrantCompat.grantRead(cxt, intent, uri);
             cxt.startActivity(intent);
         } catch (Throwable e) {
             Toast.makeText(cxt, "安装失败：" + e.getMessage(), Toast.LENGTH_LONG).show();

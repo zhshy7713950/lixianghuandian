@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
+import wongxd.common.UriGrantCompat;
 
 
 public class OpenFileThing {
@@ -24,8 +25,8 @@ public class OpenFileThing {
 //        intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(uri, "file/*");
+        UriGrantCompat.grantRead(ctx, intent, uri);
         try {
-            ctx.startActivity(intent);
             ctx.startActivity(Intent.createChooser(intent, "选择浏览工具"));
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
@@ -40,7 +41,6 @@ public class OpenFileThing {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         switch (fileType) {
             case img:
@@ -91,8 +91,8 @@ public class OpenFileThing {
                 intent.setDataAndType(uri, "application/msword");
                 break;
         }
+        UriGrantCompat.grantRead(ctx, intent, uri);
         try {
-            ctx.startActivity(intent);
             ctx.startActivity(Intent.createChooser(intent, "选择浏览工具"));
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();

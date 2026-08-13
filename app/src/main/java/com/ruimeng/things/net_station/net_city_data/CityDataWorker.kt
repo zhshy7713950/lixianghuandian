@@ -8,6 +8,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.ruimeng.things.PathV3
+import com.ruimeng.things.common.getJsonOrNull
 import wongxd.Config
 import wongxd.common.toPOJO
 import wongxd.http
@@ -17,15 +18,19 @@ import wongxd.http
  */
 object CityDataWorker {
 
+    private const val STORE_KEY = "downloadCityData"
 
     private var cityDataJson: String? = null
 
     private fun getCityData() {
-        cityDataJson = Config.getDefault().stringCacheUtils.getAsString("downloadCityData")
-        if (cityDataJson.isNullOrBlank()) {
+        val jsonBean = Config.getDefault().stringCacheUtils.getJsonOrNull(
+            STORE_KEY,
+            NetCityJsonBean::class.java
+        )
+        if (jsonBean == null) {
             downloadCityData()
         } else {
-            initJsonData()
+            applyJsonData(jsonBean)
         }
     }
 
@@ -36,7 +41,7 @@ object CityDataWorker {
             url = PathV3.GET_AREA_LIST
             onSuccess { res ->
                 cityDataJson = res
-                Config.getDefault().stringCacheUtils.put("downloadCityData", cityDataJson)
+                Config.getDefault().stringCacheUtils.put(STORE_KEY, cityDataJson)
                 initJsonData()
             }
         }
@@ -58,7 +63,13 @@ object CityDataWorker {
             return
         }
 
-        val jsonBean = cityDataJson?.toPOJO<NetCityJsonBean>()?.data ?: return//用Gson 转成实体
+        val jsonBean = cityDataJson?.toPOJO<NetCityJsonBean>() ?: return//用Gson 转成实体
+
+        applyJsonData(jsonBean)
+    }
+
+    private fun applyJsonData(jsonBean: NetCityJsonBean) {
+        val data = jsonBean.data
 
         /**
          *
@@ -73,7 +84,7 @@ object CityDataWorker {
          */
 
         provinceItems.clear()
-        provinceItems.addAll(jsonBean)
+        provinceItems.addAll(data)
 
         cityItems.clear()
         provinceItems.forEach { p ->

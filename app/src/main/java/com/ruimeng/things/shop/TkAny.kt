@@ -2,6 +2,7 @@ package   com.ruimeng.things.shop
 
 
 import org.greenrobot.eventbus.EventBus
+import com.ruimeng.things.common.getJsonOrNull
 import com.ruimeng.things.shop.bean.TkConfigBean
 import wongxd.Config
 import wongxd.TkInitEvent
@@ -15,15 +16,19 @@ import wongxd.common.toPOJO
 
 object TkAny {
 
+    private const val STORE_KEY = "TkConfigBean"
+
     var tkConfigBean: TkConfigBean.Data
         get() {
-            return Config.getDefault().stringCacheUtils.getAsString("TkConfigBean").toPOJO<TkConfigBean.Data>()
-                ?: TkConfigBean.Data()
+            return Config.getDefault().stringCacheUtils.getJsonOrNull(
+                STORE_KEY,
+                TkConfigBean.Data::class.java
+            ) ?: TkConfigBean.Data()
 
         }
         set(value) {
             TkHttp.token = value.token
-            Config.getDefault().stringCacheUtils.put("TkConfigBean", gson.toJson(value))
+            Config.getDefault().stringCacheUtils.put(STORE_KEY, gson.toJson(value))
             EventBus.getDefault().post(TkInitEvent())
         }
 }

@@ -21,6 +21,7 @@ public abstract class MainTabFragment extends FgtBase {
     private ViewStub viewStub;
     private View emptyView;
     private View mView;
+    private ObjectAnimator showAnimator;
 
     @Nullable
     @Override
@@ -63,6 +64,7 @@ public abstract class MainTabFragment extends FgtBase {
 
         //第一个参数为 view对象，第二个参数为 动画改变的类型，第三，第四个参数依次是开始透明度和结束透明度。
         ObjectAnimator alpha = ObjectAnimator.ofFloat(v, "alpha", 0f, 1f);
+        showAnimator = alpha;
         alpha.setDuration(500);//设置动画时间
         alpha.setInterpolator(new DecelerateInterpolator());//设置动画插入器，减速
 //        alpha.setRepeatCount(-1);//设置动画重复次数，这里-1代表无限
@@ -83,7 +85,10 @@ public abstract class MainTabFragment extends FgtBase {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                emptyView.setVisibility(View.GONE);
+                if (emptyView != null) {
+                    emptyView.setVisibility(View.GONE);
+                }
+                showAnimator = null;
             }
 
             @Override
@@ -100,6 +105,20 @@ public abstract class MainTabFragment extends FgtBase {
 
         alpha.start();//启动动画。
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (showAnimator != null) {
+            showAnimator.removeAllUpdateListeners();
+            showAnimator.removeAllListeners();
+            showAnimator.cancel();
+            showAnimator = null;
+        }
+        mView = null;
+        viewStub = null;
+        emptyView = null;
+        super.onDestroyView();
     }
 
 

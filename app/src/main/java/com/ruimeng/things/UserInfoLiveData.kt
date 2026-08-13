@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.ruimeng.things.bean.UserInfoBean
+import com.ruimeng.things.common.getJsonOrNull
 import org.greenrobot.eventbus.EventBus
 import wongxd.Config
 import wongxd.common.gson
@@ -24,11 +25,10 @@ class UserInfoLiveData private constructor() : MutableLiveData<UserInfoBean.Data
         }
 
         fun getFromString(): UserInfoBean.Data.UserInfo {
-            val json = Config.getDefault().stringCacheUtils.getAsString(STORE_KEY)
-            if (json.isNullOrBlank()) {
-                return UserInfoBean.Data.UserInfo()
-            }
-            val data: UserInfoBean.Data.UserInfo = json.toPOJO()
+            val data = Config.getDefault().stringCacheUtils.getJsonOrNull(
+                STORE_KEY,
+                UserInfoBean.Data.UserInfo::class.java
+            ) ?: return UserInfoBean.Data.UserInfo()
             getInstance().postValue(data)
             return data
         }

@@ -64,12 +64,11 @@ class App : Wongxd() {
         Http.host = getString(R.string.home_url)
         Http.TOKEN_LOST_FUN = { msg ->
             EasyToast.DEFAULT.show(msg)
-            val aty = AppManager.getAppManager().currentActivity()
             if(!isLoginActivityStarted){
                 isLoginActivityStarted = true
-                val i = Intent(aty, AtyLogin::class.java)
+                val i = Intent(applicationContext, AtyLogin::class.java)
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                aty.startActivity(i)
+                applicationContext.startActivity(i)
             }
         }
         CrashReport.initCrashReport(applicationContext, "85737815c2", false)

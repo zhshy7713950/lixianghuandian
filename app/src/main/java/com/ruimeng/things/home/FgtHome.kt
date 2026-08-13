@@ -325,57 +325,87 @@ class FgtHome : MainTabFragment() {
         adLoader?.commonLoadInto(ad_container,AdManager.NATIVE_SPACE_ID_HOME)
     }
 
+    private fun isHomeViewAvailable(): Boolean {
+        val fragmentView = view ?: return false
+        return fragmentView.findViewById<View>(R.id.root_has_item) != null &&
+                fragmentView.findViewById<View>(R.id.root_no_item) != null
+    }
+
     private fun refreshHomeData() {
-        vm.getMyDevice().observeForever {
-            if (it.isEmpty()) {
+        vm.getMyDevice().observe(viewLifecycleOwner) { deviceList ->
+            if (!isHomeViewAvailable()) return@observe
+            if (deviceList.isEmpty()) {
                 CURRENT_DEVICEID = ""
                 NO_PAY_DEVICEID = ""
                 payType = ""
             }
-            this.myDeviceList = it
+            this.myDeviceList = deviceList
             getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
         }
     }
 
     private var myDeviceList: List<MyDevicesBean.Data>? = null
 
-    private fun showSwitchBattery(deviceList: List<MyDevicesBean.Data>?){
-        if(deviceList != null && deviceList.size == 2 && !deviceList.first()?.device_id.isNullOrEmpty() && !deviceList[1]?.device_id.isNullOrEmpty()){
-            ll_switch_battery.isVisible = true
-            val mainDeviceId = deviceList.first().device_id
-            val subDeviceId = deviceList[1].device_id
-            val changeSwitchBtn = {
-                if(mainDeviceId == CURRENT_DEVICEID){
-                    tv_main_battery_checked.isVisible = true
-                    tv_sub_battery_unchecked.isVisible = true
-                    tv_main_battery_unchecked.isVisible = false
-                    tv_sub_battery_checked.isVisible = false
-                }else if(subDeviceId == CURRENT_DEVICEID){
-                    tv_main_battery_unchecked.isVisible = true
-                    tv_sub_battery_checked.isVisible = true
-                    tv_main_battery_checked.isVisible = false
-                    tv_sub_battery_unchecked.isVisible = false
-                }else {
-                    tv_main_battery_checked.isVisible = true
-                    tv_sub_battery_unchecked.isVisible = true
-                    tv_main_battery_unchecked.isVisible = false
-                    tv_sub_battery_checked.isVisible = false
-                }
-            }
-            changeSwitchBtn()
-            tv_sub_battery_unchecked.setOnClickListener {
-                getBatteryDetailInfo(subDeviceId)
-            }
-            tv_main_battery_unchecked.setOnClickListener {
-                getBatteryDetailInfo(mainDeviceId)
-            }
-        }else{
-            ll_switch_battery.isVisible = false
+    private fun showSwitchBattery(deviceList: List<MyDevicesBean.Data>?) {
+        val fragmentView = view ?: return
+        val switchBatteryLayout =
+            fragmentView.findViewById<View>(R.id.ll_switch_battery) ?: return
+
+        val mainDeviceId = deviceList
+            ?.takeIf { it.size == 2 }
+            ?.getOrNull(0)
+            ?.device_id
+            .orEmpty()
+        val subDeviceId = deviceList
+            ?.takeIf { it.size == 2 }
+            ?.getOrNull(1)
+            ?.device_id
+            .orEmpty()
+
+        if (mainDeviceId.isEmpty() || subDeviceId.isEmpty()) {
+            switchBatteryLayout.isVisible = false
+            return
+        }
+
+        val mainBatteryChecked =
+            fragmentView.findViewById<TextView>(R.id.tv_main_battery_checked)
+        val subBatteryUnchecked =
+            fragmentView.findViewById<TextView>(R.id.tv_sub_battery_unchecked)
+        val mainBatteryUnchecked =
+            fragmentView.findViewById<TextView>(R.id.tv_main_battery_unchecked)
+        val subBatteryChecked =
+            fragmentView.findViewById<TextView>(R.id.tv_sub_battery_checked)
+
+        if (mainBatteryChecked == null || subBatteryUnchecked == null ||
+            mainBatteryUnchecked == null || subBatteryChecked == null
+        ) {
+            switchBatteryLayout.isVisible = false
+            return
+        }
+
+        switchBatteryLayout.isVisible = true
+        if (subDeviceId == CURRENT_DEVICEID) {
+            mainBatteryUnchecked.isVisible = true
+            subBatteryChecked.isVisible = true
+            mainBatteryChecked.isVisible = false
+            subBatteryUnchecked.isVisible = false
+        } else {
+            mainBatteryChecked.isVisible = true
+            subBatteryUnchecked.isVisible = true
+            mainBatteryUnchecked.isVisible = false
+            subBatteryChecked.isVisible = false
+        }
+
+        subBatteryUnchecked.setOnClickListener {
+            getBatteryDetailInfo(subDeviceId)
+        }
+        mainBatteryUnchecked.setOnClickListener {
+            getBatteryDetailInfo(mainDeviceId)
         }
     }
 
     private fun initEvent() {
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             launch {
                 // 观察 banner 数据
                 vmMain.homeBannerData.observe(viewLifecycleOwner) { bannerList ->
@@ -383,12 +413,12 @@ class FgtHome : MainTabFragment() {
                 }
             }
             launch {
-                vmMain.adInfoLiveData.observe(this@FgtHome, Observer {
+                vmMain.adInfoLiveData.observe(viewLifecycleOwner, Observer {
                     AdPopHelper.showAdPop(this@FgtHome, it, rootView)
                 })
             }
             launch {
-                vm.userInfo.simpleObserver(this@FgtHome) {
+                vm.userInfo.simpleObserver(viewLifecycleOwner) {
                     tv_title.text = it.showName()
                 }
             }
@@ -410,12 +440,12 @@ class FgtHome : MainTabFragment() {
                 }
             }
             launch {
-                vm.deviceDetailLiveData.observe(this@FgtHome) {
+                vm.deviceDetailLiveData.observe(viewLifecycleOwner) {
                     when (it) {
                         is GetDeviceStatusEvent.Success -> {
                             updateOpenOrCloseLayer()
                             IS_OPEN = !IS_OPEN
-                            lifecycleScope.launch {
+                            viewLifecycleOwner.lifecycleScope.launch {
                                 delay(2000)
                                 dismissOpenOrCloseLayer()
                                 onGetBatteryDetailInfo(it.deviceDetail)
@@ -424,7 +454,7 @@ class FgtHome : MainTabFragment() {
 
                         is GetDeviceStatusEvent.Error -> {
                             EasyToast.DEFAULT.show(it.error)
-                            lifecycleScope.launch {
+                            viewLifecycleOwner.lifecycleScope.launch {
                                 delay(2000)
                                 dismissOpenOrCloseLayer()
                                 getBatteryDetailInfo(CURRENT_DEVICEID.ifBlank { "0" })
@@ -459,7 +489,7 @@ class FgtHome : MainTabFragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
-            srl_home.autoRefresh()
+            srl_home?.autoRefresh()
         }
     }
 
@@ -642,21 +672,26 @@ class FgtHome : MainTabFragment() {
      * 首页布局 有 已添加设备 和未加设备两种状态
      */
     private fun dealTwoStatus(isHasItem: Boolean, isFirstInit: Boolean = false) {
-        root_has_item.visibility = GONE
-        root_no_item.visibility = GONE
+        val fragmentView = view ?: return
+        val rootHasItem = fragmentView.findViewById<View>(R.id.root_has_item) ?: return
+        val rootNoItem = fragmentView.findViewById<View>(R.id.root_no_item) ?: return
+
+        rootHasItem.visibility = GONE
+        rootNoItem.visibility = GONE
 
         if (isFirstInit) return
 
         if (isHasItem) {
-            root_has_item.visibility = VISIBLE
+            rootHasItem.visibility = VISIBLE
             initHasItemView()
         } else {
-            root_no_item.visibility = VISIBLE
+            rootNoItem.visibility = VISIBLE
             initNoItemView()
         }
     }
 
     private fun showHomePageInfo() {
+        if (!isHomeViewAvailable()) return
         //0 有押金 有租金 1，无押金，无租金  2 有押金 无租金 3 已过期
         if (deviceCode == 201 && paymentCode == 208) {
             deviceStatus = 1
@@ -690,7 +725,8 @@ class FgtHome : MainTabFragment() {
             url = Path.GET_USER_LATE_FEE
             params["userId"] = userId
             params["contractId"] = contractId
-            onSuccess {
+            onSuccess overdueSuccess@ {
+                if (!isHomeViewAvailable()) return@overdueSuccess
                 val userLateFee = it.toPOJO<UserLateFeeBean>().data
                 val isLessThan3Days = userLateFee.actualLateDays <= 3
                 tv_log_info.text =
@@ -1078,15 +1114,16 @@ class FgtHome : MainTabFragment() {
     // 新增方法：二次弹窗确认续期逻辑
     private fun showContinueRantConfirm() {
         // 1. 调用接口获取电池信息
-        vm.getMyDevice().observeForever { deviceList ->
+        vm.getMyDevice().observe(viewLifecycleOwner) { deviceList ->
+            if (!isHomeViewAvailable()) return@observe
             if (deviceList.isNullOrEmpty()) {
                 EasyToast.DEFAULT.show("未获取到电池信息")
-                return@observeForever
+                return@observe
             }
             if (deviceList.size == 1) {
                 // 只有一个电池，直接进入续期升级
                 doContinueRant()
-                return@observeForever
+                return@observe
             }
             // 有两个电池，遍历判断
             val needSwitch = deviceList.find { it.rentStatus == 2 || it.rentStatus == 3 }
@@ -1245,6 +1282,7 @@ class FgtHome : MainTabFragment() {
     private var isWarningPopupShowing = false
 
     private fun onGetBatteryDetailInfo(data: DeviceDetailBean.Data) {
+        if (!isHomeViewAvailable()) return
         deviceDetailBean = data
         deviceCode = 200
         rent_day = deviceDetailBean!!.device_contract.rent_day
@@ -1275,6 +1313,7 @@ class FgtHome : MainTabFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getBatteryDetailInfo(deviceId: String = "0") {
+        if (!isHomeViewAvailable()) return
         CURRENT_DEVICEID = deviceId
 
         http {
@@ -1282,11 +1321,13 @@ class FgtHome : MainTabFragment() {
             params["device_id"] = deviceId
             IS_SHOW_MSG = false
 
-            onSuccess { res ->
+            onSuccess batterySuccess@ { res ->
+                if (!isHomeViewAvailable()) return@batterySuccess
                 onGetBatteryDetailInfo(res.toPOJO<DeviceDetailBean>().data)
                 showSwitchBattery(myDeviceList)
             }
-            onFail { i, s ->
+            onFail batteryFail@ { i, s ->
+                if (!isHomeViewAvailable()) return@batteryFail
                 Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
 //                CURRENT_DEVICEID = ""
                 deviceCode = i
@@ -1327,7 +1368,8 @@ class FgtHome : MainTabFragment() {
             params["user_id"] = userId
             params["device_id"] = CURRENT_DEVICEID
             IS_SHOW_MSG = false
-            onSuccess { res ->
+            onSuccess paymentSuccess@ { res ->
+                if (!isHomeViewAvailable()) return@paymentSuccess
                 paymentCode = 200
                 paymentDetailBean = res.toPOJO<PaymentDetailBean>().data
 
@@ -1372,7 +1414,8 @@ class FgtHome : MainTabFragment() {
                         url = "/apiv4/getonedevice"
                         params["device_id"] = NO_PAY_DEVICEID
                         IS_SHOW_MSG = false
-                        onSuccess { res ->
+                        onSuccess unpaidDeviceSuccess@ { res ->
+                            if (!isHomeViewAvailable()) return@unpaidDeviceSuccess
                             deviceDetailBean = res.toPOJO<DeviceDetailBean>().data
                             deviceCode = 200
                             rent_day = deviceDetailBean!!.device_contract.rent_day
@@ -1380,7 +1423,8 @@ class FgtHome : MainTabFragment() {
                             CURRENT_DEVICEID = "${deviceDetailBean!!.device_id}"
                             showHomePageInfo()
                         }
-                        onFail { i, s ->
+                        onFail unpaidDeviceFail@ { i, s ->
+                            if (!isHomeViewAvailable()) return@unpaidDeviceFail
                             Config.getDefault().spUtils.put(KEY_LAST_DEVICE_ID, "")
                             deviceCode = i
                             showHomePageInfo()
@@ -1401,7 +1445,8 @@ class FgtHome : MainTabFragment() {
                 }
 
             }
-            onFail { i, s ->
+            onFail paymentFail@ { i, s ->
+                if (!isHomeViewAvailable()) return@paymentFail
                 paymentCode = i
                 showHomePageInfo()
             }

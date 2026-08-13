@@ -4,6 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.ruimeng.things.bean.NoReadBean
+import com.ruimeng.things.common.getJsonOrNull
 import wongxd.Config
 import wongxd.common.gson
 import wongxd.common.toPOJO
@@ -30,11 +31,10 @@ class NoReadLiveData private constructor() : MutableLiveData<NoReadBean.Data>() 
         }
 
         fun getFromString(): NoReadBean.Data {
-            val json = Config.getDefault().stringCacheUtils.getAsString(STORE_KEY)
-            if (json.isNullOrBlank()) {
-                return NoReadBean.Data()
-            }
-            val data: NoReadBean.Data = json.toPOJO()
+            val data = Config.getDefault().stringCacheUtils.getJsonOrNull(
+                STORE_KEY,
+                NoReadBean.Data::class.java
+            ) ?: return NoReadBean.Data()
             getInstance().postValue(data)
             return data
         }

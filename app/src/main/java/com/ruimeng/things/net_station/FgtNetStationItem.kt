@@ -1,12 +1,11 @@
 package com.ruimeng.things.net_station
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
-import android.widget.ImageView
+import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -21,26 +20,23 @@ import com.ruimeng.things.net_station.net_city_data.CityDataWorker
 import com.ruimeng.things.net_station.net_city_data.NetCityJsonBean
 import com.ruimeng.things.net_station.view.DefaultNetStationCtl
 import com.ruimeng.things.net_station.view.NetStationView
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.utils.unsafeLazy
-import kotlinx.android.synthetic.main.fgt_net_station_item.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import wongxd.base.MainTabFragment
-import wongxd.base.custom.anylayer.AnyLayer
 import wongxd.common.bothNotNull
-import wongxd.common.getCurrentAppAty
 import wongxd.common.getSweetDialog
-import wongxd.common.permission.PermissionType
-import wongxd.common.permission.getPermissions
 import wongxd.common.toPOJO
 import wongxd.http
-import wongxd.utils.SystemUtils
 
 
 
 class FgtNetStationItem : MainTabFragment() {
+
+    private var contentView: View? = null
+    private var cityRetryRunnable: Runnable? = null
+    private var cityLoadingDialog: SweetAlertDialog? = null
 
     companion object {
         fun newInstance(): FgtNetStationItem {
@@ -49,68 +45,135 @@ class FgtNetStationItem : MainTabFragment() {
     }
     override fun getLayoutRes(): Int = R.layout.fgt_net_station_item
     fun refresh(){
-        et_search_station?.text?.clear()
-        dealSelectCurrentCity()
+        val activeView = contentView ?: return
+        activeView.findViewById<EditText>(R.id.et_search_station).text.clear()
+        dealSelectCurrentCity(activeView)
     }
     class RefreshStationList
     @Subscribe
     public fun refreshStation(event: RefreshStationList) {
-        srl_station?.autoRefresh()
+        contentView
+            ?.findViewById<SmartRefreshLayout>(R.id.srl_station)
+            ?.autoRefresh()
     }
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
-        srl_station?.setEnableLoadMore(false)
-        srl_station.setOnRefreshListener { getList() }
-        EventBus.getDefault().register(this)
+        val activeView = mView ?: return
+        contentView = activeView
 
-        rv_station.layoutManager = LinearLayoutManager(activity)
-        rv_station.adapter = stationAdapter
-
-        CityDataWorker.initJsonData()
-
-        tv_city.setOnClickListener {
-                        CityDataWorker.showOptionPicker(activity, "") { p, c ->
-                provice = p
-                city = c
-                refreshCityPickerState()
+        activeView.findViewById<SmartRefreshLayout>(R.id.srl_station).apply {
+            setEnableLoadMore(false)
+            setOnRefreshListener { getList(activeView) }
+        }
+        EventBus.getDefault().apply {
+            if (!isRegistered(this@FgtNetStationItem)) {
+                register(this@FgtNetStationItem)
             }
         }
 
-
-
-        dealSelectCurrentCity()
-        qfl_search_station.setOnClickListener {
-            getList()
+        activeView.findViewById<RecyclerView>(R.id.rv_station).apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = stationAdapter
         }
+
+        CityDataWorker.initJsonData()
+
+        activeView.findViewById<TextView>(R.id.tv_city).setOnClickListener {
+            CityDataWorker.showOptionPicker(activity, "") { p, c ->
+                provice = p
+                city = c
+                refreshCityPickerState(activeView)
+            }
+        }
+
+        dealSelectCurrentCity(activeView)
+        activeView.findViewById<TextView>(R.id.qfl_search_station).setOnClickListener {
+            getList(activeView)
+        }
+    }
+
+    override fun onDestroyView() {
+        cancelPendingCityResolution()
+        EventBus.getDefault().apply {
+            if (isRegistered(this@FgtNetStationItem)) {
+                unregister(this@FgtNetStationItem)
+            }
+        }
+        contentView = null
+        super.onDestroyView()
     }
 
     /**
      *  网点 服务站点和退还站点 默认定位选择到当前市
      */
-    private fun dealSelectCurrentCity() {
+    private fun dealSelectCurrentCity(requestView: View) {
+        if (contentView !== requestView) return
+
+        cancelPendingCityResolution()
 
         fun afterGetCityId(
             p: NetCityJsonBean.Data?,
             c: NetCityJsonBean.Data.Child?,
-            dlg: SweetAlertDialog?
+            dlg: SweetAlertDialog
         ) {
+            if (contentView !== requestView) {
+                dismissCityLoadingDialog(dlg, false)
+                return
+            }
             provice = p
             city = c
-            refreshCityPickerState()
-            getList()
-            dlg?.dismissWithAnimation()
+            refreshCityPickerState(requestView)
+            getList(requestView)
+            dismissCityLoadingDialog(dlg, true)
         }
 
         val (p, c) = CityDataWorker.getProvinceAndCityInfoByName(App.province, App.city)
 
         val dlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "获取城市数据中", true)
+        cityLoadingDialog = dlg
         dlg.show()
         if (null == p) {
-            tv_city?.postDelayed({
+            lateinit var retryRunnable: Runnable
+            retryRunnable = Runnable {
+                if (cityRetryRunnable !== retryRunnable) return@Runnable
+                cityRetryRunnable = null
+                if (contentView !== requestView) {
+                    dismissCityLoadingDialog(dlg, false)
+                    return@Runnable
+                }
                 val (pp, cc) = CityDataWorker.getProvinceAndCityInfoByName(App.province, App.city)
                 afterGetCityId(pp, cc, dlg)
-            }, 2000L)
+            }
+            cityRetryRunnable = retryRunnable
+            requestView.postDelayed(retryRunnable, 2000L)
         } else {
             afterGetCityId(p, c, dlg)
+        }
+    }
+
+    private fun cancelPendingCityResolution() {
+        cityRetryRunnable?.let { runnable ->
+            contentView?.removeCallbacks(runnable)
+        }
+        cityRetryRunnable = null
+
+        cityLoadingDialog?.let { dialog ->
+            if (dialog.isShowing) {
+                dialog.dismiss()
+            }
+        }
+        cityLoadingDialog = null
+    }
+
+    private fun dismissCityLoadingDialog(dialog: SweetAlertDialog, withAnimation: Boolean) {
+        if (cityLoadingDialog === dialog) {
+            cityLoadingDialog = null
+        }
+        if (!dialog.isShowing) return
+
+        if (withAnimation) {
+            dialog.dismissWithAnimation()
+        } else {
+            dialog.dismiss()
         }
     }
 
@@ -119,11 +182,13 @@ class FgtNetStationItem : MainTabFragment() {
     private var city: NetCityJsonBean.Data.Child? = null
     private var oldCity: NetCityJsonBean.Data.Child? = null
 
-    private fun refreshCityPickerState() {
-        tv_city.text = city?.name
+    private fun refreshCityPickerState(requestView: View) {
+        if (contentView !== requestView) return
+
+        requestView.findViewById<TextView>(R.id.tv_city).text = city?.name
         if (oldCity != city) {
             oldCity = city
-            getList()
+            getList(requestView)
         }
     }
 
@@ -139,26 +204,40 @@ class FgtNetStationItem : MainTabFragment() {
         return list
     }
 
-    private fun getList() {
+    private fun getList(requestView: View) {
+        if (contentView !== requestView) return
+
+        val searchText = requestView
+            .findViewById<EditText>(R.id.et_search_station)
+            .text
+            .toString()
 
         http {
             url = "apiv3/cgstationnetwork"
             params["city_id"] = city?.id ?: ""
-            params["name"] = et_search_station.text.toString()
+            params["name"] = searchText
             params["deviceId"] = FgtHome.CURRENT_DEVICEID
             params["appType"] = "lxhd"
 
-            onFinish { srl_station?.finishRefresh() }
+            onFinish {
+                if (contentView === requestView) {
+                    requestView
+                        .findViewById<SmartRefreshLayout>(R.id.srl_station)
+                        .finishRefresh()
+                }
+            }
 
             onSuccess { res ->
-                srl_station?.let {
+                if (contentView === requestView) {
+                    val emptyView = requestView.findViewById<TextView>(R.id.tv_empty_net_station)
+                    val stationCountView = requestView.findViewById<TextView>(R.id.tv_station_count)
                     data = res.toPOJO<NetStationBean>().data
                     if (data.isEmpty()){
-                        tv_empty_net_station.visibility =View.VISIBLE
+                        emptyView.visibility = View.VISIBLE
                         stationAdapter.setNewData(null)
-                        tv_station_count.text = "已为您找到0个站点"
+                        stationCountView.text = "已为您找到0个站点"
                     }else{
-                        tv_empty_net_station.visibility =View.GONE
+                        emptyView.visibility = View.GONE
                         currentIndex = 0
                         var list = data[currentIndex].filterSelf(FgtHome.getBatteryV()).list
                         // 将父级城市ID传递到每个站点项，供视图层使用
@@ -174,7 +253,7 @@ class FgtNetStationItem : MainTabFragment() {
                         var list2  = list.sortedBy { it.distance }
 
                         stationAdapter.setNewData(list2)
-                        tv_station_count.text = "已为您找到${list2.size}个站点"
+                        stationCountView.text = "已为您找到${list2.size}个站点"
                     }
                 }
             }

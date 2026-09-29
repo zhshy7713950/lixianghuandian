@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +14,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import com.ruimeng.things.R;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import com.ruimeng.things.shop.bean.GetShareBean;
 import com.ruimeng.things.shop.view.CustomDialog;
 import wongxd.base.BaseBackActivity;
@@ -50,6 +50,8 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
     private List<File> files = new ArrayList<>();
     private int checkItem = 0;
     private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    private static final int REQUEST_SHARE_CIRCLE = 19001;
+    private static final int REQUEST_SHARE_WECHAT = 19002;
 
     private GetShareBean getShareBean;
 
@@ -175,33 +177,7 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
             Toast.makeText(mContext, "请稍后", Toast.LENGTH_SHORT).show();
 
 
-            RxPermissions rxPermissions = new RxPermissions(context);
-            rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .subscribe(new Observer<Boolean>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Boolean aBoolean) {
-                            if (aBoolean) {
-                                shareImage(1);
-                            } else {
-                                Toast.makeText(mContext, "请开启SD卡读写权限", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            requestSharePermissions(1);
 
 
         }
@@ -214,36 +190,36 @@ public class CreateShareActivity extends BaseBackActivity implements View.OnClic
 
             Toast.makeText(mContext, "请稍后", Toast.LENGTH_SHORT).show();
 
-            RxPermissions rxPermissions = new RxPermissions(context);
-            rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    .subscribe(new Observer<Boolean>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(Boolean aBoolean) {
-                            if (aBoolean) {
-                                shareImage(0);
-                            } else {
-                                Toast.makeText(mContext, "请开启SD卡读写权限", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+            requestSharePermissions(0);
 
         }
 
+    }
+
+    private void requestSharePermissions(int flag) {
+        if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, permissions[1]) == PackageManager.PERMISSION_GRANTED) {
+            shareImage(flag);
+        } else {
+            ActivityCompat.requestPermissions(this, permissions,
+                    flag == 1 ? REQUEST_SHARE_CIRCLE : REQUEST_SHARE_WECHAT);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] requestedPermissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, requestedPermissions, grantResults);
+        if (requestCode != REQUEST_SHARE_CIRCLE && requestCode != REQUEST_SHARE_WECHAT) return;
+
+        boolean granted = grantResults.length == permissions.length;
+        for (int result : grantResults) {
+            granted &= result == PackageManager.PERMISSION_GRANTED;
+        }
+        if (granted) {
+            shareImage(requestCode == REQUEST_SHARE_CIRCLE ? 1 : 0);
+        } else {
+            Toast.makeText(mContext, "请开启SD卡读写权限", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

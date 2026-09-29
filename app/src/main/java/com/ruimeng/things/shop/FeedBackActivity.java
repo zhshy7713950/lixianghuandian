@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,12 +17,9 @@ import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 import com.ruimeng.things.R;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
@@ -52,6 +51,7 @@ public class FeedBackActivity extends BaseBackActivity implements View.OnClickLi
     private Button feed_back_btn;
 
     private static final int REQUEST_CODE_CHOOSE = 23;
+    private static final int REQUEST_STORAGE_PERMISSION = 19003;
     private List<String> mPaths = new ArrayList<>();
 
     @Override
@@ -219,50 +219,41 @@ public class FeedBackActivity extends BaseBackActivity implements View.OnClickLi
     }
 
     private void chooseImage() {
-        RxPermissions rxPermissions = new RxPermissions(context);
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            openImagePicker();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
+        }
+    }
 
-                    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != REQUEST_STORAGE_PERMISSION) return;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openImagePicker();
+        } else {
+            EasyToast.Companion.getDEFAULT().show("未能获取到访问存储的权限");
+        }
+    }
 
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            try {
-
-                                Matisse.from(context)
-                                        .choose(MimeType.ofAll())
-                                        .capture(true)
-                                        .captureStrategy(
-                                                new CaptureStrategy(true,
-                                                        "fileprovider"))
-                                        .countable(true)
-                                        .maxSelectable(1)
-                                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                                        .thumbnailScale(0.85f)
-                                        .imageEngine(new PostGlideEngine())
-                                        .forResult(REQUEST_CODE_CHOOSE);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            EasyToast.Companion.getDEFAULT().show("未能获取到访问存储的权限");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    private void openImagePicker() {
+        try {
+            Matisse.from(context)
+                    .choose(MimeType.ofAll())
+                    .capture(true)
+                    .captureStrategy(new CaptureStrategy(true, "fileprovider"))
+                    .countable(true)
+                    .maxSelectable(1)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(new PostGlideEngine())
+                    .forResult(REQUEST_CODE_CHOOSE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -296,16 +296,22 @@ class FgtHome : MainTabFragment() {
         view?.findViewById<View>(R.id.fl_lucky_welfare)?.setOnClickListener {
             // 点击右下角幸运福利按钮，复用 MainViewModel 请求
             vmMain.fetchLuckyWheelLottery { bean ->
-                if (bean.errcode == 200) {
-                    val grant = bean.data?.sendCouponPrice
-                    val own = bean.data?.selfCouponPrice
-                    val ownId = bean.data?.selfCouponId
-                    val price = bean.data?.paymentPrice
-                    val code = bean.data?.lotteryReqNum
+                val data = bean.data
+                if (bean.errcode == 200 && data != null) {
+                    val grant = data.sendCouponPrice
+                    val own = data.selfCouponPrice
+                    val ownId = data.selfCouponId
+                    val price = data.paymentPrice
+                    val code = data.lotteryReqNum
                     FgtMain.instance?.start(FgtLotteryCoupon.newInstance(grant, own, ownId, price, code))
                 } else {
                     val nextLotteryTime = bean.data?.nextLotteryTime
-                    ToastHelper.shortToast(context, "继续在网${nextLotteryTime}天，可获得幸运抽奖资格")
+                    val message = if (nextLotteryTime.isNullOrBlank()) {
+                        bean.errmsg.ifBlank { "暂未获得幸运抽奖资格" }
+                    } else {
+                        "继续在网${nextLotteryTime}天，可获得幸运抽奖资格"
+                    }
+                    ToastHelper.shortToast(context, message)
                 }
             }
         }
@@ -767,6 +773,14 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun initNoItemView() {
+        val agentPhone = overdueAgentPhone(deviceStatus, paymentDetailBean?.agentMobile)
+        llAgentContact.visibility = if (agentPhone == null) GONE else VISIBLE
+        btnAgentContact.setOnClickListener(if (agentPhone == null) null else View.OnClickListener {
+            val phone = paymentDetailBean?.agentMobile?.trim()?.takeIf { it.isNotEmpty() }
+                ?: "4000283969"
+            context?.let { SystemUtils.call(it, phone) }
+        })
+
         when (deviceStatus) {
             2 -> {
                 tv_log_info.text = "您还没有为电池（编号$NO_PAY_DEVICEID）购买套餐"

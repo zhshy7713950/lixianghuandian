@@ -17,6 +17,7 @@ import com.net.whenSuccess
 import com.ruimeng.things.home.bean.BannerData
 import com.ruimeng.things.home.bean.BannerInfo
 import com.ruimeng.things.home.bean.LuckyWheelLotteryBean
+import com.ruimeng.things.home.bean.parseLuckyWheelLotteryResponse
 import com.ruimeng.things.net_station.Coordinates
 import com.ruimeng.things.net_station.LocationSource
 import com.ruimeng.things.net_station.LocationUtil
@@ -76,20 +77,22 @@ class MainViewModel : BaseViewModel() {
                 IS_SHOW_MSG = false
                 url = "/apiv6/luckywheel/getlottery"
                 onSuccess { res ->
-                    try {
-                        val bean = res.toPOJO<LuckyWheelLotteryBean>()
-                        _luckyWheelLottery.value = bean
-                        onResult?.invoke(bean)
-                    } catch (_: Exception) {
-                    }
+                    publishLuckyWheelLottery(res, onResult)
                 }
-                onFailWithData { code, msg, res ->
-                    val bean = res.toPOJO<LuckyWheelLotteryBean>()
-                    _luckyWheelLottery.value = bean
-                    onResult?.invoke(bean)
+                onFailWithData { _, _, res ->
+                    publishLuckyWheelLottery(res, onResult)
                 }
             }
         }
+    }
+
+    private fun publishLuckyWheelLottery(
+        response: String,
+        onResult: ((LuckyWheelLotteryBean) -> Unit)?
+    ) {
+        val bean = parseLuckyWheelLotteryResponse(response) ?: return
+        _luckyWheelLottery.value = bean
+        onResult?.invoke(bean)
     }
 
     fun getMapKey() {

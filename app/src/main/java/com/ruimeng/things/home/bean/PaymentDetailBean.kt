@@ -55,6 +55,7 @@ data class Data(
     val battery : BatteryInfo,
     val receiptInfo: List<ReceiptInfo>?,
     val agentCityName: String? = null,
+    val agentMobile: String? = null,
     @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)
     val buyFreeDeposit: BuyFreeDeposit? = null,
     @JsonAdapter(EmptyArrayAsNullTypeAdapterFactory::class)

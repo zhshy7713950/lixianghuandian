@@ -94,8 +94,6 @@ class FgtMyCoupon : BaseBackFragment() {
         }
         srl_ticket?.setOnLoadMoreListener { getInfo() }
         ll_scan?.setOnClickListener {
-            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-5")
-            ToastHelper.shortToast(context, "请扫描兑换码")
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 AtyScanQrcode.start(getCurrentAty(), AtyScanQrcode.TYPE_TICKET)
             })

@@ -216,8 +216,6 @@ class FgtMeDeposit : BaseBackFragment() {
 
                 }.show()
         } else {
-            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-            ToastHelper.shortToast(context, "请扫描电柜二维码")
             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
                 intent.putExtra("type", "退还")

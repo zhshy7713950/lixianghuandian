@@ -14,14 +14,15 @@
 			android:id="@+id/viewfinder_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:inner_corner_length="20dp"
+			android:visibility="invisible"
+			app:inner_corner_length="30dp"
 			app:inner_corner_width="2dp"
 			app:inner_height="250dp"
-			app:inner_margintop="70dp"
+			app:inner_margintop="50dp"
 			app:inner_scan_iscircle="false"
 			app:inner_scan_speed="30"
 			app:inner_width="250dp"
 		app:inner_corner_color="#20E8AE"
-		app:inner_scan_bitmap="@mipmap/scan_line"
+		app:inner_scan_bitmap="@drawable/scan_line_thin"
 		/>
 </FrameLayout>

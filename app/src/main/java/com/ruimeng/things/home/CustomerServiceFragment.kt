@@ -146,9 +146,7 @@ class CustomerServiceFragment : BaseBackFragment() {
                         ToastHelper.shortToast(activity, "没有需要取回的电池")
                         return@observe
                     }
-                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                    // 条件满足，跳转扫码页面
-                    ToastHelper.shortToast(activity, "请扫描电柜二维码")
+                    // 条件满足，跳转扫码页面，由扫码页播报操作提示
                     getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                         val intent = Intent(activity, ScanQrCodeActivity::class.java)
                         intent.putExtra("type", "自助开仓")

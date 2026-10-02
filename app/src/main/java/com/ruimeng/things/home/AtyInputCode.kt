@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import com.ruimeng.things.R
 import com.ruimeng.things.home.helper.ScanResultCheck
 import com.utils.FlashUtil
@@ -12,8 +13,11 @@ import com.utils.ToastHelper
 import com.uuzuche.lib_zxing.activity.CodeUtils
 import kotlinx.android.synthetic.main.aty_input_code.etCode
 import kotlinx.android.synthetic.main.aty_input_code.tvConfirm
-import kotlinx.android.synthetic.main.aty_scan_qrcode.topbar
-import kotlinx.android.synthetic.main.aty_scan_qrcode.tv_light
+import kotlinx.android.synthetic.main.aty_input_code.topbar
+import kotlinx.android.synthetic.main.aty_input_code.tv_light
+import kotlinx.android.synthetic.main.aty_input_code.btn_light
+import kotlinx.android.synthetic.main.aty_input_code.tv_code_note1
+import kotlinx.android.synthetic.main.aty_input_code.tv_code_note2
 import wongxd.base.AtyBase
 
 class AtyInputCode : AtyBase() {
@@ -22,9 +26,10 @@ class AtyInputCode : AtyBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.aty_input_code)
         getType = intent.getIntExtra("type",1)
-        if (getType == 8) {
-            etCode.hint = "请输入编码"
-        }
+        etCode.hint = "请输入编码"
+        val cabinet = getType != 8 && getType != 9
+        tv_code_note1.visibility = if (cabinet) View.VISIBLE else View.GONE
+        tv_code_note2.visibility = if (cabinet) View.VISIBLE else View.GONE
         initTopbar(topbar,"手动输入编码" )
         etCode.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -49,7 +54,7 @@ class AtyInputCode : AtyBase() {
                checkScanResult(etCode.text.toString().trim())
             }
         }
-        tv_light.setOnClickListener {
+        btn_light.setOnClickListener {
             FlashUtil.changeFlashLight(this,tv_light.text.equals("打开手电筒"))
             tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
         }

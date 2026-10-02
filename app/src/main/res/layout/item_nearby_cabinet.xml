@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/station_card" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+    android:background="@drawable/bg_nearby_card" android:orientation="horizontal"
+    android:padding="10dp">
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/station_name" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textColor="@android:color/white"
+            android:textSize="16sp" android:textStyle="bold" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" android:gravity="top" android:orientation="horizontal">
+            <ImageView android:id="@+id/station_code_icon"
+                android:layout_width="14dp" android:layout_height="14dp"
+                android:src="@drawable/ic_net_station_cabinet_number" android:contentDescription="柜号" />
+            <TextView android:id="@+id/station_code" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white" android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" android:gravity="top" android:orientation="horizontal">
+            <ImageView android:id="@+id/station_address_icon"
+                android:layout_width="14dp" android:layout_height="14dp"
+                android:src="@drawable/ic_net_station_address" android:contentDescription="地址" />
+            <TextView android:id="@+id/station_address" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white" android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <FrameLayout android:layout_width="80dp" android:layout_height="match_parent"
+        android:padding="10dp">
+        <ImageView android:id="@+id/station_check" android:layout_width="18dp"
+            android:layout_height="18dp" android:layout_gravity="center"
+            android:src="@drawable/ic_scan_unselected" android:contentDescription="选择" />
+    </FrameLayout>
+</LinearLayout>

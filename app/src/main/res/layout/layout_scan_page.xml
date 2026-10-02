@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout android:id="@+id/fl_my_container" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_marginTop="@dimen/topbar_height" />
+    <com.ruimeng.things.home.view.ScanMaskView android:id="@+id/scan_mask"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/topbar_height" />
+    <ScrollView android:id="@+id/scan_scroll" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/topbar_height" android:fillViewport="true"
+        android:scrollbars="none">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_horizontal" android:orientation="vertical"
+            android:paddingBottom="100dp">
+            <TextView android:id="@+id/tv_scan_hint" style="@style/ScanWhiteLabel"
+                android:layout_marginTop="16dp" android:text="请扫描二维码" />
+            <View android:id="@+id/scan_window_placeholder"
+                android:layout_width="250dp" android:layout_height="250dp"
+                android:layout_marginTop="14dp" />
+            <TextView style="@style/ScanWhiteLabel" android:layout_marginTop="10dp"
+                android:gravity="center" android:text="二维码反光 / 扫码模糊，可尝试离码远点" />
+            <LinearLayout android:id="@+id/btn_light" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="20dp"
+                android:gravity="center_horizontal" android:orientation="vertical">
+                <ImageView android:layout_width="50dp" android:layout_height="50dp"
+                    android:src="@mipmap/ic_light" android:contentDescription="手电筒" />
+                <TextView android:id="@+id/tv_light" style="@style/ScanWhiteLabel"
+                    android:layout_marginTop="5dp" android:text="打开手电筒" />
+            </LinearLayout>
+            <TextView android:id="@+id/tv_shortcut_heading" style="@style/ScanSectionHeading"
+                android:layout_marginTop="100dp" android:text="扫码失败？试试快捷功能" />
+            <LinearLayout android:id="@+id/shortcut_row" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="10dp"
+                android:gravity="center" android:orientation="horizontal">
+                <LinearLayout android:id="@+id/btn_station" style="@style/ScanShortcut">
+                    <ImageView style="@style/ScanShortcutIcon" android:src="@drawable/ic_scan_station" android:contentDescription="选择站点" />
+                    <TextView style="@style/ScanWhiteLabel" android:layout_marginTop="5dp" android:text="选择站点" />
+                </LinearLayout>
+                <LinearLayout android:id="@+id/btn_input" style="@style/ScanShortcut">
+                    <ImageView style="@style/ScanShortcutIcon" android:src="@drawable/ic_scan_input" android:contentDescription="输入编码" />
+                    <TextView style="@style/ScanWhiteLabel" android:layout_marginTop="5dp" android:text="输入编码" />
+                </LinearLayout>
+                <LinearLayout android:id="@+id/btn_album" style="@style/ScanShortcut">
+                    <ImageView style="@style/ScanShortcutIcon" android:src="@drawable/ic_scan_album" android:contentDescription="选择相册" />
+                    <TextView style="@style/ScanWhiteLabel" android:layout_marginTop="5dp" android:text="选择相册" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView style="@style/ScanSectionHeading" android:layout_marginTop="50dp"
+                android:text="还是不行？试试换个方式" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:orientation="horizontal"
+                android:paddingLeft="10dp" android:paddingRight="10dp">
+                <LinearLayout android:id="@+id/btn_service" style="@style/ScanHelpCard"
+                    android:layout_marginRight="5dp">
+                    <ImageView style="@style/ScanShortcutIcon" android:src="@mipmap/service_support_me" android:contentDescription="客服热线" />
+                    <LinearLayout style="@style/ScanHelpTextColumn">
+                        <TextView style="@style/ScanHelpTitle" android:text="客服热线" />
+                        <TextView style="@style/ScanHelpDescription" android:text="联系客服为您处理" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout android:id="@+id/btn_mini_program" style="@style/ScanHelpCard"
+                    android:layout_marginLeft="5dp">
+                    <ImageView style="@style/ScanShortcutIcon" android:src="@drawable/ic_wx_mini_program" android:contentDescription="锂享小程序" />
+                    <LinearLayout style="@style/ScanHelpTextColumn">
+                        <TextView style="@style/ScanHelpTitle" android:text="锂享小程序" />
+                        <TextView style="@style/ScanHelpDescription" android:text="试试微信小程序吧" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <com.qmuiteam.qmui.widget.QMUITopBar android:id="@+id/topbar"
+        android:layout_width="match_parent" android:layout_height="@dimen/topbar_height"
+        app:qmui_topbar_left_back_drawable_id="@drawable/ic_back_white"
+        app:qmui_topbar_title_color="@color/white" />
+</FrameLayout>

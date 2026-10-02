@@ -834,8 +834,6 @@ class FgtHome : MainTabFragment() {
                 }
 
                 1 -> {
-                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                    ToastHelper.shortToast(context, "请扫描电柜二维码")
                     tryToScan()
                 }
 
@@ -933,8 +931,6 @@ class FgtHome : MainTabFragment() {
                             VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
                             EasyToast.DEFAULT.show("没有需要取回的电池")
                         } else {
-                            VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                            ToastHelper.shortToast(context, "请扫描电柜二维码")
                             getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
                                 val intent = Intent(activity, ScanQrCodeActivity::class.java)
                                 intent.putExtra("type", "自助开仓")
@@ -2035,8 +2031,6 @@ class FgtHome : MainTabFragment() {
                                 btnText("确认", "取消")
                                 setOnBtnClickL(OnBtnClickL {
                                     dismiss()
-                                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                                    ToastHelper.shortToast(context, "请扫描电柜二维码")
                                     getPermissions(
                                         activity,
                                         PermissionType.CAMERA,
@@ -2049,8 +2043,6 @@ class FgtHome : MainTabFragment() {
 
                             }.show()
                     } else {
-                        VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                        ToastHelper.shortToast(context, "请扫描电柜二维码")
                         getPermissions(activity, PermissionType.CAMERA, allGranted = {
                             tryToScan()
                         })
@@ -2095,8 +2087,6 @@ class FgtHome : MainTabFragment() {
                 VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-2")
                 ToastHelper.shortToast(context, "请您先完成解冻操作")
             } else {
-                VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                ToastHelper.shortToast(context, "请扫描电柜二维码")
 //                if (hasChangePackege){
                 getPermissions(activity, PermissionType.CAMERA, allGranted = {
                     val intent = Intent(activity, ScanQrCodeActivity::class.java)
@@ -2141,8 +2131,6 @@ class FgtHome : MainTabFragment() {
 
                         }.show()
                 } else {
-                    VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-                    ToastHelper.shortToast(context, "请扫描电柜二维码")
                     getPermissions(activity, PermissionType.CAMERA, allGranted = {
                         val intent = Intent(activity, ScanQrCodeActivity::class.java)
                         intent.putExtra("type", "冻结")
@@ -2173,8 +2161,6 @@ class FgtHome : MainTabFragment() {
     class BatteryRebackEvent;
     @Subscribe
     fun rebackClick(event: BatteryRebackEvent) {
-        VoicePlayerManager.getInstance().playVoice(requireContext(), "tip-1")
-        ToastHelper.shortToast(context, "请扫描电柜二维码")
         getPermissions(activity, PermissionType.CAMERA, allGranted = {
             val intent = Intent(activity, ScanQrCodeActivity::class.java)
             intent.putExtra("type", "退还")

@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -167,12 +168,13 @@ class AtyNearbyCabinet : AtyBase() {
             btnNum(2)
             title(code)
             content("请对比以上号码，是否与电柜二维码下方编号一致")
-            btnText("确认", "取消")
-            setOnBtnClickL(OnBtnClickL {
+            btnText("取消", "确认")
+            btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#FF6464"))
+            setOnBtnClickL(OnBtnClickL { dismiss() }, OnBtnClickL {
                 dismiss()
                 setResult(Activity.RESULT_OK, Intent().putExtra("code", code))
                 finish()
-            }, OnBtnClickL { dismiss() })
+            })
         }.show()
     }
 }

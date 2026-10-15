@@ -55,8 +55,8 @@ class AtyInputCode : AtyBase() {
             }
         }
         btn_light.setOnClickListener {
-            FlashUtil.changeFlashLight(this,tv_light.text.equals("打开手电筒"))
-            tv_light.text = if ( tv_light.text.equals("打开手电筒")) "关闭手电筒" else "打开手电筒"
+            FlashUtil.changeFlashLight(this,tv_light.text.equals("打开电筒"))
+            tv_light.text = if ( tv_light.text.equals("打开电筒")) "关闭电筒" else "打开电筒"
         }
     }
     private fun checkScanResult(result:String){

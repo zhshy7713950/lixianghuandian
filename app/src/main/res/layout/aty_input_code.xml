@@ -60,7 +60,7 @@
             android:src="@mipmap/ic_light" android:contentDescription="手电筒" />
         <TextView android:id="@+id/tv_light" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_marginTop="5dp"
-            android:text="打开手电筒" android:textColor="@android:color/white"
+            android:text="打开电筒" android:textColor="@android:color/white"
             android:textSize="16sp" android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

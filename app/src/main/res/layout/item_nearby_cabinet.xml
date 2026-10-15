@@ -10,17 +10,19 @@
             android:layout_height="wrap_content" android:textColor="@android:color/white"
             android:textSize="16sp" android:textStyle="bold" />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" android:gravity="top" android:orientation="horizontal">
+            android:clipChildren="false" android:layout_marginTop="8dp" android:gravity="top"
+            android:orientation="horizontal">
             <ImageView android:id="@+id/station_code_icon"
                 android:layout_width="14dp" android:layout_height="14dp"
                 android:src="@drawable/ic_net_station_cabinet_number" android:contentDescription="柜号" />
+            <!-- translationY 作用是将柜号文字视觉上移 2dp，与左侧图标居中对齐 -->
             <TextView android:id="@+id/station_code" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_marginLeft="5dp"
                 android:textColor="@android:color/white" android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold" android:translationY="-2dp" />
         </LinearLayout>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" android:gravity="top" android:orientation="horizontal">
+            android:layout_marginTop="8dp" android:gravity="top" android:orientation="horizontal">
             <ImageView android:id="@+id/station_address_icon"
                 android:layout_width="14dp" android:layout_height="14dp"
                 android:src="@drawable/ic_net_station_address" android:contentDescription="地址" />

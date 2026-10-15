@@ -45,9 +45,9 @@ object ScanPageUi {
 
         activity.findViewById<View>(R.id.btn_light).setOnClickListener {
             val label = activity.findViewById<TextView>(R.id.tv_light)
-            val turningOn = label.text.toString() == "打开手电筒"
+            val turningOn = label.text.toString() == "打开电筒"
             CodeUtils.isLightEnable(turningOn)
-            label.text = if (turningOn) "关闭手电筒" else "打开手电筒"
+            label.text = if (turningOn) "关闭电筒" else "打开电筒"
         }
         activity.findViewById<View>(R.id.btn_input).setOnClickListener {
             activity.startActivityForResult(Intent(activity, AtyInputCode::class.java).apply {

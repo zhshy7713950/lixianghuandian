@@ -47,6 +47,8 @@ import com.ruimeng.things.common.BannerHelper
 import com.ruimeng.things.home.bean.*
 import com.ruimeng.things.home.helper.AdPopHelper
 import com.ruimeng.things.home.view.BuyChangePackagePopup
+import com.ruimeng.things.home.view.HomeFunctionAction
+import com.ruimeng.things.home.view.HomeFunctionZoneView
 import com.ruimeng.things.home.view.PopupAdWindow
 import com.ruimeng.things.home.view.PopupHelpEvent
 import com.ruimeng.things.home.view.PopupHelpWindow
@@ -56,8 +58,12 @@ import com.ruimeng.things.home.view.WarningAlertPopupWindow
 // 租电型号二次确认弹窗在本类中直接使用NormalDialog实现，不依赖通用Tips方法
 import com.ruimeng.things.home.vm.GetDeviceStatusEvent
 import com.ruimeng.things.home.vm.HomeViewModel
+import com.ruimeng.things.me.FgtMeDeposit
+import com.ruimeng.things.me.FgtMyCoupon
+import com.ruimeng.things.me.FgtRecommendGift
 import com.ruimeng.things.me.FgtTrueName
 import com.ruimeng.things.me.contract.FgtContractSignStep1
+import com.ruimeng.things.me.contract.FgtMyContract
 import com.ruimeng.things.utils.CustomerServiceManager
 import com.utils.*
 import com.uuzuche.lib_zxing.activity.CodeUtils
@@ -222,9 +228,60 @@ class FgtHome : MainTabFragment() {
         (parentFragment as FgtMain).start(toFgt)
     }
 
+    private fun homeFunctionZones(): List<HomeFunctionZoneView> = listOfNotNull(
+        view?.findViewById<View>(R.id.root_has_item)
+            ?.findViewById<HomeFunctionZoneView>(R.id.home_function_zone),
+        view?.findViewById<View>(R.id.root_no_item)
+            ?.findViewById<HomeFunctionZoneView>(R.id.home_function_zone)
+    )
+
+    private fun initHomeFunctionZones() {
+        homeFunctionZones().forEach { zone ->
+            zone.setOnFunctionClickListener(::handleHomeFunctionAction)
+        }
+    }
+
+    private fun bindHomeFunctionZones() {
+        homeFunctionZones().forEach { zone ->
+            zone.setPackageFrozen(activeStatus == "3")
+        }
+    }
+
+    private fun handleHomeFunctionAction(action: HomeFunctionAction) {
+        when (action) {
+            HomeFunctionAction.SELF_SERVICE_OPEN -> startSelfService()
+            HomeFunctionAction.FREEZE_OR_UNFREEZE -> handleFreezeOrUnfreeze()
+            HomeFunctionAction.EXTRA_RENT -> startExtraRent()
+            HomeFunctionAction.CUSTOMER_SERVICE -> startFgt(CustomerServiceFragment.newInstance())
+            HomeFunctionAction.RECOMMEND_GIFT -> startFgt(FgtRecommendGift())
+            HomeFunctionAction.SWITCH_BATTERY -> startFgt(FgtSwitchBattery())
+            HomeFunctionAction.NEARBY_STATIONS ->
+                EventBus.getDefault().post(FgtMain.SwitchPageEvent(1))
+            HomeFunctionAction.MY_CONTRACT -> startFgt(FgtMyContract())
+            HomeFunctionAction.CUSTOMER_HOTLINE ->
+                CustomerServiceManager.showDialSheet(requireActivity())
+            HomeFunctionAction.BATTERY_LOCATION -> openBatteryLocation()
+            HomeFunctionAction.MY_COUPONS -> startFgt(FgtMyCoupon.newInstance())
+            HomeFunctionAction.LOW_BATTERY_REMINDER -> WeChatHelper.launchWXMiniProgram(
+                requireContext(),
+                resources.getString(R.string.wx_appid),
+                "/pages/基础/关注公众号/followWechat"
+            )
+            HomeFunctionAction.LIXIANG_MINI_PROGRAM -> WeChatHelper.launchWXMiniProgram(
+                requireContext(),
+                resources.getString(R.string.wx_appid),
+                ""
+            )
+            HomeFunctionAction.CHANGE_MOBILE ->
+                startFgt(FgtChangeMobile.newInstance(FgtChangeMobile.VERIFY_TYPE))
+            HomeFunctionAction.TERMINATE_RENT -> startFgt(FgtMeDeposit())
+        }
+    }
+
     override fun initView(mView: View?, savedInstanceState: Bundle?) {
         EventBus.getDefault().register(this)
         initEvent()
+        initHomeFunctionZones()
         vm.checkAdStatusSilently()
         if (!TextUtils.isEmpty(Config.getDefault().spUtils.getString("ledString", ""))) {
             ledTextView?.text = Config.getDefault().spUtils.getString("ledString", "")
@@ -721,6 +778,7 @@ class FgtHome : MainTabFragment() {
         } else {
             dealTwoStatus(false)
         }
+        bindHomeFunctionZones()
     }
 
     private var isCheckingLateFee = false
@@ -915,6 +973,20 @@ class FgtHome : MainTabFragment() {
 
     private fun hasBatteryInfo() = deviceCode == 200
 
+    private fun startSelfService() {
+        if (!hasBatteryInfo()) return
+        if ("3" == activeStatus || virtaul) {
+            VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
+            EasyToast.DEFAULT.show("没有需要取回的电池")
+        } else {
+            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
+                val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                intent.putExtra("type", "自助开仓")
+                startActivityForResult(intent, 1)
+            })
+        }
+    }
+
     private fun initHasItemView() {
 
         tv_remark_num.setOnClickListener { changeRemark() }
@@ -925,19 +997,7 @@ class FgtHome : MainTabFragment() {
             if (!hasBatteryInfo()) return@setOnClickListener
             PopupHelpWindow(requireActivity()) {
                 when (it) {
-                    is PopupHelpEvent.SelfService -> {
-                        if ("3" == activeStatus || virtaul) {
-                            // 播放失败语音
-                            VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-5")
-                            EasyToast.DEFAULT.show("没有需要取回的电池")
-                        } else {
-                            getPermissions(getCurrentAty(), PermissionType.CAMERA, allGranted = {
-                                val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                                intent.putExtra("type", "自助开仓")
-                                startActivityForResult(intent, 1)
-                            })
-                        }
-                    }
+                    is PopupHelpEvent.SelfService -> startSelfService()
 
                     is PopupHelpEvent.OnlineService -> {
                         CustomerServiceManager.showDialSheet(requireActivity())
@@ -1735,10 +1795,6 @@ class FgtHome : MainTabFragment() {
             tv_error_title.visibility = GONE
             tv_error_info.visibility = GONE
         }
-        tv_ice.text = "冻结套餐"
-        val drawable = context?.getDrawable(R.mipmap.ic_stop_contract)
-        drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        tv_ice.setCompoundDrawables(null, drawable, null, null)
         tvBatteryName.text = info.device_id
         tv_package_status.visibility = GONE
         if (info.device_id.startsWith("8") && info.device_id.length == 8) {
@@ -1761,10 +1817,6 @@ class FgtHome : MainTabFragment() {
             } else if (paymentDetailBean?.active_status == "3") {
                 tvProgress.text = "已冻结"
                 tv_please_change.text = "(请进行\"解冻\"操作)"
-                tv_ice.text = "解冻套餐"
-                val drawable = context?.getDrawable(R.mipmap.ic_scan_box)
-                drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                tv_ice.setCompoundDrawables(null, drawable, null, null)
                 tv_package_status.visibility = VISIBLE
                 tv_package_status.text = "已冻结"
                 tv_package_status.background = context?.getDrawable(R.drawable.shape_yello)
@@ -1813,7 +1865,6 @@ class FgtHome : MainTabFragment() {
     }
 
     private fun showPackageInfo() {
-        tv_ice.text = if (activeStatus == "3") "解冻套餐" else "冻结套餐"
         tv_exp_remind.visibility = GONE
         hasChangePackege = false
         if (paymentDetailBean != null) {
@@ -1985,88 +2036,104 @@ class FgtHome : MainTabFragment() {
         return true
     }
 
+    private fun openBatteryLocation() {
+        if (!hasBatteryInfo()) return
+        if (checkStatus()) {
+            getPermissions(activity,
+                PermissionType.COARSE_LOCATION,
+                PermissionType.FINE_LOCATION,
+                PermissionType.ACCESS_WIFI_STATE,
+                PermissionType.ACCESS_NETWORK_STATE,
+                allGranted = {
+                    startFgt(FgtFindBattery())
+                })
+        }
+    }
+
+    private fun startExtraRent() {
+        http {
+            url = Path.GET_MY_DEVICE
+            onSuccess {
+                val result = it.toPOJO<MyDevicesBean>().data
+                if (result.size >= 2) {
+                    ToastHelper.shortToast(context, "可租用电池数已达上限(2)")
+                } else if (result.size == 1) {
+                    NormalDialog(activity)
+                        .apply {
+                            style(NormalDialog.STYLE_TWO)
+                            btnNum(2)
+                            title("提示")
+                            content("您已有在租电池，请确认是否需要再租一颗电池？？")
+                            btnText("确认", "取消")
+                            setOnBtnClickL(OnBtnClickL {
+                                dismiss()
+                                getPermissions(
+                                    activity,
+                                    PermissionType.CAMERA,
+                                    allGranted = {
+                                        tryToScan()
+                                    })
+                            }, OnBtnClickL {
+                                dismiss()
+                            })
+
+                        }.show()
+                } else {
+                    getPermissions(activity, PermissionType.CAMERA, allGranted = {
+                        tryToScan()
+                    })
+                }
+            }
+        }
+    }
+
+    private fun handleFreezeOrUnfreeze() {
+        if (!hasBatteryInfo()) return
+        if (activeStatus != "3") {
+            if (virtaul) {
+                NormalDialog(activity)
+                    .apply {
+                        style(NormalDialog.STYLE_TWO)
+                        btnNum(2)
+                        title("冻结套餐成功后套餐将暂停计费(持续冻结至少24小时)，如需恢复套餐，需要您进行解冻操作")
+                        content("请确认是否立即开始冻结？")
+                        btnText("确认", "取消")
+                        setOnBtnClickL(OnBtnClickL {
+                            dismiss()
+                            frozen("")
+                        }, OnBtnClickL {
+                            dismiss()
+                        })
+
+                    }.show()
+            } else {
+                getPermissions(activity, PermissionType.CAMERA, allGranted = {
+                    val intent = Intent(activity, ScanQrCodeActivity::class.java)
+                    intent.putExtra("type", "冻结")
+                    startActivityForResult(intent, 1)
+                })
+            }
+        } else {
+            NormalDialog(activity)
+                .apply {
+                    style(NormalDialog.STYLE_TWO)
+                    btnNum(2)
+                    title("解冻成功后套餐将立即恢复计费，之后您可扫码取电继续使用")
+                    content("请确认是否立即开始解冻？")
+                    btnText("确认", "取消")
+                    setOnBtnClickL(OnBtnClickL {
+                        dismiss()
+                        resumeBattery()
+                    }, OnBtnClickL {
+                        dismiss()
+                    })
+
+                }.show()
+        }
+    }
+
     private fun initInfoEvent(item: DeviceDetailBean.Data) {
         contractId = item.device_contract.contract_id
-        tvFindLocation.setOnClickListener {
-            if (checkStatus()) {
-                getPermissions(activity,
-                    PermissionType.COARSE_LOCATION,
-                    PermissionType.FINE_LOCATION,
-                    PermissionType.ACCESS_WIFI_STATE,
-                    PermissionType.ACCESS_NETWORK_STATE,
-                    allGranted = {
-                        startFgt(FgtFindBattery())
-                    })
-            }
-
-        }
-        tvWay.setOnClickListener {
-            if (checkStatus()) {
-                startFgt(FgtTrajectory())
-            }
-        }
-        tvSwitch.setOnClickListener {
-
-            getPermissions(activity, PermissionType.CAMERA, allGranted = {
-                val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                intent.putExtra("type", "换电")
-                intent.putExtra("contract_id", item.device_contract.contract_id)
-                startActivityForResult(intent, 1)
-            })
-        }
-        tv_scan_box.setOnClickListener {
-            http {
-                url = Path.GET_MY_DEVICE
-                onSuccess {
-                    val result = it.toPOJO<MyDevicesBean>().data
-                    if (result.size >= 2) {
-                        ToastHelper.shortToast(context, "可租用电池数已达上限(2)")
-                    } else if (result.size == 1) {
-                        NormalDialog(activity)
-                            .apply {
-                                style(NormalDialog.STYLE_TWO)
-                                btnNum(2)
-                                title("提示")
-                                content("您已有在租电池，请确认是否需要再租一颗电池？？")
-                                btnText("确认", "取消")
-                                setOnBtnClickL(OnBtnClickL {
-                                    dismiss()
-                                    getPermissions(
-                                        activity,
-                                        PermissionType.CAMERA,
-                                        allGranted = {
-                                            tryToScan()
-                                        })
-                                }, OnBtnClickL {
-                                    dismiss()
-                                })
-
-                            }.show()
-                    } else {
-                        getPermissions(activity, PermissionType.CAMERA, allGranted = {
-                            tryToScan()
-                        })
-                    }
-                }
-            }
-
-        }
-        tvReback.setOnClickListener {
-            //3.【退还】按钮点击后，如果判断是虚拟电池："8开头 + 8位"，就走老流程，跳转到"退还"页面（需要上传图片、填写原因那个）
-            //否则，进入扫码页，获取到电柜码，调用新接口returnBattery】
-            if (activeStatus == "3") {
-                ToastHelper.shortToast(context, "没有需要退还的电池")
-            } else {
-                if (CURRENT_DEVICEID.startsWith("8") && CURRENT_DEVICEID.length == 8) {
-//                    startFgt(FgtReturn.newInstance(CURRENT_DEVICEID))
-                    ToastHelper.shortToast(context, "没有需要退还的电池")
-                } else {
-                    EventBus.getDefault().post(BatteryRebackEvent())
-                }
-            }
-
-
-        }
         changeOpenDoor?.setOnClickListener {
             if (CURRENT_DEVICEID.isNullOrEmpty()) {
                 ToastHelper.shortToast(context, "操作失败，请刷新后重试")
@@ -2111,50 +2178,6 @@ class FgtHome : MainTabFragment() {
                     getBatteryDetailInfo()
                 }
             }
-        }
-        tv_ice.setOnClickListener {
-            if (tv_ice.text.equals("冻结套餐")) {
-                if (virtaul) {
-                    NormalDialog(activity)
-                        .apply {
-                            style(NormalDialog.STYLE_TWO)
-                            btnNum(2)
-                            title("冻结套餐成功后套餐将暂停计费(持续冻结至少24小时)，如需恢复套餐，需要您进行解冻操作")
-                            content("请确认是否立即开始冻结？")
-                            btnText("确认", "取消")
-                            setOnBtnClickL(OnBtnClickL {
-                                dismiss()
-                                frozen("")
-                            }, OnBtnClickL {
-                                dismiss()
-                            })
-
-                        }.show()
-                } else {
-                    getPermissions(activity, PermissionType.CAMERA, allGranted = {
-                        val intent = Intent(activity, ScanQrCodeActivity::class.java)
-                        intent.putExtra("type", "冻结")
-                        startActivityForResult(intent, 1)
-                    })
-                }
-            } else {
-                NormalDialog(activity)
-                    .apply {
-                        style(NormalDialog.STYLE_TWO)
-                        btnNum(2)
-                        title("解冻成功后套餐将立即恢复计费，之后您可扫码取电继续使用")
-                        content("请确认是否立即开始解冻？")
-                        btnText("确认", "取消")
-                        setOnBtnClickL(OnBtnClickL {
-                            dismiss()
-                            resumeBattery()
-                        }, OnBtnClickL {
-                            dismiss()
-                        })
-
-                    }.show()
-            }
-
         }
     }
 

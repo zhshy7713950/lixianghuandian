@@ -311,11 +311,11 @@ class FgtMe : MainTabFragment() {
         val showReferrer = userinfo != null && (userinfo.isSH() || userinfo.isGA() || userinfo.isNC())
         menus.add(MeMenuItem("referrer", R.mipmap.service_my_referrer, "推荐有礼", { startFgt(FgtRecommendGift()) }, showReferrer))
 
-        menus.add(MeMenuItem("followWechat", R.drawable.ic_wx, "关注公众号", {
+        menus.add(MeMenuItem("followWechat", R.drawable.ic_low_battery_reminder, "低电提醒", {
             WeChatHelper.launchWXMiniProgram(requireContext(), resources.getString(R.string.wx_appid), "/pages/基础/关注公众号/followWechat")
         }, true))
 
-        val showTerminate = userinfo != null && !userinfo.isCD() && tv_ya_money_me.isEnabled
+        val showTerminate = userinfo != null && tv_ya_money_me.isEnabled
         menus.add(MeMenuItem("terminate", R.drawable.ic_terminate, "退租", { startFgt(FgtMeDeposit()) }, showTerminate))
 
         menus.add(MeMenuItem("lixiangMiniProgram", R.drawable.ic_wx_mini_program, "锂享小程序", {

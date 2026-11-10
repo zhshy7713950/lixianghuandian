@@ -54,7 +54,7 @@ class CustomerServiceFragment : BaseBackFragment() {
     }
 
     private fun setupListeners() {
-        // 电池卡仓
+        // 电池被吞
         ll_battery_compartment.setOnClickListener {
             handleBatteryCompartment()
         }

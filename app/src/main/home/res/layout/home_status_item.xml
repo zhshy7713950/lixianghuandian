@@ -279,105 +279,10 @@
 			</LinearLayout>
 		</FrameLayout>
 
-		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+		<include
+			layout="@layout/home_function_zone"
 			android:layout_width="match_parent"
-			android:layout_height="109dp"
-			android:layout_marginLeft="12dp"
-			android:layout_marginRight="12dp"
-			android:orientation="horizontal"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			app:qmui_backgroundColor="#313944"
-			app:qmui_borderColor="#535B66"
-			app:qmui_borderWidth="0.5dp"
-			android:gravity="center_vertical"
-			app:qmui_radius="10dp">
-			<TextView
-				android:id="@+id/tvFindLocation"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_home_location"
-				android:text="电池定位"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-			<TextView
-				android:id="@+id/tvWay"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_home_way"
-				android:text="轨迹"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"
-				android:visibility="gone"/>
-			<TextView
-				android:id="@+id/tvSwitch"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_home_switch"
-				android:text="手动换电"
-				android:visibility="gone"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-
-			<TextView
-				android:id="@+id/tvStop"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:visibility="gone"
-				android:drawableTop="@mipmap/ic_stop_contract"
-				android:text="暂停合约"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-
-			<TextView
-				android:id="@+id/tv_scan_box"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_home_switch"
-				android:text="额外租电"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-			<TextView
-				android:id="@+id/tv_ice"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_stop_contract"
-				android:text="冻结套餐"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-
-			<TextView
-				android:id="@+id/tvReback"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:drawableTop="@mipmap/ic_home_back"
-				android:text="退租"
-				android:visibility="gone"
-				android:gravity="center_horizontal"
-				android:drawablePadding="8dp"
-				android:textColor="#ffffffff"
-				android:textSize="13sp"/>
-
-		</com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+			android:layout_height="wrap_content" />
 
 		<com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
 			android:id="@+id/ll_renew_discount"

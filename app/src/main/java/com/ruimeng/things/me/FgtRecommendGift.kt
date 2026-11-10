@@ -30,6 +30,7 @@ class FgtRecommendGift : BaseBackFragment() {
 
     override fun getLayoutRes(): Int = R.layout.fgt_recommend_gift
     private var hasRequestedShareQrCode = false
+    private var exitRunnable: Runnable? = null
 
     override fun onSupportVisible() {
         super.onSupportVisible()
@@ -101,10 +102,28 @@ class FgtRecommendGift : BaseBackFragment() {
                     iv_invite_qrcode.loadImg(qrUrl)
                 }
             }
-            onFail { _, _ ->
+            onFail { code, _ ->
                 tv_invite_code_value.text = "--"
+                if (code == 201) {
+                    val currentView = view ?: return@onFail
+                    exitRunnable?.let(currentView::removeCallbacks)
+                    val runnable = Runnable {
+                        exitRunnable = null
+                        if (isAdded && view != null) {
+                            pop()
+                        }
+                    }
+                    exitRunnable = runnable
+                    currentView.postDelayed(runnable, 1500L)
+                }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        exitRunnable?.let { view?.removeCallbacks(it) }
+        exitRunnable = null
+        super.onDestroyView()
     }
 
     private fun normalizeQrUrl(raw: String?): String {

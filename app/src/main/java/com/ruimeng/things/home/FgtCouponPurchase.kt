@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.entity.local.AdPayLocal
@@ -28,7 +27,6 @@ import kotlinx.android.synthetic.main.fgt_coupon_purchase.rbWx
 import kotlinx.android.synthetic.main.fgt_coupon_purchase.rvCoupons
 import kotlinx.android.synthetic.main.fgt_coupon_purchase.tvCouponPrice
 import kotlinx.android.synthetic.main.fgt_coupon_purchase.tvTotalPrice
-import kotlinx.coroutines.launch
 import wongxd.alipay.BaseAlipay
 import wongxd.base.BaseBackFragment
 import wongxd.common.getSweetDialog
@@ -53,13 +51,13 @@ class FgtCouponPurchase : BaseBackFragment() {
         arguments?.getParcelableArrayList<OperationInnerData>("operationInnerData")
     }
     private val dlgPayProgress: SweetAlertDialog by unsafeLazy {
-        getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "支付中")
+        getSweetDialog(requireActivity(), SweetAlertDialog.PROGRESS_TYPE, "支付中")
     }
     private val dlgPaySuccess: SweetAlertDialog by unsafeLazy {
-        getSweetDialog(SweetAlertDialog.SUCCESS_TYPE, "支付成功") { paySuccess() }
+        getSweetDialog(requireActivity(), SweetAlertDialog.SUCCESS_TYPE, "支付成功") { paySuccess() }
     }
     private val dlgPayFailed: SweetAlertDialog by unsafeLazy {
-        getSweetDialog(SweetAlertDialog.ERROR_TYPE, "支付失败")
+        getSweetDialog(requireActivity(), SweetAlertDialog.ERROR_TYPE, "支付失败")
     }
 
     private fun paySuccess() {
@@ -149,21 +147,17 @@ class FgtCouponPurchase : BaseBackFragment() {
     }
 
     private fun initEvent() {
-        lifecycleScope.launchWhenCreated {
-            launch {
-                vm.serverPayResultLiveData.observeForever {
-                    Log.d("LXHDNet", "支付结果===> ${it.isSuccess}")
-                    dlgPayProgress.dismiss()
-                    if (it.isSuccess) {
-                        // 播放成功语音
-                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6")
-                        dlgPaySuccess.show()
-                    } else {
-                        // 播放失败语音
-                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
-                        dlgPayFailed.show()
-                    }
-                }
+        vm.serverPayResultLiveData.observe(viewLifecycleOwner) {
+            Log.d("LXHDNet", "支付结果===> ${it.isSuccess}")
+            dlgPayProgress.dismiss()
+            if (it.isSuccess) {
+                // 播放成功语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "success-6")
+                dlgPaySuccess.show()
+            } else {
+                // 播放失败语音
+                VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-2")
+                dlgPayFailed.show()
             }
         }
     }
@@ -182,7 +176,7 @@ class FgtCouponPurchase : BaseBackFragment() {
                 payType,
                 operationInnerData.price ?: ""
             )
-        ).observeForever { netRes ->
+        ).observe(viewLifecycleOwner) { netRes ->
             netRes.whenSuccess {
                 when (payType) {
                     "1" -> {

@@ -46,8 +46,12 @@ object ScanPageUi {
         activity.findViewById<View>(R.id.btn_light).setOnClickListener {
             val label = activity.findViewById<TextView>(R.id.tv_light)
             val turningOn = label.text.toString() == "打开电筒"
-            CodeUtils.isLightEnable(turningOn)
-            label.text = if (turningOn) "关闭电筒" else "打开电筒"
+            val updated = setLightEnabled(turningOn) { CodeUtils.isLightEnable(it) }
+            if (updated) {
+                label.text = if (turningOn) "关闭电筒" else "打开电筒"
+            } else {
+                ToastHelper.shortToast(activity, "手电筒暂不可用，请重试")
+            }
         }
         activity.findViewById<View>(R.id.btn_input).setOnClickListener {
             activity.startActivityForResult(Intent(activity, AtyInputCode::class.java).apply {
@@ -76,6 +80,15 @@ object ScanPageUi {
         }
         ToastHelper.shortToast(activity, mode.prompt)
         mode.voice?.let { VoicePlayerManager.getInstance().playVoice(activity, it) }
+    }
+
+    internal fun setLightEnabled(enabled: Boolean, setLight: (Boolean) -> Unit): Boolean {
+        return try {
+            setLight(enabled)
+            true
+        } catch (_: RuntimeException) {
+            false
+        }
     }
 
     fun readAlbumCode(activity: Activity, data: Intent?): String? {

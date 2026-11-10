@@ -16,8 +16,8 @@ import com.ruimeng.things.AtyLogin
 import com.utils.Configs
 import org.jetbrains.anko.textColor
 import wongxd.Http
+import wongxd.base.AppManager
 import wongxd.common.dp2px
-import wongxd.common.getCurrentAppAty
 import wongxd.common.getCurrentAty
 import wongxd.common.px2Dp
 import wongxd.utils.utilcode.util.ScreenUtils
@@ -45,14 +45,14 @@ object QuickLoginHelper {
     }
 
     fun onePassLogin(quickLoginTokenListener: QuickLoginTokenListener,privateAgree: Boolean) {
-        getQuickLoginInstance().apply {
-            setUnifyUiConfig(privateAgree)
-            onePass(quickLoginTokenListener)
-        }
+        if (!setUnifyUiConfig(privateAgree)) return
+        getQuickLoginInstance().onePass(quickLoginTokenListener)
     }
 
-    private fun setUnifyUiConfig(privateAgree: Boolean) {
-        val context = getCurrentAppAty()
+    internal fun currentActivityOrNull(): Activity? = AppManager.getActivityStack()?.lastOrNull()
+
+    private fun setUnifyUiConfig(privateAgree: Boolean): Boolean {
+        val context = currentActivityOrNull() ?: return false
         getQuickLoginInstance().setUnifyUiConfig(UnifyUiConfig.Builder().apply {
             //logo
             setLogoIconDrawable(context.getDrawable(com.ruimeng.things.R.drawable.ic_one_key_logo))
@@ -148,6 +148,7 @@ object QuickLoginHelper {
             //未勾选弹窗
             setPrivacyDialogText("请阅读并同意接受协议")
         }.build(context))
+        return true
     }
 
 }

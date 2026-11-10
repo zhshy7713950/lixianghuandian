@@ -63,8 +63,9 @@ val Int.dp2px: Float
 
 fun getCurrentAppAty(): Activity = AppManager.getAppManager().currentActivity()
 
-fun getCurrentAty(): AppCompatActivity =
-    AppManager.getAppManager().currentActivity() as AppCompatActivity
+fun getCurrentAty(): AppCompatActivity = requireNotNull(
+    AppManager.getActivityStack()?.lastOrNull { it is AppCompatActivity } as? AppCompatActivity
+) { "No AppCompatActivity in activity stack" }
 
 fun getSweetDialog(
     context: Context,

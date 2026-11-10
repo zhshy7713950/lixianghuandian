@@ -177,7 +177,7 @@ class FgtMe : MainTabFragment() {
                 }
 
                 onFinish {
-                    srl_me.finishRefresh()
+                    finishRefresh()
                 }
 
 
@@ -203,6 +203,10 @@ class FgtMe : MainTabFragment() {
         val versionName = packageInfo?.versionName ?: "未知版本"
 
         tv_version_setting.text = "当前版本:v$versionName($versionCode)"
+    }
+
+    internal fun finishRefresh() {
+        srl_me?.finishRefresh()
     }
 
     private fun initEvent() {

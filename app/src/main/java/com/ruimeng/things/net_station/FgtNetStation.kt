@@ -45,7 +45,7 @@ class FgtNetStation : BaseBackFragment() {
         showHideFragment(
             fragmentList[0]
         )
-        val dlg = getSweetDialog(SweetAlertDialog.PROGRESS_TYPE, "定位中", true)
+        val dlg = getSweetDialog(requireActivity(), SweetAlertDialog.PROGRESS_TYPE, "定位中", true)
         dlg.show()
 
         val lifecycleOwner = viewLifecycleOwner

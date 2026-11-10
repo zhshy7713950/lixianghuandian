@@ -68,6 +68,7 @@ class FgtScanOpen : BaseBackFragment() {
         }
     }
     private fun showView(){
+        if (!isAdded || view == null) return
         var textColors = arrayOf("#929FAB","#FFFFFF")
         if (checkPayBean != null){
             // 站点名称
@@ -117,23 +118,36 @@ class FgtScanOpen : BaseBackFragment() {
                     params["code"] = code
                     onSuccessWithMsg { res, msg ->
                         // 播放成功语音
-                        VoicePlayerManager.getInstance().playVoice(requireContext(), "success-8")
-                        ToastHelper.shortToast(activity, msg)
+                        showOpenDoorSuccess(msg)
 //                        if (needActiveNew){
 //                            var option =  checkPayBean!!.paymentInfo.userOptions.filter{ it.option_type == "2" && it.active_status != "1"}.first()
 //                            activeOption(option)
 //                        }else{
-                        tv_change_battery.postDelayed(Runnable { pop() },2000)
 //                        }
                     }
                     onFail { i, s ->
-                        // 播放失败语音
-                        VoicePlayerManager.getInstance().playVoice(requireContext(), "fail-1")
-                        ToastHelper.shortToast(activity, s)
+                        showOpenDoorFailure(s)
                     }
                 }
             }
         }
+    }
+
+    internal fun showOpenDoorSuccess(msg: String) {
+        val currentContext = context ?: return
+        if (view == null) return
+        VoicePlayerManager.getInstance().playVoice(currentContext, "success-8")
+        ToastHelper.shortToast(activity, msg)
+        tv_change_battery.postDelayed(Runnable {
+            if (isAdded && view != null) pop()
+        }, 2000)
+    }
+
+    internal fun showOpenDoorFailure(msg: String) {
+        val currentContext = context ?: return
+        if (view == null) return
+        VoicePlayerManager.getInstance().playVoice(currentContext, "fail-1")
+        ToastHelper.shortToast(activity, msg)
     }
 
     private fun activeOption(option: PaymentOption){

@@ -22,6 +22,9 @@ import wongxd.base.custom.SpecialTab
 import wongxd.common.EasyToast
 
 
+internal fun restoredMainTabFragments(vararg fragments: MainTabFragment?): Array<MainTabFragment>? =
+    if (fragments.all { it != null }) fragments.filterNotNull().toTypedArray() else null
+
 /**
  * Created by wongxd on 2018/10/19.
  */
@@ -58,22 +61,25 @@ class FgtMain : FgtBase() {
             ?.getInt(KEY_CURRENT_INDEX, 0)
             ?.coerceIn(0, 3)
             ?: 0
-        fgts = if (savedInstanceState == null) {
-            arrayOf(
-                FgtHome(),
-//                FgtNetStation(),
-                FgtNetStationMap(),
-                FgtTicket(),
-                FgtMe()
-            )
-        } else {
-            arrayOf(
-                requireNotNull(findChildFragment(FgtHome::class.java)),
-                requireNotNull(findChildFragment(FgtNetStationMap::class.java)),
-                requireNotNull(findChildFragment(FgtTicket::class.java)),
-                requireNotNull(findChildFragment(FgtMe::class.java))
+        val restoredFgts = savedInstanceState?.let {
+            restoredMainTabFragments(
+                findChildFragment(FgtHome::class.java),
+                findChildFragment(FgtNetStationMap::class.java),
+                findChildFragment(FgtTicket::class.java),
+                findChildFragment(FgtMe::class.java)
             )
         }
+        if (savedInstanceState != null && restoredFgts == null) {
+            childFragmentManager.beginTransaction().apply {
+                childFragmentManager.fragments.forEach { remove(it) }
+            }.commitNow()
+        }
+        fgts = restoredFgts ?: arrayOf(
+            FgtHome(),
+            FgtNetStationMap(),
+            FgtTicket(),
+            FgtMe()
+        )
 
 
 
@@ -102,7 +108,7 @@ class FgtMain : FgtBase() {
 //            NoReadLiveData.refresh { }
 //        }
 
-        if (savedInstanceState == null) {
+        if (restoredFgts == null) {
             loadMultipleRootFragment(R.id.fl_fgt_main, currentIndex, *fgts)
         }
         renderTab(currentIndex)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
 import com.ruimeng.things.InfoViewModel
@@ -31,6 +32,11 @@ class FgtRecommendGift : BaseBackFragment() {
     override fun getLayoutRes(): Int = R.layout.fgt_recommend_gift
     private var hasRequestedShareQrCode = false
     private var exitRunnable: Runnable? = null
+    private val centerToast by lazy {
+        EasyToast.newBuilder(R.layout.layout_center_toast, R.id.tv_center_toast)
+            .setGravity(Gravity.CENTER, 0, 0)
+            .build()
+    }
 
     override fun onSupportVisible() {
         super.onSupportVisible()
@@ -91,6 +97,7 @@ class FgtRecommendGift : BaseBackFragment() {
     private fun fetchShareQrCode(userId: String?) {
         http {
             url = "/apiv6/distribute/shareqrcode"
+            IS_SHOW_MSG = false
             if (!userId.isNullOrBlank()) {
                 params["user_id"] = userId
             }
@@ -102,9 +109,10 @@ class FgtRecommendGift : BaseBackFragment() {
                     iv_invite_qrcode.loadImg(qrUrl)
                 }
             }
-            onFail { code, _ ->
+            onFail { code, msg ->
                 tv_invite_code_value.text = "--"
                 if (code == 201) {
+                    centerToast.show(msg)
                     val currentView = view ?: return@onFail
                     exitRunnable?.let(currentView::removeCallbacks)
                     val runnable = Runnable {
@@ -115,6 +123,8 @@ class FgtRecommendGift : BaseBackFragment() {
                     }
                     exitRunnable = runnable
                     currentView.postDelayed(runnable, 1500L)
+                } else {
+                    EasyToast.DEFAULT.show(msg)
                 }
             }
         }

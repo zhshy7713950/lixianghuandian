@@ -319,6 +319,7 @@ class AtyLogin : AtyBase() {
                 btnNum(2)
                 content("我已认真阅读并同意接受锂享换电的《用户协议》以及《隐私政策》")
                 btnText("取消", "确定")
+                btnTextColor(Color.parseColor("#ABABAB"), Color.parseColor("#61AEDC"))
                 setOnBtnClickL(OnBtnClickL {
                     dismiss()
                 }, OnBtnClickL {

@@ -324,7 +324,7 @@ class AtyLogin : AtyBase() {
                     dismiss()
                 }, OnBtnClickL {
                     dismiss()
-                    cb_login.isChecked = true
+                    this@AtyLogin.cb_login.isChecked = true
                     doLogin()
                 })
             }.show()

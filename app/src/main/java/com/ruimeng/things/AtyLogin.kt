@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import com.entity.local.OneKeyLoginLocal
 import com.entity.local.GetCaptchaLocal
 import com.entity.local.CheckCaptchaLocal
+import com.flyco.dialog.listener.OnBtnClickL
+import com.flyco.dialog.widget.NormalDialog
 import com.net.whenBizError
 import com.net.whenError
 import com.net.whenSuccess
@@ -197,28 +199,6 @@ class AtyLogin : AtyBase() {
             layout_test.visibility = View.GONE
         }
         btnOtpLogin.setOnClickListener {
-            // ① 校验手机号码
-            val phone = et_phone.text?.toString()?.trim() ?: ""
-            if (phone.isBlank() || phone.length != 11) {
-                EasyToast.DEFAULT.show("请输入手机号码(11位)")
-                return@setOnClickListener
-            }
-            
-            // ② 校验图形验证码
-            val imgCode = et_img_code.text?.toString()?.trim() ?: ""
-            if (imgCode.isBlank() || imgCode.length != 5) {
-                EasyToast.DEFAULT.show("请输入图形验证码(5位)")
-                return@setOnClickListener
-            }
-            
-            // ③ 校验短信验证码
-            val code = et_code.text?.toString()?.trim() ?: ""
-            if (code.isBlank() || code.length != 6) {
-                EasyToast.DEFAULT.show("请输入短信验证码(6位)")
-                return@setOnClickListener
-            }
-            
-            // ④ 调用接口
             doLogin()
         }
         btnOneKey.setOnClickListener {
@@ -334,7 +314,19 @@ class AtyLogin : AtyBase() {
 
     private fun doLogin() {
         if (!isAgree) {
-            EasyToast.DEFAULT.show("请阅读并同意接受协议")
+            NormalDialog(this).apply {
+                style(NormalDialog.STYLE_TWO)
+                btnNum(2)
+                content("我已认真阅读并同意接受锂享换电的《用户协议》以及《隐私政策》")
+                btnText("取消", "确定")
+                setOnBtnClickL(OnBtnClickL {
+                    dismiss()
+                }, OnBtnClickL {
+                    dismiss()
+                    cb_login.isChecked = true
+                    doLogin()
+                })
+            }.show()
             return
         }
 
